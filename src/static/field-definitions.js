@@ -13,35 +13,15 @@ export default {
 		{
 			"name": "gender",
 			"type": "select",
-			"options": ["FEMALE", "MALE", "UNKNOWN"]
+			"options": ["UNKNOWN", "FEMALE", "MALE"]
 		},
 		{
 			"name": "birthDate",
 			"type": "datable"
 		},
 		{
-			"name": "hasBirthPlace",
-			"type": "relation",
-			"path": "domain/wwlocations/autocomplete"
-		},
-		{
-			"name": "hasResidenceLocation",
-			"type": "multirelation",
-			"path": "domain/wwlocations/autocomplete"
-		},
-		{
 			"name": "deathDate",
 			"type": "datable"
-		},
-		{
-			"name": "hasDeathPlace",
-			"type": "relation",
-			"path": "domain/wwlocations/autocomplete"
-		},
-		{
-			"name": "isRelatedTo",
-			"type": "multirelation",
-			"path": "domain/wwpersons/autocomplete"
 		},
 		{
 			"name": "bibliography",
@@ -50,6 +30,41 @@ export default {
 		{
 			"name": "notes",
 			"type": "text"
+		},
+		{
+			"name": "links",
+			"type": "links"
+		},
+		{
+			"name": "children",
+			"type": "select",
+			"options": ["YES", "NO", "UNKNOWN"]
+		},
+		{
+			"name": "hasBirthPlace",
+			"type": "relation",
+			"path": "domain/wwlocations/autocomplete"
+		},
+		{
+			"name": "hasResidenceLocation",
+			"type": "relation",
+			"path": "domain/wwlocations/autocomplete"
+		},
+		{
+			"name": "hasDeathPlace",
+			"type": "relation",
+			"path": "domain/wwlocations/autocomplete"
+		},
+		{
+			"name": "isRelatedTo",
+			"type": "relation",
+			"path": "domain/wwpersons/autocomplete"
+		},
+		{
+			"name": "hasProfession",
+			"type": "keyword",
+			"keywordType": "profession",
+			"path": "domain/wwkeywords"
 		}
 	]
-}
+};

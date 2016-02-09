@@ -1,5 +1,5 @@
-import data from "./data";
+import entity from "./entity";
 
 export default {
-	data: data
+	entity: entity
 };
