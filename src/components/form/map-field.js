@@ -17,7 +17,7 @@ const MAP = {
 	"datable": (fieldDef, props) => (<DatableField {...props} name={fieldDef.name} />),
 	"names": (fieldDef, props) => (<NamesField {...props} name={fieldDef.name} />),
 	"multiselect": (fieldDef, props) => (<MultiSelectField {...props} name={fieldDef.name} />),
-	"select": (fieldDef, props) => (<SelectField {...props} name={fieldDef.name} />),
+	"select": (fieldDef, props) => (<SelectField {...props} name={fieldDef.name} options={fieldDef.options} />),
 	"relation": (fieldDef, props) => (<RelationField {...props} name={fieldDef.name} />),
 	"keyword": (fieldDef, props) => (<KeywordField {...props} name={fieldDef.name} />)
 };
