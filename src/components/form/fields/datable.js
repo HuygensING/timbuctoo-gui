@@ -1,15 +1,27 @@
 import React from "react";
+import Input from "hire-forms-input";
+import {validateDate} from "../validations";
 
-class Field extends React.Component {
+
+class DatableField extends React.Component {
 	render() {
 		return (
-			<span>{this.props.name}</span>
+			<div>
+				<label>{this.props.name}</label>
+				<Input
+					onChange={this.props.onChange.bind(this, [this.props.name])}
+					validate={validateDate}
+					value={this.props.entity.data[this.props.name]}
+				/>
+			</div>
 		);
 	}
 }
 
-Field.propTypes = {
-	name: React.PropTypes.string
+DatableField.propTypes = {
+	entity: React.PropTypes.object,
+	name: React.PropTypes.string,
+	onChange: React.PropTypes.func
 };
 
-export default Field;
+export default DatableField;
