@@ -1,4 +1,4 @@
-const dataTypes = {
+const initialData = {
 	names: [],
 	multiselect: [],
 	links: [],
@@ -10,7 +10,7 @@ const dataTypes = {
 };
 
 const initialDataForType = (fieldDef) =>
-	fieldDef.type === "relation" ? {} : dataTypes[fieldDef.type];
+	fieldDef.type === "relation" ? {} : initialData[fieldDef.type];
 
 const nameForType = (fieldDef) =>
 	fieldDef.type === "relation" || fieldDef.type === "keyword" ? "@relations" : fieldDef.name;

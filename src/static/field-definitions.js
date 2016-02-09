@@ -66,5 +66,11 @@ export default {
 			"keywordType": "profession",
 			"path": "domain/wwkeywords"
 		}
+	],
+	"wwdocument": [
+		{
+			"name": "title",
+			"type": "string"
+		}
 	]
 };

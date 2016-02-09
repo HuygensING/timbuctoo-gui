@@ -6,6 +6,8 @@ class App extends React.Component {
 		return (
 			<div className="app">
 				<button onClick={() => this.props.onNew("wwperson")}>New wwperson</button>
+				<button onClick={() => this.props.onNew("wwdocument")}>New wwdocument</button>
+
 			</div>
 		);
 	}
