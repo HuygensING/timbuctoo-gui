@@ -1,3 +1,6 @@
+import R from "ramda";
+
+
 const initialData = {
 	names: [],
 	multiselect: [],
@@ -23,7 +26,6 @@ const makeSkeleton = (fieldDefs) =>
 			return obj;
 		}, {});
 
-
 let initialState = {
 	data: null,
 	domain: null,
@@ -33,13 +35,17 @@ let initialState = {
 export default function(state=initialState, action) {
 	switch (action.type) {
 		case "NEW_ENTITY":
-			state = {...state, ...{
+			return {...state, ...{
 				data: makeSkeleton(action.fieldDefinitions),
 				domain: action.domain,
 				fieldDefinitions: action.fieldDefinitions
 			}};
 
-			break;
+		case "SET_ENTITY_FIELD_VALUE":
+			return {...state, ...{
+				data: R.assocPath(action.fieldPath, action.value, state.data)
+			}};
+
 	}
 
 	return state;
