@@ -71,6 +71,19 @@ export default {
 		{
 			"name": "title",
 			"type": "string"
+		},
+		{
+			"name": "notes",
+			"type": "text"
+		},
+		{
+			"name": "links",
+			"type": "links"
+		},
+		{
+			"name": "documentType",
+			"type": "select",
+			"options": ["UNKNOWN", "ANTHOLOGY", "ARTICLE", "AWARD", "CATALOGUE", "COMPILATION"]
 		}
 	]
 };

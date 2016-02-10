@@ -21,7 +21,7 @@ function onFilesChanged(event, file) {
 
 browserSync.watch(watchFiles, debounce(onFilesChanged, 300));
 
-var proxyOptions = url.parse("http://demo7.huygens.knaw.nl/test-afp-backend");
+var proxyOptions = url.parse("http://localhost:8080/");
 proxyOptions.route = "/api";
 
 browserSync.init({
