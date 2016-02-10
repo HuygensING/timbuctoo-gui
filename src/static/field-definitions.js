@@ -3,7 +3,7 @@ export default {
 		{
 			"name": "names",
 			"type": "names",
-			"options": ["SURNAME", "FORENAME", "NAME_LINK", "ROLE_NAME", "GEN_NAME"]
+			"options": ["FORENAME", "SURNAME", "NAME_LINK", "ROLE_NAME", "GEN_NAME"]
 		},
 		{
 			"name": "types",
