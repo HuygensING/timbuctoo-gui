@@ -9,6 +9,12 @@ class Links extends React.Component {
 		this.props.onChange(path, data);
 	}
 
+	onDelete(path) {
+		let values = this.props.entity.data[this.props.name];
+		values.splice(path[1], 1);
+		this.props.onChange([path[0]], values);
+	}
+
 	render() {
 		return (
 			<div>
@@ -18,7 +24,7 @@ class Links extends React.Component {
 					component = {LinkForm}
 					model={{label: "", url: ""}}
 					onChange={this.onChange.bind(this)}
-					onDelete={(...args) => console.log(args)}
+					onDelete={this.onDelete.bind(this)}
 					values={this.props.entity.data[this.props.name]} />
 			</div>
 		);
