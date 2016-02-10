@@ -1,4 +1,4 @@
-import R from "ramda";
+import clone from "clone-deep";
 
 
 const initialData = {
@@ -26,6 +26,32 @@ const makeSkeleton = (fieldDefs) =>
 			return obj;
 		}, {});
 
+const locateIn = (path, data, deref = null) => {
+	while(path.length > 1) { deref = deref ? deref[path.shift()] : data[path.shift()]; }
+	return deref ? deref : data;
+};
+
+const setEither = (data, deref, key, val) => {
+	(deref || data)[key] = val;
+	return data;
+};
+
+const setIn = (path, value, data, deref = null) => {
+	return path.length > 1 ?
+		setIn(path, value, data, deref ? deref[path.shift()] : data[path.shift()]) :
+		setEither(data, deref, path[0], value);
+/*
+	if(path.length > 1) {
+		return 
+	} else {
+		
+		return data;
+	}*/
+//	locateIn(path, data)[path[0]] = value;
+};
+
+
+
 let initialState = {
 	data: null,
 	domain: null,
@@ -43,7 +69,7 @@ export default function(state=initialState, action) {
 
 		case "SET_ENTITY_FIELD_VALUE":
 			return {...state, ...{
-				data: R.assocPath(action.fieldPath, action.value, state.data)
+				data: setIn(action.fieldPath, action.value, clone(state.data))
 			}};
 
 	}
