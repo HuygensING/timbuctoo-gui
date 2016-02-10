@@ -1,15 +1,27 @@
 import React from "react";
+import SelectList from "hire-forms-select-list";
 
-class Field extends React.Component {
+
+class MultiSelect extends React.Component {
 	render() {
 		return (
-			<span>{this.props.name}</span>
+			<div>
+				<label>{this.props.name}</label>
+				<SelectList
+					onChange={this.props.onChange.bind(this, [this.props.name])}
+					options={this.props.options}
+					values={this.props.entity.data[this.props.name]}
+				/>
+			</div>
 		);
 	}
 }
 
-Field.propTypes = {
-	name: React.PropTypes.string
+MultiSelect.propTypes = {
+	entity: React.PropTypes.object,
+	name: React.PropTypes.string,
+	onChange: React.PropTypes.func,
+	options: React.PropTypes.array
 };
 
-export default Field;
+export default MultiSelect;

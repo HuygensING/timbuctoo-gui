@@ -17,6 +17,7 @@
     "classnames": "^2.2.3",
     "hire-forms-input": "https://github.com/Hire-Forms/hire-forms-input.git#react-0.14",
     "hire-forms-select": "https://github.com/Hire-Forms/hire-forms-select.git#react-0.14",
+    "hire-forms-select-list": "https://github.com/Hire-Forms/hire-forms-select-list.git#react-0.14",
     "ramda": "^0.19.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
