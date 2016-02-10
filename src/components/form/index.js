@@ -5,7 +5,7 @@ class Form extends React.Component {
 	render() {
 		if(!this.props.entity.data) { return null; }
 		return (
-			<ul>
+			<ul id="form">
 				{this.props.entity.fieldDefinitions.map((fieldDef, i) => <li key={i}>{mapField(fieldDef, this.props)}</li> )}
 			</ul>
 		);

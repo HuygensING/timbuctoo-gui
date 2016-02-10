@@ -1,0 +1,44 @@
+@import "./reset"
+
+body
+	font-family sans-serif
+
+
+#app
+	padding 1em
+	ul#form
+		margin-top 1em
+		& > li
+			padding 0.5em
+			&:nth-child(even)
+				background-color #ddf
+			&:nth-child(odd)
+				background-color #dfd
+			& > div
+				label
+					vertical-align top
+					display inline-block
+					width 120px
+					& + *
+						display inline-block
+
+.hire-select
+	& > .input-container
+		width 200px
+		height 1.5em
+		background-color #fff
+
+		& > button
+			height 100%
+			width 25px
+			float right
+
+		& > .input
+			display inline-block
+			height 100%
+			width calc(100% - 25px)
+
+	& > .hire-options
+		position absolute
+		background-color white
+		width 175px
