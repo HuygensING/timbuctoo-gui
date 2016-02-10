@@ -1,15 +1,24 @@
 import React from "react";
+import TextArea from "hire-forms-textarea";
 
-class Field extends React.Component {
+class TextField extends React.Component {
 	render() {
 		return (
-			<span>{this.props.name}</span>
+			<div>
+				<label>{this.props.name}</label>
+				<TextArea
+					onChange={this.props.onChange.bind(this, [this.props.name])}
+					value={this.props.entity.data[this.props.name]}
+				/>
+			</div>
 		);
 	}
 }
 
-Field.propTypes = {
-	name: React.PropTypes.string
+TextField.propTypes = {
+	entity: React.PropTypes.object,
+	name: React.PropTypes.string,
+	onChange: React.PropTypes.func
 };
 
-export default Field;
+export default TextField;
