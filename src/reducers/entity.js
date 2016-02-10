@@ -26,30 +26,15 @@ const makeSkeleton = (fieldDefs) =>
 			return obj;
 		}, {});
 
-const locateIn = (path, data, deref = null) => {
-	while(path.length > 1) { deref = deref ? deref[path.shift()] : data[path.shift()]; }
-	return deref ? deref : data;
-};
-
 const setEither = (data, deref, key, val) => {
 	(deref || data)[key] = val;
 	return data;
 };
 
-const setIn = (path, value, data, deref = null) => {
-	return path.length > 1 ?
+const setIn = (path, value, data, deref = null) =>
+	path.length > 1 ?
 		setIn(path, value, data, deref ? deref[path.shift()] : data[path.shift()]) :
 		setEither(data, deref, path[0], value);
-/*
-	if(path.length > 1) {
-		return 
-	} else {
-		
-		return data;
-	}*/
-//	locateIn(path, data)[path[0]] = value;
-};
-
 
 
 let initialState = {
