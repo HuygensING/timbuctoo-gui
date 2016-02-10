@@ -3,12 +3,17 @@ import SelectList from "hire-forms-select-list";
 
 
 class MultiSelect extends React.Component {
+
+	onChange(values) {
+		this.props.onChange([this.props.name], values.filter((val, idx, me) => me.indexOf(val) === idx));
+	}
+
 	render() {
 		return (
 			<div>
 				<label>{this.props.name}</label>
 				<SelectList
-					onChange={this.props.onChange.bind(this, [this.props.name])}
+					onChange={this.onChange.bind(this)}
 					options={this.props.options}
 					values={this.props.entity.data[this.props.name]}
 				/>
