@@ -42,6 +42,16 @@ export default {
 			"options": ["YES", "NO", "UNKNOWN"]
 		},
 		{
+			"name": "hasProfession",
+			"type": "keyword",
+			"path": "domain/wwkeywords/autocomplete?type=profession&rows=1000" // this should definitely change
+		},
+		{
+			"name": "hasMaritalStatus",
+			"type": "keyword",
+			"path": "domain/wwkeywords/autocomplete?type=maritalStatus&rows=1000" // this should definitely change
+		}
+/*		{
 			"name": "hasBirthPlace",
 			"type": "relation",
 			"path": "domain/wwlocations/autocomplete"
@@ -60,13 +70,7 @@ export default {
 			"name": "isRelatedTo",
 			"type": "relation",
 			"path": "domain/wwpersons/autocomplete"
-		},
-		{
-			"name": "hasProfession",
-			"type": "keyword",
-			"keywordType": "profession",
-			"path": "domain/wwkeywords"
-		}
+		}*/
 	],
 	"wwdocument": [
 		{

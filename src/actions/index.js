@@ -4,7 +4,44 @@ import xhr from "xhr";
 import store from "../store";
 import fieldDefinitions from "../static/field-definitions";
 
-const getFieldDescription = (domain, actionType, data = null) => (dispatch) => dispatch({type: actionType, domain: domain, fieldDefinitions: fieldDefinitions[domain], data: data});
+// Use XHR to fetch the keyword options defined in the fieldDefinition
+// using path property.
+//  --> FIXME: we should not use async for all this stuff,
+//      the server could give these values via the fieldDefinitions directly
+const fetchKeywordOptions = (fieldDefinition, done) =>
+		xhr({
+			url: `/api/v2.1/${fieldDefinition.path}`,
+			headers: {"Accept": "application/json", "VRE_ID": "WomenWriters"}
+		}, (err, resp, body) => done({key: fieldDefinition.name, options: JSON.parse(body)}));
+
+
+// Three step approach:
+// 0. Fetch the fieldDefinitions for the given domain (TODO: should become server request in stead of static source file)
+// 1. Fetch all the options for the fields which are of type "keyword"/relation (FIXME: this should come directly from the fieldDefinition)
+// 2. Add the options as a property to the fieldDefinition
+// 3. Dispatch the requested actionType (RECEIVE_ENTITY or NEW_ENTITY)
+const getFieldDescription = (domain, actionType, data = null) => {
+	return (dispatch) => {
+
+		const promises = fieldDefinitions[domain]
+			.filter((fieldDef) => fieldDef.type === "keyword")
+			.map((fieldDef) => new Promise((resolve) => fetchKeywordOptions(fieldDef, resolve)));
+
+		Promise.all(promises).then((responses) => {
+			dispatch({
+				type: actionType,
+				domain: domain,
+				fieldDefinitions: fieldDefinitions[domain].map((fieldDef) => {
+					return {
+						...fieldDef,
+						options: fieldDef.options || (responses.find((r) => r.key === fieldDef.name) || {}).options || null
+					};
+				}),
+				data: data
+			});
+		});
+	};
+};
 
 const fetchEntity = (location) => (dispatch) => {
 	xhr({
