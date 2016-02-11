@@ -4,7 +4,11 @@ import {Login, Basic} from "hire-login";
 
 class App extends React.Component {
 	render() {
-		console.log(this.props);
+		let idDiv = this.props.entity.data && this.props.entity.data._id ?
+			(<div>
+				<label>ID</label>:
+				<span>{this.props.entity.data._id}</span>
+			</div>) : null;
 		return (
 			<div>
 				<Login
@@ -16,6 +20,7 @@ class App extends React.Component {
 				</Login>
 				<button onClick={() => this.props.onNew("wwperson")}>New wwperson</button>
 				<button onClick={() => this.props.onNew("wwdocument")}>New wwdocument</button>
+				{idDiv}
 				<Form {...this.props} />
 			</div>
 		);
@@ -23,7 +28,7 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-	data: React.PropTypes.object,
+	entity: React.PropTypes.object,
 	onLoginChange: React.PropTypes.func,
 	onNew: React.PropTypes.func
 };

@@ -52,6 +52,13 @@ export default function(state=initialState, action) {
 				fieldDefinitions: action.fieldDefinitions
 			}};
 
+		case "RECEIVE_ENTITY":
+			return {...state, ...{
+				data: action.data,
+				domain: action.domain,
+				fieldDefinitions: action.fieldDefinitions
+			}};
+
 		case "SET_ENTITY_FIELD_VALUE":
 			return {...state, ...{
 				data: setIn(action.fieldPath, action.value, clone(state.data))
