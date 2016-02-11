@@ -22,6 +22,7 @@ function onFilesChanged(event, file) {
 browserSync.watch(watchFiles, debounce(onFilesChanged, 300));
 
 var proxyOptions = url.parse("http://test.repository.huygens.knaw.nl/");
+//var proxyOptions = url.parse("http://localhost:8080/");
 proxyOptions.route = "/api";
 
 browserSync.init({

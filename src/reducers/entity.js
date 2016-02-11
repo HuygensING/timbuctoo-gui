@@ -1,6 +1,5 @@
 import clone from "clone-deep";
 
-
 const initialData = {
 	names: [],
 	multiselect: [],
@@ -13,7 +12,7 @@ const initialData = {
 };
 
 const initialDataForType = (fieldDef) =>
-	fieldDef.defaultValue || (fieldDef.type === "relation" ? {} : initialData[fieldDef.type]);
+	fieldDef.defaultValue || (fieldDef.type === "relation" || fieldDef.type === "keyword" ? {} : initialData[fieldDef.type]);
 
 const nameForType = (fieldDef) =>
 	fieldDef.type === "relation" || fieldDef.type === "keyword" ? "@relations" : fieldDef.name;

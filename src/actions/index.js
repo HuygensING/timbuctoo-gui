@@ -4,6 +4,20 @@ import xhr from "xhr";
 import store from "../store";
 import fieldDefinitions from "../static/field-definitions";
 
+const fetchEntity = (location, next) => {
+	xhr({
+		method: "GET",
+		headers: {
+			"Accept": "application/json"
+		},
+		url: location
+	}, (err, resp, body) => {
+		const data = JSON.parse(body);
+		next(data);
+	});
+};
+
+
 // Use XHR to fetch the keyword options defined in the fieldDefinition
 // using path property.
 //  --> FIXME: we should not use async for all this stuff,
@@ -12,7 +26,9 @@ const fetchKeywordOptions = (fieldDefinition, done) =>
 		xhr({
 			url: `/api/v2.1/${fieldDefinition.path}`,
 			headers: {"Accept": "application/json", "VRE_ID": "WomenWriters"}
-		}, (err, resp, body) => done({key: fieldDefinition.name, options: JSON.parse(body)}));
+		}, (err, resp, body) => resp.statusCode !== 200 ?
+			done({key: fieldDefinition.name, options: []}) :
+			done({key: fieldDefinition.name, options: JSON.parse(body).map((opt) => {return {key: opt.key.replace(/^.*\//, ""), value: opt.value}; }) }));
 
 
 // Three step approach:
@@ -43,21 +59,51 @@ const getFieldDescription = (domain, actionType, data = null) => {
 	};
 };
 
-const fetchEntity = (location) => (dispatch) => {
-	xhr({
-		method: "GET",
-		headers: {
-			"Accept": "application/json"
-		},
-		url: location
-	}, (err, resp, body) => {
-		const data = JSON.parse(body);
-		dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data));
-	});
+
+
+
+/* POST
+	"@type": "wwrelation"
+	"^sourceId":
+	"^sourceType":
+	"^targetId":
+	"^targetType":
+	"^typeId":
+	accepted: true,
+	key: val.key,
+	value: val.value
+*/
+
+/* PUT
+	@type: "wwrelation"
+	^rev: 1
+	^sourceId: "24a78fcc-1539-473a-adb4-3943c2f03c8e"
+	^sourceType: "person"
+	^targetId: "27a71d66-3bae-4141-9fd4-6b298e5e9c98"
+	^targetType: "keyword"
+	^typeId: "d3951eeb-d66f-41c5-8545-9b6498400fa7"
+	_id: "c0cf885a-e7ae-41b7-9918-86a821894d67"
+	accepted: false/true
+*/
+
+/* GET
+	type: "wwkeyword"
+	id: "ee73228b-493e-46da-8f96-173d3ded5ffb"
+	path: "domain/wwkeywords/ee7322...-46da-8f96-173d3ded5ffb"
+	displayName: "Editor of periodical press"
+	relationId: "83d0bcbf-d019-4d46-bf99-ec2a63b3ee2d"
+	accepted: true
+	rev: 1
+*/
+
+const saveRelations = (data, relationData, dispatch) => {
+	console.log("TODO: save relations", relationData);
+	dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data));
 };
 
 const saveEntity = () => (dispatch, getState) => {
 	let saveData = clone(getState().entity.data);
+	let relationData = clone(saveData["@relations"]);
 	delete saveData["@relations"];
 
 	xhr({
@@ -73,11 +119,11 @@ const saveEntity = () => (dispatch, getState) => {
 	}, (err, resp, body) => {
 		if(resp.statusCode === 201) {
 			// POST RESPONSE --> FETCH ENTITY --> SAVE RELATIONS --> FETCH ENTITY
-			dispatch(fetchEntity(resp.headers.location));
+			dispatch((redispatch) => fetchEntity(resp.headers.location, (data) => saveRelations(data, relationData, redispatch)));
 		} else if(resp.statusCode === 200) {
 			// PUT RESPONSE --> SAVE RELATIONS --> FETCH ENTITY
 			const data = JSON.parse(resp.body);
-			dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data));
+			dispatch((redispatch) => saveRelations(data, relationData, redispatch));
 		} else {
 			console.log(err, resp, body);
 		}
@@ -93,7 +139,10 @@ const setUser = (response) => {
 
 export default {
 	onNew: (domain) => store.dispatch(getFieldDescription(domain, "NEW_ENTITY")),
-	onSelect: (record) => store.dispatch(fetchEntity(`/api/v2.1/domain/${record.domain}s/${record.id}`)),
+	onSelect: (record) => store.dispatch((redispatch) =>
+		fetchEntity(`/api/v2.1/domain/${record.domain}s/${record.id}`,
+		(data) => redispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data))
+	)),
 	onChange: (fieldPath, value) => store.dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
 	onSave: () => store.dispatch(saveEntity()),
 	onLoginChange: (response) => store.dispatch(setUser(response))

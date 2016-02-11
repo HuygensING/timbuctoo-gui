@@ -44,12 +44,28 @@ export default {
 		{
 			"name": "hasProfession",
 			"type": "keyword",
-			"path": "domain/wwkeywords/autocomplete?type=profession&rows=1000" // this should definitely change
+			"path": "domain/wwkeywords/autocomplete?type=profession&rows=1000", // this should definitely change
+			"relation": { // This object describes how and where a new relation should be stored
+				"type": "wwrelation", // and this seems way too complex for the client --> cannot the server resolve a lot of this info by itself?
+				"path": "domain/wwkeywords",
+				"isInverseName": false, // (does not seem necessary for the keyword use case; is never inverse)
+				"sourceType": "person",
+				"targetType": "keyword",
+				"typeId": "5f83410f-3b77-404a-ad53-3b2cb7607674"
+			}
 		},
 		{
 			"name": "hasMaritalStatus",
 			"type": "keyword",
-			"path": "domain/wwkeywords/autocomplete?type=maritalStatus&rows=1000" // this should definitely change
+			"path": "domain/wwkeywords/autocomplete?type=maritalStatus&rows=1000", // this should definitely change
+			"relation": { // This object describes how and where a new relation should be stored
+				"type": "wwrelation", // and this seems way too complex for the client --> cannot the server resolve a lot of this info by itself?
+				"path": "domain/wwkeywords",
+				"isInverseName": false, // (does not seem necessary for the keyword use case; is never inverse)
+				"sourceType": "person",
+				"targetType": "keyword",
+				"typeId": "d3951eeb-d66f-41c5-8545-9b6498400fa7"
+			}
 		}
 /*		{
 			"name": "hasBirthPlace",

@@ -1,15 +1,44 @@
 import React from "react";
+import SelectList from "hire-forms-select-list";
 
-class Field extends React.Component {
+
+class KeywordField extends React.Component {
+
+	onChange(values) {
+		const currentValues = this.props.entity.data["@relations"][this.props.name] || [];
+		this.props.onChange(
+			["@relations", this.props.name],
+			values
+				.map((val) => {
+					return {
+						"id": val.key,
+						"displayName": val.value,
+						...(currentValues.find((curVal) => curVal.id === val.key) || {})
+					};
+				})
+		);
+	}
+
 	render() {
+		const values = this.props.entity.data["@relations"][this.props.name] || [];
 		return (
-			<span>{this.props.name}</span>
+			<div>
+				<label>{this.props.name}</label>
+				<SelectList
+					onChange={this.onChange.bind(this)}
+					options={this.props.fieldDefinition.options}
+					values={values.map((val) => { return { value: val.displayName, key: val.id, foo: "asdsad"}; })}
+				/>
+			</div>
 		);
 	}
 }
 
-Field.propTypes = {
-	name: React.PropTypes.string
+KeywordField.propTypes = {
+	entity: React.PropTypes.object,
+	fieldDefinition: React.PropTypes.object,
+	name: React.PropTypes.string,
+	onChange: React.PropTypes.func
 };
 
-export default Field;
+export default KeywordField;
