@@ -96,9 +96,66 @@ const getFieldDescription = (domain, actionType, data = null) => {
 	rev: 1
 */
 
-const saveRelations = (data, relationData, dispatch) => {
-	console.log("TODO: save relations", relationData);
-	dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data));
+
+
+const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
+
+	const makeSaveRelationPayload = (relation, key) => {
+			const fieldDef = fieldDefs.find((def) => def.name === key);
+			const jsonPayload = {
+				"@type": fieldDef.relation.type,
+				"^sourceId": fieldDef.relation.isInverseName ? relation.id : data._id,
+				"^sourceType": fieldDef.relation.isInverseName ? fieldDef.relation.targetType : fieldDef.relation.sourceType,
+				"^targetId": fieldDef.relation.isInverseName ? data._id : relation.id,
+				"^targetType": fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType,
+				"^typeId": fieldDef.relation.typeId,
+				accepted: relation.relationId ? false : true
+			};
+
+			if(relation.relationId) { jsonPayload._id = relation.relationId; }
+			if(relation.rev) { jsonPayload["^rev"] = relation.rev; }
+
+			return {
+				method: relation.relationId ? "PUT" : "POST",
+				headers: {
+					"Accept": "application/json",
+					"Content-type": "application/json",
+					"Authorization": token,
+					"VRE_ID": "WomenWriters"
+				},
+				url: `/api/v2.1/domain/${fieldDef.relation.type}s${relation.relationId ? "/" + relation.relationId : ""}`,
+				data: JSON.stringify(jsonPayload)
+			};
+	};
+
+	const newPayloads = Object.keys(relationData).map((key) =>
+		relationData[key]
+			.filter((relation) => (data["@relations"][key] || []).map((origRelation) => origRelation.id).indexOf(relation.id) < 0)
+			.map((relation) => makeSaveRelationPayload(relation, key))
+	).reduce((a, b) => a.concat(b), []);
+
+	const updatePayloads = Object.keys(data["@relations"]).map((key) =>
+		data["@relations"][key]
+			.filter((origRelation) =>
+				(origRelation.accepted === false && (relationData[key] || []).map((relation) => relation.id).indexOf(origRelation.id) > 0) ||
+				((relationData[key] || []).map((relation) => relation.id).indexOf(origRelation.id) < 0)
+			)
+			.map((relation) => makeSaveRelationPayload(relation, key))
+	).reduce((a, b) => a.concat(b), []);
+
+	const promises = newPayloads
+		.map((payload) => new Promise((resolve) => xhr(payload, resolve)))
+		.concat(updatePayloads
+			.map((payload) => new Promise((resolve) => xhr(payload, resolve)))
+		);
+
+	Promise.all(promises).then(() => {
+		fetchEntity(
+			`/api/v2.1/domain/${data["@type"]}s/${data._id}`,
+			(respData) => dispatch(getFieldDescription(respData["@type"], "RECEIVE_ENTITY", respData))
+		);
+	});
+
 };
 
 const saveEntity = () => (dispatch, getState) => {
@@ -119,13 +176,16 @@ const saveEntity = () => (dispatch, getState) => {
 	}, (err, resp, body) => {
 		if(resp.statusCode === 201) {
 			// POST RESPONSE --> FETCH ENTITY --> SAVE RELATIONS --> FETCH ENTITY
-			dispatch((redispatch) => fetchEntity(resp.headers.location, (data) => saveRelations(data, relationData, redispatch)));
+			dispatch((redispatch) => fetchEntity(resp.headers.location, (data) =>
+				saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, redispatch)
+			));
 		} else if(resp.statusCode === 200) {
 			// PUT RESPONSE --> SAVE RELATIONS --> FETCH ENTITY
 			const data = JSON.parse(resp.body);
-			dispatch((redispatch) => saveRelations(data, relationData, redispatch));
+			dispatch((redispatch) => saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, redispatch));
 		} else {
 			console.log(err, resp, body);
+			alert("PID!");
 		}
 	});
 };
@@ -140,8 +200,7 @@ const setUser = (response) => {
 export default {
 	onNew: (domain) => store.dispatch(getFieldDescription(domain, "NEW_ENTITY")),
 	onSelect: (record) => store.dispatch((redispatch) =>
-		fetchEntity(`/api/v2.1/domain/${record.domain}s/${record.id}`,
-		(data) => redispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data))
+		fetchEntity(`/api/v2.1/domain/${record.domain}s/${record.id}`, (data) => redispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data))
 	)),
 	onChange: (fieldPath, value) => store.dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
 	onSave: () => store.dispatch(saveEntity()),

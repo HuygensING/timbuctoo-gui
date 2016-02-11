@@ -13,7 +13,8 @@ class KeywordField extends React.Component {
 					return {
 						"id": val.key,
 						"displayName": val.value,
-						...(currentValues.find((curVal) => curVal.id === val.key) || {})
+						...(currentValues.find((curVal) => curVal.id === val.key) || {}),
+						accepted: true
 					};
 				})
 		);
@@ -27,7 +28,7 @@ class KeywordField extends React.Component {
 				<SelectList
 					onChange={this.onChange.bind(this)}
 					options={this.props.fieldDefinition.options}
-					values={values.map((val) => { return { value: val.displayName, key: val.id, foo: "asdsad"}; })}
+					values={values.filter((val) => val.accepted).map((val) => { return { value: val.displayName, key: val.id}; })}
 				/>
 			</div>
 		);
