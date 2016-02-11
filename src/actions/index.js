@@ -1,6 +1,8 @@
+import clone from "clone-deep";
+import xhr from "xhr";
+
 import store from "../store";
 import fieldDefinitions from "../static/field-definitions";
-import xhr from "xhr";
 
 const getFieldDescription = (domain, actionType, data = null) => (dispatch) => dispatch({type: actionType, domain: domain, fieldDefinitions: fieldDefinitions[domain], data: data});
 
@@ -18,7 +20,7 @@ const fetchEntity = (location) => (dispatch) => {
 };
 
 const saveEntity = () => (dispatch, getState) => {
-	let saveData = getState().entity.data;
+	let saveData = clone(getState().entity.data);
 	delete saveData["@relations"];
 
 	xhr({
@@ -33,16 +35,17 @@ const saveEntity = () => (dispatch, getState) => {
 		url: `/api/v2.1/domain/${getState().entity.domain}s${getState().entity.data._id ? "/" + getState().entity.data._id : ""}`
 	}, (err, resp, body) => {
 		if(resp.statusCode === 201) {
+			// POST RESPONSE --> save relations
 			dispatch(fetchEntity(resp.headers.location));
 		} else if(resp.statusCode === 200) {
-			let data = JSON.parse(resp.body);
+			// PUT RESPONSE --> save relations
+			const data = JSON.parse(resp.body);
 			dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data));
 		} else {
 			console.log(err, resp, body);
 		}
 	});
 };
-
 
 const setUser = (response) => {
 	return {
