@@ -25,7 +25,7 @@ class App extends React.Component {
 				<button onClick={() => this.props.onNew("wwdocument")}>New wwdocument</button>
 				{idDiv}
 				<Form {...this.props} />
-				<ul>
+				<ul id="entity-index">
 					{this.props.entityIndex.records.map((record, i) => (
 						<li key={i} onClick={() => this.props.onSelect(record)}>
 							{record.domain} - {record.id}

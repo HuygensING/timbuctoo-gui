@@ -35,10 +35,10 @@ const saveEntity = () => (dispatch, getState) => {
 		url: `/api/v2.1/domain/${getState().entity.domain}s${getState().entity.data._id ? "/" + getState().entity.data._id : ""}`
 	}, (err, resp, body) => {
 		if(resp.statusCode === 201) {
-			// POST RESPONSE --> save relations
+			// POST RESPONSE --> FETCH ENTITY --> SAVE RELATIONS --> FETCH ENTITY
 			dispatch(fetchEntity(resp.headers.location));
 		} else if(resp.statusCode === 200) {
-			// PUT RESPONSE --> save relations
+			// PUT RESPONSE --> SAVE RELATIONS --> FETCH ENTITY
 			const data = JSON.parse(resp.body);
 			dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data));
 		} else {
