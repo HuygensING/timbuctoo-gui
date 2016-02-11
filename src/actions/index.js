@@ -99,7 +99,6 @@ const getFieldDescription = (domain, actionType, data = null) => {
 
 
 const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
-
 	const makeSaveRelationPayload = (relation, key) => {
 			const fieldDef = fieldDefs.find((def) => def.name === key);
 			const jsonPayload = {
@@ -109,7 +108,7 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 				"^targetId": fieldDef.relation.isInverseName ? data._id : relation.id,
 				"^targetType": fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType,
 				"^typeId": fieldDef.relation.typeId,
-				accepted: relation.relationId ? false : true
+				accepted: relation.accepted || false
 			};
 
 			if(relation.relationId) { jsonPayload._id = relation.relationId; }
