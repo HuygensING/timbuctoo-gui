@@ -13,7 +13,8 @@ export default {
 		{
 			"name": "gender",
 			"type": "select",
-			"options": ["UNKNOWN", "FEMALE", "MALE"]
+			"options": ["UNKNOWN", "FEMALE", "MALE"],
+			"defaultValue": "UNKNOWN"
 		},
 		{
 			"name": "birthDate",
@@ -83,7 +84,8 @@ export default {
 		{
 			"name": "documentType",
 			"type": "select",
-			"options": ["UNKNOWN", "ANTHOLOGY", "ARTICLE", "AWARD", "CATALOGUE", "COMPILATION"]
+			"options": ["UNKNOWN", "ANTHOLOGY", "ARTICLE", "AWARD", "CATALOGUE", "COMPILATION"],
+			"defaultValue": "UNKNOWN"
 		}
 	]
 };

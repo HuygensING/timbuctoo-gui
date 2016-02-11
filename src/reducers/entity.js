@@ -13,14 +13,15 @@ const initialData = {
 };
 
 const initialDataForType = (fieldDef) =>
-	fieldDef.type === "relation" ? {} : initialData[fieldDef.type];
+	fieldDef.defaultValue || (fieldDef.type === "relation" ? {} : initialData[fieldDef.type]);
 
 const nameForType = (fieldDef) =>
 	fieldDef.type === "relation" || fieldDef.type === "keyword" ? "@relations" : fieldDef.name;
 
-const makeSkeleton = (fieldDefs) =>
+const makeSkeleton = (fieldDefs, domain) =>
 	fieldDefs
 		.map((fieldDef) => [nameForType(fieldDef), initialDataForType(fieldDef)])
+		.concat([["@type", domain]])
 		.reduce((obj, cur) => {
 			obj[cur[0]] = cur[1];
 			return obj;
@@ -47,7 +48,7 @@ export default function(state=initialState, action) {
 	switch (action.type) {
 		case "NEW_ENTITY":
 			return {...state, ...{
-				data: makeSkeleton(action.fieldDefinitions),
+				data: makeSkeleton(action.fieldDefinitions, action.domain),
 				domain: action.domain,
 				fieldDefinitions: action.fieldDefinitions
 			}};

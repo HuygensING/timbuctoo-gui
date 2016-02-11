@@ -4,7 +4,7 @@ import {Login, Basic} from "hire-login";
 
 class App extends React.Component {
 	render() {
-		console.log(this.props.entityIndex.records);
+		console.log(this.props.entity);
 
 		let idDiv = this.props.entity.data && this.props.entity.data._id ?
 			(<div>

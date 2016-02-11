@@ -18,23 +18,31 @@ const fetchEntity = (location) => (dispatch) => {
 };
 
 const saveEntity = () => (dispatch, getState) => {
+	let saveData = getState().entity.data;
+	delete saveData["@relations"];
+
 	xhr({
 		method: getState().entity.data._id ? "PUT" : "POST",
 		headers: {
 			"Accept": "application/json",
 			"Content-type": "application/json",
-			"Authorization": getState().user.token
+			"Authorization": getState().user.token,
+			"VRE_ID": "WomenWriters"
 		},
-		body: JSON.stringify(getState().entity.data),
+		body: JSON.stringify(saveData),
 		url: `/api/v2.1/domain/${getState().entity.domain}s${getState().entity.data._id ? "/" + getState().entity.data._id : ""}`
 	}, (err, resp, body) => {
 		if(resp.statusCode === 201) {
 			dispatch(fetchEntity(resp.headers.location));
+		} else if(resp.statusCode === 200) {
+			let data = JSON.parse(resp.body);
+			dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data));
 		} else {
 			console.log(err, resp, body);
 		}
 	});
 };
+
 
 const setUser = (response) => {
 	return {
