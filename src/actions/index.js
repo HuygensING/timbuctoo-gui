@@ -45,6 +45,7 @@ const setUser = (response) => {
 
 export default {
 	onNew: (domain) => store.dispatch(getFieldDescription(domain, "NEW_ENTITY")),
+	onSelect: (record) => store.dispatch(fetchEntity(`/api/v2.1/domain/${record.domain}s/${record.id}`)),
 	onChange: (fieldPath, value) => store.dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
 	onSave: () => store.dispatch(saveEntity()),
 	onLoginChange: (response) => store.dispatch(setUser(response))
