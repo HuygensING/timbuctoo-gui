@@ -60,44 +60,6 @@ const getFieldDescription = (domain, actionType, data = null) => {
 };
 
 
-
-
-/* POST
-	"@type": "wwrelation"
-	"^sourceId":
-	"^sourceType":
-	"^targetId":
-	"^targetType":
-	"^typeId":
-	accepted: true,
-	key: val.key,
-	value: val.value
-*/
-
-/* PUT
-	@type: "wwrelation"
-	^rev: 1
-	^sourceId: "24a78fcc-1539-473a-adb4-3943c2f03c8e"
-	^sourceType: "person"
-	^targetId: "27a71d66-3bae-4141-9fd4-6b298e5e9c98"
-	^targetType: "keyword"
-	^typeId: "d3951eeb-d66f-41c5-8545-9b6498400fa7"
-	_id: "c0cf885a-e7ae-41b7-9918-86a821894d67"
-	accepted: false/true
-*/
-
-/* GET
-	type: "wwkeyword"
-	id: "ee73228b-493e-46da-8f96-173d3ded5ffb"
-	path: "domain/wwkeywords/ee7322...-46da-8f96-173d3ded5ffb"
-	displayName: "Editor of periodical press"
-	relationId: "83d0bcbf-d019-4d46-bf99-ec2a63b3ee2d"
-	accepted: true
-	rev: 1
-*/
-
-
-
 const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 	const makeSaveRelationPayload = (relation, key) => {
 			const fieldDef = fieldDefs.find((def) => def.name === key);
@@ -108,7 +70,7 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 				"^targetId": fieldDef.relation.isInverseName ? data._id : relation.id,
 				"^targetType": fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType,
 				"^typeId": fieldDef.relation.typeId,
-				accepted: relation.accepted || false
+				accepted: relation.relationId ? false : true
 			};
 
 			if(relation.relationId) { jsonPayload._id = relation.relationId; }
