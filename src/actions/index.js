@@ -84,7 +84,7 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 					"Authorization": token,
 					"VRE_ID": "WomenWriters"
 				},
-				url: `/api/v2.1/domain/${fieldDef.relation.type}s${relation.relationId ? "/" + relation.relationId : ""}`,
+				url: `/api/v4/domain/${fieldDef.relation.type}s${relation.relationId ? "/" + relation.relationId : ""}`,
 				data: JSON.stringify(jsonPayload)
 			};
 	};
@@ -95,29 +95,27 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 			.map((relation) => makeSaveRelationPayload(relation, key))
 	).reduce((a, b) => a.concat(b), []);
 
-	// Still no good. FIXME?
-	const updatePayloads = Object.keys(data["@relations"]).map((key) =>
-		data["@relations"][key]
-			.filter((origRelation) =>
-				(origRelation.accepted === false && (relationData[key] || []).map((relation) => relation.id).indexOf(origRelation.id) > -1) ||
-				((relationData[key] || []).map((relation) => relation.id).indexOf(origRelation.id) < 0)
-			)
-			.map((relation) => {
-				console.log(relation);
-				return makeSaveRelationPayload(relation, key);
-			})
-
-	).reduce((a, b) => a.concat(b), []);
+//	// Still no good. FIXME?
+//	const updatePayloads = Object.keys(data["@relations"]).map((key) =>
+//		data["@relations"][key]
+//			.filter((origRelation) =>
+//				(origRelation.accepted === false && (relationData[key] || []).map((relation) => relation.id).indexOf(origRelation.id) > -1) ||
+//				((relationData[key] || []).map((relation) => relation.id).indexOf(origRelation.id) < 0)
+//			)
+//			.map((relation) => {
+//				console.log(relation);
+//				return makeSaveRelationPayload(relation, key);
+//			})
+//
+//	).reduce((a, b) => a.concat(b), []);
 
 	const promises = newPayloads
-		.map((payload) => new Promise((resolve) => xhr(payload, resolve)))
-		.concat(updatePayloads
-			.map((payload) => new Promise((resolve) => xhr(payload, resolve)))
-		);
+		.map((payload) => new Promise((resolve) => xhr(payload, resolve)));
+//		.concat(updatePayloads.map((payload) => new Promise((resolve) => xhr(payload, resolve))));
 
 	Promise.all(promises).then(() => {
 		fetchEntity(
-			`/api/v2.1/domain/${data["@type"]}s/${data._id}`,
+			`/api/v4/domain/${data["@type"]}s/${data._id}`,
 			(respData) => dispatch(getFieldDescription(respData["@type"], "RECEIVE_ENTITY", respData))
 		);
 	});
@@ -127,7 +125,7 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 
 const saveEntity = () => (dispatch, getState) => {
 	let saveData = clone(getState().entity.data);
-	let relationData = clone(saveData["@relations"]);
+	let relationData = clone(saveData["@relations"]) || {};
 	delete saveData["@relations"];
 
 	xhr({
@@ -139,7 +137,7 @@ const saveEntity = () => (dispatch, getState) => {
 			"VRE_ID": "WomenWriters"
 		},
 		body: JSON.stringify(saveData),
-		url: `/api/v2.1/domain/${getState().entity.domain}s${getState().entity.data._id ? "/" + getState().entity.data._id : ""}`
+		url: `/api/v4/domain/${getState().entity.domain}s${getState().entity.data._id ? "/" + getState().entity.data._id : ""}`
 	}, (err, resp, body) => {
 		if(resp.statusCode === 201) {
 			// POST RESPONSE --> FETCH ENTITY --> SAVE RELATIONS --> FETCH ENTITY
@@ -166,7 +164,7 @@ const setUser = (response) => {
 export default {
 	onNew: (domain) => store.dispatch(getFieldDescription(domain, "NEW_ENTITY")),
 	onSelect: (record) => store.dispatch((redispatch) =>
-		fetchEntity(`/api/v2.1/domain/${record.domain}s/${record.id}`, (data) => redispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data))
+		fetchEntity(`/api/v4/domain/${record.domain}s/${record.id}`, (data) => redispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data))
 	)),
 	onChange: (fieldPath, value) => store.dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
 	onSave: () => store.dispatch(saveEntity()),

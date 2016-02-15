@@ -51,7 +51,7 @@ export default {
 				"isInverseName": false, // (does not seem necessary for the keyword use case; is never inverse)
 				"sourceType": "person",
 				"targetType": "keyword",
-				"typeId": "5f83410f-3b77-404a-ad53-3b2cb7607674"
+				"typeId": "50d748bc-166d-464b-b468-16553f13bf54"
 			}
 		},
 		{
@@ -64,7 +64,7 @@ export default {
 				"isInverseName": false, // (does not seem necessary for the keyword use case; is never inverse)
 				"sourceType": "person",
 				"targetType": "keyword",
-				"typeId": "d3951eeb-d66f-41c5-8545-9b6498400fa7"
+				"typeId": "74ca3110-f212-4149-9d6d-80d7cbf8dc7c"
 			}
 		}
 /*		{
