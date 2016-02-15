@@ -70,7 +70,7 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 				"^targetId": fieldDef.relation.isInverseName ? data._id : relation.id,
 				"^targetType": fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType,
 				"^typeId": fieldDef.relation.typeId,
-				accepted: relation.relationId ? false : true
+				accepted: relation.accepted
 			};
 
 			if(relation.relationId) { jsonPayload._id = relation.relationId; }
@@ -98,10 +98,14 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 	const updatePayloads = Object.keys(data["@relations"]).map((key) =>
 		data["@relations"][key]
 			.filter((origRelation) =>
-				(origRelation.accepted === false && (relationData[key] || []).map((relation) => relation.id).indexOf(origRelation.id) > 0) ||
+				(origRelation.accepted === false && (relationData[key] || []).map((relation) => relation.id).indexOf(origRelation.id) > -1) ||
 				((relationData[key] || []).map((relation) => relation.id).indexOf(origRelation.id) < 0)
 			)
-			.map((relation) => makeSaveRelationPayload(relation, key))
+			.map((relation) => {
+				console.log(relation);
+				return makeSaveRelationPayload(relation, key);
+			})
+
 	).reduce((a, b) => a.concat(b), []);
 
 	const promises = newPayloads
@@ -146,7 +150,8 @@ const saveEntity = () => (dispatch, getState) => {
 			dispatch((redispatch) => saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, redispatch));
 		} else {
 			console.log(err, resp, body);
-			alert("PID!");
+			// TEMP
+			dispatch((redispatch) => saveRelations(getState().entity.data, relationData, getState().entity.fieldDefinitions, getState().user.token, redispatch));
 		}
 	});
 };
