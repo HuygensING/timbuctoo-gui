@@ -95,6 +95,7 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 			.map((relation) => makeSaveRelationPayload(relation, key))
 	).reduce((a, b) => a.concat(b), []);
 
+	// Still no good. FIXME?
 	const updatePayloads = Object.keys(data["@relations"]).map((key) =>
 		data["@relations"][key]
 			.filter((origRelation) =>
@@ -120,8 +121,9 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 			(respData) => dispatch(getFieldDescription(respData["@type"], "RECEIVE_ENTITY", respData))
 		);
 	});
-
 };
+
+
 
 const saveEntity = () => (dispatch, getState) => {
 	let saveData = clone(getState().entity.data);
@@ -150,8 +152,6 @@ const saveEntity = () => (dispatch, getState) => {
 			dispatch((redispatch) => saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, redispatch));
 		} else {
 			console.log(err, resp, body);
-			// TEMP
-			dispatch((redispatch) => saveRelations(getState().entity.data, relationData, getState().entity.fieldDefinitions, getState().user.token, redispatch));
 		}
 	});
 };
