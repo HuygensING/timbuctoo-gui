@@ -1,48 +1,16 @@
 import clone from "clone-deep";
-import fieldDefinitions from "../static/field-definitions";
+
 import server from "./server";
-
-
-// Fetch entity from the database and invoke next callback with response
-const fetchEntity = (location, next) =>
-	server.performXhr({
-		method: "GET",
-		headers: {"Accept": "application/json"},
-		url: location
-	}, (err, resp) => {
-		const data = JSON.parse(resp.body);
-		next(data);
-	});
-
-const saveNewEntity = (domain, saveData, token, vreId, next) =>
-	server.performXhr({
-		method: "POST",
-		headers: server.makeHeaders(token, vreId),
-		body: JSON.stringify(saveData),
-		url: `/api/v4/domain/${domain}s`
-	}, next);
-
-const updateEntity = (domain, saveData, token, vreId, next) =>
-	server.performXhr({
-		method: "PUT",
-		headers: server.makeHeaders(token, vreId),
-		body: JSON.stringify(saveData),
-		url: `/api/v4/domain/${domain}s/${saveData._id}`
-	}, next);
-
-const deleteEntity = (domain, entityId, token, vreId, next) =>
-	server.performXhr({
-		method: "DELETE",
-		headers: server.makeHeaders(token, vreId),
-		url: `/api/v4/domain/${domain}s/${entityId}`
-	}, next);
-
+import { saveNewEntity, updateEntity, fetchEntity } from "./crud";
+import saveRelations from "./save-relations";
+import fieldDefinitions from "../static/field-definitions";
 
 
 // Use XHR to fetch the keyword options defined in the fieldDefinition
 // using path property.
 //  --> FIXME: we should not use async for all this stuff,
 //      the server could give these values via the fieldDefinitions directly
+//   ---> TODO: move to mock server
 const fetchKeywordOptions = (fieldDefinition, done) =>
 		server.performXhr({
 			url: `/api/v2.1/${fieldDefinition.path}`,
@@ -55,14 +23,13 @@ const fetchKeywordOptions = (fieldDefinition, done) =>
 			done({key: fieldDefinition.name, options: JSON.parse(body).map((opt) => {return {key: opt.key.replace(/^.*\//, ""), value: opt.value}; }) }));
 
 
-// Three step approach:
-// 0. Fetch the fieldDefinitions for the given domain (TODO: should become server request in stead of static source file)
-// 1. Fetch all the options for the fields which are of type "keyword"/relation (FIXME: this should come directly from the fieldDefinition)
-// 2. Add the options as a property to the fieldDefinition
-// 3. Dispatch the requested actionType (RECEIVE_ENTITY or NEW_ENTITY)
+// 1) Fetch the fieldDefinitions for the given domain (TODO: should become server request in stead of static source file)
+// 2) Fetch all the options for the fields which are of type "keyword"/relation (FIXME: this should come directly from the fieldDefinition)
+// 3) Add the options as a property to the fieldDefinition
+// 4) Dispatch the requested actionType (RECEIVE_ENTITY or NEW_ENTITY)
+//  ---> TODO: move to mock server
 const getFieldDescription = (domain, actionType, data = null) => {
 	return (dispatch) => {
-
 		const promises = fieldDefinitions[domain]
 			.filter((fieldDef) => fieldDef.type === "keyword")
 			.map((fieldDef) => new Promise((resolve) => fetchKeywordOptions(fieldDef, resolve)));
@@ -83,96 +50,49 @@ const getFieldDescription = (domain, actionType, data = null) => {
 	};
 };
 
-// TODO split up and reuse saveEntity
-const saveRelations = (data, relationData, fieldDefs, token, next) => {
-	const makeSaveRelationPayload = (relation, key) => {
-		const fieldDef = fieldDefs.find((def) => def.name === key);
-		const jsonPayload = {
-			"@type": fieldDef.relation.type,
-			"^sourceId": fieldDef.relation.isInverseName ? relation.id : data._id,
-			"^sourceType": fieldDef.relation.isInverseName ? fieldDef.relation.targetType : fieldDef.relation.sourceType,
-			"^targetId": fieldDef.relation.isInverseName ? data._id : relation.id,
-			"^targetType": fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType,
-			"^typeId": fieldDef.relation.typeId,
-			accepted: true
-		};
-
-		return {
-			method: "POST",
-			headers: {
-				"Accept": "application/json",
-				"Content-type": "application/json",
-				"Authorization": token,
-				"VRE_ID": "WomenWriters"
-			},
-			url: `/api/v4/domain/${fieldDef.relation.type}s`,
-			data: JSON.stringify(jsonPayload)
-		};
-	};
-
-	const makeDeletePayload = (id, key) => {
-		const fieldDef = fieldDefs.find((def) => def.name === key);
-		return {
-			method: "DELETE",
-			headers: {
-				"Accept": "application/json",
-				"Authorization": token,
-				"VRE_ID": "WomenWriters"
-			},
-			url: `/api/v4/domain/${fieldDef.relation.type}s/${id}`
-		};
-	};
-
-	const newPayloads = Object.keys(relationData).map((key) =>
-		relationData[key]
-			.filter((relation) => (data["@relations"][key] || []).map((origRelation) => origRelation.id).indexOf(relation.id) < 0)
-			.map((relation) => makeSaveRelationPayload(relation, key))
-	).reduce((a, b) => a.concat(b), []);
-
-	const deletePayloads = Object.keys(data["@relations"]).map((key) =>
-		data["@relations"][key]
-			.filter((origRelation) => (relationData[key] || []).map((relation) => relation.id).indexOf(origRelation.id) < 0)
-			.map((relation) => makeDeletePayload(relation.relationId, key))
-	).reduce((a, b) => a.concat(b), []);
-
-	const promises = newPayloads
-		.map((payload) => new Promise((resolve) => server.performXhr(payload, resolve)))
-		.concat(deletePayloads.map((payload) => new Promise((resolve) => server.performXhr(payload, resolve))));
-
-	Promise.all(promises).then(next);
-};
-
-
+// 1) Fetch entity
+// 2) Fetch field description of this entity's domain
+// 3) Dispatch RECEIVE_ENTITY for render
 const selectEntity = (domain, entityId) =>
 	(dispatch) =>
 		fetchEntity(`/api/v4/domain/${domain}s/${entityId}`, (data) =>
 			dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data)));
 
 
+// 1) Save an entity
+// 2) Save the relations for this entity
+// 3) Refetch entity for render
 const saveEntity = () => (dispatch, getState) => {
+	// Make a deep copy of the data to be saved in order to leave application state unaltered
 	let saveData = clone(getState().entity.data);
+	// Make a deep copy of the relation data in order to leave application state unaltered
 	let relationData = clone(saveData["@relations"]) || {};
+	// Delete the relation data from the saveData as it is not expected by the server
 	delete saveData["@relations"];
 
 	if(getState().entity.data._id) {
+		// 1) Update the entity with saveData
 		updateEntity(getState().entity.domain, saveData, getState().user.token, getState().vre, (err, resp) =>
-			dispatch((redispatch) =>
-				saveRelations(JSON.parse(resp.body), relationData, getState().entity.fieldDefinitions, getState().user.token, () =>
-					redispatch(selectEntity(getState().entity.domain, getState().entity.data._id)))));
+			// 2) Save relations using server response for current relations to diff against relationData
+			dispatch((redispatch) => saveRelations(JSON.parse(resp.body), relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre, () =>
+				// 3) Refetch entity for render
+				redispatch(selectEntity(getState().entity.domain, getState().entity.data._id)))));
 
 	} else {
+		// 1) Create new entity with saveData
 		saveNewEntity(getState().entity.domain, saveData, getState().user.token, getState().vre, (err, resp) =>
-			dispatch((redispatch) =>
-				fetchEntity(resp.headers.location, (data) =>
-					saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, () =>
-						redispatch(selectEntity(getState().entity.domain, data._id))))));
+			// 2) Fetch entity via location header
+			dispatch((redispatch) => fetchEntity(resp.headers.location, (data) =>
+				// 3) Save relations using server response for current relations to diff against relationData
+				saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre, () =>
+					// 4) Refetch entity for render
+					redispatch(selectEntity(getState().entity.domain, data._id))))));
 	}
 };
 
+// 1) Fetch field description for the given domain
+// 2) Dispatch NEW_ENTITY with field description for render
 const makeNewEntity = (domain) =>
 	(dispatch) => dispatch(getFieldDescription(domain, "NEW_ENTITY"));
-
-
-
 
 export {saveEntity, selectEntity, makeNewEntity};
