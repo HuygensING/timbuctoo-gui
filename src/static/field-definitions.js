@@ -113,6 +113,18 @@ module.exports = {
 			"type": "select",
 			"options": ["UNKNOWN", "ANTHOLOGY", "ARTICLE", "AWARD", "CATALOGUE", "COMPILATION"],
 			"defaultValue": "UNKNOWN"
+		},
+		{
+			"name": "isCreatedBy",
+			"type": "relation",
+			"path": "domain/wwpersons/autocomplete",
+			"relation": {
+				"type": "wwrelation",
+				"isInverseName": false,
+				"sourceType": "document",
+				"targetType": "person",
+				"typeId": "83eb9cc1-ab91-4d6c-8778-b639480f2b9a"
+			}
 		}
 	]
 };
