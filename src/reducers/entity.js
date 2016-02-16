@@ -1,5 +1,7 @@
 import clone from "clone-deep";
+import setIn from "./util/set-in";
 
+// Skeleton base data per field definition
 const initialData = {
 	names: [],
 	multiselect: [],
@@ -11,12 +13,16 @@ const initialData = {
 	datable: ""
 };
 
+// Return the initial data for the type in the field definition
 const initialDataForType = (fieldDef) =>
 	fieldDef.defaultValue || (fieldDef.type === "relation" || fieldDef.type === "keyword" ? {} : initialData[fieldDef.type]);
 
+// Return the initial name-key for a certain field type
 const nameForType = (fieldDef) =>
 	fieldDef.type === "relation" || fieldDef.type === "keyword" ? "@relations" : fieldDef.name;
 
+
+// Create a new empty entity based on the fieldDefinitions
 const makeSkeleton = (fieldDefs, domain) =>
 	fieldDefs
 		.map((fieldDef) => [nameForType(fieldDef), initialDataForType(fieldDef)])
@@ -25,17 +31,6 @@ const makeSkeleton = (fieldDefs, domain) =>
 			obj[cur[0]] = cur[1];
 			return obj;
 		}, {});
-
-const setEither = (data, deref, key, val) => {
-	(deref || data)[key] = val;
-	return data;
-};
-
-const setIn = (path, value, data, deref = null) =>
-	path.length > 1 ?
-		setIn(path, value, data, deref ? deref[path.shift()] : data[path.shift()]) :
-		setEither(data, deref, path[0], value);
-
 
 let initialState = {
 	data: null,
@@ -63,7 +58,6 @@ export default function(state=initialState, action) {
 			return {...state, ...{
 				data: setIn(action.fieldPath, action.value, clone(state.data))
 			}};
-
 	}
 
 	return state;
