@@ -1,3 +1,6 @@
+var keywords = require("./keywords");
+
+
 module.exports = {
 	"wwperson": [
 		{
@@ -44,7 +47,10 @@ module.exports = {
 		{
 			"name": "hasProfession",
 			"type": "keyword",
-			"path": "domain/wwkeywords/autocomplete?type=profession&rows=1000", // this should definitely change
+			"options": keywords
+				.filter(function(keyword) { return keyword.type === "profession"; })
+				.map(function(keyword) { return { key: keyword._id, value: keyword.value }; }),
+
 			"relation": { // This object describes how and where a new relation should be stored
 				"type": "wwrelation", // and this seems way too complex for the client --> cannot the server resolve a lot of this info by itself?
 				"path": "domain/wwkeywords",
@@ -57,7 +63,10 @@ module.exports = {
 		{
 			"name": "hasMaritalStatus",
 			"type": "keyword",
-			"path": "domain/wwkeywords/autocomplete?type=maritalStatus&rows=1000", // this should definitely change
+			"options": keywords
+				.filter(function(keyword) { return keyword.type === "maritalStatus"; })
+				.map(function(keyword) { return { key: keyword._id, value: keyword.value }; }),
+
 			"relation": { // This object describes how and where a new relation should be stored
 				"type": "wwrelation", // and this seems way too complex for the client --> cannot the server resolve a lot of this info by itself?
 				"path": "domain/wwkeywords",

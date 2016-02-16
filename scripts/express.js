@@ -1,8 +1,8 @@
 var app = require("express")();
 var bodyParser = require('body-parser');
 var clone = require('clone-deep');
-var relationTypes = require("./relationtypes");
-var keywords = require("./keywords");
+var relationTypes = require("../src/static/relationtypes");
+var keywords = require("../src/static/keywords");
 var fieldDefinitions = require("../src/static/field-definitions");
 app.use(bodyParser.json());
 
