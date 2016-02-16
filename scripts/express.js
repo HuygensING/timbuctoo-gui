@@ -53,7 +53,7 @@ var relationsFor = function(vertexType, vertexId) {
 
 app.post("/domain/:domain", function(req, res) {
 	var record = req.body;
-	record._id = req.params.domain + "_" + Object.keys(entities[req.params.domain]).length;
+	record._id = req.params.domain + "_" + new Date().getTime();
 
 	entities[req.params.domain][record._id] = req.body;
 	res
