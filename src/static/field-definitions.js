@@ -53,7 +53,6 @@ module.exports = {
 
 			"relation": { // This object describes how and where a new relation should be stored
 				"type": "wwrelation", // and this seems way too complex for the client --> cannot the server resolve a lot of this info by itself?
-				"path": "domain/wwkeywords",
 				"isInverseName": false, // (does not seem necessary for the keyword use case; is never inverse)
 				"sourceType": "person",
 				"targetType": "keyword",
@@ -69,7 +68,6 @@ module.exports = {
 
 			"relation": { // This object describes how and where a new relation should be stored
 				"type": "wwrelation", // and this seems way too complex for the client --> cannot the server resolve a lot of this info by itself?
-				"path": "domain/wwkeywords",
 				"isInverseName": false, // (does not seem necessary for the keyword use case; is never inverse)
 				"sourceType": "person",
 				"targetType": "keyword",
