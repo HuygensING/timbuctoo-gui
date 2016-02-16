@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var clone = require('clone-deep');
 var relationTypes = require("./relationtypes");
 var keywords = require("./keywords");
+var fieldDefinitions = require("../src/static/field-definitions");
 app.use(bodyParser.json());
 
 
@@ -66,6 +67,10 @@ app.get("/domain/:domain/:id", function(req, res) {
 	var respData = clone(entities[req.params.domain][req.params.id]);
 	respData["@relations"] = relationsFor(req.params.domain.replace(/^ww/, "").replace(/s$/, ""), req.params.id);
 	res.send(respData);
+});
+
+app.get("/fielddefinitions/:domain", function(req, res) {
+	res.send(fieldDefinitions[req.params.domain]);
 });
 
 app.put("/domain/:domain/:id", function(req, res) {

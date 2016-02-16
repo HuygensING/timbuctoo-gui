@@ -3,7 +3,6 @@ import clone from "clone-deep";
 import server from "./server";
 import { saveNewEntity, updateEntity, fetchEntity } from "./crud";
 import saveRelations from "./save-relations";
-import fieldDefinitions from "../static/field-definitions";
 
 
 // Use XHR to fetch the keyword options defined in the fieldDefinition
@@ -28,9 +27,14 @@ const fetchKeywordOptions = (fieldDefinition, done) =>
 // 3) Add the options as a property to the fieldDefinition
 // 4) Dispatch the requested actionType (RECEIVE_ENTITY or NEW_ENTITY)
 //  ---> TODO: move to mock server
-const getFieldDescription = (domain, actionType, data = null) => {
-	return (dispatch) => {
-		const promises = fieldDefinitions[domain]
+const getFieldDescription = (domain, actionType, data = null) => (dispatch) =>
+
+	server.performXhr({
+		headers: {"Accept": "application/json"},
+		url: `/api/v4/fieldDefinitions/${domain}`
+	}, (err, resp) => {
+		const fieldDefinitions = JSON.parse(resp.body);
+		const promises = fieldDefinitions
 			.filter((fieldDef) => fieldDef.type === "keyword")
 			.map((fieldDef) => new Promise((resolve) => fetchKeywordOptions(fieldDef, resolve)));
 
@@ -38,7 +42,7 @@ const getFieldDescription = (domain, actionType, data = null) => {
 			dispatch({
 				type: actionType,
 				domain: domain,
-				fieldDefinitions: fieldDefinitions[domain].map((fieldDef) => {
+				fieldDefinitions: fieldDefinitions.map((fieldDef) => {
 					return {
 						...fieldDef,
 						options: fieldDef.options || (responses.find((r) => r.key === fieldDef.name) || {}).options || null
@@ -46,9 +50,9 @@ const getFieldDescription = (domain, actionType, data = null) => {
 				}),
 				data: data
 			});
-		});
-	};
-};
+	});
+});
+
 
 // 1) Fetch entity
 // 2) Fetch field description of this entity's domain
