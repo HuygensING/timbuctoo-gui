@@ -3,7 +3,7 @@ import xhr from "xhr";
 import fieldDefinitions from "../static/field-definitions";
 
 
-
+// Fetch entity from the database and invoke next callback with response
 const fetchEntity = (location, next) => {
 	xhr({
 		method: "GET",
@@ -12,6 +12,7 @@ const fetchEntity = (location, next) => {
 		},
 		url: location
 	}, (err, resp, body) => {
+		// TODO: handle errors
 		const data = JSON.parse(body);
 		next(data);
 	});
@@ -59,10 +60,7 @@ const getFieldDescription = (domain, actionType, data = null) => {
 	};
 };
 
-
-
-
-
+// TODO split up and reuse saveEntity
 const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 	const makeSaveRelationPayload = (relation, key) => {
 		const fieldDef = fieldDefs.find((def) => def.name === key);
@@ -126,7 +124,10 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 	});
 };
 
-
+// TODO:
+//  - move header code to a header builder
+//  - move "WomenWriters" magic string to app store
+//  - split up methods PUT, POST, DELETE
 const saveEntity = () => (dispatch, getState) => {
 	let saveData = clone(getState().entity.data);
 	let relationData = clone(saveData["@relations"]) || {};
@@ -160,9 +161,11 @@ const saveEntity = () => (dispatch, getState) => {
 
 const makeNewEntity = (domain, dispatch) => dispatch(getFieldDescription(domain, "NEW_ENTITY"));
 
+
 const selectEntity = (record, dispatch) =>
-		fetchEntity(`/api/v4/domain/${record.domain}s/${record.id}`, (data) =>
-			dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data))
-		);
+	fetchEntity(`/api/v4/domain/${record.domain}s/${record.id}`, (data) =>
+		dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data)
+	)
+);
 
 export {saveEntity, selectEntity, makeNewEntity};
