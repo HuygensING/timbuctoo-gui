@@ -1,11 +1,11 @@
 import clone from "clone-deep";
-import xhr from "xhr";
 import fieldDefinitions from "../static/field-definitions";
+import server from "./server";
 
 
 // Fetch entity from the database and invoke next callback with response
 const fetchEntity = (location, next) => {
-	xhr({
+	server.performXhr({
 		method: "GET",
 		headers: {
 			"Accept": "application/json"
@@ -24,7 +24,7 @@ const fetchEntity = (location, next) => {
 //  --> FIXME: we should not use async for all this stuff,
 //      the server could give these values via the fieldDefinitions directly
 const fetchKeywordOptions = (fieldDefinition, done) =>
-		xhr({
+		server.performXhr({
 			url: `/api/v2.1/${fieldDefinition.path}`,
 			headers: {"Accept": "application/json", "VRE_ID": "WomenWriters"}
 		}, (err, resp, body) => resp.statusCode !== 200 ?
@@ -113,8 +113,8 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 	).reduce((a, b) => a.concat(b), []);
 
 	const promises = newPayloads
-		.map((payload) => new Promise((resolve) => xhr(payload, resolve)))
-		.concat(deletePayloads.map((payload) => new Promise((resolve) => xhr(payload, resolve))));
+		.map((payload) => new Promise((resolve) => server.performXhr(payload, resolve)))
+		.concat(deletePayloads.map((payload) => new Promise((resolve) => server.performXhr(payload, resolve))));
 
 	Promise.all(promises).then(() => {
 		fetchEntity(
@@ -133,7 +133,7 @@ const saveEntity = () => (dispatch, getState) => {
 	let relationData = clone(saveData["@relations"]) || {};
 	delete saveData["@relations"];
 
-	xhr({
+	server.performXhr({
 		method: getState().entity.data._id ? "PUT" : "POST",
 		headers: {
 			"Accept": "application/json",
