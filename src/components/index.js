@@ -4,7 +4,7 @@ import {Login, Basic} from "hire-login";
 
 class App extends React.Component {
 	render() {
-		console.log(this.props.entity);
+		console.log(this.props.vre, this.props.entity);
 
 		let idDiv = this.props.entity.data && this.props.entity.data._id ?
 			(<div>
@@ -42,7 +42,8 @@ App.propTypes = {
 	entityIndex: React.PropTypes.object,
 	onLoginChange: React.PropTypes.func,
 	onNew: React.PropTypes.func,
-	onSelect: React.PropTypes.func
+	onSelect: React.PropTypes.func,
+	vre: React.PropTypes.string
 };
 
 export default App;

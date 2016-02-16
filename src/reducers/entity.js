@@ -1,6 +1,5 @@
 import clone from "clone-deep";
 import setIn from "./util/set-in";
-
 // Skeleton base data per field definition
 const initialData = {
 	names: [],
