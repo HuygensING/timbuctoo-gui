@@ -62,31 +62,41 @@ const getFieldDescription = (domain, actionType, data = null) => {
 
 const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 	const makeSaveRelationPayload = (relation, key) => {
-			const fieldDef = fieldDefs.find((def) => def.name === key);
-			const jsonPayload = {
-				"@type": fieldDef.relation.type,
-				"^sourceId": fieldDef.relation.isInverseName ? relation.id : data._id,
-				"^sourceType": fieldDef.relation.isInverseName ? fieldDef.relation.targetType : fieldDef.relation.sourceType,
-				"^targetId": fieldDef.relation.isInverseName ? data._id : relation.id,
-				"^targetType": fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType,
-				"^typeId": fieldDef.relation.typeId,
-				accepted: relation.accepted
-			};
+		const fieldDef = fieldDefs.find((def) => def.name === key);
+		const jsonPayload = {
+			"@type": fieldDef.relation.type,
+			"^sourceId": fieldDef.relation.isInverseName ? relation.id : data._id,
+			"^sourceType": fieldDef.relation.isInverseName ? fieldDef.relation.targetType : fieldDef.relation.sourceType,
+			"^targetId": fieldDef.relation.isInverseName ? data._id : relation.id,
+			"^targetType": fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType,
+			"^typeId": fieldDef.relation.typeId,
+			accepted: true
+		};
 
-			if(relation.relationId) { jsonPayload._id = relation.relationId; }
-			if(relation.rev) { jsonPayload["^rev"] = relation.rev; }
+		return {
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-type": "application/json",
+				"Authorization": token,
+				"VRE_ID": "WomenWriters"
+			},
+			url: `/api/v4/domain/${fieldDef.relation.type}s`,
+			data: JSON.stringify(jsonPayload)
+		};
+	};
 
-			return {
-				method: relation.relationId ? "PUT" : "POST",
-				headers: {
-					"Accept": "application/json",
-					"Content-type": "application/json",
-					"Authorization": token,
-					"VRE_ID": "WomenWriters"
-				},
-				url: `/api/v4/domain/${fieldDef.relation.type}s${relation.relationId ? "/" + relation.relationId : ""}`,
-				data: JSON.stringify(jsonPayload)
-			};
+	const makeDeletePayload = (id, key) => {
+		const fieldDef = fieldDefs.find((def) => def.name === key);
+		return {
+			method: "DELETE",
+			headers: {
+				"Accept": "application/json",
+				"Authorization": token,
+				"VRE_ID": "WomenWriters"
+			},
+			url: `/api/v4/domain/${fieldDef.relation.type}s/${id}`
+		};
 	};
 
 	const newPayloads = Object.keys(relationData).map((key) =>
@@ -94,6 +104,13 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 			.filter((relation) => (data["@relations"][key] || []).map((origRelation) => origRelation.id).indexOf(relation.id) < 0)
 			.map((relation) => makeSaveRelationPayload(relation, key))
 	).reduce((a, b) => a.concat(b), []);
+
+	const deletePayloads = Object.keys(data["@relations"]).map((key) =>
+		data["@relations"][key]
+			.filter((origRelation) => (relationData[key] || []).map((relation) => relation.id).indexOf(origRelation.id) < 0)
+			.map((relation) => makeDeletePayload(relation.relationId, key))
+	).reduce((a, b) => a.concat(b), []);
+
 
 //	// Still no good. FIXME?
 //	const updatePayloads = Object.keys(data["@relations"]).map((key) =>
@@ -110,8 +127,8 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 //	).reduce((a, b) => a.concat(b), []);
 
 	const promises = newPayloads
-		.map((payload) => new Promise((resolve) => xhr(payload, resolve)));
-//		.concat(updatePayloads.map((payload) => new Promise((resolve) => xhr(payload, resolve))));
+		.map((payload) => new Promise((resolve) => xhr(payload, resolve)))
+		.concat(deletePayloads.map((payload) => new Promise((resolve) => xhr(payload, resolve))));
 
 	Promise.all(promises).then(() => {
 		fetchEntity(

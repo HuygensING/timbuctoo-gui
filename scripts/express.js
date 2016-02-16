@@ -7,30 +7,39 @@ app.use(bodyParser.json());
 
 
 var entities = {
-	wwdocuments: [],
-	wwpersons: [],
-	wwrelations: []
+	wwdocuments: {},
+	wwpersons: {},
+	wwrelations: {}
 };
 
 app.use(function (req, res, next) {
-	console.log(entities);
+	console.log(req.method, req.path);
 	next();
 })
 
 
 var relationsFor = function(vertexType, vertexId) {
-	var test = entities.wwrelations.filter(function(relation) {
+	var test = Object.keys(entities.wwrelations)
+	.map(function(id) {
+		return {
+			relation: entities.wwrelations[id],
+			id: id
+		};
+	}).filter(function(relObj) {
+		var relation = relObj.relation;
 		return (relation["^sourceId"] === "" + vertexId || relation["^targetId"] === "" + vertexId) &&
 					(relation["^sourceType"] === vertexType  || relation["^targetType"] === vertexType);
-	}).map(function(relation) {
+	}).map(function(relObj) {
+		var relation = relObj.relation;
 		var relKey = "regularName"; // TODO
-		var displayName = keywords.filter(function(kw) { return kw._id === relation["^targetId"]})[0].value;
+		var displayName = keywords.filter(function(kw) { return kw._id === relation["^targetId"]})[0].value // TODO;
 
 		return [
 			relationTypes.filter(function(relType) { return relType._id === relation["^typeId"]; })[0][relKey],
 			{
 				displayName: displayName,
-				id: relation["^targetId"],
+				id: relation["^targetId"], // TODO,
+				relationId: relObj.id,
 				accepted: true
 			}
 		];
@@ -44,13 +53,14 @@ var relationsFor = function(vertexType, vertexId) {
 }
 
 
+
 app.post("/domain/:domain", function(req, res) {
 	var record = req.body;
-	record._id = "" + entities[req.params.domain].length;
+	record._id = req.params.domain + "_" + Object.keys(entities[req.params.domain]).length;
 
-	entities[req.params.domain].push(req.body);
+	entities[req.params.domain][record._id] = req.body;
 	res
-		.set("Location", "/api/v4/domain/" + req.params.domain + "/" + (entities[req.params.domain].length - 1))
+		.set("Location", "/api/v4/domain/" + req.params.domain + "/" + record._id)
 		.status(201)
 		.end();
 });
@@ -68,6 +78,14 @@ app.put("/domain/:domain/:id", function(req, res) {
 
 	res.send(respData);
 });
+
+app.delete("/domain/:domain/:id", function(req, res) {
+	delete entities[req.params.domain][req.params.id]
+	res
+		.status(204)
+		.end();
+});
+
 
 
 app.listen(5000, function() {
