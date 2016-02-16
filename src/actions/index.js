@@ -16,7 +16,7 @@ const setUser = (response) => {
 export default {
 	onNew: (domain) => store.dispatch(makeNewEntity(domain)),
 
-	onSelect: (record) => store.dispatch(selectEntity(record)),
+	onSelect: (record) => store.dispatch(selectEntity(record.domain, record.id)),
 
 	onSave: () => store.dispatch(saveEntity()),
 

@@ -84,7 +84,7 @@ const getFieldDescription = (domain, actionType, data = null) => {
 };
 
 // TODO split up and reuse saveEntity
-const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
+const saveRelations = (data, relationData, fieldDefs, token, next) => {
 	const makeSaveRelationPayload = (relation, key) => {
 		const fieldDef = fieldDefs.find((def) => def.name === key);
 		const jsonPayload = {
@@ -139,13 +139,14 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 		.map((payload) => new Promise((resolve) => server.performXhr(payload, resolve)))
 		.concat(deletePayloads.map((payload) => new Promise((resolve) => server.performXhr(payload, resolve))));
 
-	Promise.all(promises).then(() => {
-		fetchEntity(
-			`/api/v4/domain/${data["@type"]}s/${data._id}`,
-			(respData) => dispatch(getFieldDescription(respData["@type"], "RECEIVE_ENTITY", respData))
-		);
-	});
+	Promise.all(promises).then(next);
 };
+
+
+const selectEntity = (domain, entityId) =>
+	(dispatch) =>
+		fetchEntity(`/api/v4/domain/${domain}s/${entityId}`, (data) =>
+			dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data)));
 
 
 const saveEntity = () => (dispatch, getState) => {
@@ -154,17 +155,17 @@ const saveEntity = () => (dispatch, getState) => {
 	delete saveData["@relations"];
 
 	if(getState().entity.data._id) {
-		updateEntity(getState().entity.domain, saveData, getState().user.token, getState().vre, (err, resp) => {
-			const data = JSON.parse(resp.body);
-			dispatch((redispatch) => saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, redispatch));
-		});
+		updateEntity(getState().entity.domain, saveData, getState().user.token, getState().vre, (err, resp) =>
+			dispatch((redispatch) =>
+				saveRelations(JSON.parse(resp.body), relationData, getState().entity.fieldDefinitions, getState().user.token, () =>
+					redispatch(selectEntity(getState().entity.domain, getState().entity.data._id)))));
 
 	} else {
-		saveNewEntity(getState().entity.domain, saveData, getState().user.token, getState().vre, (err, resp) => {
-			dispatch((redispatch) => fetchEntity(resp.headers.location, (data) =>
-				saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, redispatch)
-			));
-		});
+		saveNewEntity(getState().entity.domain, saveData, getState().user.token, getState().vre, (err, resp) =>
+			dispatch((redispatch) =>
+				fetchEntity(resp.headers.location, (data) =>
+					saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, () =>
+						redispatch(selectEntity(getState().entity.domain, data._id))))));
 	}
 };
 
@@ -172,9 +173,6 @@ const makeNewEntity = (domain) =>
 	(dispatch) => dispatch(getFieldDescription(domain, "NEW_ENTITY"));
 
 
-const selectEntity = (record) =>
-	(dispatch) =>
-		fetchEntity(`/api/v4/domain/${record.domain}s/${record.id}`, (data) =>
-			dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data)));
+
 
 export {saveEntity, selectEntity, makeNewEntity};
