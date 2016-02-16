@@ -19,37 +19,34 @@ app.use(function (req, res, next) {
 
 
 var relationsFor = function(vertexType, vertexId) {
-	var test = Object.keys(entities.wwrelations)
-	.map(function(id) {
-		return {
-			relation: entities.wwrelations[id],
-			id: id
-		};
-	}).filter(function(relObj) {
-		var relation = relObj.relation;
-		return (relation["^sourceId"] === "" + vertexId || relation["^targetId"] === "" + vertexId) &&
-					(relation["^sourceType"] === vertexType  || relation["^targetType"] === vertexType);
-	}).map(function(relObj) {
-		var relation = relObj.relation;
-		var relKey = "regularName"; // TODO
-		var displayName = keywords.filter(function(kw) { return kw._id === relation["^targetId"]})[0].value // TODO;
 
-		return [
-			relationTypes.filter(function(relType) { return relType._id === relation["^typeId"]; })[0][relKey],
-			{
-				displayName: displayName,
-				id: relation["^targetId"], // TODO,
-				relationId: relObj.id,
-				accepted: true
-			}
-		];
-	}).reduce(function (obj, cur) {
-		obj[cur[0]] = obj[cur[0]] || [];
-		obj[cur[0]].push(cur[1]);
-		return obj;
-	}, {});
+	return Object.keys(entities.wwrelations)
+		.filter(function(id) {
+			var relation = entities.wwrelations[id];
+			return (relation["^sourceId"] === vertexId || relation["^targetId"] === vertexId) &&
+				(relation["^sourceType"] === vertexType  || relation["^targetType"] === vertexType);
 
-	return test;
+		}).map(function(id) {
+			var relation = entities.wwrelations[id];
+			var relKey = relation["^sourceId"] === vertexId ? "regularName" : "inverseName";
+			var targetKey = relation["^sourceId"] === vertexId ? "^targetId" : "^sourceId";
+
+			return [
+				relationTypes.filter(function(relType) { return relType._id === relation["^typeId"]; })[0][relKey],
+				{
+					displayName: keywords.filter(function(kw) { return kw._id === relation[targetKey]})[0].value,
+					id: relation[targetKey],
+					relationId: id,
+					accepted: true
+				}
+			];
+
+		}).reduce(function (obj, cur) {
+			obj[cur[0]] = obj[cur[0]] || [];
+			obj[cur[0]].push(cur[1]);
+			return obj;
+
+		}, {});
 }
 
 
@@ -75,7 +72,6 @@ app.put("/domain/:domain/:id", function(req, res) {
 	entities[req.params.domain][req.params.id] = req.body;
 	var respData = clone(entities[req.params.domain][req.params.id]);
 	respData["@relations"] = relationsFor(req.params.domain.replace(/^ww/, "").replace(/s$/, ""), req.params.id);
-
 	res.send(respData);
 });
 
