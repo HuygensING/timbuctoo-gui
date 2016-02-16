@@ -4,19 +4,39 @@ import server from "./server";
 
 
 // Fetch entity from the database and invoke next callback with response
-const fetchEntity = (location, next) => {
+const fetchEntity = (location, next) =>
 	server.performXhr({
 		method: "GET",
-		headers: {
-			"Accept": "application/json"
-		},
+		headers: {"Accept": "application/json"},
 		url: location
-	}, (err, resp, body) => {
-		// TODO: handle errors
-		const data = JSON.parse(body);
+	}, (err, resp) => {
+		const data = JSON.parse(resp.body);
 		next(data);
 	});
-};
+
+const saveNewEntity = (domain, saveData, token, vreId, next) =>
+	server.performXhr({
+		method: "POST",
+		headers: server.makeHeaders(token, vreId),
+		body: JSON.stringify(saveData),
+		url: `/api/v4/domain/${domain}s`
+	}, next);
+
+const updateEntity = (domain, saveData, token, vreId, next) =>
+	server.performXhr({
+		method: "PUT",
+		headers: server.makeHeaders(token, vreId),
+		body: JSON.stringify(saveData),
+		url: `/api/v4/domain/${domain}s/${saveData._id}`
+	}, next);
+
+const deleteEntity = (domain, entityId, token, vreId, next) =>
+	server.performXhr({
+		method: "DELETE",
+		headers: server.makeHeaders(token, vreId),
+		url: `/api/v4/domain/${domain}s/${entityId}`
+	}, next);
+
 
 
 // Use XHR to fetch the keyword options defined in the fieldDefinition
@@ -26,7 +46,10 @@ const fetchEntity = (location, next) => {
 const fetchKeywordOptions = (fieldDefinition, done) =>
 		server.performXhr({
 			url: `/api/v2.1/${fieldDefinition.path}`,
-			headers: {"Accept": "application/json", "VRE_ID": "WomenWriters"}
+			headers: {
+				"Accept": "application/json",
+				"VRE_ID": "WomenWriters"
+			}
 		}, (err, resp, body) => resp.statusCode !== 200 ?
 			done({key: fieldDefinition.name, options: []}) :
 			done({key: fieldDefinition.name, options: JSON.parse(body).map((opt) => {return {key: opt.key.replace(/^.*\//, ""), value: opt.value}; }) }));
@@ -124,48 +147,34 @@ const saveRelations = (data, relationData, fieldDefs, token, dispatch) => {
 	});
 };
 
-// TODO:
-//  - move header code to a header builder
-//  - move "WomenWriters" magic string to app store
-//  - split up methods PUT, POST, DELETE
+
 const saveEntity = () => (dispatch, getState) => {
 	let saveData = clone(getState().entity.data);
 	let relationData = clone(saveData["@relations"]) || {};
 	delete saveData["@relations"];
 
-	server.performXhr({
-		method: getState().entity.data._id ? "PUT" : "POST",
-		headers: {
-			"Accept": "application/json",
-			"Content-type": "application/json",
-			"Authorization": getState().user.token,
-			"VRE_ID": "WomenWriters"
-		},
-		body: JSON.stringify(saveData),
-		url: `/api/v4/domain/${getState().entity.domain}s${getState().entity.data._id ? "/" + getState().entity.data._id : ""}`
-	}, (err, resp, body) => {
-		if(resp.statusCode === 201) {
-			// POST RESPONSE --> FETCH ENTITY --> SAVE RELATIONS --> FETCH ENTITY
+	if(getState().entity.data._id) {
+		updateEntity(getState().entity.domain, saveData, getState().user.token, getState().vre, (err, resp) => {
+			const data = JSON.parse(resp.body);
+			dispatch((redispatch) => saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, redispatch));
+		});
+
+	} else {
+		saveNewEntity(getState().entity.domain, saveData, getState().user.token, getState().vre, (err, resp) => {
 			dispatch((redispatch) => fetchEntity(resp.headers.location, (data) =>
 				saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, redispatch)
 			));
-		} else if(resp.statusCode === 200) {
-			// PUT RESPONSE --> SAVE RELATIONS --> FETCH ENTITY
-			const data = JSON.parse(resp.body);
-			dispatch((redispatch) => saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, redispatch));
-		} else {
-			console.log(err, resp, body);
-		}
-	});
+		});
+	}
 };
 
-const makeNewEntity = (domain, dispatch) => dispatch(getFieldDescription(domain, "NEW_ENTITY"));
+const makeNewEntity = (domain) =>
+	(dispatch) => dispatch(getFieldDescription(domain, "NEW_ENTITY"));
 
 
-const selectEntity = (record, dispatch) =>
-	fetchEntity(`/api/v4/domain/${record.domain}s/${record.id}`, (data) =>
-		dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data)
-	)
-);
+const selectEntity = (record) =>
+	(dispatch) =>
+		fetchEntity(`/api/v4/domain/${record.domain}s/${record.id}`, (data) =>
+			dispatch(getFieldDescription(data["@type"], "RECEIVE_ENTITY", data)));
 
 export {saveEntity, selectEntity, makeNewEntity};

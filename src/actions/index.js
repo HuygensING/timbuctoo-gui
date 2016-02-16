@@ -6,9 +6,6 @@ import {
 	makeNewEntity
 } from "./entity";
 
-
-
-
 const setUser = (response) => {
 	return {
 		type: "SET_USER",
@@ -17,9 +14,15 @@ const setUser = (response) => {
 };
 
 export default {
-	onNew: (domain) => store.dispatch((redispatch) => makeNewEntity(domain, redispatch)),
-	onSelect: (record) => store.dispatch((redispatch) => selectEntity(record, redispatch)),
-	onChange: (fieldPath, value) => store.dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
+	onNew: (domain) => store.dispatch(makeNewEntity(domain)),
+
+	onSelect: (record) => store.dispatch(selectEntity(record)),
+
 	onSave: () => store.dispatch(saveEntity()),
-	onLoginChange: (response) => store.dispatch(setUser(response))
+
+	onChange: (fieldPath, value) =>
+		store.dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
+
+	onLoginChange: (response) =>
+		store.dispatch(setUser(response))
 };
