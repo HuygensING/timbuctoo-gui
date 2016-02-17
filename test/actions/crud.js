@@ -1,7 +1,7 @@
 import sinon from "sinon";
 import expect from "expect";
 import server from "../../src/actions/server";
-import {saveNewEntity, updateEntity, deleteEntity, fetchEntity, fetchFieldDescription} from "../../src/actions/crud";
+import {saveNewEntity, updateEntity, deleteEntity, fetchEntity} from "../../src/actions/crud";
 import config from "../../src/config";
 
 
