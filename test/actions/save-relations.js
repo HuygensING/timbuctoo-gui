@@ -31,11 +31,10 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 		const counts = {relTypeA: 0, relTypeB: 0};
 
 		sinon.stub(server, "performXhr", (options, accept) => {
-			const payload = JSON.parse(options.body);
-			const relType = payload["@type"];
-			counts[relType]++;
-
 			try {
+				const payload = JSON.parse(options.body);
+				const relType = payload["@type"];
+				counts[relType]++;
 				expect(options.method).toEqual("POST");
 				if(relType === "relTypeA") {
 					expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual("domain/relTypeAs");
@@ -71,6 +70,37 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 		saveRelations(data, relationData, fieldDefs, "TOKEN", "VREID", () => {
 			try {
 				sinon.assert.calledThrice(server.performXhr);
+				server.performXhr.restore();
+				done();
+			} catch (e) {
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+	});
+
+	it("should delete rejected relations with DELETE", (done) => { //eslint-disable-line no-undef
+		const data = {_id: "entityID", "@relations": {
+			"relNameA": [{accepted: true, id: "A_1", relationId: "REL_1"}]
+		}};
+		const relationData = {"relNameA": []};
+		const fieldDefs = [{name: "relNameA", relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}}];
+
+
+		sinon.stub(server, "performXhr", (options, accept) => {
+			try {
+				expect(options.method).toEqual("DELETE");
+				expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual(`domain/${fieldDefs[0].relation.type}s/${data["@relations"].relNameA[0].relationId}`);
+				accept();
+			} catch(e) {
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+
+		saveRelations(data, relationData, fieldDefs, "TOKEN", "VREID", () => {
+			try {
+				sinon.assert.calledOnce(server.performXhr);
 				server.performXhr.restore();
 				done();
 			} catch (e) {

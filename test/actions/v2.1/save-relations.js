@@ -31,11 +31,10 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 		const counts = {relTypeA: 0, relTypeB: 0};
 
 		sinon.stub(server, "performXhr", (options, accept) => {
-			const payload = JSON.parse(options.body);
-			const relType = payload["@type"];
-			counts[relType]++;
-
 			try {
+				const payload = JSON.parse(options.body);
+				const relType = payload["@type"];
+				counts[relType]++;
 				expect(options.method).toEqual("POST");
 				if(relType === "relTypeA") {
 					expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual("domain/relTypeAs");
@@ -89,9 +88,8 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 
 
 		sinon.stub(server, "performXhr", (options, accept) => {
-			const payload = JSON.parse(options.body);
-
 			try {
+				const payload = JSON.parse(options.body);
 				expect(options.method).toEqual("PUT");
 				expect(payload).toEqual({
 					"@type": "relTypeA",
