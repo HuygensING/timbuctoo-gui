@@ -16,7 +16,7 @@ var entities = {
 app.use(function (req, res, next) {
 	console.log(req.method, req.path);
 	next();
-})
+});
 
 
 var relationsFor = function(vertexType, vertexId) {
@@ -25,7 +25,7 @@ var relationsFor = function(vertexType, vertexId) {
 		.filter(function(id) {
 			var relation = entities.wwrelations[id];
 			return (relation["^sourceId"] === vertexId || relation["^targetId"] === vertexId) &&
-				(relation["^sourceType"] === vertexType  || relation["^targetType"] === vertexType);
+				(relation["^sourceType"] === vertexType || relation["^targetType"] === vertexType);
 
 		}).map(function(id) {
 			var relation = entities.wwrelations[id];
@@ -35,7 +35,7 @@ var relationsFor = function(vertexType, vertexId) {
 			return [
 				relationTypes.filter(function(relType) { return relType._id === relation["^typeId"]; })[0][relKey],
 				{
-					displayName: keywords.filter(function(kw) { return kw._id === relation[targetKey]})[0].value,
+					displayName: (keywords.filter(function(kw) { return kw._id === relation[targetKey]; })[0] || {value: "mock value"}).value,
 					id: relation[targetKey],
 					relationId: id,
 					accepted: true
@@ -48,7 +48,7 @@ var relationsFor = function(vertexType, vertexId) {
 			return obj;
 
 		}, {});
-}
+};
 
 
 

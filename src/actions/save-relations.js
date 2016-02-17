@@ -1,16 +1,11 @@
 import { saveNewEntity, deleteEntity } from "./crud";
-import saveRelationsV21 from "./v2.1/save-relations";
-import config from "../config";
 
 // Save relations described in relationData
 // a) create all relations which are relationData but not in data["@relations"]
 // b) delete all relations which are in data["@relations"] but not in relationData
 // c) ignore all relations which are in both
 const saveRelations = (data, relationData, fieldDefs, token, vreId, next) => {
-	if(config.apiVersion === "v2.1") {
-		saveRelationsV21(data, relationData, fieldDefs, token, vreId, next);
-		return;
-	}
+
 	// Returns the domain based on the fieldDefinitions and the relation key (i.e. "hasBirthPlace")
 	const makeNewRelationArgs = (relation, key) => {
 		const fieldDef = fieldDefs.find((def) => def.name === key);

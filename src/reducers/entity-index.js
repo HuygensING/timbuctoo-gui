@@ -1,9 +1,14 @@
 import clone from "clone-deep";
 
-let localStorage = localStorage || {
-	getItem: function() { },
-	setItem: function() { }
-};
+
+let win = typeof window === "undefined" ? {
+	localStorage: {
+		getItem: function() { },
+		setItem: function() { }
+	}
+} : window;
+
+let localStorage = win.localStorage;
 
 let initialState = {
 	records: JSON.parse(localStorage.getItem("entity-index") || "[]")
