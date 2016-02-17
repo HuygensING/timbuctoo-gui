@@ -21,6 +21,11 @@ const fetchFieldDescription = (domain, actionType, data = null) => (dispatch) =>
 			fieldDefinitions: fieldDefinitions,
 			data: data
 		});
+	}, () => {
+		dispatch({
+			type: "RECEIVE_ENTITY_FAILURE",
+			errorMessage: `Failed to fetch field definitions for ${domain}`
+		});
 	});
 
 // 1) Fetch entity
@@ -29,8 +34,8 @@ const fetchFieldDescription = (domain, actionType, data = null) => (dispatch) =>
 const selectEntity = (domain, entityId) =>
 	(dispatch) =>
 		fetchEntity(`/api/${config.apiVersion}/domain/${domain}s/${entityId}`, (data) =>
-			dispatch(fetchFieldDescription(data["@type"], "RECEIVE_ENTITY", data)), (err, resp) =>
-				dispatch({type: "RECEIVE_ENTITY_FAILURE", errorMessage: resp.body}));
+			dispatch(fetchFieldDescription(data["@type"], "RECEIVE_ENTITY", data)), () =>
+				dispatch({type: "RECEIVE_ENTITY_FAILURE", errorMessage: `Failed to fetch ${domain} with ID ${entityId}`}));
 
 
 // 1) Save an entity
