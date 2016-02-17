@@ -29,7 +29,8 @@ const fetchFieldDescription = (domain, actionType, data = null) => (dispatch) =>
 const selectEntity = (domain, entityId) =>
 	(dispatch) =>
 		fetchEntity(`/api/${config.apiVersion}/domain/${domain}s/${entityId}`, (data) =>
-			dispatch(fetchFieldDescription(data["@type"], "RECEIVE_ENTITY", data)));
+			dispatch(fetchFieldDescription(data["@type"], "RECEIVE_ENTITY", data)), (err, resp) =>
+				dispatch({type: "RECEIVE_ENTITY_FAILURE", errorMessage: resp.body}));
 
 
 // 1) Save an entity

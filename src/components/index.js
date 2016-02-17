@@ -12,6 +12,9 @@ class App extends React.Component {
 				<span>{this.props.entity.data._id}</span>
 			</div>) : null;
 
+		let errorMessage = this.props.entity.errorMessage ?
+			<pre style={{fontWeight: "bold", color: "red"}}>{this.props.entity.errorMessage}</pre> : null;
+
 		return (
 			<div>
 				<Login
@@ -23,6 +26,7 @@ class App extends React.Component {
 				</Login>
 				<button onClick={() => this.props.onNew("wwperson")}>New wwperson</button>
 				<button onClick={() => this.props.onNew("wwdocument")}>New wwdocument</button>
+				{errorMessage}
 				{idDiv}
 				<Form {...this.props} />
 				<ul id="entity-index">

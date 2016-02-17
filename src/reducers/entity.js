@@ -35,7 +35,8 @@ const makeSkeleton = (fieldDefs, domain) =>
 let initialState = {
 	data: null,
 	domain: null,
-	fieldDefinitions: null
+	fieldDefinitions: null,
+	errorMessage: null
 };
 
 export default function(state=initialState, action) {
@@ -44,19 +45,28 @@ export default function(state=initialState, action) {
 			return {...state, ...{
 				data: makeSkeleton(action.fieldDefinitions, action.domain),
 				domain: action.domain,
-				fieldDefinitions: action.fieldDefinitions
+				fieldDefinitions: action.fieldDefinitions,
+				errorMessage: null
 			}};
 
 		case "RECEIVE_ENTITY":
 			return {...state, ...{
 				data: action.data,
 				domain: action.domain,
-				fieldDefinitions: action.fieldDefinitions
+				fieldDefinitions: action.fieldDefinitions,
+				errorMessage: null
 			}};
 
 		case "SET_ENTITY_FIELD_VALUE":
 			return {...state, ...{
 				data: setIn(action.fieldPath, action.value, clone(state.data))
+			}};
+
+		case "RECEIVE_ENTITY_FAILURE":
+			return {...state, ...{
+				data: null,
+				fieldDefinitions: null,
+				errorMessage: action.errorMessage
 			}};
 	}
 
