@@ -34,4 +34,11 @@ const fetchEntity = (location, next, fail) =>
 		next(data);
 	}, fail, "Fetch entity");
 
-export {saveNewEntity, updateEntity, deleteEntity, fetchEntity};
+const crud = {
+	saveNewEntity: saveNewEntity,
+	updateEntity: updateEntity,
+	deleteEntity: deleteEntity,
+	fetchEntity: fetchEntity
+};
+
+export {saveNewEntity, updateEntity, deleteEntity, fetchEntity, crud};

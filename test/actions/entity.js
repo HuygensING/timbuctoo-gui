@@ -4,7 +4,7 @@ import server from "../../src/actions/server";
 import store from "../../src/store";
 import config from "../../src/config";
 import {saveEntity, selectEntity, makeNewEntity, setSaveRelationsFunc} from "../../src/actions/entity";
-
+import {crud} from "../../src/actions/crud";
 
 describe("entity", () => { //eslint-disable-line no-undef
 
@@ -50,6 +50,9 @@ describe("entity", () => { //eslint-disable-line no-undef
 		const onSave = () => {
 			unsubscribe();
 			server.performXhr.restore();
+			crud.saveNewEntity.restore();
+			crud.fetchEntity.restore();
+
 			try {
 				expect(store.getState().entity).toEqual({
 					data: {
@@ -67,25 +70,12 @@ describe("entity", () => { //eslint-disable-line no-undef
 			}
 		};
 
-		let count = 0;
 		const xhrStub = (options, accept) => {
 			try {
-				count++;
-				if(count === 1) {
-					expect(options.method).toEqual("POST");
-					accept(null, {headers: {location: expectedUrl}});
-				} else if(count === 2) {
-					expect(options.url).toEqual(expectedUrl);
-					expect(options.method).toEqual("GET");
-					accept(null, {body: JSON.stringify({...data, _id: entityId})});
-				} else if(count === 3) {
-					expect(options.url).toEqual(expectedUrl);
-					accept(null, {body: JSON.stringify({...data, _id: entityId})});
-				} else if(count === 4) {
-					expect(options.url).toEqual(`/api/v4/fielddefinitions/${domain}`);
-					accept(null, {body: JSON.stringify(fieldDefinitions)});
-				}
+				expect(options.url).toEqual(`/api/v4/fielddefinitions/${domain}`);
+				accept(null, {body: JSON.stringify(fieldDefinitions)});
 			} catch (e) {
+				console.log("ERROR?", e);
 				unsubscribe();
 				server.performXhr.restore();
 				done(e);
@@ -93,11 +83,38 @@ describe("entity", () => { //eslint-disable-line no-undef
 		};
 
 
+		sinon.stub(crud, "saveNewEntity", (dom, saveData, token, vreId, next) => {
+			try {
+				expect(saveData).toEqual({"title": data.title, "@type": domain});
+				next(null, {headers: {location: expectedUrl}});
+			} catch (e) {
+				unsubscribe();
+				crud.fetchEntity.restore();
+				crud.saveNewEntity.restore();
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+
+		sinon.stub(crud, "fetchEntity", (location, next) => {
+			try {
+				expect(location).toEqual(expectedUrl);
+				next({...data, _id: entityId});
+			} catch (e) {
+				unsubscribe();
+				crud.fetchEntity.restore();
+				crud.saveNewEntity.restore();
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+
+		sinon.stub(server, "performXhr", xhrStub);
+
 		const onSetInitialEntity = () => {
 			unsubscribe();
 			unsubscribe = store.subscribe(onSave);
 
-			sinon.stub(server, "performXhr", xhrStub);
 			store.dispatch(saveEntity());
 		};
 
