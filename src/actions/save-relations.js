@@ -54,12 +54,12 @@ const saveRelations = (data, relationData, fieldDefs, token, vreId, next) => {
 	// Combines saveNewEntity and deleteEntity instructions into promises
 	const promises = newRelations
 		// Map newRelations to promised invocations of saveNewEntity
-		.map((args) => new Promise((resolve) => saveNewEntity(...args, token, vreId, resolve) ))
+		.map((args) => new Promise((resolve, reject) => saveNewEntity(...args, token, vreId, resolve, reject) ))
 		// Map deleteRelations to promised invocations of deleteEntity
-		.concat(deleteRelations.map((args) => new Promise((resolve) => deleteEntity(...args, token, vreId, resolve))));
+		.concat(deleteRelations.map((args) => new Promise((resolve, reject) => deleteEntity(...args, token, vreId, resolve, reject))));
 
 	// Invoke all CRUD operations for the relations
-	Promise.all(promises).then(next);
+	Promise.all(promises).then(next, next);
 };
 
 export default saveRelations;

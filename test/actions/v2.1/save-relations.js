@@ -5,7 +5,7 @@ import saveRelations from "../../../src/actions/v2.1/save-relations";
 
 describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 
-	it("should save new relations with POST", (done) => {  //eslint-disable-line no-undef
+	it("should save new relations with POST", (done) => { //eslint-disable-line no-undef
 		const data = {_id: "entityID", "@relations": {}};
 		const relationData = {
 			"relNameA": [
@@ -63,6 +63,21 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 
 		saveRelations(data, relationData, fieldDefs, "TOKEN", "VREID", () => {
 			sinon.assert.calledThrice(server.performXhr);
+			server.performXhr.restore();
+			done();
+		});
+	});
+
+	it("should handle server exceptions", (done) => { //eslint-disable-line no-undef
+		const data = {_id: "entityID", "@relations": {}};
+		const relationData = {"relNameA": [{accepted: true, id: "A_1"}]};
+		const fieldDefs = [{name: "relNameA", relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}}];
+
+		sinon.stub(server, "performXhr", (options, accept, reject) => {
+			reject();
+		});
+
+		saveRelations(data, relationData, fieldDefs, "TOKEN", "VREID", () => {
 			server.performXhr.restore();
 			done();
 		});
