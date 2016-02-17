@@ -1,5 +1,10 @@
 import clone from "clone-deep";
 
+let localStorage = localStorage || {
+	getItem: function() { },
+	setItem: function() { }
+};
+
 let initialState = {
 	records: JSON.parse(localStorage.getItem("entity-index") || "[]")
 };

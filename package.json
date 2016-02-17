@@ -12,6 +12,8 @@
   "scripts": {
     "start": "scripts/server.js",
     "express": "node scripts/express.js",
+    "test": "mocha --compilers js:babel/register --recursive test",
+    "test:watch": "nodemon -x \"mocha --compilers js:babel/register --recursive --watch test\" -w test -w build",
     "watch": "scripts/watch.sh"
   },
   "dependencies": {
@@ -43,10 +45,14 @@
     "connect-modrewrite": "^0.8.2",
     "eslint": "^1.5.1",
     "eslint-plugin-react": "^3.16.1",
+    "expect": "^1.14.0",
     "express": "^4.13.4",
     "lodash.debounce": "^3.1.1",
+    "mocha": "^2.4.5",
     "nib": "^1.1.0",
+    "nodemon": "^1.8.1",
     "proxy-middleware": "^0.14.0",
+    "sinon": "^1.17.3",
     "stylus": "^0.53.0",
     "url": "^0.11.0",
     "watchify": "^3.4.0"
