@@ -73,6 +73,18 @@ module.exports = {
 				"targetType": "keyword",
 				"typeId": "74ca3110-f212-4149-9d6d-80d7cbf8dc7c"
 			}
+		},
+		{
+			"name": "isCreatorOf",
+			"type": "relation",
+			"path": "domain/wwdocuments/autocomplete",
+			"relation": {
+				"type": "wwrelation",
+				"isInverseName": true,
+				"sourceType": "document",
+				"targetType": "person",
+				"typeId": "83eb9cc1-ab91-4d6c-8778-b639480f2b9a"
+			}
 		}
 /*		{
 			"name": "hasBirthPlace",

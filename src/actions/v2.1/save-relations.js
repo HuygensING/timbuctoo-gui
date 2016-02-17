@@ -7,9 +7,9 @@ const saveRelationsV21 = (data, relationData, fieldDefs, token, vreId, next) => 
 		const relationSaveData = {
 			"@type": fieldDef.relation.type,
 			"^sourceId": fieldDef.relation.isInverseName ? relation.id : data._id,
-			"^sourceType": fieldDef.relation.isInverseName ? fieldDef.relation.targetType : fieldDef.relation.sourceType, // FIXME?
+			"^sourceType": fieldDef.relation.sourceType,
 			"^targetId": fieldDef.relation.isInverseName ? data._id : relation.id,
-			"^targetType": fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType,  // FIXME?
+			"^targetType": fieldDef.relation.targetType,
 			"^typeId": fieldDef.relation.typeId,
 			accepted: accepted
 		};
