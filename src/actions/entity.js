@@ -5,7 +5,9 @@ import saveRelationsV4 from "./save-relations";
 import saveRelationsV21 from "./v2.1/save-relations";
 import config from "../config";
 
-const saveRelations = config.apiVersion === "v2.1" ? saveRelationsV21 : saveRelationsV4;
+let saveRelations = config.apiVersion === "v2.1" ? saveRelationsV21 : saveRelationsV4;
+
+const setSaveRelationsFunc = (func) => { saveRelations = func; };
 
 // 1) Fetch the fieldDefinitions for the given domain (TODO: should become server request in stead of static source file)
 // 2) Dispatch the requested actionType (RECEIVE_ENTITY or NEW_ENTITY)
@@ -74,4 +76,4 @@ const saveEntity = () => (dispatch, getState) => {
 const makeNewEntity = (domain) =>
 	(dispatch) => dispatch(fetchFieldDescription(domain, "NEW_ENTITY"));
 
-export {saveEntity, selectEntity, makeNewEntity};
+export {saveEntity, selectEntity, makeNewEntity, setSaveRelationsFunc};
