@@ -14,6 +14,10 @@ export default {
 		});
 	},
 
+	fastXhr: function(options, accept) {
+		xhr(options, accept);
+	},
+
 	makeHeaders: function(token, vreId) {
 		return {
 			"Accept": "application/json",

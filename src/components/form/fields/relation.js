@@ -1,29 +1,23 @@
 import React from "react";
 import AutocompleteList from "hire-forms-autocomplete-list";
-import xhr from "xhr";
-
-
-// TODO: move to appropriate place
-const getAutocompleteValues = function(path, query, done) {
-	let options = {
-		headers: {"Accept": "application/json", "VRE_ID": "WomenWriters"},
-		url: `/api/v2.1/${path}?query=*${query}*`
-	};
-
-	let xhrDone = function(err, response, body) {
-
-		done(JSON.parse(body));
-	};
-
-	xhr(options, xhrDone);
-};
+import getAutocompleteValues from "../../../actions/autocomplete";
 
 class RelationField extends React.Component {
 
-	// TODO: @see ./keyword.js for specifics on what relation data should be
-	onChange(...args) {
-		console.log(args);
-		this.props.onChange(["@relations", this.props.name], ...args);
+	onChange(values) {
+		const currentValues = this.props.entity.data["@relations"][this.props.name] || [];
+		this.props.onChange(
+			["@relations", this.props.name],
+			values
+				.map((val) => {
+					return {
+						"id": val.key,
+						"displayName": val.value,
+						...(currentValues.find((curVal) => curVal.id === val.key) || {}),
+						accepted: true
+					};
+				})
+		);
 	}
 
 	render() {
@@ -33,9 +27,9 @@ class RelationField extends React.Component {
 			<div>
 				<label>{this.props.name}</label>
 				<AutocompleteList
-					async={(query, done) => getAutocompleteValues(this.props.path, query, done) }
+					async={(query, done) => getAutocompleteValues(this.props.path, query, this.props.vre, done) }
 					onChange={this.onChange.bind(this)}
-					values={values} /> {/* TODO: @see ./keyword.js on how values should be mapped */}
+					values={values.filter((val) => val.accepted).map((val) => { return { value: val.displayName, key: val.id}; })} />
 			</div>
 		);
 	}
