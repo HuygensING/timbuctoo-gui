@@ -2,8 +2,6 @@ import { saveNewEntity, deleteEntity } from "./crud";
 import saveRelationsV21 from "./v2.1/save-relations";
 import config from "../config";
 
-
-
 // Save relations described in relationData
 // a) create all relations which are relationData but not in data["@relations"]
 // b) delete all relations which are in data["@relations"] but not in relationData

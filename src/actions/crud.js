@@ -1,7 +1,6 @@
 import server from "./server";
 import config from "../config";
 
-
 const saveNewEntity = (domain, saveData, token, vreId, next, fail) =>
 	server.performXhr({
 		method: "POST",
@@ -34,8 +33,5 @@ const fetchEntity = (location, next, fail) =>
 		const data = JSON.parse(resp.body);
 		next(data);
 	}, fail, "Fetch entity");
-
-
-
 
 export {saveNewEntity, updateEntity, deleteEntity, fetchEntity};
