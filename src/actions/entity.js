@@ -1,7 +1,24 @@
 import clone from "clone-deep";
-import { saveNewEntity, updateEntity, fetchEntity, fetchFieldDescription } from "./crud";
+import { saveNewEntity, updateEntity, fetchEntity } from "./crud";
+import server from "./server";
 import saveRelations from "./save-relations";
 import config from "../config";
+
+// 1) Fetch the fieldDefinitions for the given domain (TODO: should become server request in stead of static source file)
+// 2) Dispatch the requested actionType (RECEIVE_ENTITY or NEW_ENTITY)
+const fetchFieldDescription = (domain, actionType, data = null) => (dispatch) =>
+	server.performXhr({
+		headers: {"Accept": "application/json"},
+		url: `/api/v4/fielddefinitions/${domain}`
+	}, (err, resp) => {
+		const fieldDefinitions = JSON.parse(resp.body);
+		dispatch({
+			type: actionType,
+			domain: domain,
+			fieldDefinitions: fieldDefinitions,
+			data: data
+		});
+	});
 
 // 1) Fetch entity
 // 2) Fetch field description of this entity's domain

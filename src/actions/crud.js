@@ -35,21 +35,7 @@ const fetchEntity = (location, next, fail) =>
 		next(data);
 	}, fail, "Fetch entity");
 
-// 1) Fetch the fieldDefinitions for the given domain (TODO: should become server request in stead of static source file)
-// 2) Dispatch the requested actionType (RECEIVE_ENTITY or NEW_ENTITY)
-const fetchFieldDescription = (domain, actionType, data = null) => (dispatch) =>
-	server.performXhr({
-		headers: {"Accept": "application/json"},
-		url: `/api/v4/fielddefinitions/${domain}`
-	}, (err, resp) => {
-		const fieldDefinitions = JSON.parse(resp.body);
-		dispatch({
-			type: actionType,
-			domain: domain,
-			fieldDefinitions: fieldDefinitions,
-			data: data
-		});
-	});
 
 
-export {saveNewEntity, updateEntity, deleteEntity, fetchEntity, fetchFieldDescription};
+
+export {saveNewEntity, updateEntity, deleteEntity, fetchEntity};
