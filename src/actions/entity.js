@@ -11,7 +11,7 @@ const setSaveRelationsFunc = (func) => { saveRelations = func; };
 
 // 1) Fetch the fieldDefinitions for the given domain (TODO: should become server request in stead of static source file)
 // 2) Dispatch the requested actionType (RECEIVE_ENTITY or NEW_ENTITY)
-const fetchFieldDescription = (domain, actionType, data = null) => (dispatch) =>
+const fetchFieldDescription = (domain, actionType, data = null, errorMessage = null) => (dispatch) =>
 	server.performXhr({
 		headers: {"Accept": "application/json"},
 		url: `/api/v4/fielddefinitions/${domain}`
@@ -21,7 +21,8 @@ const fetchFieldDescription = (domain, actionType, data = null) => (dispatch) =>
 			type: actionType,
 			domain: domain,
 			fieldDefinitions: fieldDefinitions,
-			data: data
+			data: data,
+			errorMessage: errorMessage
 		});
 	}, () => {
 		dispatch({
@@ -33,10 +34,10 @@ const fetchFieldDescription = (domain, actionType, data = null) => (dispatch) =>
 // 1) Fetch entity
 // 2) Fetch field description of this entity's domain
 // 3) Dispatch RECEIVE_ENTITY for render
-const selectEntity = (domain, entityId) =>
+const selectEntity = (domain, entityId, errorMessage = null) =>
 	(dispatch) =>
 		fetchEntity(`/api/${config.apiVersion}/domain/${domain}s/${entityId}`, (data) =>
-			dispatch(fetchFieldDescription(data["@type"], "RECEIVE_ENTITY", data)), () =>
+			dispatch(fetchFieldDescription(data["@type"], "RECEIVE_ENTITY", data, errorMessage)), () =>
 				dispatch({type: "RECEIVE_ENTITY_FAILURE", errorMessage: `Failed to fetch ${domain} with ID ${entityId}`}));
 
 
@@ -57,7 +58,9 @@ const saveEntity = () => (dispatch, getState) => {
 			// 2) Save relations using server response for current relations to diff against relationData
 			dispatch((redispatch) => saveRelations(JSON.parse(resp.body), relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre, () =>
 				// 3) Refetch entity for render
-				redispatch(selectEntity(getState().entity.domain, getState().entity.data._id)))));
+				redispatch(selectEntity(getState().entity.domain, getState().entity.data._id)))), () =>
+					// 2a) Handle error by refetching and passing along an error message
+					dispatch(selectEntity(getState().entity.domain, getState().entity.data._id, `Failed to save ${getState().entity.domain} with ID ${getState().entity.data._id}`)));
 
 	} else {
 		// 1) Create new entity with saveData

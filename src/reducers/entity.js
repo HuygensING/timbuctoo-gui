@@ -54,7 +54,7 @@ export default function(state=initialState, action) {
 				data: action.data,
 				domain: action.domain,
 				fieldDefinitions: action.fieldDefinitions,
-				errorMessage: null
+				errorMessage: action.errorMessage
 			}};
 
 		case "SET_ENTITY_FIELD_VALUE":
