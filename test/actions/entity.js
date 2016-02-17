@@ -244,6 +244,57 @@ describe("entity", () => { //eslint-disable-line no-undef
 		store.dispatch({type: "RECEIVE_ENTITY", data: data, domain: domain, fieldDefinitions: fieldDefinitions});
 	});
 
+	it("should handle POST server errors with saveEntity", (done) => {  //eslint-disable-line no-undef
+		const domain = "dom";
+		const data = {
+			"title": "a title",
+			"@type": "dom",
+			"@relations": {}
+		};
+		const fieldDefinitions = [
+			{name: "title", type: "string"}
+		];
+		let unsubscribe;
+
+		let count = 0;
+		sinon.stub(server, "performXhr", (options, accept, reject) => {
+			count++;
+			if(count === 1) {
+				reject("reason", {
+					body: "not found",
+					statusCode: 404
+				});
+			} else if(count === 2) {
+				accept(null, {body: JSON.stringify(fieldDefinitions)});
+			}
+		});
+
+		const onSaveRejected = () => {
+			unsubscribe();
+			server.performXhr.restore();
+			try {
+				expect(store.getState().entity).toEqual({
+					data: {"title": "", "@type": domain},
+					domain: domain,
+					fieldDefinitions: fieldDefinitions,
+					errorMessage: `Failed to save new ${domain}`
+				});
+				done();
+			} catch (e) {
+				done(e);
+			}
+		};
+
+		const onSetInitialEntity = () => {
+			unsubscribe();
+			unsubscribe = store.subscribe(onSaveRejected);
+			store.dispatch(saveEntity());
+		};
+
+		unsubscribe = store.subscribe(onSetInitialEntity);
+
+		store.dispatch({type: "RECEIVE_ENTITY", data: data, domain: domain, fieldDefinitions: fieldDefinitions});
+	});
 
 	it("should make a new entity with makeNewEntity", (done) => { //eslint-disable-line no-undef
 		const domain = "dom";

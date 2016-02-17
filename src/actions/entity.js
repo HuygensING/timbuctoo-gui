@@ -41,6 +41,12 @@ const selectEntity = (domain, entityId, errorMessage = null) =>
 				dispatch({type: "RECEIVE_ENTITY_FAILURE", errorMessage: `Failed to fetch ${domain} with ID ${entityId}`}));
 
 
+
+// 1) Fetch field description for the given domain
+// 2) Dispatch NEW_ENTITY with field description for render
+const makeNewEntity = (domain, errorMessage = null) =>
+	(dispatch) => dispatch(fetchFieldDescription(domain, "NEW_ENTITY", null, errorMessage));
+
 // 1) Save an entity
 // 2) Save the relations for this entity
 // 3) Refetch entity for render
@@ -70,13 +76,11 @@ const saveEntity = () => (dispatch, getState) => {
 				// 3) Save relations using server response for current relations to diff against relationData
 				saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre, () =>
 					// 4) Refetch entity for render
-					redispatch(selectEntity(getState().entity.domain, data._id))))));
+					redispatch(selectEntity(getState().entity.domain, data._id))))), () =>
+						// 2a) Handle error by refetching and passing along an error message
+						dispatch(makeNewEntity(getState().entity.domain, `Failed to save new ${getState().entity.domain}`)));
 	}
 };
 
-// 1) Fetch field description for the given domain
-// 2) Dispatch NEW_ENTITY with field description for render
-const makeNewEntity = (domain) =>
-	(dispatch) => dispatch(fetchFieldDescription(domain, "NEW_ENTITY"));
 
 export {saveEntity, selectEntity, makeNewEntity, setSaveRelationsFunc};

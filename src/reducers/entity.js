@@ -46,7 +46,7 @@ export default function(state=initialState, action) {
 				data: makeSkeleton(action.fieldDefinitions, action.domain),
 				domain: action.domain,
 				fieldDefinitions: action.fieldDefinitions,
-				errorMessage: null
+				errorMessage: action.errorMessage || null
 			}};
 
 		case "RECEIVE_ENTITY":
@@ -54,7 +54,7 @@ export default function(state=initialState, action) {
 				data: action.data,
 				domain: action.domain,
 				fieldDefinitions: action.fieldDefinitions,
-				errorMessage: action.errorMessage
+				errorMessage: action.errorMessage || null
 			}};
 
 		case "SET_ENTITY_FIELD_VALUE":
