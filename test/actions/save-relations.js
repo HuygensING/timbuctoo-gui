@@ -110,6 +110,61 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 		});
 	});
 
+	it("should add and delete in one go", (done) => { //eslint-disable-line no-undef
+		const data = {_id: "entityID", "@relations": {
+			"relNameA": [{accepted: true, id: "A_2", relationId: "REL_2"}]
+		}};
+		const relationData = {"relNameA": [{accepted: true, id: "A_1"}]};
+		const fieldDefs = [{name: "relNameA", relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}}];
+
+		let counts = 0;
+		sinon.stub(server, "performXhr", (options, accept) => {
+			try {
+				counts++;
+				if(counts === 1) {
+					expect(options.method).toEqual("POST");
+				} else if(counts === 2) {
+					expect(options.method).toEqual("DELETE");
+				}
+				accept();
+			} catch(e) {
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+
+		saveRelations(data, relationData, fieldDefs, "TOKEN", "VREID", () => {
+			try {
+				sinon.assert.calledTwice(server.performXhr);
+				server.performXhr.restore();
+				done();
+			} catch (e) {
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+	});
+
+
+	it("should not send updates to the server if there are no changes", (done) => { //eslint-disable-line no-undef
+		const data = {_id: "entityID", "@relations": {
+			"relNameA": [{accepted: true, id: "A_1", relationId: "REL_1"}]
+		}};
+		const relationData = {"relNameA": [{accepted: true, id: "A_1", relationId: "REL_1"}]};
+		const fieldDefs = [{name: "relNameA", relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}}];
+		sinon.stub(server, "performXhr");
+
+		saveRelations(data, relationData, fieldDefs, "TOKEN", "VREID", () => {
+			try {
+				sinon.assert.notCalled(server.performXhr);
+				server.performXhr.restore();
+				done();
+			} catch (e) {
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+	});
 
 	it("should handle server exceptions", (done) => { //eslint-disable-line no-undef
 		const data = {_id: "entityID", "@relations": {}};

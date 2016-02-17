@@ -121,6 +121,106 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 		});
 	});
 
+	it("should reaccept previously rejected relations with PUT", (done) => { //eslint-disable-line no-undef
+		const data = {_id: "entityID", "@relations": {
+			"relNameA": [{accepted: false, id: "A_1", relationId: "REL_1"}]
+		}};
+		const relationData = {"relNameA": [{accepted: true, id: "A_1", relationId: "REL_1"}]};
+		const fieldDefs = [{name: "relNameA", relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}}];
+
+		sinon.stub(server, "performXhr", (options, accept) => {
+			try {
+				const payload = JSON.parse(options.body);
+				expect(options.method).toEqual("PUT");
+				expect(payload).toEqual({
+					"@type": "relTypeA",
+					"^sourceId": "entityID",
+					"^sourceType": "document",
+					"^targetId": `A_1`,
+					"^targetType": "person",
+					"^typeId": "typeID",
+					"_id": "REL_1",
+					"accepted": true
+				});
+				expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual(`domain/${fieldDefs[0].relation.type}s/${data["@relations"].relNameA[0].relationId}`);
+				accept();
+			} catch(e) {
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+
+		saveRelations(data, relationData, fieldDefs, "TOKEN", "VREID", () => {
+			try {
+				sinon.assert.calledOnce(server.performXhr);
+				server.performXhr.restore();
+				done();
+			} catch (e) {
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+	});
+
+	it("should add, delete and readd in one go", (done) => { //eslint-disable-line no-undef
+		const data = {_id: "entityID", "@relations": {
+			"relNameA": [{accepted: false, id: "A_1", relationId: "REL_1"}, {accepted: true, id: "A_2", relationId: "REL_2"}]
+		}};
+		const relationData = {"relNameA": [{accepted: true, id: "A_1"}, {accepted: true, id: "A_3"}]};
+		const fieldDefs = [{name: "relNameA", relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}}];
+
+		let counts = 0;
+		sinon.stub(server, "performXhr", (options, accept) => {
+			try {
+				const payload = JSON.parse(options.body);
+				counts++;
+				if(counts === 1) {
+					expect(options.method).toEqual("POST");
+				} else if(counts === 2) {
+					expect(options.method).toEqual("PUT");
+					expect(payload.accepted).toEqual(true);
+				} else if(counts === 3) {
+					expect(options.method).toEqual("PUT");
+					expect(payload.accepted).toEqual(false);
+				}
+				accept();
+			} catch(e) {
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+
+		saveRelations(data, relationData, fieldDefs, "TOKEN", "VREID", () => {
+			try {
+				sinon.assert.calledThrice(server.performXhr);
+				server.performXhr.restore();
+				done();
+			} catch (e) {
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+	});
+
+	it("should not send updates to the server if there are no changes", (done) => { //eslint-disable-line no-undef
+		const data = {_id: "entityID", "@relations": {
+			"relNameA": [{accepted: true, id: "A_1", relationId: "REL_1"}]
+		}};
+		const relationData = {"relNameA": [{accepted: true, id: "A_1", relationId: "REL_1"}]};
+		const fieldDefs = [{name: "relNameA", relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}}];
+		sinon.stub(server, "performXhr");
+
+		saveRelations(data, relationData, fieldDefs, "TOKEN", "VREID", () => {
+			try {
+				sinon.assert.notCalled(server.performXhr);
+				server.performXhr.restore();
+				done();
+			} catch (e) {
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+	});
 
 	it("should handle server exceptions", (done) => { //eslint-disable-line no-undef
 		const data = {_id: "entityID", "@relations": {}};
