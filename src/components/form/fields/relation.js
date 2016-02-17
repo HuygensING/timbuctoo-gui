@@ -40,7 +40,8 @@ RelationField.propTypes = {
 	fieldDefinition: React.PropTypes.object,
 	name: React.PropTypes.string,
 	onChange: React.PropTypes.func,
-	path: React.PropTypes.string
+	path: React.PropTypes.string,
+	vre: React.PropTypes.string
 };
 
 export default RelationField;
