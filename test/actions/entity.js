@@ -22,6 +22,8 @@ describe("entity", () => { //eslint-disable-line no-undef
 	});
 
 	it("should save a new entity with saveEntity", (done) => { //eslint-disable-line no-undef
+
+		// SETUP
 		const domain = "dom";
 		const entityId = "entId";
 		const data = {
@@ -33,10 +35,11 @@ describe("entity", () => { //eslint-disable-line no-undef
 			{name: "title", type: "string"}
 		];
 		const expectedUrl = `/api/${config.apiVersion}/domain/${domain}s/${entityId}`;
-		let unsubscribe;
 
+		let unsubscribe;
 		let saveRelationsCalled = false;
 
+		// TODO: stub this.
 		setSaveRelationsFunc((d, relationData, f, t, v, next) => {
 			expect(relationData).toEqual(data["@relations"]);
 			expect(d).toEqual({...data, _id: entityId});
@@ -47,6 +50,47 @@ describe("entity", () => { //eslint-disable-line no-undef
 			next();
 		});
 
+		const finalize = (e) => {
+			unsubscribe();
+			crud.fetchEntity.restore();
+			crud.saveNewEntity.restore();
+			server.performXhr.restore();
+			done(e);
+		};
+
+		// TODO: stub fetch for field defs
+		const xhrStub = (options, accept) => {
+			try {
+				expect(options.url).toEqual(`/api/v4/fielddefinitions/${domain}`);
+				accept(null, {body: JSON.stringify(fieldDefinitions)});
+			} catch (e) {
+				finalize(e);
+			}
+		};
+
+
+		sinon.stub(crud, "saveNewEntity", (dom, saveData, token, vreId, next) => {
+			try {
+				expect(saveData).toEqual({"title": data.title, "@type": domain});
+				next(null, {headers: {location: expectedUrl}});
+			} catch (e) {
+				finalize(e);
+			}
+		});
+
+		sinon.stub(crud, "fetchEntity", (location, next) => {
+			try {
+				expect(location).toEqual(expectedUrl);
+				next({...data, _id: entityId});
+			} catch (e) {
+				finalize(e);
+			}
+		});
+
+		sinon.stub(server, "performXhr", xhrStub);
+
+
+		// ASSERT SAVE RESULTS
 		const onSave = () => {
 			unsubscribe();
 			server.performXhr.restore();
@@ -70,47 +114,8 @@ describe("entity", () => { //eslint-disable-line no-undef
 			}
 		};
 
-		const xhrStub = (options, accept) => {
-			try {
-				expect(options.url).toEqual(`/api/v4/fielddefinitions/${domain}`);
-				accept(null, {body: JSON.stringify(fieldDefinitions)});
-			} catch (e) {
-				console.log("ERROR?", e);
-				unsubscribe();
-				server.performXhr.restore();
-				done(e);
-			}
-		};
 
-
-		sinon.stub(crud, "saveNewEntity", (dom, saveData, token, vreId, next) => {
-			try {
-				expect(saveData).toEqual({"title": data.title, "@type": domain});
-				next(null, {headers: {location: expectedUrl}});
-			} catch (e) {
-				unsubscribe();
-				crud.fetchEntity.restore();
-				crud.saveNewEntity.restore();
-				server.performXhr.restore();
-				done(e);
-			}
-		});
-
-		sinon.stub(crud, "fetchEntity", (location, next) => {
-			try {
-				expect(location).toEqual(expectedUrl);
-				next({...data, _id: entityId});
-			} catch (e) {
-				unsubscribe();
-				crud.fetchEntity.restore();
-				crud.saveNewEntity.restore();
-				server.performXhr.restore();
-				done(e);
-			}
-		});
-
-		sinon.stub(server, "performXhr", xhrStub);
-
+		// TODO: move to beforeEach ...??
 		const onSetInitialEntity = () => {
 			unsubscribe();
 			unsubscribe = store.subscribe(onSave);
