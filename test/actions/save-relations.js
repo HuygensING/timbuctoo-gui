@@ -38,6 +38,7 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 			try {
 				expect(options.method).toEqual("POST");
 				if(relType === "relTypeA") {
+					expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual("domain/relTypeAs");
 					expect(payload).toEqual({
 						"@type": "relTypeA",
 						"^sourceId": "entityID",
@@ -48,6 +49,7 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 						"accepted": true
 					});
 				} else {
+					expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual("domain/relTypeBs");
 					expect(payload).toEqual({
 						"@type": "relTypeB",
 						"^sourceId": "B_1",

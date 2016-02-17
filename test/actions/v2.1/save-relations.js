@@ -38,6 +38,7 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 			try {
 				expect(options.method).toEqual("POST");
 				if(relType === "relTypeA") {
+					expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual("domain/relTypeAs");
 					expect(payload).toEqual({
 						"@type": "relTypeA",
 						"^sourceId": "entityID",
@@ -48,6 +49,7 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 						"accepted": true
 					});
 				} else {
+					expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual("domain/relTypeBs");
 					expect(payload).toEqual({
 						"@type": "relTypeB",
 						"^sourceId": "B_1",
@@ -101,6 +103,7 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 					"_id": "REL_1",
 					"accepted": false
 				});
+				expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual(`domain/${fieldDefs[0].relation.type}s/${data["@relations"].relNameA[0].relationId}`);
 				accept();
 			} catch(e) {
 				server.performXhr.restore();
