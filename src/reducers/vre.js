@@ -1,6 +1,7 @@
 let initialState = {
 	vreId: null,
-	list: []
+	list: [],
+	collections: null
 };
 
 export default function(state=initialState, action) {
@@ -9,13 +10,15 @@ export default function(state=initialState, action) {
 			return {
 				...state,
 				vreId: action.vreId,
+				collections: action.collections,
 				list: action.list || state.list
 			};
 
 		case "LIST_VRES":
 			return {
 				...state,
-				list: action.list
+				list: action.list,
+				collections: null
 			};
 
 		default:

@@ -11,4 +11,6 @@ const listVres = () => (dispatch) =>
 		dispatch({type: "LIST_VRES", list: JSON.parse(resp.body)});
 	}, null, "List VREs");
 
-export {listVres};
+const setVre = (vreId) => (dispatch) => dispatch({type: "SET_VRE", vreId: vreId});
+
+export {listVres, setVre};

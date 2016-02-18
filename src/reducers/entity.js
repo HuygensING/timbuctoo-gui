@@ -68,6 +68,11 @@ export default function(state=initialState, action) {
 				fieldDefinitions: null,
 				errorMessage: action.errorMessage
 			}};
+
+		case "SET_VRE": {
+			return initialState;
+		}
+
 	}
 
 	return state;

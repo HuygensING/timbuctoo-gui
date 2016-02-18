@@ -2,7 +2,7 @@ import sinon from "sinon";
 import expect from "expect";
 import store from "../../src/store";
 import server from "../../src/actions/server";
-import {listVres} from "../../src/actions/vre";
+import {listVres, setVre} from "../../src/actions/vre";
 
 
 describe("vre", () => { //eslint-disable-line no-undef
@@ -42,5 +42,10 @@ describe("vre", () => { //eslint-disable-line no-undef
 		});
 
 		store.dispatch(listVres());
+	});
+
+	it("should setVre", () => { //eslint-disable-line no-undef
+
+		store.dispatch(setVre("WomenWriters"));
 	});
 });

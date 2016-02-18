@@ -1,5 +1,6 @@
 import store from "../store";
 import { saveEntity, selectEntity, makeNewEntity } from "./entity";
+import { setVre } from "./vre";
 
 const setUser = (response) => {
 	return {
@@ -14,5 +15,5 @@ export default {
 	onSave: () => store.dispatch(saveEntity()),
 	onChange: (fieldPath, value) => store.dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
 	onLoginChange: (response) => store.dispatch(setUser(response)),
-	onSelectVre: (vreId) => store.dispatch({type: "SET_VRE", vreId: vreId})
+	onSelectVre: (vreId) => store.dispatch(setVre(vreId))
 };

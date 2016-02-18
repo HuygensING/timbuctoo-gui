@@ -18,6 +18,7 @@ describe("vre reducer", () => { //eslint-disable-line no-undef
 			unsubscribe();
 			try {
 				expect(store.getState().vre).toEqual({
+					collections: ["foo", "bar"],
 					vreId: "WomenWriters",
 					list: []
 				});
@@ -27,7 +28,7 @@ describe("vre reducer", () => { //eslint-disable-line no-undef
 			}
 		});
 
-		store.dispatch({type: "SET_VRE", vreId: "WomenWriters"});
+		store.dispatch({type: "SET_VRE", vreId: "WomenWriters", collections: ["foo", "bar"]});
 	});
 
 	it("should LIST the vres", (done) => { //eslint-disable-line no-undef
@@ -36,7 +37,8 @@ describe("vre reducer", () => { //eslint-disable-line no-undef
 			try {
 				expect(store.getState().vre).toEqual({
 					vreId: null,
-					list: ["a", "b", "c"]
+					list: ["a", "b", "c"],
+					collections: null
 				});
 				done();
 			} catch(e) {
