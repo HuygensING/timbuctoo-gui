@@ -11,16 +11,13 @@ describe("entity", () => { //eslint-disable-line no-undef
 	let unsubscribe;
 
 	function runWithInitialData(domain, data, fieldDefinitions, run, runAfter) {
-		// TODO: move to beforeEach ...??
 		const onSetInitialEntity = () => {
 			unsubscribe();
 			unsubscribe = store.subscribe(runAfter);
 
 			store.dispatch(run());
 		};
-
 		unsubscribe = store.subscribe(onSetInitialEntity);
-
 		store.dispatch({type: "RECEIVE_ENTITY", data: data, domain: domain, fieldDefinitions: fieldDefinitions});
 	}
 
@@ -36,17 +33,10 @@ describe("entity", () => { //eslint-disable-line no-undef
 	});
 
 	it("should save a new entity with saveEntity", (done) => { //eslint-disable-line no-undef
-		// SETUP
 		const domain = "dom";
 		const entityId = "entId";
-		const data = {
-			"title": "a title",
-			"@type": "dom",
-			"@relations": {"x": "y"}
-		};
-		const fieldDefinitions = [
-			{name: "title", type: "string"}
-		];
+		const data = {"title": "a title", "@type": "dom", "@relations": {"x": "y"}};
+		const fieldDefinitions = [{name: "title", type: "string"}];
 		const expectedUrl = `/api/${config.apiVersion}/domain/${domain}s/${entityId}`;
 
 		let orderOfOperations = [];
@@ -80,7 +70,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 
 		sinon.stub(crud, "fetchFieldDescription", (dom, next) => {
 			try {
-				expect(dom).toEqual("dom");
+				expect(dom).toEqual(domain);
 				orderOfOperations.push("fetchFieldDescription");
 				next(fieldDefinitions);
 			} catch(e) {
@@ -88,11 +78,12 @@ describe("entity", () => { //eslint-disable-line no-undef
 			}
 		});
 
-
 		sinon.stub(crud, "saveNewEntity", (dom, saveData, token, vreId, next) => {
 			try {
 				orderOfOperations.push("saveNewEntity");
 				expect(saveData).toEqual({"title": data.title, "@type": domain});
+				expect(token).toEqual(store.getState().user.token);
+				expect(vreId).toEqual(store.getState().vre);
 				next(null, {headers: {location: expectedUrl}});
 			} catch (e) {
 				finalize(e);
@@ -134,32 +125,71 @@ describe("entity", () => { //eslint-disable-line no-undef
 	it("should update an entity with saveEntity", (done) => { //eslint-disable-line no-undef
 		const domain = "dom";
 		const entityId = "entId";
-		const data = {
-			"_id": entityId,
-			"title": "a title",
-			"@type": "dom",
-			"@relations": {}
-		};
-		const fieldDefinitions = [
-			{name: "title", type: "string"}
-		];
+		const data = {"_id": entityId, "title": "a title", "@type": "dom", "@relations": {"foo": "bar"}};
+		const fieldDefinitions = [{name: "title", type: "string"}];
 		const expectedUrl = `/api/${config.apiVersion}/domain/${domain}s/${entityId}`;
 
-		let saveRelationsCalled = false;
+		let orderOfOperations = [];
+
+
+		const finalize = (e) => {
+			unsubscribe();
+			crud.fetchEntity.restore();
+			crud.updateEntity.restore();
+			crud.fetchFieldDescription.restore();
+			relationSavers["v2.1"].restore();
+			relationSavers.v4.restore();
+			done(e);
+		};
 
 		const saveRelationsStub = (d, relationData, f, t, v, next) => {
 			expect(relationData).toEqual(data["@relations"]);
-			expect(d).toEqual({...data, _id: entityId});
+			expect(d).toEqual(data);
 			expect(f).toEqual(fieldDefinitions);
 			expect(t).toEqual(store.getState().user.token);
 			expect(v).toEqual(store.getState().vre);
-			saveRelationsCalled = true;
+			orderOfOperations.push("saveRelations");
 			next();
 		};
 
-		const onSave = () => {
-			unsubscribe();
-			server.performXhr.restore();
+		sinon.stub(relationSavers, "v2.1", saveRelationsStub);
+		sinon.stub(relationSavers, "v4", saveRelationsStub);
+
+		sinon.stub(crud, "fetchEntity", (location, next) => {
+			try {
+				orderOfOperations.push("fetchEntity");
+				expect(location).toEqual(expectedUrl);
+				next(data);
+			} catch (e) {
+				finalize(e);
+			}
+		});
+
+		sinon.stub(crud, "fetchFieldDescription", (dom, next) => {
+			try {
+				expect(dom).toEqual(domain);
+				orderOfOperations.push("fetchFieldDescription");
+				next(fieldDefinitions);
+			} catch(e) {
+				finalize(e);
+			}
+		});
+
+		sinon.stub(crud, "updateEntity", (dom, saveData, token, vreId, next) => {
+			try {
+				expect(dom).toEqual("dom");
+				expect(saveData).toEqual({"_id": entityId, "title": "a title", "@type": "dom"});
+				expect(token).toEqual(store.getState().user.token);
+				expect(vreId).toEqual(store.getState().vre);
+				orderOfOperations.push("updateEntity");
+				next(null, {body: JSON.stringify(data)});
+			} catch(e) {
+				finalize(e);
+			}
+		});
+
+
+		const assertSaveComplete = () => {
 			try {
 				expect(store.getState().entity).toEqual({
 					data: data,
@@ -167,49 +197,15 @@ describe("entity", () => { //eslint-disable-line no-undef
 					fieldDefinitions: fieldDefinitions,
 					errorMessage: null
 				});
-				expect(saveRelationsCalled).toEqual(true);
+				expect(orderOfOperations).toEqual(["updateEntity", "saveRelations", "fetchEntity", "fetchFieldDescription"]);
 
-				done();
+				finalize();
 			} catch (e) {
-				done(e);
+				finalize(e);
 			}
 		};
 
-		let count = 0;
-		const xhrStub = (options, accept) => {
-			try {
-				count++;
-				if(count === 1) {
-					expect(options.method).toEqual("PUT");
-					accept(null, {body: JSON.stringify(data)});
-				} else if(count === 2) {
-					expect(options.url).toEqual(expectedUrl);
-					accept(null, {body: JSON.stringify(data)});
-				} else if(count === 3) {
-					expect(options.url).toEqual(`/api/v4/fielddefinitions/${domain}`);
-					accept(null, {body: JSON.stringify(fieldDefinitions)});
-				}
-			} catch (e) {
-				unsubscribe();
-				server.performXhr.restore();
-				done(e);
-			}
-		};
-
-		sinon.stub(relationSavers, "v2.1", saveRelationsStub);
-		sinon.stub(relationSavers, "v4", saveRelationsStub);
-
-		const onSetInitialEntity = () => {
-			unsubscribe();
-			unsubscribe = store.subscribe(onSave);
-
-			sinon.stub(server, "performXhr", xhrStub);
-			store.dispatch(saveEntity());
-		};
-
-		unsubscribe = store.subscribe(onSetInitialEntity);
-
-		store.dispatch({type: "RECEIVE_ENTITY", data: data, domain: domain, fieldDefinitions: fieldDefinitions});
+		runWithInitialData(domain, data, fieldDefinitions, saveEntity, assertSaveComplete);
 	});
 
 
@@ -257,16 +253,9 @@ describe("entity", () => { //eslint-disable-line no-undef
 			}
 		};
 
-		const onSetInitialEntity = () => {
-			unsubscribe();
-			unsubscribe = store.subscribe(onSaveRejected);
-			store.dispatch(saveEntity());
-		};
-
-		unsubscribe = store.subscribe(onSetInitialEntity);
-
-		store.dispatch({type: "RECEIVE_ENTITY", data: data, domain: domain, fieldDefinitions: fieldDefinitions});
+		runWithInitialData(domain, data, fieldDefinitions, saveEntity, onSaveRejected);
 	});
+
 
 	it("should handle POST server errors with saveEntity", (done) => {  //eslint-disable-line no-undef
 		const domain = "dom";
@@ -308,16 +297,9 @@ describe("entity", () => { //eslint-disable-line no-undef
 			}
 		};
 
-		const onSetInitialEntity = () => {
-			unsubscribe();
-			unsubscribe = store.subscribe(onSaveRejected);
-			store.dispatch(saveEntity());
-		};
-
-		unsubscribe = store.subscribe(onSetInitialEntity);
-
-		store.dispatch({type: "RECEIVE_ENTITY", data: data, domain: domain, fieldDefinitions: fieldDefinitions});
+		runWithInitialData(domain, data, fieldDefinitions, saveEntity, onSaveRejected);
 	});
+
 
 	it("should make a new entity with makeNewEntity", (done) => { //eslint-disable-line no-undef
 		const domain = "dom";
@@ -327,24 +309,23 @@ describe("entity", () => { //eslint-disable-line no-undef
 			{name: "testField3", type: "relation"}
 		];
 
-		sinon.stub(server, "performXhr", (options, accept) => {
+		const finalize = (e) => {
+			unsubscribe();
+			crud.fetchFieldDescription.restore();
+			done(e);
+		};
+
+		sinon.stub(crud, "fetchFieldDescription", (dom, next) => {
 			try {
-				expect(options).toEqual({
-					url: `/api/v4/fielddefinitions/${domain}`,
-					headers: {
-						"Accept": "application/json"
-					}
-				});
-				accept(null, {body: JSON.stringify(responseFieldDefs)});
+				expect(dom).toEqual(domain);
+				next(responseFieldDefs);
 			} catch(e) {
-				server.performXhr.restore();
-				done(e);
+				finalize(e);
 			}
 		});
 
 		unsubscribe = store.subscribe(() => {
 			try {
-				unsubscribe();
 				expect(store.getState().entity).toEqual({
 					data: {
 						testField1: "",
@@ -356,11 +337,9 @@ describe("entity", () => { //eslint-disable-line no-undef
 					fieldDefinitions: responseFieldDefs,
 					errorMessage: null
 				});
-				server.performXhr.restore();
-				done();
+				finalize();
 			} catch (e) {
-				server.performXhr.restore();
-				done(e);
+				finalize(e);
 			}
 		});
 
