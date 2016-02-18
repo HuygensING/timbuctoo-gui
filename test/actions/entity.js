@@ -21,8 +21,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 		store.dispatch({type: "RECEIVE_ENTITY", data: data, domain: domain, fieldDefinitions: fieldDefinitions});
 	}
 
-	beforeEach((done) => { //eslint-disable-line no-undef
-
+	before((done) => { //eslint-disable-line no-undef
 		const onUser = () => {
 			unsubscribe();
 			done();
@@ -32,6 +31,103 @@ describe("entity", () => { //eslint-disable-line no-undef
 		store.dispatch({type: "SET_USER", user: {token: "TOKEN"}});
 	});
 
+	it("should make a new entity with makeNewEntity", (done) => { //eslint-disable-line no-undef
+		const domain = "dom";
+		const responseFieldDefs = [
+			{name: "testField1", type: "text"},
+			{name: "testField2", type: "multiselect", options: ["foo", "bar"]},
+			{name: "testField3", type: "relation"}
+		];
+
+		const finalize = (e) => {
+			unsubscribe();
+			crud.fetchFieldDescription.restore();
+			done(e);
+		};
+
+		sinon.stub(crud, "fetchFieldDescription", (dom, next) => {
+			try {
+				expect(dom).toEqual(domain);
+				next(responseFieldDefs);
+			} catch(e) {
+				finalize(e);
+			}
+		});
+
+		unsubscribe = store.subscribe(() => {
+			try {
+				expect(store.getState().entity).toEqual({
+					data: {
+						testField1: "",
+						testField2: [],
+						"@relations": {},
+						"@type": "dom"
+					},
+					domain: domain,
+					fieldDefinitions: responseFieldDefs,
+					errorMessage: null
+				});
+				finalize();
+			} catch (e) {
+				finalize(e);
+			}
+		});
+
+		store.dispatch(makeNewEntity(domain));
+	});
+
+	it("should fetch an entity with selectEntity", (done) => { //eslint-disable-line no-undef
+		const domain = "dom";
+		const entityId = "ID";
+		const responseData = {"@type": domain};
+		const responseFieldDefs = [{"name": "test"}];
+		let orderOfOperations = [];
+
+		const finalize = (e) => {
+			unsubscribe();
+			crud.fetchEntity.restore();
+			crud.fetchFieldDescription.restore();
+			done(e);
+		};
+
+		sinon.stub(crud, "fetchEntity", (location, next) => {
+			try {
+				orderOfOperations.push("fetchEntity");
+				expect(location).toEqual(`/api/${config.apiVersion}/domain/${domain}s/${entityId}`);
+				next(responseData);
+			} catch (e) {
+				finalize(e);
+			}
+		});
+
+		sinon.stub(crud, "fetchFieldDescription", (dom, next) => {
+			try {
+				expect(dom).toEqual(domain);
+				orderOfOperations.push("fetchFieldDescription");
+				next(responseFieldDefs);
+			} catch(e) {
+				finalize(e);
+			}
+		});
+
+		unsubscribe = store.subscribe(() => {
+			try {
+				expect(store.getState().entity).toEqual({
+					data: responseData,
+					domain: domain,
+					fieldDefinitions: responseFieldDefs,
+					errorMessage: null
+				});
+				expect(orderOfOperations).toEqual(["fetchEntity", "fetchFieldDescription"]);
+				finalize();
+			} catch (e) {
+				finalize(e);
+			}
+		});
+
+
+		store.dispatch(selectEntity(domain, entityId));
+	});
 
 	it("should save a new entity with saveEntity", (done) => { //eslint-disable-line no-undef
 		const domain = "dom";
@@ -208,6 +304,66 @@ describe("entity", () => { //eslint-disable-line no-undef
 		runWithInitialData(domain, data, fieldDefinitions, saveEntity, assertSaveComplete);
 	});
 
+	it("should handle a fetch exception with makeNewEntity", (done) => { //eslint-disable-line no-undef
+		const domain = "dom";
+		sinon.stub(server, "performXhr", (options, accept, reject) => {
+			reject("reason", {
+				body: "not found",
+				statusCode: 404
+			});
+		});
+
+		unsubscribe = store.subscribe(() => {
+			try {
+				unsubscribe();
+				expect(store.getState().entity).toEqual({
+					data: null,
+					domain: domain,
+					errorMessage: `Failed to fetch field definitions for ${domain}`,
+					fieldDefinitions: null
+				});
+				server.performXhr.restore();
+				done();
+			} catch (e) {
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+
+		store.dispatch(makeNewEntity(domain));
+	});
+
+	it("should handle a fetch exception with selectEntity", (done) => { //eslint-disable-line no-undef
+		const domain = "dom";
+		const entityId = "ID";
+		sinon.stub(server, "performXhr", (options, accept, reject) => {
+			reject("reason", {
+				body: "not found",
+				statusCode: 404
+			});
+		});
+
+		unsubscribe = store.subscribe(() => {
+			try {
+				unsubscribe();
+				expect(store.getState().entity).toEqual({
+					data: null,
+					domain: domain,
+					errorMessage: `Failed to fetch dom with ID ${entityId}`,
+					fieldDefinitions: null
+				});
+				server.performXhr.restore();
+				done();
+			} catch (e) {
+				server.performXhr.restore();
+				done(e);
+			}
+		});
+
+		store.dispatch(selectEntity(domain, entityId));
+	});
+
+
 
 	it("should handle PUT server errors with saveEntity", (done) => {  //eslint-disable-line no-undef
 		const domain = "dom";
@@ -298,165 +454,6 @@ describe("entity", () => { //eslint-disable-line no-undef
 		};
 
 		runWithInitialData(domain, data, fieldDefinitions, saveEntity, onSaveRejected);
-	});
-
-
-	it("should make a new entity with makeNewEntity", (done) => { //eslint-disable-line no-undef
-		const domain = "dom";
-		const responseFieldDefs = [
-			{name: "testField1", type: "text"},
-			{name: "testField2", type: "multiselect", options: ["foo", "bar"]},
-			{name: "testField3", type: "relation"}
-		];
-
-		const finalize = (e) => {
-			unsubscribe();
-			crud.fetchFieldDescription.restore();
-			done(e);
-		};
-
-		sinon.stub(crud, "fetchFieldDescription", (dom, next) => {
-			try {
-				expect(dom).toEqual(domain);
-				next(responseFieldDefs);
-			} catch(e) {
-				finalize(e);
-			}
-		});
-
-		unsubscribe = store.subscribe(() => {
-			try {
-				expect(store.getState().entity).toEqual({
-					data: {
-						testField1: "",
-						testField2: [],
-						"@relations": {},
-						"@type": "dom"
-					},
-					domain: domain,
-					fieldDefinitions: responseFieldDefs,
-					errorMessage: null
-				});
-				finalize();
-			} catch (e) {
-				finalize(e);
-			}
-		});
-
-		store.dispatch(makeNewEntity(domain));
-	});
-
-
-	it("should handle a fetch exception with makeNewEntity", (done) => { //eslint-disable-line no-undef
-		const domain = "dom";
-		sinon.stub(server, "performXhr", (options, accept, reject) => {
-			reject("reason", {
-				body: "not found",
-				statusCode: 404
-			});
-		});
-
-		unsubscribe = store.subscribe(() => {
-			try {
-				unsubscribe();
-				expect(store.getState().entity).toEqual({
-					data: null,
-					domain: domain,
-					errorMessage: `Failed to fetch field definitions for ${domain}`,
-					fieldDefinitions: null
-				});
-				server.performXhr.restore();
-				done();
-			} catch (e) {
-				server.performXhr.restore();
-				done(e);
-			}
-		});
-
-		store.dispatch(makeNewEntity(domain));
-	});
-
-	it("should fetch an entity with selectEntity", (done) => { //eslint-disable-line no-undef
-		const domain = "dom";
-		const entityId = "ID";
-		const responseData = {"@type": domain};
-		const responseFieldDefs = [{"name": "test"}];
-		let orderOfOperations = [];
-
-		const finalize = (e) => {
-			unsubscribe();
-			crud.fetchEntity.restore();
-			crud.fetchFieldDescription.restore();
-			done(e);
-		};
-
-		sinon.stub(crud, "fetchEntity", (location, next) => {
-			try {
-				orderOfOperations.push("fetchEntity");
-				expect(location).toEqual(`/api/${config.apiVersion}/domain/${domain}s/${entityId}`);
-				next(responseData);
-			} catch (e) {
-				finalize(e);
-			}
-		});
-
-		sinon.stub(crud, "fetchFieldDescription", (dom, next) => {
-			try {
-				expect(dom).toEqual(domain);
-				orderOfOperations.push("fetchFieldDescription");
-				next(responseFieldDefs);
-			} catch(e) {
-				finalize(e);
-			}
-		});
-
-		unsubscribe = store.subscribe(() => {
-			try {
-				expect(store.getState().entity).toEqual({
-					data: responseData,
-					domain: domain,
-					fieldDefinitions: responseFieldDefs,
-					errorMessage: null
-				});
-				expect(orderOfOperations).toEqual(["fetchEntity", "fetchFieldDescription"]);
-				finalize();
-			} catch (e) {
-				finalize(e);
-			}
-		});
-
-
-		store.dispatch(selectEntity(domain, entityId));
-	});
-
-	it("should handle a fetch exception with selectEntity", (done) => { //eslint-disable-line no-undef
-		const domain = "dom";
-		const entityId = "ID";
-		sinon.stub(server, "performXhr", (options, accept, reject) => {
-			reject("reason", {
-				body: "not found",
-				statusCode: 404
-			});
-		});
-
-		unsubscribe = store.subscribe(() => {
-			try {
-				unsubscribe();
-				expect(store.getState().entity).toEqual({
-					data: null,
-					domain: domain,
-					errorMessage: `Failed to fetch dom with ID ${entityId}`,
-					fieldDefinitions: null
-				});
-				server.performXhr.restore();
-				done();
-			} catch (e) {
-				server.performXhr.restore();
-				done(e);
-			}
-		});
-
-		store.dispatch(selectEntity(domain, entityId));
 	});
 
 });
