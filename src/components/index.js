@@ -2,13 +2,13 @@ import React from "react";
 import {Login, Basic} from "hire-login";
 import Select from "hire-forms-select";
 import Form from "./form";
+import FacetedSearch from "hire-faceted-search";
 import RequestLog from "./request-log";
-
+import SearchFilters from "./search-filters";
 
 class App extends React.Component {
 	render() {
 		console.log(this.props.vre, this.props.entity);
-
 
 		let errorMessage = this.props.entity.errorMessage ? <div style={{fontWeight: "bold", color: "red"}}>{this.props.entity.errorMessage}</div> : null;
 
@@ -23,16 +23,28 @@ class App extends React.Component {
 			/>
 		) : null;
 
-		let businessPart = this.props.vre.vreId ? (
+		let addNewButton = this.props.vre.vreId && this.props.entity.domain ?
+			<button onClick={() => this.props.onNew(this.props.entity.domain)}>Add new</button>
+			: null;
+
+		let businessPart = this.props.vre.vreId && this.props.entity.domain ? (
 			<div>
 				<Form {...this.props} />
-				<ul id="entity-index">
-					{this.props.entityIndex.records.map((record, i) => (
-						<li key={i} onClick={() => this.props.onSelect(record)}>
-							{record.domain} - {record.id}
-						</li>
-					))}
-				</ul>
+				<FacetedSearch
+					config={{
+						baseURL: "/api/v2.1",
+						searchPath: `/search/${this.props.entity.domain}s`,
+						headers: {
+							VRE_ID: this.props.vre.vreId,
+							Accept: "application/json"
+						}
+					}}
+					customComponents={{
+						filters: SearchFilters
+					}}
+					key={this.props.entity.domain}
+					onSelect={(obj) => this.props.onSelect({id: obj.id, domain: obj.type})}
+				/>
 			</div>) : null;
 
 		return (
@@ -51,6 +63,7 @@ class App extends React.Component {
 						<li key={vreId} onClick={() => this.props.onSelectVre(vreId)}>{vreId}</li>
 					))}
 					<li>{domainSelect}</li>
+					<li>{addNewButton}</li>
 				</ul>
 				{businessPart}
 
