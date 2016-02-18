@@ -1,6 +1,6 @@
 import React from "react";
 import {Login, Basic} from "hire-login";
-
+import Select from "hire-forms-select";
 import Form from "./form";
 import RequestLog from "./request-log";
 
@@ -9,21 +9,22 @@ class App extends React.Component {
 	render() {
 		console.log(this.props.vre, this.props.entity);
 
-		let idDiv = this.props.entity.data && this.props.entity.data._id ?
-			(<div>
-				<label>ID</label>:
-				<span>{this.props.entity.data._id}</span>
-			</div>) : null;
 
-		let errorMessage = this.props.entity.errorMessage ?
-			<pre style={{fontWeight: "bold", color: "red"}}>{this.props.entity.errorMessage}</pre> : null;
+		let errorMessage = this.props.entity.errorMessage ? <div style={{fontWeight: "bold", color: "red"}}>{this.props.entity.errorMessage}</div> : null;
+
+		const domains = (this.props.vre.collections || []).map((domain) => domain.name.replace(/s$/, ""));
+
+		let domainSelect = domains.length ? (
+			<Select
+				onChange={(domain) => this.props.onNew(domain)}
+				options={domains}
+				placeholder="- select a domain - "
+				value={this.props.entity.domain || ""}
+			/>
+		) : null;
 
 		let businessPart = this.props.vre.vreId ? (
 			<div>
-				<button onClick={() => this.props.onNew("wwperson")}>New wwperson</button>
-				<button onClick={() => this.props.onNew("wwdocument")}>New wwdocument</button>
-				{errorMessage}
-				{idDiv}
 				<Form {...this.props} />
 				<ul id="entity-index">
 					{this.props.entityIndex.records.map((record, i) => (
@@ -44,10 +45,12 @@ class App extends React.Component {
 					userUrl="/api/v2.1/system/users/me">
 					<Basic url="/api/v2.1/authenticate"/>
 				</Login>
+				{errorMessage}
 				<ul id="vre-list">
 					{this.props.vre.list.map((vreId) => (
 						<li key={vreId} onClick={() => this.props.onSelectVre(vreId)}>{vreId}</li>
 					))}
+					<li>{domainSelect}</li>
 				</ul>
 				{businessPart}
 

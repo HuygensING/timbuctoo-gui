@@ -15,14 +15,11 @@ var entities = {
 
 var VREs = {
 	"WomenWriters": [
-		{
-			wwdocuments: {
-			}
-		},
-		{
-			wwpersons: {
-			}
-		}
+		{name: "wwdocuments"},
+		{name: "wwpersons"}
+	],
+	"CKCC": [
+		{name: "ckccpersons"}
 	]
 };
 
