@@ -18,16 +18,8 @@ class App extends React.Component {
 		let errorMessage = this.props.entity.errorMessage ?
 			<pre style={{fontWeight: "bold", color: "red"}}>{this.props.entity.errorMessage}</pre> : null;
 
-		return (
+		let businessPart = this.props.vre.vreId ? (
 			<div>
-				<RequestLog {...this.props} />
-				<Login
-					appId="WomenWriters"
-					headers={{VRE_ID: "WomenWriters"}}
-					onChange={this.props.onLoginChange}
-					userUrl="/api/v2.1/system/users/me">
-					<Basic url="/api/v2.1/authenticate"/>
-				</Login>
 				<button onClick={() => this.props.onNew("wwperson")}>New wwperson</button>
 				<button onClick={() => this.props.onNew("wwdocument")}>New wwdocument</button>
 				{errorMessage}
@@ -40,6 +32,19 @@ class App extends React.Component {
 						</li>
 					))}
 				</ul>
+			</div>) : null;
+		return (
+			<div>
+				<RequestLog {...this.props} />
+				<Login
+					appId={this.props.vre.vreId}
+					headers={{VRE_ID: "WomenWriters"}}
+					onChange={this.props.onLoginChange}
+					userUrl="/api/v2.1/system/users/me">
+					<Basic url="/api/v2.1/authenticate"/>
+				</Login>
+				{businessPart}
+
 			</div>
 		);
 	}
@@ -51,7 +56,7 @@ App.propTypes = {
 	onLoginChange: React.PropTypes.func,
 	onNew: React.PropTypes.func,
 	onSelect: React.PropTypes.func,
-	vre: React.PropTypes.string
+	vre: React.PropTypes.object
 };
 
 export default App;

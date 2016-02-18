@@ -8,6 +8,7 @@ import relationSavers from "../../src/actions/relation-savers";
 import {crud} from "../../src/actions/crud";
 
 describe("entity", () => { //eslint-disable-line no-undef
+	const VRE = "WomenWriters";
 	let unsubscribe;
 
 	function runWithInitialData(domain, data, fieldDefinitions, run, runAfter) {
@@ -22,9 +23,16 @@ describe("entity", () => { //eslint-disable-line no-undef
 	}
 
 	before((done) => { //eslint-disable-line no-undef
-		const onUser = () => {
+
+		const onVre = () => {
 			unsubscribe();
 			done();
+		};
+
+		const onUser = () => {
+			unsubscribe();
+			unsubscribe = store.subscribe(onVre);
+			store.dispatch({type: "SET_VRE", vreId: VRE});
 		};
 
 		unsubscribe = store.subscribe(onUser);
@@ -154,7 +162,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(d).toEqual({...data, _id: entityId});
 				expect(f).toEqual(fieldDefinitions);
 				expect(t).toEqual(store.getState().user.token);
-				expect(v).toEqual(store.getState().vre);
+				expect(v).toEqual(store.getState().vre.vreId);
 				orderOfOperations.push("saveRelations");
 				next();
 			} catch (e) {
@@ -180,7 +188,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 				orderOfOperations.push("saveNewEntity");
 				expect(saveData).toEqual({"title": data.title, "@type": domain});
 				expect(token).toEqual(store.getState().user.token);
-				expect(vreId).toEqual(store.getState().vre);
+				expect(vreId).toEqual(store.getState().vre.vreId);
 				next(null, {headers: {location: expectedUrl}});
 			} catch (e) {
 				finalize(e);
@@ -244,7 +252,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 			expect(d).toEqual(data);
 			expect(f).toEqual(fieldDefinitions);
 			expect(t).toEqual(store.getState().user.token);
-			expect(v).toEqual(store.getState().vre);
+			expect(v).toEqual(store.getState().vre.vreId);
 			orderOfOperations.push("saveRelations");
 			next();
 		};
@@ -277,7 +285,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(dom).toEqual("dom");
 				expect(saveData).toEqual({"_id": entityId, "title": "a title", "@type": "dom"});
 				expect(token).toEqual(store.getState().user.token);
-				expect(vreId).toEqual(store.getState().vre);
+				expect(vreId).toEqual(store.getState().vre.vreId);
 				orderOfOperations.push("updateEntity");
 				next(null, {body: JSON.stringify(data)});
 			} catch(e) {

@@ -27,7 +27,7 @@ class RelationField extends React.Component {
 			<div>
 				<label>{this.props.name}</label>
 				<AutocompleteList
-					async={(query, done) => getAutocompleteValues(this.props.path, query, this.props.vre, done) }
+					async={(query, done) => getAutocompleteValues(this.props.path, query, this.props.vre.vreId, done) }
 					onChange={this.onChange.bind(this)}
 					values={values.filter((val) => val.accepted).map((val) => { return { value: val.displayName, key: val.id}; })} />
 			</div>
@@ -41,7 +41,7 @@ RelationField.propTypes = {
 	name: React.PropTypes.string,
 	onChange: React.PropTypes.func,
 	path: React.PropTypes.string,
-	vre: React.PropTypes.string
+	vre: React.PropTypes.object
 };
 
 export default RelationField;

@@ -52,9 +52,9 @@ const saveEntity = () => (dispatch, getState) => {
 
 	if(getState().entity.data._id) {
 		// 1) Update the entity with saveData
-		crud.updateEntity(getState().entity.domain, saveData, getState().user.token, getState().vre, (err, resp) =>
+		crud.updateEntity(getState().entity.domain, saveData, getState().user.token, getState().vre.vreId, (err, resp) =>
 			// 2) Save relations using server response for current relations to diff against relationData
-			dispatch((redispatch) => saveRelations[config.apiVersion](JSON.parse(resp.body), relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre, () =>
+			dispatch((redispatch) => saveRelations[config.apiVersion](JSON.parse(resp.body), relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre.vreId, () =>
 				// 3) Refetch entity for render
 				redispatch(selectEntity(getState().entity.domain, getState().entity.data._id)))), () =>
 					// 2a) Handle error by refetching and passing along an error message
@@ -62,11 +62,11 @@ const saveEntity = () => (dispatch, getState) => {
 
 	} else {
 		// 1) Create new entity with saveData
-		crud.saveNewEntity(getState().entity.domain, saveData, getState().user.token, getState().vre, (err, resp) =>
+		crud.saveNewEntity(getState().entity.domain, saveData, getState().user.token, getState().vre.vreId, (err, resp) =>
 			// 2) Fetch entity via location header
 			dispatch((redispatch) => crud.fetchEntity(resp.headers.location, (data) =>
 				// 3) Save relations using server response for current relations to diff against relationData
-				saveRelations[config.apiVersion](data, relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre, () =>
+				saveRelations[config.apiVersion](data, relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre.vreId, () =>
 					// 4) Refetch entity for render
 					redispatch(selectEntity(getState().entity.domain, data._id))))), () =>
 						// 2a) Handle error by refetching and passing along an error message
