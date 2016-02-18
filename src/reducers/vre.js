@@ -10,7 +10,7 @@ export default function(state=initialState, action) {
 			return {
 				...state,
 				vreId: action.vreId,
-				collections: action.collections,
+				collections: action.collections || null,
 				list: action.list || state.list
 			};
 

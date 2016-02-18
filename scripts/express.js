@@ -1,6 +1,6 @@
 var app = require("express")();
-var bodyParser = require('body-parser');
-var clone = require('clone-deep');
+var bodyParser = require("body-parser");
+var clone = require("clone-deep");
 var relationTypes = require("../src/static/relationtypes");
 var keywords = require("../src/static/keywords");
 var fieldDefinitions = require("../src/static/field-definitions");
@@ -11,6 +11,19 @@ var entities = {
 	wwdocuments: {},
 	wwpersons: {},
 	wwrelations: {}
+};
+
+var VREs = {
+	"WomenWriters": [
+		{
+			wwdocuments: {
+			}
+		},
+		{
+			wwpersons: {
+			}
+		}
+	]
 };
 
 app.use(function (req, res, next) {
@@ -81,12 +94,15 @@ app.put("/domain/:domain/:id", function(req, res) {
 });
 
 app.delete("/domain/:domain/:id", function(req, res) {
-	delete entities[req.params.domain][req.params.id]
+	delete entities[req.params.domain][req.params.id];
 	res
 		.status(204)
 		.end();
 });
 
+app.get("/system/vres/:vreId", function(req, res) {
+	res.send(VREs[req.params.vreId] || []);
+});
 
 
 app.listen(5000, function() {
