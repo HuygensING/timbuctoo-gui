@@ -42,3 +42,5 @@ browserSync.init({
 		]
 	}
 });
+
+require("./express");
