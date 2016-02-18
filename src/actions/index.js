@@ -13,5 +13,6 @@ export default {
 	onSelect: (record) => store.dispatch(selectEntity(record.domain, record.id)),
 	onSave: () => store.dispatch(saveEntity()),
 	onChange: (fieldPath, value) => store.dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
-	onLoginChange: (response) => store.dispatch(setUser(response))
+	onLoginChange: (response) => store.dispatch(setUser(response)),
+	onSelectVre: (vreId) => store.dispatch({type: "SET_VRE", vreId: vreId})
 };

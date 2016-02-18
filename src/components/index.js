@@ -44,6 +44,11 @@ class App extends React.Component {
 					userUrl="/api/v2.1/system/users/me">
 					<Basic url="/api/v2.1/authenticate"/>
 				</Login>
+				<ul id="vre-list">
+					{this.props.vre.list.map((vreId) => (
+						<li key={vreId} onClick={() => this.props.onSelectVre(vreId)}>{vreId}</li>
+					))}
+				</ul>
 				{businessPart}
 
 			</div>
@@ -57,6 +62,7 @@ App.propTypes = {
 	onLoginChange: React.PropTypes.func,
 	onNew: React.PropTypes.func,
 	onSelect: React.PropTypes.func,
+	onSelectVre: React.PropTypes.func,
 	vre: React.PropTypes.object
 };
 
