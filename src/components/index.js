@@ -33,6 +33,7 @@ class App extends React.Component {
 					))}
 				</ul>
 			</div>) : null;
+
 		return (
 			<div>
 				<RequestLog {...this.props} />

@@ -4,13 +4,13 @@ import store from "../../src/store";
 
 describe("vre reducer", () => { //eslint-disable-line no-undef
 
-	before((done) => { //eslint-disable-line no-undef
+	beforeEach((done) => { //eslint-disable-line no-undef
 		const unsubscribe = store.subscribe(() => {
 			unsubscribe();
 			done();
 		});
 
-		store.dispatch({type: "SET_VRE", vreId: null});
+		store.dispatch({type: "SET_VRE", vreId: null, list: []});
 	});
 
 	it("should SET the vre", (done) => { //eslint-disable-line no-undef
@@ -18,7 +18,8 @@ describe("vre reducer", () => { //eslint-disable-line no-undef
 			unsubscribe();
 			try {
 				expect(store.getState().vre).toEqual({
-					vreId: "WomenWriters"
+					vreId: "WomenWriters",
+					list: []
 				});
 				done();
 			} catch(e) {
@@ -27,5 +28,23 @@ describe("vre reducer", () => { //eslint-disable-line no-undef
 		});
 
 		store.dispatch({type: "SET_VRE", vreId: "WomenWriters"});
+	});
+
+	it("should LIST the vres", (done) => { //eslint-disable-line no-undef
+		const unsubscribe = store.subscribe(() => {
+			unsubscribe();
+			try {
+				expect(store.getState().vre).toEqual({
+					vreId: null,
+					list: ["a", "b", "c"]
+				});
+				done();
+			} catch(e) {
+				done(e);
+			}
+		});
+
+		store.dispatch({type: "LIST_VRES", list: ["a", "b", "c"]});
+
 	});
 });
