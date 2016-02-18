@@ -1,22 +1,13 @@
 import clone from "clone-deep";
 import { crud } from "./crud";
-import server from "./server";
-import saveRelationsV4 from "./save-relations";
-import saveRelationsV21 from "./v2.1/save-relations";
+import saveRelations from "./relation-savers";
 import config from "../config";
 
-let saveRelations = config.apiVersion === "v2.1" ? saveRelationsV21 : saveRelationsV4;
-
-const setSaveRelationsFunc = (func) => { saveRelations = func; };
 
 // 1) Fetch the fieldDefinitions for the given domain (TODO: should become server request in stead of static source file)
 // 2) Dispatch the requested actionType (RECEIVE_ENTITY or NEW_ENTITY)
 const fetchFieldDescription = (domain, actionType, data = null, errorMessage = null) => (dispatch) =>
-	server.performXhr({
-		headers: {"Accept": "application/json"},
-		url: `/api/v4/fielddefinitions/${domain}`
-	}, (err, resp) => {
-		const fieldDefinitions = JSON.parse(resp.body);
+	crud.fetchFieldDescription(domain, (fieldDefinitions) => {
 		dispatch({
 			type: actionType,
 			domain: domain,
@@ -30,6 +21,7 @@ const fetchFieldDescription = (domain, actionType, data = null, errorMessage = n
 			errorMessage: `Failed to fetch field definitions for ${domain}`
 		});
 	});
+
 
 // 1) Fetch entity
 // 2) Fetch field description of this entity's domain
@@ -62,7 +54,7 @@ const saveEntity = () => (dispatch, getState) => {
 		// 1) Update the entity with saveData
 		crud.updateEntity(getState().entity.domain, saveData, getState().user.token, getState().vre, (err, resp) =>
 			// 2) Save relations using server response for current relations to diff against relationData
-			dispatch((redispatch) => saveRelations(JSON.parse(resp.body), relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre, () =>
+			dispatch((redispatch) => saveRelations[config.apiVersion](JSON.parse(resp.body), relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre, () =>
 				// 3) Refetch entity for render
 				redispatch(selectEntity(getState().entity.domain, getState().entity.data._id)))), () =>
 					// 2a) Handle error by refetching and passing along an error message
@@ -74,7 +66,7 @@ const saveEntity = () => (dispatch, getState) => {
 			// 2) Fetch entity via location header
 			dispatch((redispatch) => crud.fetchEntity(resp.headers.location, (data) =>
 				// 3) Save relations using server response for current relations to diff against relationData
-				saveRelations(data, relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre, () =>
+				saveRelations[config.apiVersion](data, relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre, () =>
 					// 4) Refetch entity for render
 					redispatch(selectEntity(getState().entity.domain, data._id))))), () =>
 						// 2a) Handle error by refetching and passing along an error message
@@ -83,4 +75,4 @@ const saveEntity = () => (dispatch, getState) => {
 };
 
 
-export {saveEntity, selectEntity, makeNewEntity, setSaveRelationsFunc};
+export {saveEntity, selectEntity, makeNewEntity};

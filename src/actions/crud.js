@@ -34,11 +34,23 @@ const fetchEntity = (location, next, fail) =>
 		next(data);
 	}, fail, "Fetch entity");
 
+const fetchFieldDescription = (domain, next, fail) =>
+	server.performXhr({
+		headers: {"Accept": "application/json"},
+		url: `/api/v4/fielddefinitions/${domain}`
+	}, (err, resp) => {
+		const fieldDefinitions = JSON.parse(resp.body);
+		next(fieldDefinitions);
+	}, fail);
+
+
+
 const crud = {
 	saveNewEntity: saveNewEntity,
 	updateEntity: updateEntity,
 	deleteEntity: deleteEntity,
-	fetchEntity: fetchEntity
+	fetchEntity: fetchEntity,
+	fetchFieldDescription: fetchFieldDescription
 };
 
 export {saveNewEntity, updateEntity, deleteEntity, fetchEntity, crud};
