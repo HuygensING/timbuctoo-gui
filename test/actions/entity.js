@@ -32,6 +32,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 		store.dispatch({type: "SET_USER", user: {token: "TOKEN"}});
 	});
 
+
 	it("should save a new entity with saveEntity", (done) => { //eslint-disable-line no-undef
 		const domain = "dom";
 		const entityId = "entId";
@@ -187,7 +188,6 @@ describe("entity", () => { //eslint-disable-line no-undef
 				finalize(e);
 			}
 		});
-
 
 		const assertSaveComplete = () => {
 			try {
@@ -381,51 +381,50 @@ describe("entity", () => { //eslint-disable-line no-undef
 		const entityId = "ID";
 		const responseData = {"@type": domain};
 		const responseFieldDefs = [{"name": "test"}];
-		let count = 0;
-		sinon.stub(server, "performXhr", (options, accept) => {
-			try {
-				count++;
-				if(count === 1) {
-					expect(options).toEqual({
-						url: `/api/${config.apiVersion}/domain/${domain}s/${entityId}`,
-						headers: {
-							"Accept": "application/json"
-						},
-						method: "GET"
-					});
-					accept(null, {body: JSON.stringify(responseData)});
+		let orderOfOperations = [];
 
-				} else if(count === 2) {
-					expect(options).toEqual({
-						url: `/api/v4/fielddefinitions/${domain}`,
-						headers: {
-							"Accept": "application/json"
-						}
-					});
-					accept(null, {body: JSON.stringify(responseFieldDefs)});
-				}
+		const finalize = (e) => {
+			unsubscribe();
+			crud.fetchEntity.restore();
+			crud.fetchFieldDescription.restore();
+			done(e);
+		};
+
+		sinon.stub(crud, "fetchEntity", (location, next) => {
+			try {
+				orderOfOperations.push("fetchEntity");
+				expect(location).toEqual(`/api/${config.apiVersion}/domain/${domain}s/${entityId}`);
+				next(responseData);
+			} catch (e) {
+				finalize(e);
+			}
+		});
+
+		sinon.stub(crud, "fetchFieldDescription", (dom, next) => {
+			try {
+				expect(dom).toEqual(domain);
+				orderOfOperations.push("fetchFieldDescription");
+				next(responseFieldDefs);
 			} catch(e) {
-				server.performXhr.restore();
-				done(e);
+				finalize(e);
 			}
 		});
 
 		unsubscribe = store.subscribe(() => {
 			try {
-				unsubscribe();
 				expect(store.getState().entity).toEqual({
 					data: responseData,
 					domain: domain,
 					fieldDefinitions: responseFieldDefs,
 					errorMessage: null
 				});
-				server.performXhr.restore();
-				done();
+				expect(orderOfOperations).toEqual(["fetchEntity", "fetchFieldDescription"]);
+				finalize();
 			} catch (e) {
-				server.performXhr.restore();
-				done(e);
+				finalize(e);
 			}
 		});
+
 
 		store.dispatch(selectEntity(domain, entityId));
 	});
