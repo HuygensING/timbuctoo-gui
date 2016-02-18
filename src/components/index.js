@@ -1,6 +1,9 @@
 import React from "react";
-import Form from "./form";
 import {Login, Basic} from "hire-login";
+
+import Form from "./form";
+import RequestLog from "./request-log";
+
 
 class App extends React.Component {
 	render() {
@@ -17,6 +20,7 @@ class App extends React.Component {
 
 		return (
 			<div>
+				<RequestLog {...this.props} />
 				<Login
 					appId="WomenWriters"
 					headers={{VRE_ID: "WomenWriters"}}

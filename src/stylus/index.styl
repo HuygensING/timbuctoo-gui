@@ -5,6 +5,7 @@ body
 
 
 #app
+	margin-top 20px
 	padding 1em
 	ul#form
 		display inline-block
@@ -32,6 +33,37 @@ body
 
 	ul#form + ul#entity-index
 		width 25%
+
+#request-log
+	position absolute
+	z-index 999
+	top 0
+	left 0
+	height 24px
+	line-height 20px
+	width 100%
+	font-family courier, serif
+	font-size 0.75em
+	background-color #aaa
+	padding 4px
+
+	&.close
+		height 100%
+	button
+		position absolute
+		bottom 2px
+		right 20px
+
+	& > div
+		height 100%
+		overflow-y auto
+		.msg
+			margin-left 6px
+		.time
+			margin-right 6px
+		.ERROR_MESSAGE
+			color #f00
+			font-weight bold
 
 .hire-input
 	height 1.5em
