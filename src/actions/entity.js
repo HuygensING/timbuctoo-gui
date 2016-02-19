@@ -41,7 +41,8 @@ const makeNewEntity = (domain, errorMessage = null) =>
 
 const deleteEntity = () => (dispatch, getState) => {
 	crud.deleteEntity(getState().entity.domain, getState().entity.data._id, getState().user.token, getState().vre.vreId, () =>
-		dispatch(makeNewEntity(getState().entity.domain)));
+		dispatch(makeNewEntity(getState().entity.domain)), () =>
+			dispatch(selectEntity(getState().entity.domain, getState().entity.data._id, `Failed to delete ${getState().entity.domain} with ID ${getState().entity.data._id}`)));
 };
 
 // 1) Save an entity

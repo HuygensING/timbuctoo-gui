@@ -362,6 +362,64 @@ describe("entity", () => { //eslint-disable-line no-undef
 
 	});
 
+	it("should handle a delete exception with selectEntity", (done) => { //eslint-disable-line no-undef
+		const domain = "dom";
+		const data = {_id: "entId", "@type": domain};
+		const expectedUrl = `/api/${config.apiVersion}/domain/${domain}s/${data._id}`;
+		let orderOfOperations = [];
+
+		const finalize = (e) => {
+			unsubscribe();
+			crud.deleteEntity.restore();
+			crud.fetchEntity.restore();
+			crud.fetchFieldDescription.restore();
+			done(e);
+		};
+
+		sinon.stub(crud, "fetchEntity", (location, next) => {
+			try {
+				orderOfOperations.push("fetchEntity");
+				expect(location).toEqual(expectedUrl);
+				next(data);
+			} catch (e) {
+				finalize(e);
+			}
+		});
+
+		sinon.stub(crud, "fetchFieldDescription", (dom, next) => {
+			try {
+				expect(dom).toEqual(domain);
+				orderOfOperations.push("fetchFieldDescription");
+				next([]);
+			} catch(e) {
+				finalize(e);
+			}
+		});
+
+		sinon.stub(crud, "deleteEntity", (dom, entId, token, vreId, next, fail) => {
+			try {
+				orderOfOperations.push("deleteEntity");
+				fail();
+			} catch(e) {
+				finalize(e);
+			}
+		});
+
+		const assertDeleteComplete = () => {
+			try {
+				expect(orderOfOperations).toEqual(["deleteEntity", "fetchEntity", "fetchFieldDescription"]);
+				expect(store.getState().entity.data).toEqual(data);
+				expect(store.getState().entity.domain).toEqual(domain);
+				finalize();
+			} catch(e) {
+				finalize(e);
+			}
+		};
+
+		runWithInitialData(domain, data, {}, deleteEntity, assertDeleteComplete);
+
+	});
+
 	it("should handle a fetch exception with makeNewEntity", (done) => { //eslint-disable-line no-undef
 		const domain = "dom";
 		sinon.stub(server, "performXhr", (options, accept, reject) => {
