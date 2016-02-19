@@ -5,8 +5,13 @@ import mapField from "./map-field";
 class Form extends React.Component {
 	render() {
 		if(!this.props.entity.data) { return null; }
+
 		let saveButton = this.props.user && this.props.user.token ?
-			<li><button onClick={this.props.onSave}>Save</button></li> : null;
+			<button onClick={this.props.onSave}>Save</button> : null;
+
+		let deleteButton = this.props.user && this.props.user.token && this.props.entity.data._id ?
+			<button onClick={this.props.onDelete}>Delete</button> : null;
+
 		let newForm = this.props.user && this.props.user.token ?
 			this.props.entity.fieldDefinitions.map((fieldDef, i) => <li key={i}>{mapField(fieldDef, this.props)}</li> ) :
 			"you are not logged in";
@@ -14,7 +19,7 @@ class Form extends React.Component {
 		return (
 			<ul id="form">
 				{newForm}
-				{saveButton}
+				<li>{saveButton}{deleteButton}</li>
 			</ul>
 		);
 	}
@@ -22,6 +27,7 @@ class Form extends React.Component {
 
 Form.propTypes = {
 	entity: React.PropTypes.object,
+	onDelete: React.PropTypes.func,
 	onSave: React.PropTypes.func,
 	user: React.PropTypes.object
 };
