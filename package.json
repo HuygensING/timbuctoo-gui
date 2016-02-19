@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "scripts/server.js",
-    "express": "node scripts/express.js",
+    "start:proxies": "node scripts/server2.js",
     "test": "mocha --compilers js:babel/register --recursive test",
     "test:watch": "nodemon -x \"mocha --compilers js:babel/register --recursive --watch test\" -w test -w build",
     "watch": "scripts/watch.sh"
