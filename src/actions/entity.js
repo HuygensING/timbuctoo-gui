@@ -39,6 +39,11 @@ const selectEntity = (domain, entityId, errorMessage = null) =>
 const makeNewEntity = (domain, errorMessage = null) =>
 	(dispatch) => dispatch(fetchFieldDescription(domain, "NEW_ENTITY", null, errorMessage));
 
+const deleteEntity = () => (dispatch, getState) => {
+	crud.deleteEntity(getState().entity.domain, getState().entity.data._id, getState().user.token, getState().vre.vreId, () =>
+		dispatch(makeNewEntity(getState().entity.domain)));
+};
+
 // 1) Save an entity
 // 2) Save the relations for this entity
 // 3) Refetch entity for render
@@ -75,4 +80,4 @@ const saveEntity = () => (dispatch, getState) => {
 };
 
 
-export {saveEntity, selectEntity, makeNewEntity};
+export {saveEntity, selectEntity, makeNewEntity, deleteEntity};

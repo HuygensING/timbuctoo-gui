@@ -3,7 +3,7 @@ import expect from "expect";
 import server from "../../src/actions/server";
 import store from "../../src/store";
 import config from "../../src/config";
-import {saveEntity, selectEntity, makeNewEntity} from "../../src/actions/entity";
+import {saveEntity, selectEntity, makeNewEntity, deleteEntity} from "../../src/actions/entity";
 import relationSavers from "../../src/actions/relation-savers";
 import {crud} from "../../src/actions/crud";
 
@@ -310,6 +310,56 @@ describe("entity", () => { //eslint-disable-line no-undef
 		};
 
 		runWithInitialData(domain, data, fieldDefinitions, saveEntity, assertSaveComplete);
+	});
+
+	it("should delete an entity with deleteEntity", (done) => { //eslint-disable-line no-undef
+		const domain = "dom";
+		const data = {_id: "entId"};
+		let orderOfOperations = [];
+
+		const finalize = (e) => {
+			unsubscribe();
+			crud.deleteEntity.restore();
+			crud.fetchFieldDescription.restore();
+			done(e);
+		};
+
+		sinon.stub(crud, "fetchFieldDescription", (dom, next) => {
+			try {
+				expect(dom).toEqual(domain);
+				orderOfOperations.push("fetchFieldDescription");
+				next([]);
+			} catch(e) {
+				finalize(e);
+			}
+		});
+
+		sinon.stub(crud, "deleteEntity", (dom, entId, token, vreId, next) => {
+			try {
+				expect(dom).toEqual("dom");
+				expect(entId).toEqual(data._id);
+				expect(token).toEqual(store.getState().user.token);
+				expect(vreId).toEqual(store.getState().vre.vreId);
+				orderOfOperations.push("deleteEntity");
+				next();
+			} catch(e) {
+				finalize(e);
+			}
+		});
+
+		const assertDeleteComplete = () => {
+			try {
+				expect(orderOfOperations).toEqual(["deleteEntity", "fetchFieldDescription"]);
+				expect(store.getState().entity.data).toEqual({"@type": domain});
+				expect(store.getState().entity.domain).toEqual(domain);
+				finalize();
+			} catch(e) {
+				finalize(e);
+			}
+		};
+
+		runWithInitialData(domain, data, {}, deleteEntity, assertDeleteComplete);
+
 	});
 
 	it("should handle a fetch exception with makeNewEntity", (done) => { //eslint-disable-line no-undef
