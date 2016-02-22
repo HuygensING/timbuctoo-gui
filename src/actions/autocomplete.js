@@ -1,10 +1,10 @@
 import server from "./server";
-
+import config from "../config";
 
 export default function(path, query, vreId, done) {
 	let options = {
 		headers: {"Accept": "application/json", "VRE_ID": vreId},
-		url: `/api/v2.1/${path}?query=${query}*`
+		url: `${config.apiUrl[config.apiVersion]}/${path}?query=${query}*`
 	};
 
 	let xhrDone = function(err, response, body) {

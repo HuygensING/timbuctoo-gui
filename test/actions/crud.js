@@ -49,7 +49,7 @@ describe("crud", () => { //eslint-disable-line no-undef
 		sinon.stub(server, "performXhr", (options, accept, reject, operation) => {
 			try {
 				expect(options).toEqual({
-					url: `/api/${config.apiVersion}/domain/${domain}s/${saveData._id}`,
+					url: `${config.apiUrl[config.apiVersion]}/domain/${domain}s/${saveData._id}`,
 					headers: {
 						"Content-type": "application/json",
 						"Accept": "application/json",
@@ -85,7 +85,7 @@ describe("crud", () => { //eslint-disable-line no-undef
 		sinon.stub(server, "performXhr", (options, accept, reject, operation) => {
 			try {
 				expect(options).toEqual({
-					url: `/api/${config.apiVersion}/domain/${domain}s/${entityId}`,
+					url: `${config.apiUrl[config.apiVersion]}/domain/${domain}s/${entityId}`,
 					headers: {
 						"Content-type": "application/json",
 						"Accept": "application/json",
@@ -121,7 +121,7 @@ describe("crud", () => { //eslint-disable-line no-undef
 		sinon.stub(server, "performXhr", (options, accept, reject, operation) => {
 			try {
 				expect(options).toEqual({
-					url: `/api/${config.apiVersion}/domain/${domain}s`,
+					url: `${config.apiUrl[config.apiVersion]}/domain/${domain}s`,
 					headers: {
 						"Content-type": "application/json",
 						"Accept": "application/json",

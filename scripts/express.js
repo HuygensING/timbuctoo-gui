@@ -25,6 +25,7 @@ var VREs = {
 
 app.use(function (req, res, next) {
 	console.log(req.method, req.path);
+	res.set("Access-Control-Allow-Origin", "*");
 	next();
 });
 

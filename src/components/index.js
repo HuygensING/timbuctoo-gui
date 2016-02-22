@@ -5,6 +5,7 @@ import Form from "./form";
 import FacetedSearch from "hire-faceted-search";
 import RequestLog from "./request-log";
 import SearchFilters from "./search-filters";
+import config from "../config";
 
 class App extends React.Component {
 	render() {
@@ -32,7 +33,7 @@ class App extends React.Component {
 				<Form {...this.props} />
 				<FacetedSearch
 					config={{
-						baseURL: "/api/v2.1",
+						baseURL: config.apiUrl["v2.1"],
 						searchPath: `/search/${this.props.entity.domain}s`,
 						headers: {
 							VRE_ID: this.props.vre.vreId,
@@ -54,8 +55,8 @@ class App extends React.Component {
 					appId={this.props.vre.vreId}
 					headers={{VRE_ID: "WomenWriters"}}
 					onChange={this.props.onLoginChange}
-					userUrl="/api/v2.1/system/users/me">
-					<Basic url="/api/v2.1/authenticate"/>
+					userUrl={`${config.apiUrl["v2.1"]}/system/users/me`}>
+					<Basic url={`${config.apiUrl["v2.1"]}/authenticate`} />
 				</Login>
 				{errorMessage}
 				<ul id="vre-list">

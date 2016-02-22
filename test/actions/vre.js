@@ -4,6 +4,7 @@ import clone from "clone-deep";
 import store from "../../src/store";
 import server from "../../src/actions/server";
 import {listVres, setVre} from "../../src/actions/vre";
+import config from "../../src/config";
 
 
 describe("vre", () => { //eslint-disable-line no-undef
@@ -29,7 +30,7 @@ describe("vre", () => { //eslint-disable-line no-undef
 		sinon.stub(server, "performXhr", (options, accept, reject, operation) => {
 			try {
 				expect(options).toEqual({
-					url: "/api/v2.1/system/vres",
+					url: `${config.apiUrl["v2.1"]}/system/vres`,
 					headers: {
 						"Accept": "application/json"
 					},
@@ -77,7 +78,7 @@ describe("vre", () => { //eslint-disable-line no-undef
 		sinon.stub(server, "performXhr", (options, accept, reject, operation) => {
 			try {
 				expect(options).toEqual({
-					url: `/api/v4/system/vres/${vreId}`,
+					url: `${config.apiUrl.v4}/system/vres/${vreId}`,
 					headers: {
 						"Accept": "application/json"
 					},

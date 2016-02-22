@@ -2,6 +2,8 @@ import sinon from "sinon";
 import expect from "expect";
 import server from "../../../src/actions/server";
 import saveRelations from "../../../src/actions/v2.1/save-relations";
+import config from "../../../src/config";
+
 
 describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 
@@ -37,7 +39,7 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 				counts[relType]++;
 				expect(options.method).toEqual("POST");
 				if(relType === "relTypeA") {
-					expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual("domain/relTypeAs");
+					expect(options.url).toEqual(`${config.apiUrl[config.apiVersion]}/domain/relTypeAs`);
 					expect(payload).toEqual({
 						"@type": "relTypeA",
 						"^sourceId": "entityID",
@@ -48,7 +50,7 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 						"accepted": true
 					});
 				} else {
-					expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual("domain/relTypeBs");
+					expect(options.url).toEqual(`${config.apiUrl[config.apiVersion]}/domain/relTypeBs`);
 					expect(payload).toEqual({
 						"@type": "relTypeB",
 						"^sourceId": "B_1",
@@ -101,7 +103,7 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 					"_id": "REL_1",
 					"accepted": false
 				});
-				expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual(`domain/${fieldDefs[0].relation.type}s/${data["@relations"].relNameA[0].relationId}`);
+				expect(options.url).toEqual(`${config.apiUrl[config.apiVersion]}/domain/${fieldDefs[0].relation.type}s/${data["@relations"].relNameA[0].relationId}`);
 				accept();
 			} catch(e) {
 				server.performXhr.restore();
@@ -142,7 +144,7 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 					"_id": "REL_1",
 					"accepted": true
 				});
-				expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual(`domain/${fieldDefs[0].relation.type}s/${data["@relations"].relNameA[0].relationId}`);
+				expect(options.url).toEqual(`${config.apiUrl[config.apiVersion]}/domain/${fieldDefs[0].relation.type}s/${data["@relations"].relNameA[0].relationId}`);
 				accept();
 			} catch(e) {
 				server.performXhr.restore();

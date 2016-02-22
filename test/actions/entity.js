@@ -101,7 +101,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 		sinon.stub(crud, "fetchEntity", (location, next) => {
 			try {
 				orderOfOperations.push("fetchEntity");
-				expect(location).toEqual(`/api/${config.apiVersion}/domain/${domain}s/${entityId}`);
+				expect(location).toEqual(`${config.apiUrl[config.apiVersion]}/domain/${domain}s/${entityId}`);
 				next(responseData);
 			} catch (e) {
 				finalize(e);
@@ -142,7 +142,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 		const entityId = "entId";
 		const data = {"title": "a title", "@type": "dom", "@relations": {"x": "y"}};
 		const fieldDefinitions = [{name: "title", type: "string"}];
-		const expectedUrl = `/api/${config.apiVersion}/domain/${domain}s/${entityId}`;
+		const expectedUrl = `${config.apiUrl[config.apiVersion]}/domain/${domain}s/${entityId}`;
 
 		let orderOfOperations = [];
 
@@ -232,7 +232,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 		const entityId = "entId";
 		const data = {"_id": entityId, "title": "a title", "@type": "dom", "@relations": {"foo": "bar"}};
 		const fieldDefinitions = [{name: "title", type: "string"}];
-		const expectedUrl = `/api/${config.apiVersion}/domain/${domain}s/${entityId}`;
+		const expectedUrl = `${config.apiUrl[config.apiVersion]}/domain/${domain}s/${entityId}`;
 
 		let orderOfOperations = [];
 
@@ -365,7 +365,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 	it("should handle a delete exception with selectEntity", (done) => { //eslint-disable-line no-undef
 		const domain = "dom";
 		const data = {_id: "entId", "@type": domain};
-		const expectedUrl = `/api/${config.apiVersion}/domain/${domain}s/${data._id}`;
+		const expectedUrl = `${config.apiUrl[config.apiVersion]}/domain/${domain}s/${data._id}`;
 		let orderOfOperations = [];
 
 		const finalize = (e) => {

@@ -28,7 +28,7 @@ const fetchFieldDescription = (domain, actionType, data = null, errorMessage = n
 // 3) Dispatch RECEIVE_ENTITY for render
 const selectEntity = (domain, entityId, errorMessage = null) =>
 	(dispatch) =>
-		crud.fetchEntity(`/api/${config.apiVersion}/domain/${domain}s/${entityId}`, (data) =>
+		crud.fetchEntity(`${config.apiUrl[config.apiVersion]}/domain/${domain}s/${entityId}`, (data) =>
 			dispatch(fetchFieldDescription(data["@type"], "RECEIVE_ENTITY", data, errorMessage)), () =>
 				dispatch({type: "RECEIVE_ENTITY_FAILURE", errorMessage: `Failed to fetch ${domain} with ID ${entityId}`}));
 

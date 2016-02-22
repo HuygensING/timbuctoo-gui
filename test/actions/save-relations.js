@@ -2,6 +2,7 @@ import sinon from "sinon";
 import expect from "expect";
 import server from "../../src/actions/server";
 import saveRelations from "../../src/actions/save-relations";
+import config from "../../src/config";
 
 describe("saveRelations v4", () => { //eslint-disable-line no-undef
 
@@ -37,7 +38,7 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 				counts[relType]++;
 				expect(options.method).toEqual("POST");
 				if(relType === "relTypeA") {
-					expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual("domain/relTypeAs");
+					expect(options.url).toEqual(`${config.apiUrl[config.apiVersion]}/domain/relTypeAs`);
 					expect(payload).toEqual({
 						"@type": "relTypeA",
 						"^sourceId": "entityID",
@@ -48,7 +49,7 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 						"accepted": true
 					});
 				} else {
-					expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual("domain/relTypeBs");
+					expect(options.url).toEqual(`${config.apiUrl[config.apiVersion]}/domain/relTypeBs`);
 					expect(payload).toEqual({
 						"@type": "relTypeB",
 						"^sourceId": "B_1",
@@ -90,7 +91,7 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 		sinon.stub(server, "performXhr", (options, accept) => {
 			try {
 				expect(options.method).toEqual("DELETE");
-				expect(options.url.replace(/^\/api\/v[^\/]+\//, "")).toEqual(`domain/${fieldDefs[0].relation.type}s/${data["@relations"].relNameA[0].relationId}`);
+				expect(options.url).toEqual(`${config.apiUrl[config.apiVersion]}/domain/${fieldDefs[0].relation.type}s/${data["@relations"].relNameA[0].relationId}`);
 				accept();
 			} catch(e) {
 				server.performXhr.restore();
