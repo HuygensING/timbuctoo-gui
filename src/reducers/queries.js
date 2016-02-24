@@ -10,7 +10,7 @@ const makeQuery = (domain, fieldDefinitions) => {
 	return {
 		domain: domain,
 		deleted: false,
-		entity: {fieldDefinitions: fieldDefinitions, data: {}}
+		entity: {domain: domain, fieldDefinitions: fieldDefinitions, data: {}}
 	};
 };
 
@@ -31,6 +31,17 @@ export default function(state=initialState, action) {
 
 		case "SET_QUERY_FIELD_VALUE":
 			current = setIn([state.currentQuery, "entity", "data"].concat(action.fieldPath), action.value, clone(state.queries));
+			return {
+				...state,
+				queries: current,
+				entity: current[state.currentQuery].entity
+			};
+
+		case "SET_QUERY_RELATION_VALUE":
+			const newEntity = {domain: action.data.domain, fieldDefinitions: action.fieldDefinitions, data: {}};
+			action.data.value[action.data.value.length - 1].entity = newEntity;
+			current = setIn([state.currentQuery, "entity", "data"].concat(action.data.fieldPath), action.data.value, clone(state.queries));
+
 			return {
 				...state,
 				queries: current,

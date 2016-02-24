@@ -20,5 +20,5 @@ export default {
 	onSelectVre: (vreId) => store.dispatch(setVre(vreId)),
 	onSelectQuery: (domain, queryIndex) => store.dispatch(selectQuery(domain, queryIndex)),
 	onDeleteQuery: (queryIndex) => store.dispatch(deleteQuery(queryIndex)),
-	onQueryChange: (fieldPath, value) => store.dispatch({type: "SET_QUERY_FIELD_VALUE", fieldPath: fieldPath, value: value})
+	onQueryChange: (fieldPath, value, domain) => store.dispatch(changeQuery(fieldPath, value, domain))
 };

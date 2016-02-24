@@ -9,6 +9,13 @@ import SelectField from "../../form/fields/select";
 import RelationField from "../../form/fields/relation";
 import KeywordField from "../../form/fields/keyword";
 
+const relateButton = (fieldDef, props) => (
+		<button
+			onClick={() => props.onChange(["@relations"], (props.entity.data["@relations"] || [])
+				.concat({name: fieldDef.name, targetType: fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType }))} >
+			{fieldDef.name}
+		</button>
+	);
 
 const MAP = {
 //	"string": (fieldDef, props) => (<StringField {...props} name={fieldDef.name} />),
@@ -17,8 +24,8 @@ const MAP = {
 //	"names": (fieldDef, props) => (<NamesField {...props} name={fieldDef.name} options={fieldDef.options} />),
 	"multiselect": (fieldDef, props) => (<MultiSelectField {...props} name={fieldDef.name} options={fieldDef.options} />),
 	"select": (fieldDef, props) => (<SelectField {...props} name={fieldDef.name} options={fieldDef.options} />),
-//	"relation": (fieldDef, props) => (<RelationField {...props} name={fieldDef.name} path={fieldDef.path} />),
-//	"keyword": (fieldDef, props) => (<RelationField {...props} fieldDefinition={fieldDef} name={fieldDef.name} />)
+	"relation": relateButton,
+	"keyword": relateButton,
 	"unsupported": (fieldDef, props) => (null)
 };
 

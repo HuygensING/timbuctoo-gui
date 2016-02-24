@@ -146,5 +146,6 @@ module.exports = {
 			}
 		}
 	],
-	"wwcollective": []
+	"wwcollective": [],
+	"wwkeyword": []
 };
