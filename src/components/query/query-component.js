@@ -1,5 +1,5 @@
 import React from "react";
-import { draggable, actions as gridActions } from "infinity-grid";
+import { draggable } from "infinity-grid";
 import icons from "./icons";
 
 class QueryComponent extends React.Component {
@@ -11,7 +11,7 @@ class QueryComponent extends React.Component {
 					{icons[this.props.domain]({className: "handle"})}
 				</g>
 				<g transform="translate(20 20)" >
-					<circle onClick={() => gridActions.onSetComponentProps({deleted: true}, this.props.componentIndex)} r="10" />
+					<circle onClick={() => this.props.onDeleteQuery(this.props.componentIndex) } r="10" />
 				</g>
 			</g>
 		) : (
