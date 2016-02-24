@@ -14,9 +14,9 @@ class App extends React.Component {
 	render() {
 		const collections = this.props.vre.collections || [];
 		return (<div style={{height: "500px"}}>
-			<div style={{position: "absolute", top: 0, height: "50px"}}>
+			<div style={{position: "absolute", top: 0, height: "60px"}}>
 				{collections.map((c) => (
-					<div key={c.name} style={{display: "inline-block"}}>
+					<div key={c.name} style={{display: "inline-block", height: "40px", width: "40px"}}>
 						<QueryComponent
 							domain={c.name}
 							onDeleteQuery={this.onDeleteQuery.bind(this)}

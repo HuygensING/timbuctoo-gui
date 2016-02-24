@@ -10,8 +10,10 @@ class QueryComponent extends React.Component {
 				<g transform="translate(-20 -20)" {...this.props}>
 					{icons[this.props.domain]({className: "handle"})}
 				</g>
-				<g transform="translate(20 20)" >
-					<circle onClick={() => this.props.onDeleteQuery(this.props.componentIndex) } r="10" />
+				<g onClick={() => this.props.onDeleteQuery(this.props.componentIndex) } transform="translate(-20 -20)" >
+					<circle r="8" />
+					<line x1="-3" x2="3" y1="-3" y2="3" strokeWidth="1" stroke="white" />
+					<line x1="-3" x2="3" y1="3" y2="-3" strokeWidth="1" stroke="white" />
 				</g>
 			</g>
 		) : (
@@ -27,6 +29,6 @@ QueryComponent.propTypes = {
 };
 
 export default draggable(
-	(props) => (<svg height="40" width="40" >{icons[props.domain]()}</svg>),
+	(props) => (<svg height="40" width="40">{icons[props.domain]()}</svg>),
 	QueryComponent
 );

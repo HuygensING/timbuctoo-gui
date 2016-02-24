@@ -75,7 +75,6 @@ class App extends React.Component {
 
 App.propTypes = {
 	entity: React.PropTypes.object,
-	entityIndex: React.PropTypes.object,
 	onLoginChange: React.PropTypes.func,
 	onNew: React.PropTypes.func,
 	onSelect: React.PropTypes.func,
