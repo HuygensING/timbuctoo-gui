@@ -7,8 +7,6 @@ import QueryComponent from "./query-component";
 class App extends React.Component {
 
 	render() {
-				console.log(this.props.vre, this.props.entity);
-
 		const collections = this.props.vre.collections || [];
 		return (<div style={{height: "500px"}}>
 			<div style={{position: "absolute", top: 0, height: "50px"}}>
@@ -17,7 +15,7 @@ class App extends React.Component {
 						<QueryComponent
 							domain={c.name}
 							onDeselect={(...args) => console.log(args)}
-							onSelect={(queryIndex, props, setProps) => this.props.onSelectDomain(props.domain.replace(/s$/, ""), "SELECT_QUERY", {queryIndex: queryIndex}) }
+							onSelect={(queryIndex, props) => this.props.onSelectDomain(props.domain.replace(/s$/, ""), "SELECT_QUERY", {queryIndex: queryIndex}) }
 						/>
 					</div>
 				))}

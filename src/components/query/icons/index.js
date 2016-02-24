@@ -4,7 +4,7 @@ import Document from "./document";
 import Person from "./person";
 
 export default {
-	"wwpersons": <Person />,
-	"wwdocuments": <Document />,
-	"wwcollectives": <Collective />
+	"wwpersons": (props = null) => <Person {...props} />,
+	"wwdocuments": (props = null) => <Document {...props} />,
+	"wwcollectives": (props = null) => <Collective {...props} />
 };
