@@ -14,7 +14,8 @@
     "start:proxies": "node scripts/server2.js",
     "test": "mocha --compilers js:babel/register --recursive test",
     "test:watch": "nodemon -x \"mocha --compilers js:babel/register --recursive --watch test\" -w test -w build",
-    "watch": "scripts/watch.sh"
+    "watch": "scripts/watch.sh",
+    "watch:query": "scripts/watch_query.sh"
   },
   "dependencies": {
     "classnames": "^2.2.3",
@@ -28,7 +29,10 @@
     "hire-forms-select-list": "https://github.com/Hire-Forms/hire-forms-select-list.git#react-0.14",
     "hire-forms-textarea": "https://github.com/Hire-Forms/hire-forms-textarea.git#react-0.14",
     "hire-login": "^2.4.0",
+    "infinity-grid": "git+https://github.com/renevanderark/infinity-grid.git",
     "react": "^0.14.7",
+    "react-dnd": "^2.1.2",
+    "react-dnd-touch-backend": "^0.2.4",
     "react-dom": "^0.14.7",
     "redux": "^3.2.1",
     "redux-thunk": "^1.0.3",

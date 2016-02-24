@@ -156,3 +156,24 @@ svg.loader
 .hire-login
 	float right
 	margin-right 400px
+
+svg text
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+rect.handle
+	stroke rgba(0,0,0,1)
+
+.query
+	text
+		fill rgba(0,0,0,.2)
+	rect.handle
+		stroke rgba(0,0,0,.2)
+	&.selected
+		text
+			fill rgba(0,0,0,1)
+		rect.handle
+			stroke rgba(0,0,0,1)

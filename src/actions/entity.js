@@ -81,4 +81,4 @@ const saveEntity = () => (dispatch, getState) => {
 };
 
 
-export {saveEntity, selectEntity, makeNewEntity, deleteEntity};
+export { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchFieldDescription };

@@ -16,7 +16,8 @@ var entities = {
 var VREs = {
 	"WomenWriters": [
 		{name: "wwdocuments"},
-		{name: "wwpersons"}
+		{name: "wwpersons"},
+		{name: "wwcollectives"}
 	],
 	"CKCC": [
 		{name: "ckccpersons"}

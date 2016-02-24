@@ -53,7 +53,7 @@
                 "no-extra-parens": [2, "functions"],
                 "eqeqeq": 0,
                 "key-spacing": [2, { "beforeColon": false, "afterColon": true }],
-                "new-cap": 2,
+                "new-cap": 0,
                 "new-parens": 2,
                 "quotes": [2, "double"],
                 "semi": 2,

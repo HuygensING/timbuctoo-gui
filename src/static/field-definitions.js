@@ -145,5 +145,6 @@ module.exports = {
 				"typeId": "83eb9cc1-ab91-4d6c-8778-b639480f2b9a"
 			}
 		}
-	]
+	],
+	"wwcollective": []
 };
