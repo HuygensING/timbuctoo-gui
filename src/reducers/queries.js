@@ -6,6 +6,7 @@ let initialState = {
 	currentQuery: -1
 };
 
+/* TODO: add path to active entity */
 const makeQuery = (domain, fieldDefinitions) => {
 	return {
 		domain: domain,
@@ -29,6 +30,7 @@ export default function(state=initialState, action) {
 				entity: current[action.data.queryIndex].entity
 			};
 
+		/* TODO: use path to active entity */
 		case "SET_QUERY_FIELD_VALUE":
 			current = setIn([state.currentQuery, "entity", "data"].concat(action.fieldPath), action.value, clone(state.queries));
 			return {
@@ -37,6 +39,7 @@ export default function(state=initialState, action) {
 				entity: current[state.currentQuery].entity
 			};
 
+		/* TODO: use path to active entity */
 		case "SET_QUERY_RELATION_VALUE":
 			const newEntity = {domain: action.data.domain, fieldDefinitions: action.fieldDefinitions, data: {}};
 			action.data.value[action.data.value.length - 1].entity = newEntity;

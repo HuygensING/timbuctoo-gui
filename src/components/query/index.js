@@ -45,6 +45,8 @@ class App extends React.Component {
 			<div style={{position: "absolute", top: "50px", left: 0, width: "30%", height: "calc(100% - 60px)"}}>
 				<InfinityGrid />
 			</div>
+
+			{/* TODO fetch entity prop via queries path */}
 			<div style={{position: "absolute", top: "50px", left: "30%", width: "30%", height: "calc(100% - 60px)"}}>
 				<QueryFilters {...this.props} entity={this.props.queries.entity} onChange={this.onQueryChange.bind(this)} />
 			</div>

@@ -2,6 +2,19 @@ import React from "react";
 import { draggable } from "infinity-grid";
 import icons from "./icons";
 
+/* TODO:
+	foreach entity at topPosition (from :bottomPosition)
+		- render props
+		- render relations
+		- return :renderedComponent, :bottomPosition
+
+	foreach related entity
+		- handle delete: remove subtree
+		- handle select:
+			- set field path to active entity
+			- set class for active entity
+*/
+
 class QueryComponent extends React.Component {
 
 	render() {
