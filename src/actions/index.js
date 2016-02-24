@@ -1,6 +1,6 @@
 import store from "../store";
-import { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchFieldDescription } from "./entity";
-import { deleteQuery } from "./queries";
+import { saveEntity, selectEntity, makeNewEntity, deleteEntity } from "./entity";
+import { deleteQuery, selectQuery, changeQuery } from "./queries";
 import { setVre } from "./vre";
 
 const setUser = (response) => {
@@ -18,6 +18,7 @@ export default {
 	onChange: (fieldPath, value) => store.dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
 	onLoginChange: (response) => store.dispatch(setUser(response)),
 	onSelectVre: (vreId) => store.dispatch(setVre(vreId)),
-	onSelectDomain: (domain, actionType, data = null) => store.dispatch(fetchFieldDescription(domain, actionType, data)),
-	onDeleteQuery: (queryIndex) => store.dispatch(deleteQuery(queryIndex))
+	onSelectQuery: (domain, queryIndex) => store.dispatch(selectQuery(domain, queryIndex)),
+	onDeleteQuery: (queryIndex) => store.dispatch(deleteQuery(queryIndex)),
+	onQueryChange: (fieldPath, value) => store.dispatch({type: "SET_QUERY_FIELD_VALUE", fieldPath: fieldPath, value: value})
 };

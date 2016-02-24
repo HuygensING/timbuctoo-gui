@@ -3,16 +3,31 @@ import { DragDropContext } from "react-dnd";
 import TouchBackend from "react-dnd-touch-backend";
 import { InfinityGrid, actions as gridActions } from "infinity-grid";
 import QueryComponent from "./query-component";
+import QueryFilters from "./query-filters";
 
 class App extends React.Component {
 
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.queries.currentQuery > -1 && nextProps.queries !== this.props.queries) {
+			gridActions.onSetComponentProps({query: nextProps.queries.queries[nextProps.queries.currentQuery]}, nextProps.queries.currentQuery);
+		}
+	}
+
 	onDeleteQuery(queryIndex) {
-		gridActions.onSetComponentProps({deleted: true}, queryIndex);
+		gridActions.onSetComponentProps({deleted: true }, queryIndex);
 		this.props.onDeleteQuery(queryIndex);
 	}
 
+	onSelectQuery(queryIndex, props) {
+		this.props.onSelectQuery(props.domain.replace(/s$/, ""), queryIndex);
+	}
+
+	onQueryChange(path, value) {
+		this.props.onQueryChange(path, value);
+	}
+
 	render() {
-		console.log(this.props.queries);
 		const collections = this.props.vre.collections || [];
 		return (<div style={{height: "500px"}}>
 			<div style={{position: "absolute", top: 0, height: "60px"}}>
@@ -22,13 +37,16 @@ class App extends React.Component {
 							domain={c.name}
 							onDeleteQuery={this.onDeleteQuery.bind(this)}
 							onDeselect={(...args) => console.log(args)}
-							onSelect={(queryIndex, props) => this.props.onSelectDomain(props.domain.replace(/s$/, ""), "SELECT_QUERY", {queryIndex: queryIndex}) }
+							onSelect={this.onSelectQuery.bind(this)}
 						/>
 					</div>
 				))}
 			</div>
-			<div style={{position: "absolute", top: "50px", width: "30%", height: "calc(100% - 60px)"}}>
+			<div style={{position: "absolute", top: "50px", left: 0, width: "30%", height: "calc(100% - 60px)"}}>
 				<InfinityGrid />
+			</div>
+			<div style={{position: "absolute", top: "50px", left: "30%", width: "30%", height: "calc(100% - 60px)"}}>
+				<QueryFilters {...this.props} entity={this.props.queries.entity} onChange={this.onQueryChange.bind(this)} />
 			</div>
 		</div>);
 	}
@@ -37,7 +55,10 @@ class App extends React.Component {
 
 App.propTypes = {
 	entity: React.PropTypes.object,
-	onSelectDomain: React.PropTypes.func,
+	onDeleteQuery: React.PropTypes.func,
+	onQueryChange: React.PropTypes.func,
+	onSelectQuery: React.PropTypes.func,
+	queries: React.PropTypes.object,
 	vre: React.PropTypes.object
 };
 
