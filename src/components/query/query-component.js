@@ -42,6 +42,7 @@ QueryComponent.propTypes = {
 	componentIndex: React.PropTypes.number,
 	domain: React.PropTypes.string,
 	onDeleteQuery: React.PropTypes.func,
+	query: React.PropTypes.object,
 	selected: React.PropTypes.bool
 };
 
