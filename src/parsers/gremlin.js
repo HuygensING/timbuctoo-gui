@@ -5,7 +5,7 @@ let parseRelation, parseProp, parseEntity;
 
 parseProp = (prop) => `has("${prop.name}", "${prop.value}")`;
 
-parseRelation = (rel) => [`both("${rel.name}")`, parseEntity(rel.entity)];
+parseRelation = (rel) => `both("${rel.name}")${parseEntity(rel.entity)}`;
 
 parseEntity = (ent) => {
 	const props = (ent.data["@properties"] || []).map((p) => parseProp(p));
@@ -16,11 +16,56 @@ parseEntity = (ent) => {
 		`.and(${props.map((p) => "__." + p).join(", ")})`;
 	
 	const relQ = rels.length === 0 ? "" :
-		rels.length === 1 ? `__.${rels[0][0]}${rels[0][1]}` :
-		`.union(${rels.map((r) => "__." + r[0] + r[1]).join("")})`;
+		rels.length === 1 ? `.${rels[0]}` :
+		`.union(${rels.map((r) => "__." + r).join(", ")})`;
 
-	return [propQ, relQ];
+	return propQ + relQ;
 }
 
-console.log(parseEntity(testQuery.entity));
+console.log(`g.V().label("${testQuery.entity.domain}")${parseEntity(testQuery.entity)}`);
 
+/*
+1)
+===
+g.V().label("wwperson")
+.and(
+	__.has("types", "AUTHOR"),
+	__.has("types", "ARCHETYPE")
+)
+.union(
+	__.both("isCreatorOf")
+		.and(
+			__.has("documentType", "ANTHOLOGY"),
+			__.has("documentType", "UNKNOWN")
+		)
+		.both("isCreatedBy")
+		.has("gender", "FEMALE"),
+
+	__.both("isCreatorOf")
+	  .has("documentType", "ANTHOLOGY")
+	  .both("isCreatedBy")
+	  .has("children", "NO")
+	  .union(
+		  __.both("hasProfession"),
+		  __.both("hasMaritalStatus")
+	  )
+)
+===
+
+2)
+===
+g.V().label("wwperson")
+.and(
+	__.has("gender", "FEMALE"),
+	__.has("types", "AUTHOR")
+)
+.union(
+	__.both("isCreatorOf")
+	  .has("documentType", "ARTICLE")
+	  .both("isCreatedBy")
+	  .has("gender", "MALE"),
+
+	__.both("hasProfession")
+)
+===
+*/
