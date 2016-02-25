@@ -78,6 +78,13 @@ class QueryComponent extends React.Component {
 				return component;
 			});
 
+		const deleteButton = selected ? (
+			<g onClick={() => props.onDeleteQuery(props.componentIndex) } transform="translate(-20 -20)" >
+				<circle r="8" />
+				<line stroke="white" strokeWidth="1" x1="-3" x2="3" y1="-3" y2="3" />
+				<line stroke="white" strokeWidth="1" x1="-3" x2="3" y1="3" y2="-3" />
+			</g>) : null;
+
 		const component = (
 			<g>
 				<g {...props}
@@ -87,12 +94,7 @@ class QueryComponent extends React.Component {
 				>
 					{icons[queryEntity.domain]({className: "handle"})}
 				</g>
-				<g onClick={() => props.onDeleteQuery(props.componentIndex) } transform="translate(-20 -20)" >
-					<circle r="8" />
-					<line stroke="white" strokeWidth="1" x1="-3" x2="3" y1="-3" y2="3" />
-					<line stroke="white" strokeWidth="1" x1="-3" x2="3" y1="3" y2="-3" />
-				</g>
-
+				{deleteButton}
 				<g transform="translate(-20 40)">
 					{propertyComponents}
 					{relationComponents}

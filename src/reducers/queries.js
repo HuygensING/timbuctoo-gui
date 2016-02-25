@@ -67,12 +67,26 @@ export default function(state=initialState, action) {
 
 
 		case "DELETE_QUERY":
-			// TODO: delete subqueries
-			return {
-				...state,
-				queries: setIn([action.queryIndex], {...state.queries[action.queryIndex], deleted: true}, clone(state.queries)),
-				currentQuery: -1
-			};
+			pathToSelectedEntity = clone(state.queries[action.queryIndex].pathToSelectedEntity);
+			if(pathToSelectedEntity.length === 0) {
+				return {
+					...state,
+					queries: setIn([action.queryIndex], {...state.queries[action.queryIndex], deleted: true}, clone(state.queries)),
+					currentQuery: -1
+				};
+			} else {
+				const deleteRelationIndex = pathToSelectedEntity.pop();
+				let relations = getIn([state.currentQuery].concat(pathToSelectedEntity), clone(state.queries));
+
+				relations.splice(deleteRelationIndex, 1);
+				current = setIn([state.currentQuery].concat(pathToSelectedEntity), relations, clone(state.queries));
+				current[state.currentQuery].pathToSelectedEntity = [];
+				return {
+					...state,
+					queries: current,
+					entity: current[state.currentQuery].entity
+				};
+			}
 	}
 
 	return state;

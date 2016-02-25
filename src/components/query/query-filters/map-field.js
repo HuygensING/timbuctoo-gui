@@ -26,7 +26,7 @@ const MAP = {
 	"select": (fieldDef, props) => (<SelectField {...props} name={fieldDef.name} options={fieldDef.options} />),
 	"relation": relateButton,
 	"keyword": relateButton,
-	"unsupported": (fieldDef, props) => (null)
+	"unsupported": () => (null)
 };
 
 export default (fieldDef, props) => (MAP[fieldDef.type] || MAP["unsupported"]) (fieldDef, props);

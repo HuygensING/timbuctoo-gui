@@ -15,7 +15,9 @@ class App extends React.Component {
 	}
 
 	onDeleteQuery(queryIndex) {
-		gridActions.onSetComponentProps({deleted: true }, queryIndex);
+		if(this.props.queries.queries[queryIndex].pathToSelectedEntity.length === 0) {
+			gridActions.onSetComponentProps({deleted: true }, queryIndex);
+		}
 		this.props.onDeleteQuery(queryIndex);
 	}
 
@@ -54,7 +56,6 @@ class App extends React.Component {
 				<InfinityGrid />
 			</div>
 
-			{/* TODO fetch entity prop via queries path */}
 			<div style={{position: "absolute", top: "50px", left: "30%", width: "30%", height: "calc(100% - 60px)"}}>
 				<QueryFilters {...this.props} entity={this.props.queries.entity} onChange={this.onQueryChange.bind(this)} />
 			</div>
