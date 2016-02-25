@@ -1,1 +1,2 @@
-console.log("hello");
+require("babel/register");
+require("./gremlin");
