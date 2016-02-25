@@ -29,17 +29,17 @@ class QueryComponent extends React.Component {
 		const baseHeight = 50;
 		const basePropertyComponentHeight = 28;
 
-		const propertyFilterKeys = Object.keys(queryEntityData)
-			.filter((key) => key !== "@relations" && queryEntityData[key].length);
+		const propertyFilters = (queryEntityData["@properties"] || []);
 
-		const propertyFilterHeight = propertyFilterKeys.length * basePropertyComponentHeight;
 
-		const propertyComponents = propertyFilterKeys.map((key, i) => (
-			<g key={key} transform={`translate(0, ${i * basePropertyComponentHeight})`}>
+		const propertyFilterHeight = propertyFilters.length * basePropertyComponentHeight;
+
+		const propertyComponents = propertyFilters.map((pf, i) => (
+			<g key={i} transform={`translate(0, ${i * basePropertyComponentHeight})`}>
 				<line stroke="black" x1="0" x2="0" y1={-basePropertyComponentHeight - 5} y2="-5" />
 				<line stroke="black" strokeWidth="1" x1="0" x2="10" y1="-5" y2="-5" />
 				<g transform="translate(12 0)">
-					<text>{`${key}: ${queryEntityData[key]}`}</text>
+					<text>{`${pf.name}: ${pf.value}`}</text>
 				</g>
 			</g>
 		));
@@ -62,12 +62,14 @@ class QueryComponent extends React.Component {
 		const relationComponents = (queryEntityData["@relations"] || [])
 			.map((relation, i) => {
 				const component = (
-					<g key={i} transform={`translate(0, ${propertyFilterHeight + relationComponentHeight})`}>
+					<g key={i} transform={`translate(0, ${propertyFilterHeight + relationComponentHeight + 10})`}>
 						<line stroke="black" x1="0" x2="0" y1={-baseHeight - relationComponentHeight} y2="-5" />
 						<line stroke="black" strokeWidth="1" x1="0" x2="10" y1="-5" y2="-5" />
 						<g transform={`translate(${45 - (relation.name.length * 2)} 0)`}>
 							<text>{relation.name}</text>
 						</g>
+						<rect className="relation" height="30" rx="5" ry="5" width="140" x="10" y="-20" />
+
 						<line stroke="black" strokeWidth="1" x1="150" x2="180" y1="-5" y2="-5" />
 						<g transform="translate(200 0)">
 							{subComponents[i].component}

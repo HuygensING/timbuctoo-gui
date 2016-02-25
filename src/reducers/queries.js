@@ -47,6 +47,7 @@ export default function(state=initialState, action) {
 		case "SET_QUERY_FIELD_VALUE":
 			pathToSelectedEntity = state.queries[state.currentQuery].pathToSelectedEntity;
 			current = setIn([state.currentQuery].concat(pathToSelectedEntity).concat(["entity", "data"]).concat(action.fieldPath), action.value, clone(state.queries));
+			console.log("CURRENT", current);
 			return {
 				...state,
 				queries: current,

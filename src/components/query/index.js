@@ -29,6 +29,7 @@ class App extends React.Component {
 	}
 
 	onQueryChange(path, value) {
+		console.log(path, value);
 		this.props.onQueryChange(path, value);
 	}
 
@@ -37,6 +38,7 @@ class App extends React.Component {
 	}
 
 	render() {
+		console.log(this.props.queries);
 		const collections = this.props.vre.collections || [];
 		return (<div style={{height: "500px"}}>
 			<div style={{position: "absolute", top: 0, height: "60px"}}>
