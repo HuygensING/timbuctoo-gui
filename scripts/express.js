@@ -10,14 +10,16 @@ app.use(bodyParser.json());
 var entities = {
 	wwdocuments: {},
 	wwpersons: {},
-	wwrelations: {}
+	wwrelations: {},
+	wwkeywords: {}
 };
 
 var VREs = {
 	"WomenWriters": [
 		{name: "wwdocuments"},
 		{name: "wwpersons"},
-		{name: "wwcollectives"}
+		{name: "wwcollectives"},
+		{name: "wwkeywords"}
 	],
 	"CKCC": [
 		{name: "ckccpersons"}

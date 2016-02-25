@@ -20,11 +20,18 @@ class App extends React.Component {
 	}
 
 	onSelectQuery(queryIndex, props) {
-		this.props.onSelectQuery(props.domain.replace(/s$/, ""), queryIndex);
+		if(this.props.queries.currentQuery !== queryIndex) {
+			console.log("select query");
+			this.props.onSelectQuery(props.domain.replace(/s$/, ""), queryIndex);
+		}
 	}
 
 	onQueryChange(path, value) {
 		this.props.onQueryChange(path, value);
+	}
+
+	onSetQueryPath(path) {
+		this.props.onSetQueryPath(path);
 	}
 
 	render() {
@@ -38,6 +45,7 @@ class App extends React.Component {
 							onDeleteQuery={this.onDeleteQuery.bind(this)}
 							onDeselect={(...args) => console.log(args)}
 							onSelect={this.onSelectQuery.bind(this)}
+							onSetQueryPath={this.onSetQueryPath.bind(this)}
 						/>
 					</div>
 				))}
@@ -60,6 +68,7 @@ App.propTypes = {
 	onDeleteQuery: React.PropTypes.func,
 	onQueryChange: React.PropTypes.func,
 	onSelectQuery: React.PropTypes.func,
+	onSetQueryPath: React.PropTypes.func,
 	queries: React.PropTypes.object,
 	vre: React.PropTypes.object
 };

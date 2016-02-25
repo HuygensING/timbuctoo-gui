@@ -9,9 +9,11 @@ const DOMAIN_MAP = {
 	}
 };
 
-const selectQuery = (domain, queryIndex) => (dispatch) => {
+const selectQuery = (domain, queryIndex) => (dispatch) =>
 	dispatch(fetchFieldDescription(domain, "SELECT_QUERY", {queryIndex: queryIndex, domain: domain}));
-};
+
+const setQueryPath = (path) => (dispatch) =>
+	dispatch({type: "SET_QUERY_PATH", path: path});
 
 const deleteQuery = (queryIndex) => (dispatch) =>
 	dispatch({type: "DELETE_QUERY", queryIndex: queryIndex});
@@ -27,4 +29,4 @@ const changeQuery = (fieldPath, value) => (dispatch, getState) => {
 	}
 };
 
-export { deleteQuery, selectQuery, changeQuery };
+export { deleteQuery, selectQuery, changeQuery, setQueryPath };

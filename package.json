@@ -20,6 +20,7 @@
   "dependencies": {
     "classnames": "^2.2.3",
     "clone-deep": "^0.2.4",
+    "deep-equal": "^1.0.1",
     "hire-faceted-search": "https://github.com/HuygensING/hire-faceted-search.git#react-0.14",
     "hire-forms-autocomplete-list": "https://github.com/Hire-Forms/hire-forms-autocomplete-list.git#react-0.14",
     "hire-forms-form": "https://github.com/Hire-Forms/hire-forms-form.git#react-0.14",
