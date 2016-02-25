@@ -15,7 +15,8 @@
     "test": "mocha --compilers js:babel/register --recursive test",
     "test:watch": "nodemon -x \"mocha --compilers js:babel/register --recursive --watch test\" -w test -w build",
     "watch": "scripts/watch.sh",
-    "watch:query": "scripts/watch_query.sh"
+    "watch:query": "scripts/watch_query.sh",
+    "parse": "node src/parsers/index.js"
   },
   "dependencies": {
     "classnames": "^2.2.3",

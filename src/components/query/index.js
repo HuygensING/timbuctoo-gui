@@ -23,13 +23,11 @@ class App extends React.Component {
 
 	onSelectQuery(queryIndex, props) {
 		if(this.props.queries.currentQuery !== queryIndex) {
-			console.log("select query");
 			this.props.onSelectQuery(props.domain.replace(/s$/, ""), queryIndex);
 		}
 	}
 
 	onQueryChange(path, value) {
-		console.log(path, value);
 		this.props.onQueryChange(path, value);
 	}
 
@@ -60,6 +58,11 @@ class App extends React.Component {
 
 			<div style={{position: "absolute", top: "50px", left: "30%", width: "30%", height: "calc(100% - 60px)"}}>
 				<QueryFilters {...this.props} entity={this.props.queries.entity} onChange={this.onQueryChange.bind(this)} />
+			</div>
+			<div style={{position: "absolute", top: "50px", left: "60%", width: "40%", height: "calc(100% - 60px)"}}>
+				<pre>
+					{JSON.stringify(this.props.queries.queries[this.props.queries.currentQuery])}
+				</pre>
 			</div>
 		</div>);
 	}

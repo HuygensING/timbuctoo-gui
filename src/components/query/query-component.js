@@ -68,12 +68,17 @@ class QueryComponent extends React.Component {
 						<g transform={`translate(${45 - (relation.name.length * 2)} 0)`}>
 							<text>{relation.name}</text>
 						</g>
-						<rect {...props} className="relation handle" height="30" rx="5" ry="5" width="140" x="10" y="-20" />
 
 						<line stroke="black" strokeWidth="1" x1="150" x2="180" y1="-5" y2="-5" />
 						<g transform="translate(200 0)">
 							{subComponents[i].component}
 						</g>
+						<rect {...props}
+							className="relation handle" 
+							height="30" 
+							onClick={() => console.log("TODO: make relation selectable")}
+							rx="5" ry="5" width="140" x="10" y="-20" />
+
 					</g>
 				);
 				relationComponentHeight += subComponents[i].height;
