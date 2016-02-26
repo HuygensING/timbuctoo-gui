@@ -62,8 +62,8 @@ class App extends React.Component {
 			</div>
 			<div style={{position: "absolute", top: "50px", left: "60%", width: "40%", height: "calc(100% - 60px)"}}>
 				{this.props.queries.currentQuery > -1 ? parseGremlin(this.props.queries.queries[this.props.queries.currentQuery]).map((q, i) => (
-					<div>
-						<a href={`http://localhost:8080/v2.1/gremlin?query=${q}`} key={i} target="_blank">
+					<div key={i}>
+						<a href={`http://localhost:8080/v2.1/gremlin?query=${q}`} target="_blank">
 							{i === 0 ? "results" : "count"}
 						</a>
 						<pre>{q}</pre>

@@ -15,17 +15,17 @@ const mappings = {
 
 const MAP = mappings["v2.1"];
 
-let parseRelation, parseEntity;
+let parseEntity;
 
 
-parseRelation = (rel, relName) => `both("${relName}")${parseEntity(rel.entity)}`;
+const parseRelation = (rel, relName, path) => `both("${relName}")${parseEntity(rel.entity, path)}`;
 
 const getRelationName = (relName, fieldDefinitions) => fieldDefinitions.filter((f) => f.name === relName)[0].relation.regularName;
 
 
-parseEntity = (ent) => {
+parseEntity = (ent, path = []) => {
 	const props = (ent.data["@properties"] || []).map((p) => MAP.parseProp(p, ent.domain));
-	const rels = (ent.data["@relations"] || []).map((r) => parseRelation(r, getRelationName(r.name, ent.fieldDefinitions)));
+	const rels = (ent.data["@relations"] || []).map((r, i) => parseRelation(r, getRelationName(r.name, ent.fieldDefinitions), path.concat(["entity", "data", "@relations", i])));
 
 	const propQ = props.length === 0 ? "" :
 		props.length === 1 ? `.${props[0]}` :
@@ -35,12 +35,16 @@ parseEntity = (ent) => {
 		rels.length === 1 ? `.${rels[0]}` :
 		`.and(${rels.map((r) => "__." + r).join(", ")})`;
 
-	return propQ + relQ;
+	const asQ = path.length ? `.as("${path.join("|")}")` : `.as("result")`;
+	return asQ + propQ + relQ;
 };
 
-const parseQuery = (query) => [
-	`${MAP.identity(query.entity.domain)}.as("result")${parseEntity(query.entity)}.select("result").dedup().range(0,10)`,
-	`${MAP.identity(query.entity.domain)}.as("result")${parseEntity(query.entity)}.select("result").dedup().count()`
-];
+const parseQuery = (query) => {
+	let selectVal = query.pathToSelectedEntity.length ? query.pathToSelectedEntity.join("|") : "result";
+	return [
+		`${MAP.identity(query.entity.domain)}${parseEntity(query.entity)}.select("${selectVal}").dedup().range(0,10)`,
+		`${MAP.identity(query.entity.domain)}${parseEntity(query.entity)}.select("${selectVal}").dedup().count()`
+	];
+};
 
 export default parseQuery;
