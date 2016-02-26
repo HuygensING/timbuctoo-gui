@@ -36,7 +36,7 @@ const sendQuery = debounce(function(q) {
 const setQuery = (state) => {
 	if(state.currentQuery > -1) {
 		sendQuery(parseGremlin(state.queries[state.currentQuery]));
-		state = {...state, resultsPending: true};
+		state = {...state, resultCount: "", resultsPending: true};
 	}
 	return state;
 };
