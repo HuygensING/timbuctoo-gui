@@ -63,7 +63,8 @@ module.exports = {
 				"isInverseName": false, // (does not seem necessary for the keyword use case; is never inverse)
 				"sourceType": "person",
 				"targetType": "keyword",
-				"typeId": "50d748bc-166d-464b-b468-16553f13bf54"
+				"typeId": "50d748bc-166d-464b-b468-16553f13bf54",
+				"regularName": "hasProfession"
 			}
 		},
 		{
@@ -78,7 +79,8 @@ module.exports = {
 				"isInverseName": false, // (does not seem necessary for the keyword use case; is never inverse)
 				"sourceType": "person",
 				"targetType": "keyword",
-				"typeId": "74ca3110-f212-4149-9d6d-80d7cbf8dc7c"
+				"typeId": "74ca3110-f212-4149-9d6d-80d7cbf8dc7c",
+				"regularName": "hasMaritalStatus"
 			}
 		},
 		{
@@ -90,7 +92,8 @@ module.exports = {
 				"isInverseName": true,
 				"sourceType": "document",
 				"targetType": "person",
-				"typeId": "83eb9cc1-ab91-4d6c-8778-b639480f2b9a"
+				"typeId": "83eb9cc1-ab91-4d6c-8778-b639480f2b9a",
+				"regularName": "isCreatedBy"
 			}
 		}
 /*		{
@@ -142,10 +145,33 @@ module.exports = {
 				"isInverseName": false,
 				"sourceType": "document",
 				"targetType": "person",
-				"typeId": "83eb9cc1-ab91-4d6c-8778-b639480f2b9a"
+				"typeId": "83eb9cc1-ab91-4d6c-8778-b639480f2b9a",
+				"regularName": "isCreatedBy"
 			}
 		}
 	],
 	"wwcollective": [],
-	"wwkeyword": []
+	"wwkeyword": [
+		{
+			"name": "type",
+			"type": "string"
+		},
+		{
+			"name": "value",
+			"type": "string"
+		},
+		{
+			"name": "isProfessionOf",
+			"type": "relation",
+			"path": "domain/wwpersons/autocomplete",
+			"relation": { // This object describes how and where a new relation should be stored
+				"type": "wwrelation", // and this seems way too complex for the client --> cannot the server resolve a lot of this info by itself?
+				"isInverseName": true, // (does not seem necessary for the keyword use case; is never inverse)
+				"sourceType": "person",
+				"targetType": "keyword",
+				"typeId": "50d748bc-166d-464b-b468-16553f13bf54",
+				"regularName": "hasProfession"
+			}
+		}
+	]
 };

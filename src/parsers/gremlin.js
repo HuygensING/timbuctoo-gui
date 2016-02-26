@@ -1,71 +1,46 @@
-import testQuery from "./test-query";
+const v2UnquotedPropVals = ["wwperson_children"];
+
+const quoteProp = (domain, prop) => v2UnquotedPropVals.indexOf(`${domain}_${prop.name}`) > -1 ? `"${prop.value}"` : `"\\"${prop.value}\\""`;
+
+const mappings = {
+	v4: {
+		identity: (domain) => `g.V().label("${domain}")`,
+		parseProp: (prop) => `has("${prop.name}", "${prop.value}")`
+	},
+	"v2.1": {
+		identity: (domain) => `g.V().has("isLatest", true).filter{it.get().property("types").value().contains("\\"${domain}\\"")}`,
+		parseProp: (prop, domain) => `has("${domain}_${prop.name}").filter{it.get().property("${domain}_${prop.name}").value().contains(${quoteProp(domain, prop)})}`
+	}
+};
+
+const MAP = mappings["v2.1"];
+
+let parseRelation, parseEntity;
 
 
-let parseRelation, parseProp, parseEntity;
+parseRelation = (rel, relName) => `both("${relName}")${parseEntity(rel.entity)}`;
 
-parseProp = (prop) => `has("${prop.name}", "${prop.value}")`;
+const getRelationName = (relName, fieldDefinitions) => fieldDefinitions.filter((f) => f.name === relName)[0].relation.regularName;
 
-parseRelation = (rel) => `both("${rel.name}")${parseEntity(rel.entity)}`;
 
 parseEntity = (ent) => {
-	const props = (ent.data["@properties"] || []).map((p) => parseProp(p));
-	const rels = (ent.data["@relations"] || []).map((r) => parseRelation(r));
+	const props = (ent.data["@properties"] || []).map((p) => MAP.parseProp(p, ent.domain));
+	const rels = (ent.data["@relations"] || []).map((r) => parseRelation(r, getRelationName(r.name, ent.fieldDefinitions)));
 
 	const propQ = props.length === 0 ? "" :
 		props.length === 1 ? `.${props[0]}` :
 		`.and(${props.map((p) => "__." + p).join(", ")})`;
-	
+
 	const relQ = rels.length === 0 ? "" :
 		rels.length === 1 ? `.${rels[0]}` :
-		`.union(${rels.map((r) => "__." + r).join(", ")})`;
+		`.and(${rels.map((r) => "__." + r).join(", ")})`;
 
 	return propQ + relQ;
-}
+};
 
-console.log(`g.V().label("${testQuery.entity.domain}")${parseEntity(testQuery.entity)}`);
+const parseQuery = (query) => [
+	`${MAP.identity(query.entity.domain)}.as("result")${parseEntity(query.entity)}.select("result").dedup().range(0,10)`,
+	`${MAP.identity(query.entity.domain)}.as("result")${parseEntity(query.entity)}.select("result").dedup().count()`
+];
 
-/*
-1)
-===
-g.V().label("wwperson")
-.and(
-	__.has("types", "AUTHOR"),
-	__.has("types", "ARCHETYPE")
-)
-.union(
-	__.both("isCreatorOf")
-		.and(
-			__.has("documentType", "ANTHOLOGY"),
-			__.has("documentType", "UNKNOWN")
-		)
-		.both("isCreatedBy")
-		.has("gender", "FEMALE"),
-
-	__.both("isCreatorOf")
-	  .has("documentType", "ANTHOLOGY")
-	  .both("isCreatedBy")
-	  .has("children", "NO")
-	  .union(
-		  __.both("hasProfession"),
-		  __.both("hasMaritalStatus")
-	  )
-)
-===
-
-2)
-===
-g.V().label("wwperson")
-.and(
-	__.has("gender", "FEMALE"),
-	__.has("types", "AUTHOR")
-)
-.union(
-	__.both("isCreatorOf")
-	  .has("documentType", "ARTICLE")
-	  .both("isCreatedBy")
-	  .has("gender", "MALE"),
-
-	__.both("hasProfession")
-)
-===
-*/
+export default parseQuery;

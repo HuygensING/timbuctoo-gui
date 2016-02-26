@@ -4,6 +4,7 @@ import TouchBackend from "react-dnd-touch-backend";
 import { InfinityGrid, actions as gridActions } from "infinity-grid";
 import QueryComponent from "./query-component";
 import QueryFilters from "./query-filters";
+import parseGremlin from "../../parsers/gremlin";
 
 class App extends React.Component {
 
@@ -60,9 +61,14 @@ class App extends React.Component {
 				<QueryFilters {...this.props} entity={this.props.queries.entity} onChange={this.onQueryChange.bind(this)} />
 			</div>
 			<div style={{position: "absolute", top: "50px", left: "60%", width: "40%", height: "calc(100% - 60px)"}}>
-				<pre>
-					{JSON.stringify(this.props.queries.queries[this.props.queries.currentQuery])}
-				</pre>
+				{this.props.queries.currentQuery > -1 ? parseGremlin(this.props.queries.queries[this.props.queries.currentQuery]).map((q, i) => (
+					<div>
+						<a href={`http://localhost:8080/v2.1/gremlin?query=${q}`} key={i} target="_blank">
+							{i === 0 ? "results" : "count"}
+						</a>
+						<pre>{q}</pre>
+					</div>
+				)) : null}
 			</div>
 		</div>);
 	}
