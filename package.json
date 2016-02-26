@@ -32,6 +32,7 @@
     "hire-forms-textarea": "https://github.com/Hire-Forms/hire-forms-textarea.git#react-0.14",
     "hire-login": "^2.4.0",
     "infinity-grid": "git+https://github.com/renevanderark/infinity-grid.git",
+    "lodash.debounce": "^3.1.1",
     "react": "^0.14.7",
     "react-dnd": "^2.1.2",
     "react-dnd-touch-backend": "^0.2.4",

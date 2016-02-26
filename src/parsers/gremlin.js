@@ -1,12 +1,6 @@
 const v2UnquotedPropVals = ["wwperson_children"];
-
 const quoteProp = (domain, prop) => v2UnquotedPropVals.indexOf(`${domain}_${prop.name}`) > -1 ? `"${prop.value}"` : `"\\"${prop.value}\\""`;
-
 const mappings = {
-	v4: {
-		identity: (domain) => `g.V().label("${domain}")`,
-		parseProp: (prop) => `has("${prop.name}", "${prop.value}")`
-	},
 	"v2.1": {
 		identity: (domain) => `g.V().has("isLatest", true).filter{it.get().property("types").value().contains("\\"${domain}\\"")}`,
 		parseProp: (prop, domain) => `has("${domain}_${prop.name}").filter{it.get().property("${domain}_${prop.name}").value().contains(${quoteProp(domain, prop)})}`
@@ -17,11 +11,9 @@ const MAP = mappings["v2.1"];
 
 let parseEntity;
 
-
-const parseRelation = (rel, relName, path) => `both("${relName}")${parseEntity(rel.entity, path)}`;
+const parseRelation = (rel, relName, path) => `bothE("${relName}").otherV()${parseEntity(rel.entity, path)}`;
 
 const getRelationName = (relName, fieldDefinitions) => fieldDefinitions.filter((f) => f.name === relName)[0].relation.regularName;
-
 
 parseEntity = (ent, path = []) => {
 	const props = (ent.data["@properties"] || []).map((p) => MAP.parseProp(p, ent.domain));
@@ -31,12 +23,12 @@ parseEntity = (ent, path = []) => {
 		props.length === 1 ? `.${props[0]}` :
 		`.and(${props.map((p) => "__." + p).join(", ")})`;
 
-	const relQ = rels.length === 0 ? "" :
+	const relAndQ = rels.length === 0 ? "" :
 		rels.length === 1 ? `.${rels[0]}` :
-		`.and(${rels.map((r) => "__." + r).join(", ")})`;
+		`.and(${rels.map((r) => r).join(", ")}).union(${rels.map((r) => r).join(", ")})`;
 
 	const asQ = path.length ? `.as("${path.join("|")}")` : `.as("result")`;
-	return asQ + propQ + relQ;
+	return asQ + propQ + relAndQ;
 };
 
 const parseQuery = (query) => {

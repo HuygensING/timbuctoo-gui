@@ -38,6 +38,7 @@ class App extends React.Component {
 
 	render() {
 		console.log(this.props.queries);
+		const [resQ, countQ] = this.props.queries.currentQuery > -1 ? parseGremlin(this.props.queries.queries[this.props.queries.currentQuery]) : ["", ""];
 		const collections = this.props.vre.collections || [];
 		return (<div style={{height: "500px"}}>
 			<div style={{position: "absolute", top: 0, height: "60px"}}>
@@ -61,14 +62,12 @@ class App extends React.Component {
 				<QueryFilters {...this.props} entity={this.props.queries.entity} onChange={this.onQueryChange.bind(this)} />
 			</div>
 			<div style={{position: "absolute", top: "50px", left: "60%", width: "40%", height: "calc(100% - 60px)"}}>
-				{this.props.queries.currentQuery > -1 ? parseGremlin(this.props.queries.queries[this.props.queries.currentQuery]).map((q, i) => (
-					<div key={i}>
-						<a href={`http://localhost:8080/v2.1/gremlin?query=${q}`} target="_blank">
-							{i === 0 ? "results" : "count"}
-						</a>
-						<pre>{q}</pre>
-					</div>
-				)) : null}
+				<pre style={{width: "100%", whiteSpace: "pre-wrap"}}>
+					{this.props.queries.resultsPending ? null : this.props.queries.resultCount}
+					{this.props.queries.resultsPending ? "WAITING FOR RESULTS...\n" : this.props.queries.results}
+					COUNT QUERY: {countQ}<br /><br />
+					RESULT QUERY: {resQ}
+				</pre>
 			</div>
 		</div>);
 	}
