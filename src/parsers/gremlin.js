@@ -11,7 +11,7 @@ const MAP = mappings["v2.1"];
 
 let parseEntity;
 
-const parseRelation = (rel, relName, path) => `bothE("${relName}").otherV()${parseEntity(rel.entity, path)}`;
+const parseRelation = (rel, relName, path, addAlias = true) => `bothE("${relName}")${addAlias ? `.as("${path.join("|")}")` : ""}.otherV()${parseEntity(rel.entity, path.concat("entity"), addAlias)}`;
 
 const getRelationName = (relName, fieldDefinitions) => fieldDefinitions.filter((f) => f.name === relName)[0].relation.regularName;
 
@@ -24,9 +24,9 @@ const parseProps = (props, domain) => {
 
 const parseRelations = (rels, ent, path) => {
 	if(rels.length === 0) { return ""; }
-	if(rels.length === 1) { return `.${parseRelation(rels[0], getRelationName(rels[0].name, ent.fieldDefinitions), path.concat(["data", "@relations", 0, "entity"]))}`; }
-	return `.and(${rels.map((r, i) => parseRelation(r, getRelationName(r.name, ent.fieldDefinitions), path.concat(["data", "@relations", i, "entity"]), false)).join(", ")})` +
-		`.union(${rels.map((r, i) => parseRelation(r, getRelationName(r.name, ent.fieldDefinitions), path.concat(["data", "@relations", i, "entity"]))).join(", ")})`;
+	if(rels.length === 1) { return `.${parseRelation(rels[0], getRelationName(rels[0].name, ent.fieldDefinitions), path.concat(["data", "@relations", 0]))}`; }
+	return `.and(${rels.map((r, i) => parseRelation(r, getRelationName(r.name, ent.fieldDefinitions), path.concat(["data", "@relations", i]), false)).join(", ")})` +
+		`.union(${rels.map((r, i) => parseRelation(r, getRelationName(r.name, ent.fieldDefinitions), path.concat(["data", "@relations", i]))).join(", ")})`;
 };
 
 parseEntity = (ent, path = ["entity"], aliasSelf = true) => {

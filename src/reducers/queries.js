@@ -116,8 +116,8 @@ export default function(state=initialState, action) {
 					currentQuery: -1
 				};
 			} else {
-				pathToQuerySelection.pop();
-				const deleteRelationIndex = pathToQuerySelection.pop();
+				let deleteRelationIndex = pathToQuerySelection.pop();
+				if(deleteRelationIndex === "entity") { deleteRelationIndex = pathToQuerySelection.pop(); }
 				let relations = getIn([state.currentQuery].concat(pathToQuerySelection), clone(state.queries));
 
 				relations.splice(deleteRelationIndex, 1);

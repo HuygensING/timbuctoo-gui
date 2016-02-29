@@ -1,14 +1,24 @@
 import React from "react";
+import deepEqual from "deep-equal";
+import DeleteButton from "./delete-button";
 
 class RelationComponent extends React.Component {
 	render() {
 		const {
 			baseHeight,
+			componentIndex,
 			topPosition,
-			relationComponentHeight,
 			relation,
-			subComponent
+			subComponent,
+			path,
+			onDeleteQuery,
+			onSetQueryPath,
+			query
 		} = this.props;
+		const pathToQuerySelection = query ? query.pathToQuerySelection : [];
+
+		const selected = deepEqual(path, pathToQuerySelection);
+		const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQuery(componentIndex) } translate="8 -20" />) : null;
 
 		return (
 			<g transform={`translate(0, ${topPosition + 10})`}>
@@ -23,10 +33,11 @@ class RelationComponent extends React.Component {
 					{subComponent}
 				</g>
 				<rect {...this.props}
-					className="relation handle"
+					className={`relation handle ${selected ? "selected" :""}`}
 					height="30"
-					onClick={() => console.log("TODO: make relation selectable")}
+					onClick={() => onSetQueryPath(path)}
 					rx="5" ry="5" width="140" x="10" y="-20" />
+				{deleteButton}
 			</g>
 		);
 	}
@@ -34,6 +45,12 @@ class RelationComponent extends React.Component {
 
 RelationComponent.propTypes = {
 	baseHeight: React.PropTypes.number,
+	componentIndex: React.PropTypes.number,
+	onDeleteQuery: React.PropTypes.func,
+	onSetQueryPath: React.PropTypes.func,
+	path: React.PropTypes.array,
+	pathToQuerySelection: React.PropTypes.array,
+	query: React.PropTypes.object,
 	relation: React.PropTypes.object,
 	relationComponentHeight: React.PropTypes.number,
 	subComponent: React.PropTypes.object,
