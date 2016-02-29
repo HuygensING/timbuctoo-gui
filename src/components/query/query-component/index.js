@@ -3,6 +3,7 @@ import deepEqual from "deep-equal";
 import { draggable } from "infinity-grid";
 import icons from "./icons";
 
+import PropertyComponent from "./property-component";
 
 class QueryComponent extends React.Component {
 
@@ -34,15 +35,9 @@ class QueryComponent extends React.Component {
 
 		const propertyFilterHeight = propertyFilters.length * basePropertyComponentHeight;
 
-		const propertyComponents = propertyFilters.map((pf, i) => (
-			<g key={i} transform={`translate(0, ${i * basePropertyComponentHeight})`}>
-				<line stroke="black" x1="0" x2="0" y1={-basePropertyComponentHeight - 5} y2="-5" />
-				<line stroke="black" strokeWidth="1" x1="0" x2="10" y1="-5" y2="-5" />
-				<g transform="translate(12 0)">
-					<text>{`${pf.name}: ${pf.value}`}</text>
-				</g>
-			</g>
-		));
+		const propertyComponents = propertyFilters.map((pf, i) =>
+			<PropertyComponent basePropertyComponentHeight={basePropertyComponentHeight} index={i} key={i} name={pf.name} value={pf.value} />
+		);
 
 		const subComponents = (queryEntityData["@relations"] || [])
 			.map((relation, i) => {
@@ -74,8 +69,8 @@ class QueryComponent extends React.Component {
 							{subComponents[i].component}
 						</g>
 						<rect {...props}
-							className="relation handle" 
-							height="30" 
+							className="relation handle"
+							height="30"
 							onClick={() => console.log("TODO: make relation selectable")}
 							rx="5" ry="5" width="140" x="10" y="-20" />
 
