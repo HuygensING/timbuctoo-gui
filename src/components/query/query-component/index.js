@@ -3,6 +3,7 @@ import deepEqual from "deep-equal";
 import { draggable } from "infinity-grid";
 import icons from "./icons";
 
+import RelationComponent from "./relation-component";
 import PropertyComponent from "./property-component";
 import DeleteButton from "./delete-button";
 
@@ -56,28 +57,19 @@ class QueryComponent extends React.Component {
 		let relationComponentHeight = 0;
 		const relationComponents = (queryEntityData["@relations"] || [])
 			.map((relation, i) => {
-				const component = (
-					<g key={i} transform={`translate(0, ${propertyFilterHeight + relationComponentHeight + 10})`}>
-						<line stroke="black" x1="0" x2="0" y1={-baseHeight - relationComponentHeight} y2="-5" />
-						<line stroke="black" strokeWidth="1" x1="0" x2="10" y1="-5" y2="-5" />
-						<g transform={`translate(${45 - (relation.name.length * 2)} 0)`}>
-							<text>{relation.name}</text>
-						</g>
-
-						<line stroke="black" strokeWidth="1" x1="150" x2="180" y1="-5" y2="-5" />
-						<g transform="translate(200 0)">
-							{subComponents[i].component}
-						</g>
-						<rect {...props}
-							className="relation handle"
-							height="30"
-							onClick={() => console.log("TODO: make relation selectable")}
-							rx="5" ry="5" width="140" x="10" y="-20" />
-
-					</g>
+				const relationComponent = (
+					<RelationComponent
+						{...props}
+						baseHeight={baseHeight}
+						key={i}
+						propertyFilterHeight={propertyFilterHeight}
+						relation={relation}
+						relationComponentHeight={relationComponentHeight}
+						subComponent={subComponents[i].component}
+					/>
 				);
 				relationComponentHeight += subComponents[i].height;
-				return component;
+				return relationComponent;
 			});
 
 		const deleteButton = selected ? (<DeleteButton onSelect={() => props.onDeleteQuery(props.componentIndex) } />) : null;
