@@ -35,7 +35,6 @@ class EntityComponent extends React.Component {
 			filterComponent: (
 				<RelationComponent
 					{...props}
-					baseHeight={baseHeight}
 					key={i}
 					path={path}
 					relation={relation}

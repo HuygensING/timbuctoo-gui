@@ -5,8 +5,8 @@ const relateButton = (fieldDef, props) => (
 		<button
 			onClick={() => props.onChange(["@relations"], (props.entity.data["@relations"] || [])
 				.concat({
-					name: fieldDef.name,
-					direction: "both",
+					name: fieldDef.relation.regularName,
+					data: {direction: "both"},
 					targetType: fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType
 				}))} >
 			{fieldDef.name}

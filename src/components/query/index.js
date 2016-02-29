@@ -48,6 +48,7 @@ class App extends React.Component {
 							domain={c.name}
 							onDeleteQuery={this.onDeleteQuery.bind(this)}
 							onDeselect={(...args) => console.log(args)}
+							onQueryChange={this.onQueryChange.bind(this)}
 							onSelect={this.onSelectQuery.bind(this)}
 							onSetQueryPath={this.onSetQueryPath.bind(this)}
 						/>
