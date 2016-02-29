@@ -34,11 +34,12 @@ class QueryComponent extends React.Component {
 
 		const propertyFilters = (queryEntityData["@properties"] || []);
 
-		const propertyFilterHeight = propertyFilters.length * basePropertyComponentHeight;
-
-		const propertyComponents = propertyFilters.map((pf, i) =>
-			<PropertyComponent basePropertyComponentHeight={basePropertyComponentHeight} index={i} key={i} name={pf.name} value={pf.value} />
-		);
+		let propertyFilterHeight = 0;
+		const propertyComponents = propertyFilters.map((pf, i) => {
+			const propertyComponent = (<PropertyComponent basePropertyComponentHeight={basePropertyComponentHeight} index={i} key={i} name={pf.name} value={pf.value} />);
+			propertyFilterHeight += basePropertyComponentHeight;
+			return propertyComponent;
+		});
 
 		const subComponents = (queryEntityData["@relations"] || [])
 			.map((relation, i) => {
