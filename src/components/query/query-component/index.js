@@ -4,6 +4,7 @@ import { draggable } from "infinity-grid";
 import icons from "./icons";
 
 import PropertyComponent from "./property-component";
+import DeleteButton from "./delete-button";
 
 class QueryComponent extends React.Component {
 
@@ -31,7 +32,6 @@ class QueryComponent extends React.Component {
 		const basePropertyComponentHeight = 28;
 
 		const propertyFilters = (queryEntityData["@properties"] || []);
-
 
 		const propertyFilterHeight = propertyFilters.length * basePropertyComponentHeight;
 
@@ -80,12 +80,7 @@ class QueryComponent extends React.Component {
 				return component;
 			});
 
-		const deleteButton = selected ? (
-			<g onClick={() => props.onDeleteQuery(props.componentIndex) } transform="translate(-20 -20)" >
-				<circle r="8" />
-				<line stroke="white" strokeWidth="1" x1="-3" x2="3" y1="-3" y2="3" />
-				<line stroke="white" strokeWidth="1" x1="-3" x2="3" y1="3" y2="-3" />
-			</g>) : null;
+		const deleteButton = selected ? (<DeleteButton onSelect={() => props.onDeleteQuery(props.componentIndex) } />) : null;
 
 		const component = (
 			<g>
