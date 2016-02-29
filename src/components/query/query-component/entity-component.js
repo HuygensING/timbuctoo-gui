@@ -13,10 +13,11 @@ const basePropertyComponentHeight = 28;
 class EntityComponent extends React.Component {
 
 	// Renders a property filter
-	renderPropFilter(propertyFilter, i, topPosition, path) {
+	renderPropFilter(propertyFilter, i, topPosition, path, props) {
 		return {
 			filterComponent: (
 				<PropertyComponent
+					{...props}
 					baseHeight={basePropertyComponentHeight}
 					key={i}
 					name={propertyFilter.name}
@@ -85,7 +86,8 @@ class EntityComponent extends React.Component {
 
 		// Loads all the property filters into direct child components, keeping track of their respective total height
 		let [propertyComponents, propertyComponentHeights] = this.renderFilters(propertyFilters, this.renderPropFilter.bind(this),
-				(i) => path.concat(["data", "@properties", i]));
+				(i) => path.concat(["data", "@properties", i]),
+				[], props);
 
 		// Loads all the relation filters into direct child components, keeping track of their respective total height
 		let [relationComponents, relationComponentHeights] = this.renderFilters(relationFilters, this.renderRelation.bind(this),

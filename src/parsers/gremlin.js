@@ -1,3 +1,5 @@
+import clone from "clone-deep";
+
 const v2UnquotedPropVals = ["wwperson_children"];
 const quoteProp = (domain, prop) => v2UnquotedPropVals.indexOf(`${domain}_${prop.name}`) > -1 ? `"${prop.value}"` : `"\\"${prop.value}\\""`;
 const mappings = {
@@ -37,7 +39,13 @@ parseEntity = (ent, path = ["entity"], aliasSelf = true) => {
 };
 
 const parseQuery = (query) => {
-	let selectVal = query.pathToQuerySelection.length ? query.pathToQuerySelection.join("|") : "result";
+	let path = query.pathToQuerySelection ? clone(query.pathToQuerySelection) : [];
+	if(path.length > 2 && path[path.length - 2] === "@properties") {
+		path.pop();
+		path.pop();
+		path.pop();
+	}
+	let selectVal = path.length ? path.join("|") : "result";
 	return [
 		`${MAP.identity(query.entity.domain)}${parseEntity(query.entity)}.select("${selectVal}").dedup().range(0,10)`,
 		`${MAP.identity(query.entity.domain)}${parseEntity(query.entity)}.select("${selectVal}").dedup().count()`
