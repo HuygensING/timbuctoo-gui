@@ -6,22 +6,45 @@ import RelationComponent from "./relation-component";
 import PropertyComponent from "./property-component";
 import DeleteButton from "./delete-button";
 
+const baseHeight = 50;
+const basePropertyComponentHeight = 28;
+
 
 class EntityComponent extends React.Component {
 
-/*
-	...original spec...
-	foreach entity at topPosition (from :bottomPosition)
-		- render props
-		- render relations
-		- return :renderedComponent, :bottomPosition
+	renderPropFilter(propertyFilter, i, topPosition) {
+		return {
+			propertyComponent: (
+				<PropertyComponent
+					baseHeight={basePropertyComponentHeight}
+					key={i}
+					name={propertyFilter.name}
+					topPosition={topPosition}
+					value={propertyFilter.value}
+				/>
+			),
+			height: basePropertyComponentHeight
+		};
+	}
 
-	foreach related entity
-		- handle delete: remove subtree
-		- handle select:
-			- set field path to active entity
-			- set class for active entity
-*/
+	renderRelation(relation, i, topPosition, props, subComponents) {
+
+		return {
+			relationComponent: (
+				<RelationComponent
+					{...props}
+					baseHeight={baseHeight}
+					key={i}
+					relation={relation}
+					subComponent={subComponents[i].component}
+					topPosition={topPosition}
+				/>
+			),
+			height: subComponents[i].height
+		};
+	}
+
+
 	renderQueryEntity(props, path = ["entity"]) {
 		const queryEntity = props.query && props.query.entity ? props.query.entity : {domain: props.domain};
 		const queryEntityData = props.query && props.query.entity ? props.query.entity.data : {};
@@ -29,45 +52,36 @@ class EntityComponent extends React.Component {
 
 		const selected = deepEqual(path, pathToQuerySelection);
 
-		const baseHeight = 50;
-		const basePropertyComponentHeight = 28;
 
 		const propertyFilters = (queryEntityData["@properties"] || []);
-
-		let propertyFilterHeight = 0;
-		const propertyComponents = propertyFilters.map((pf, i) => {
-			const propertyComponent = (<PropertyComponent basePropertyComponentHeight={basePropertyComponentHeight} index={i} key={i} name={pf.name} value={pf.value} />);
-			propertyFilterHeight += basePropertyComponentHeight;
-			return propertyComponent;
-		});
-
-		const subComponents = (queryEntityData["@relations"] || [])
+		const relationFilters = (queryEntityData["@relations"] || []);
+		const subComponents = relationFilters
 			.map((relation, i) => {
 				const subProps = {...props, query: {...relation, pathToQuerySelection: pathToQuerySelection }};
 				const { component, height } = this.renderQueryEntity(subProps, path.concat(["data", "@relations", i, "entity"]));
 				return { component: component, height: height };
 			});
 
+		let filterComponentHeight = 0;
 
-		let relationComponentHeight = 0;
-		const relationComponents = (queryEntityData["@relations"] || [])
-			.map((relation, i) => {
-				const relationComponent = (
-					<RelationComponent
-						{...props}
-						baseHeight={baseHeight}
-						key={i}
-						propertyFilterHeight={propertyFilterHeight}
-						relation={relation}
-						relationComponentHeight={relationComponentHeight}
-						subComponent={subComponents[i].component}
-					/>
-				);
-				relationComponentHeight += subComponents[i].height;
-				return relationComponent;
-			});
+
+
+		const propertyComponents = propertyFilters.map((filter, i) => {
+			const {propertyComponent, height} = this.renderPropFilter(filter, i, filterComponentHeight);
+			filterComponentHeight += height;
+			return propertyComponent;
+		});
+
+
+		const relationComponents = relationFilters.map((filter, i) => {
+			const {relationComponent, height} = this.renderRelation(filter, i, filterComponentHeight, props, subComponents);
+			filterComponentHeight += height;
+			return relationComponent;
+		});
+
 
 		const deleteButton = selected ? (<DeleteButton onSelect={() => props.onDeleteQuery(props.componentIndex) } />) : null;
+
 
 		const component = (
 			<g>
@@ -87,7 +101,7 @@ class EntityComponent extends React.Component {
 		);
 
 		return {
-			height: baseHeight + propertyFilterHeight + relationComponentHeight,
+			height: baseHeight + filterComponentHeight,
 			component: component
 		};
 	}
@@ -100,7 +114,7 @@ class EntityComponent extends React.Component {
 
 
 EntityComponent.propTypes = {
-
+	onSetQueryPath: React.PropTypes.func
 };
 
 export default EntityComponent;

@@ -4,15 +4,15 @@ class RelationComponent extends React.Component {
 	render() {
 		const {
 			baseHeight,
-			propertyFilterHeight,
+			topPosition,
 			relationComponentHeight,
 			relation,
 			subComponent
 		} = this.props;
 
 		return (
-			<g transform={`translate(0, ${propertyFilterHeight + relationComponentHeight + 10})`}>
-				<line stroke="black" x1="0" x2="0" y1={-baseHeight - relationComponentHeight} y2="-5" />
+			<g transform={`translate(0, ${topPosition + 10})`}>
+				<line stroke="black" x1="0" x2="0" y1={-baseHeight - topPosition} y2="-5" />
 				<line stroke="black" strokeWidth="1" x1="0" x2="10" y1="-5" y2="-5" />
 				<g transform={`translate(${45 - (relation.name.length * 2)} 0)`}>
 					<text>{relation.name}</text>
@@ -34,10 +34,10 @@ class RelationComponent extends React.Component {
 
 RelationComponent.propTypes = {
 	baseHeight: React.PropTypes.number,
-	propertyFilterHeight: React.PropTypes.number,
 	relation: React.PropTypes.object,
 	relationComponentHeight: React.PropTypes.number,
-	subComponent: React.PropTypes.func
+	subComponent: React.PropTypes.object,
+	topPosition: React.PropTypes.number
 };
 
 export default RelationComponent;
