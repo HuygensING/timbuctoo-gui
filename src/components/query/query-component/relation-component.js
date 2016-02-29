@@ -1,8 +1,14 @@
 import React from "react";
 import deepEqual from "deep-equal";
 import DeleteButton from "./delete-button";
+import DirectionToggle from "./direction-toggle";
+
 
 class RelationComponent extends React.Component {
+	onChangeDirection() {
+		console.log(this.props.relation.direction);
+	}
+
 	render() {
 		const {
 			baseHeight,
@@ -19,10 +25,13 @@ class RelationComponent extends React.Component {
 
 		const selected = deepEqual(path, pathToQuerySelection);
 		const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQuery(componentIndex) } translate="8 -20" />) : null;
+		const directionToggle = selected ?
+			(<DirectionToggle direction={relation.direction} onSelect={this.onChangeDirection.bind(this)} selected={true} />) :
+			(<DirectionToggle direction={relation.direction} selected={false} />);
 
 		return (
 			<g transform={`translate(0, ${topPosition + 10})`}>
-				<line stroke="black" x1="0" x2="0" y1={-baseHeight - topPosition} y2="-5" />
+				{/*<line stroke="black" x1="0" x2="0" y1={-baseHeight - topPosition} y2="-5" />*/}
 				<line stroke="black" strokeWidth="1" x1="0" x2="10" y1="-5" y2="-5" />
 				<g transform={`translate(${45 - (relation.name.length * 2)} 0)`}>
 					<text>{relation.name}</text>
@@ -38,6 +47,7 @@ class RelationComponent extends React.Component {
 					onClick={() => onSetQueryPath(path)}
 					rx="5" ry="5" width="140" x="10" y="-20" />
 				{deleteButton}
+				{directionToggle}
 			</g>
 		);
 	}

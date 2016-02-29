@@ -6,7 +6,7 @@ import RelationComponent from "./relation-component";
 import PropertyComponent from "./property-component";
 import DeleteButton from "./delete-button";
 
-const baseHeight = 50;
+const baseHeight = 60;
 const basePropertyComponentHeight = 28;
 
 
@@ -48,15 +48,14 @@ class EntityComponent extends React.Component {
 	}
 
 	// Loads filters into direct child components, keeping track of their respective total height
-	renderFilters(filters, renderFunc, getPath, topPosition = 0, ...args) {
-		let filterComponentHeight = topPosition;
+	renderFilters(filters, renderFunc, getPath, componentHeights = [], ...args) {
 		const filterComponents = filters.map((filter, i) => {
-			const {filterComponent, height} = renderFunc(filter, i, filterComponentHeight, getPath(i), ...args);
-			filterComponentHeight += height;
+			const {filterComponent, height} = renderFunc(filter, i, componentHeights.reduce((a, b) => a + b, 0), getPath(i), ...args);
+			componentHeights.push(height);
 			return filterComponent;
 		});
 
-		return [filterComponents, filterComponentHeight];
+		return [filterComponents, componentHeights];
 	}
 
 	// Recursively renders the current query and returns its height
@@ -86,17 +85,26 @@ class EntityComponent extends React.Component {
 			});
 
 		// Loads all the property filters into direct child components, keeping track of their respective total height
-		let [propertyComponents, propertyComponentHeight] = this.renderFilters(propertyFilters, this.renderPropFilter.bind(this),
+		let [propertyComponents, propertyComponentHeights] = this.renderFilters(propertyFilters, this.renderPropFilter.bind(this),
 				(i) => path.concat(["data", "@properties", i]));
 
 		// Loads all the relation filters into direct child components, keeping track of their respective total height
-		let [relationComponents, childComponentHeight] = this.renderFilters(relationFilters, this.renderRelation.bind(this),
+		let [relationComponents, relationComponentHeights] = this.renderFilters(relationFilters, this.renderRelation.bind(this),
 				(i) => path.concat(["data", "@relations", i]),
-				propertyComponentHeight, props, childEntityComponents);
+				[], props, childEntityComponents);
 
 		// If the current entity is selected show a delete button
 		const deleteButton = selected ? (<DeleteButton onSelect={() => props.onDeleteQuery(props.componentIndex) } />) : null;
 
+		// Some fuzzy stuff to calculate the length of the vertical tree line ... for property filters
+		const propertyLineHeight = propertyFilters.length ?
+			propertyComponentHeights.reduce((a, b) => a + b, 0) - (basePropertyComponentHeight / 2) : 0;
+
+		// ... for relation filters
+		const relationLineHeight = relationFilters.length ?
+			relationComponentHeights.reduce((a, b) => a + b, 0) -
+				relationComponentHeights[relationComponentHeights.length - 1] + (propertyFilters.length ? 40 : 25)
+			: 0;
 
 		// Render the entity into component
 		const component = (
@@ -104,21 +112,27 @@ class EntityComponent extends React.Component {
 				<g {...props}
 					className={`${selected ? "selected " : ""}query`}
 					onClick={() => this.props.onSetQueryPath(path)}
-					transform="translate(-20 -20)"
-				>
+					transform="translate(-20 -20)">
 					{icons[queryEntity.domain]({className: "handle"})}
 				</g>
 				{deleteButton}
+
+				<g transform="translate(-20 20)">
+					<line stroke="black" x1="0" x2="0" y1="0" y2={propertyLineHeight + relationLineHeight} />
+				</g>
+
 				<g transform="translate(-20 40)">
 					{propertyComponents}
-					{relationComponents}
+					<g transform={`translate(0 ${propertyComponentHeights.reduce((a, b) => a + b, 0)})`}>
+						{relationComponents}
+					</g>
 				</g>
 			</g>
 		);
 
 		// Return the total height of this entity component and the component itself
 		return {
-			height: baseHeight + childComponentHeight,
+			height: baseHeight + relationComponentHeights.reduce((a, b) => a + b, 0) + propertyComponentHeights.reduce((a, b) => a + b, 0),
 			component: component
 		};
 	}
