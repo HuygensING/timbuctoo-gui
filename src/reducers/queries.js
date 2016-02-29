@@ -18,7 +18,7 @@ const makeQuery = (domain, fieldDefinitions) => {
 	return {
 		domain: domain,
 		deleted: false,
-		pathToQuerySelection: [],
+		pathToQuerySelection: ["entity"],
 		entity: {domain: domain, fieldDefinitions: fieldDefinitions, data: {}}
 	};
 };
@@ -63,30 +63,32 @@ export default function(state=initialState, action) {
 			return setQuery({
 				...state,
 				queries: current,
-				entity: getIn([state.currentQuery].concat(action.path).concat("entity"), state.queries)
+				entity: getIn([state.currentQuery].concat(action.path), state.queries)
 			});
 		}
 
 		case "SET_QUERY_FIELD_VALUE":
 			pathToQuerySelection = state.queries[state.currentQuery].pathToQuerySelection;
-			current = setIn([state.currentQuery].concat(pathToQuerySelection).concat(["entity", "data"]).concat(action.fieldPath), action.value, clone(state.queries));
+			current = setIn([state.currentQuery].concat(pathToQuerySelection).concat("data").concat(action.fieldPath), action.value, clone(state.queries));
 			return setQuery({
 				...state,
 				queries: current,
-				entity: getIn([state.currentQuery].concat(pathToQuerySelection).concat("entity"), current)
+				entity: getIn([state.currentQuery].concat(pathToQuerySelection), current)
 			});
 
 		case "SET_QUERY_RELATION_VALUE":
 			pathToQuerySelection = state.queries[state.currentQuery].pathToQuerySelection;
 			const newEntity = {domain: action.data.domain, fieldDefinitions: action.fieldDefinitions, data: {}};
 			action.data.value[action.data.value.length - 1].entity = newEntity;
-			current = setIn([state.currentQuery].concat(pathToQuerySelection).concat(["entity", "data"]).concat(action.data.fieldPath), action.data.value, clone(state.queries));
+			current = setIn([state.currentQuery].concat(pathToQuerySelection).concat("data").concat(action.data.fieldPath), action.data.value, clone(state.queries));
 
 			return setQuery({
 				...state,
 				queries: current,
-				entity: getIn([state.currentQuery].concat(pathToQuerySelection).concat("entity"), current)
+				entity: getIn([state.currentQuery].concat(pathToQuerySelection), current)
 			});
+
+
 
 
 		case "SET_QUERY_RESULTS":
@@ -98,25 +100,27 @@ export default function(state=initialState, action) {
 
 		case "DELETE_QUERY":
 			pathToQuerySelection = clone(state.queries[action.queryIndex].pathToQuerySelection);
-			if(pathToQuerySelection.length === 0) {
+			if(pathToQuerySelection.length === 1) {
 				return {
 					...state,
 					queries: setIn([action.queryIndex], {...state.queries[action.queryIndex], deleted: true}, clone(state.queries)),
 					currentQuery: -1
 				};
 			} else {
+				pathToQuerySelection.pop();
 				const deleteRelationIndex = pathToQuerySelection.pop();
 				let relations = getIn([state.currentQuery].concat(pathToQuerySelection), clone(state.queries));
 
 				relations.splice(deleteRelationIndex, 1);
 				current = setIn([state.currentQuery].concat(pathToQuerySelection), relations, clone(state.queries));
-				current[state.currentQuery].pathToQuerySelection = [];
+				current[state.currentQuery].pathToQuerySelection = ["entity"];
 				return setQuery({
 					...state,
 					queries: current,
 					entity: current[state.currentQuery].entity
 				});
 			}
+
 
 	}
 

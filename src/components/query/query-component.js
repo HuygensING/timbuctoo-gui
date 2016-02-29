@@ -19,7 +19,7 @@ class QueryComponent extends React.Component {
 			- set field path to active entity
 			- set class for active entity
 */
-	renderQueryEntity(props, path = []) {
+	renderQueryEntity(props, path = ["entity"]) {
 		const queryEntity = props.query && props.query.entity ? props.query.entity : {domain: props.domain};
 		const queryEntityData = props.query && props.query.entity ? props.query.entity.data : {};
 		const pathToQuerySelection = props.query ? props.query.pathToQuerySelection : [];
@@ -52,7 +52,7 @@ class QueryComponent extends React.Component {
 						...relation,
 						pathToQuerySelection: pathToQuerySelection
 					}
-				}, path.concat(["entity", "data", "@relations", i]));
+				}, path.concat(["data", "@relations", i, "entity"]));
 
 				return { component: component, height: height };
 			});

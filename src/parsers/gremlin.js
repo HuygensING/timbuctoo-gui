@@ -24,12 +24,12 @@ const parseProps = (props, domain) => {
 
 const parseRelations = (rels, ent, path) => {
 	if(rels.length === 0) { return ""; }
-	if(rels.length === 1) { return `.${parseRelation(rels[0], getRelationName(rels[0].name, ent.fieldDefinitions), path.concat(["entity", "data", "@relations", 0]))}`; }
-	return `.and(${rels.map((r, i) => parseRelation(r, getRelationName(r.name, ent.fieldDefinitions), path.concat(["entity", "data", "@relations", i]), false)).join(", ")})` +
-		`.union(${rels.map((r, i) => parseRelation(r, getRelationName(r.name, ent.fieldDefinitions), path.concat(["entity", "data", "@relations", i]))).join(", ")})`;
+	if(rels.length === 1) { return `.${parseRelation(rels[0], getRelationName(rels[0].name, ent.fieldDefinitions), path.concat(["data", "@relations", 0, "entity"]))}`; }
+	return `.and(${rels.map((r, i) => parseRelation(r, getRelationName(r.name, ent.fieldDefinitions), path.concat(["data", "@relations", i, "entity"]), false)).join(", ")})` +
+		`.union(${rels.map((r, i) => parseRelation(r, getRelationName(r.name, ent.fieldDefinitions), path.concat(["data", "@relations", i, "entity"]))).join(", ")})`;
 };
 
-parseEntity = (ent, path = [], aliasSelf = true) => {
+parseEntity = (ent, path = ["entity"], aliasSelf = true) => {
 	const propQ = parseProps(ent.data["@properties"] || [], ent.domain);
 	const relQ = parseRelations(ent.data["@relations"] || [], ent, path);
 

@@ -16,7 +16,7 @@ class App extends React.Component {
 	}
 
 	onDeleteQuery(queryIndex) {
-		if(this.props.queries.queries[queryIndex].pathToQuerySelection.length === 0) {
+		if(this.props.queries.queries[queryIndex].pathToQuerySelection.length === 1) {
 			gridActions.onSetComponentProps({deleted: true }, queryIndex);
 		}
 		this.props.onDeleteQuery(queryIndex);
