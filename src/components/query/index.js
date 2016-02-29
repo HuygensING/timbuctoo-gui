@@ -63,8 +63,8 @@ class App extends React.Component {
 			</div>
 			<div style={{position: "absolute", top: "50px", left: "60%", width: "40%", height: "calc(100% - 60px)"}}>
 				<pre style={{width: "100%", whiteSpace: "pre-wrap"}}>
-					{this.props.queries.resultsPending ? null : this.props.queries.resultCount}
-					{this.props.queries.resultsPending ? "WAITING FOR RESULTS...\n" : this.props.queries.results}
+					{this.props.queries.resultsPending || this.props.queries.resultCountPending ? null : this.props.queries.resultCount}
+					{this.props.queries.resultsPending || this.props.queries.resultCountPending ? "WAITING FOR RESULTS...\n" : this.props.queries.results}
 					COUNT QUERY: {countQ}<br /><br />
 					RESULT QUERY: {resQ}
 				</pre>

@@ -11,7 +11,8 @@ let initialState = {
 	currentQuery: -1,
 	results: "",
 	resultCount: "",
-	resultsPending: false
+	resultsPending: false,
+	resultCountPending: false
 };
 
 const makeQuery = (domain, fieldDefinitions) => {
@@ -27,17 +28,25 @@ const getIn = (path, data) =>
 	path.length === 0 ? data : getIn(path, data[path.shift()]);
 
 
-const sendQuery = debounce(function(q) {
+const sendQuery = function(q) {
 	xhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[0]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULTS", results: resp.body}); });
 	xhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[1]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}); });
-}, 2000);
+};
+
+const sendDelayedQuery = debounce(sendQuery, 2000);
 
 
 const setQuery = (state) => {
 	if(state.currentQuery > -1) {
-		sendQuery(parseGremlin(state.queries[state.currentQuery]));
-		state = {...state, resultCount: "", resultsPending: true};
+		if(state.resultsPending || state.resultCountPending) {
+			sendDelayedQuery(parseGremlin(state.queries[state.currentQuery]));
+		} else {
+			sendQuery(parseGremlin(state.queries[state.currentQuery]));
+		}
+
+		state = {...state, resultCount: "", resultsPending: true, resultCountPending: true};
 	}
+
 	return state;
 };
 
@@ -96,7 +105,7 @@ export default function(state=initialState, action) {
 
 
 		case "SET_QUERY_RESULT_COUNT":
-			return {...state, resultCount: action.count, resultsPending: false};
+			return {...state, resultCount: action.count, resultCountPending: false};
 
 		case "DELETE_QUERY":
 			pathToQuerySelection = clone(state.queries[action.queryIndex].pathToQuerySelection);
