@@ -14,7 +14,7 @@ class EntityComponent extends React.Component {
 
 	renderPropFilter(propertyFilter, i, topPosition) {
 		return {
-			propertyComponent: (
+			filterComponent: (
 				<PropertyComponent
 					baseHeight={basePropertyComponentHeight}
 					key={i}
@@ -30,7 +30,7 @@ class EntityComponent extends React.Component {
 	renderRelation(relation, i, topPosition, props, subComponents) {
 
 		return {
-			relationComponent: (
+			filterComponent: (
 				<RelationComponent
 					{...props}
 					baseHeight={baseHeight}
@@ -44,45 +44,51 @@ class EntityComponent extends React.Component {
 		};
 	}
 
+	renderFilters(filters, renderFunc, topPosition = 0, ...args) {
+		let filterComponentHeight = topPosition;
+
+		const filterComponents = filters.map((filter, i) => {
+			const {filterComponent, height} = renderFunc(filter, i, filterComponentHeight, ...args);
+			filterComponentHeight += height;
+			return filterComponent;
+		});
+
+		return [filterComponents, filterComponentHeight];
+	}
 
 	renderQueryEntity(props, path = ["entity"]) {
+		// The current entity within the query tree
 		const queryEntity = props.query && props.query.entity ? props.query.entity : {domain: props.domain};
+		// The current entity data
 		const queryEntityData = props.query && props.query.entity ? props.query.entity.data : {};
+		// The current query's selection path
 		const pathToQuerySelection = props.query ? props.query.pathToQuerySelection : [];
 
+		// Query filters on properties of this entity
+		const propertyFilters = (queryEntityData["@properties"] || []);
+		// Query filters on related entities
+		const relationFilters = (queryEntityData["@relations"] || []);
+
+		// Test whether this entity is selected using the current query's seletion path
 		const selected = deepEqual(path, pathToQuerySelection);
 
-
-		const propertyFilters = (queryEntityData["@properties"] || []);
-		const relationFilters = (queryEntityData["@relations"] || []);
-		const subComponents = relationFilters
+		// Renders all the child entity trees connected to this entity via its @relations
+		const childEntityComponents = relationFilters
 			.map((relation, i) => {
 				const subProps = {...props, query: {...relation, pathToQuerySelection: pathToQuerySelection }};
 				const { component, height } = this.renderQueryEntity(subProps, path.concat(["data", "@relations", i, "entity"]));
 				return { component: component, height: height };
 			});
 
-		let filterComponentHeight = 0;
+		// Loads all the filters into direct child components, keeping track of their respective total height
+		let [propertyComponents, propertyComponentHeight] = this.renderFilters(propertyFilters, this.renderPropFilter.bind(this));
+		let [relationComponents, childComponentHeight] = this.renderFilters(relationFilters, this.renderRelation.bind(this), propertyComponentHeight, props, childEntityComponents);
 
-
-
-		const propertyComponents = propertyFilters.map((filter, i) => {
-			const {propertyComponent, height} = this.renderPropFilter(filter, i, filterComponentHeight);
-			filterComponentHeight += height;
-			return propertyComponent;
-		});
-
-
-		const relationComponents = relationFilters.map((filter, i) => {
-			const {relationComponent, height} = this.renderRelation(filter, i, filterComponentHeight, props, subComponents);
-			filterComponentHeight += height;
-			return relationComponent;
-		});
-
-
+		// If the current entity is selected show a delete button
 		const deleteButton = selected ? (<DeleteButton onSelect={() => props.onDeleteQuery(props.componentIndex) } />) : null;
 
 
+		// Render the entity into component
 		const component = (
 			<g>
 				<g {...props}
@@ -100,8 +106,9 @@ class EntityComponent extends React.Component {
 			</g>
 		);
 
+		// Return the total height of this entity component and the component itself
 		return {
-			height: baseHeight + filterComponentHeight,
+			height: baseHeight + childComponentHeight,
 			component: component
 		};
 	}
