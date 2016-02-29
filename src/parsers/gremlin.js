@@ -39,7 +39,7 @@ parseEntity = (ent, path = [], aliasSelf = true) => {
 };
 
 const parseQuery = (query) => {
-	let selectVal = query.pathToSelectedEntity.length ? query.pathToSelectedEntity.join("|") : "result";
+	let selectVal = query.pathToQuerySelection.length ? query.pathToQuerySelection.join("|") : "result";
 	return [
 		`${MAP.identity(query.entity.domain)}${parseEntity(query.entity)}.select("${selectVal}").dedup().range(0,10)`,
 		`${MAP.identity(query.entity.domain)}${parseEntity(query.entity)}.select("${selectVal}").dedup().count()`

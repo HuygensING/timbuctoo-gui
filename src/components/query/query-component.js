@@ -22,9 +22,9 @@ class QueryComponent extends React.Component {
 	renderQueryEntity(props, path = []) {
 		const queryEntity = props.query && props.query.entity ? props.query.entity : {domain: props.domain};
 		const queryEntityData = props.query && props.query.entity ? props.query.entity.data : {};
-		const pathToSelectedEntity = props.query ? props.query.pathToSelectedEntity : [];
+		const pathToQuerySelection = props.query ? props.query.pathToQuerySelection : [];
 
-		const selected = deepEqual(path, pathToSelectedEntity);
+		const selected = deepEqual(path, pathToQuerySelection);
 
 		const baseHeight = 50;
 		const basePropertyComponentHeight = 28;
@@ -50,7 +50,7 @@ class QueryComponent extends React.Component {
 					...props,
 					query: {
 						...relation,
-						pathToSelectedEntity: pathToSelectedEntity
+						pathToQuerySelection: pathToQuerySelection
 					}
 				}, path.concat(["entity", "data", "@relations", i]));
 
