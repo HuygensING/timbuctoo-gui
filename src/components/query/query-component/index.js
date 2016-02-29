@@ -42,14 +42,8 @@ class QueryComponent extends React.Component {
 
 		const subComponents = (queryEntityData["@relations"] || [])
 			.map((relation, i) => {
-				const { component, height } = this.renderQueryEntity({
-					...props,
-					query: {
-						...relation,
-						pathToQuerySelection: pathToQuerySelection
-					}
-				}, path.concat(["data", "@relations", i, "entity"]));
-
+				const subProps = {...props, query: {...relation, pathToQuerySelection: pathToQuerySelection }};
+				const { component, height } = this.renderQueryEntity(subProps, path.concat(["data", "@relations", i, "entity"]));
 				return { component: component, height: height };
 			});
 
