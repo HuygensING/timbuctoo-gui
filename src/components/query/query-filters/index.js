@@ -1,14 +1,21 @@
 import React from "react";
 import mapField from "./map-field";
-
+import getIn from "../../../util/get-in";
 
 class QueryFilters extends React.Component {
 
 	render() {
-		if(!this.props.entity || !this.props.entity.fieldDefinitions || this.props.queries.currentQuery === -1) { return null; }
-		return (<ul>
-			{this.props.entity.fieldDefinitions.map((fieldDef, i) => <li key={i}>{mapField(fieldDef, this.props)}</li> )}
-		</ul>);
+		const { queries } = this.props;
+		if(queries.currentQuery === -1) { return null; }
+		const query = queries.queries[queries.currentQuery];
+		const { data, type } = getIn(query.pathToQuerySelection, query, {typed: true});
+		if(type === "entity") {
+			return (<ul>
+				{data.fieldDefinitions.map((fieldDef, i) => <li key={i}>{mapField(fieldDef, {...this.props, entity: data})}</li> )}
+			</ul>);
+		} else {
+			return null;
+		}
 	}
 }
 

@@ -10,7 +10,6 @@ import parseGremlin from "../parsers/gremlin";
 
 let initialState = {
 	queries: [],
-	entity: null,
 	currentQuery: -1,
 	results: "",
 	resultCount: "",
@@ -66,16 +65,14 @@ export default function(state=initialState, action) {
 			return setQuery({
 				...state,
 				queries: current,
-				currentQuery: action.data.queryIndex,
-				entity: getIn([action.data.queryIndex].concat(pathToQuerySelection), current)
+				currentQuery: action.data.queryIndex
 			});
 
 		case "SET_QUERY_PATH": {
 			current = setIn([state.currentQuery, "pathToQuerySelection"], action.path, state.queries);
 			return setQuery({
 				...state,
-				queries: current,
-				entity: getIn([state.currentQuery].concat(action.path), state.queries)
+				queries: current
 			});
 		}
 
@@ -84,8 +81,7 @@ export default function(state=initialState, action) {
 			current = setIn([state.currentQuery].concat(pathToQuerySelection).concat("data").concat(action.fieldPath), action.value, state.queries);
 			return setQuery({
 				...state,
-				queries: current,
-				entity: getIn([state.currentQuery].concat(pathToQuerySelection), current)
+				queries: current
 			});
 
 		case "SET_QUERY_RELATION_VALUE":
@@ -96,19 +92,9 @@ export default function(state=initialState, action) {
 
 			return setQuery({
 				...state,
-				queries: current,
-				entity: getIn([state.currentQuery].concat(pathToQuerySelection), current)
+				queries: current
 			});
 
-
-
-
-		case "SET_QUERY_RESULTS":
-			return {...state, results: action.results, resultsPending: false};
-
-
-		case "SET_QUERY_RESULT_COUNT":
-			return {...state, resultCount: action.count, resultCountPending: false};
 
 		case "DELETE_QUERY":
 			pathToQuerySelection = clone(state.queries[action.queryIndex].pathToQuerySelection);
@@ -128,11 +114,16 @@ export default function(state=initialState, action) {
 				current[state.currentQuery].pathToQuerySelection = ["entity"];
 				return setQuery({
 					...state,
-					queries: current,
-					entity: current[state.currentQuery].entity
+					queries: current
 				});
 			}
+			break;
 
+		case "SET_QUERY_RESULTS":
+			return {...state, results: action.results, resultsPending: false};
+
+		case "SET_QUERY_RESULT_COUNT":
+			return {...state, resultCount: action.count, resultCountPending: false};
 
 	}
 

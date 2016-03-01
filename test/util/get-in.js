@@ -1,7 +1,7 @@
 import expect from "expect";
 import getIn from "../../src/util/get-in";
 
-describe("setIn", () => { //eslint-disable-line no-undef
+describe("getIn", () => { //eslint-disable-line no-undef
 
 	it("should get a value in the given object", () => { //eslint-disable-line no-undef
 
@@ -19,4 +19,9 @@ describe("setIn", () => { //eslint-disable-line no-undef
 		expect(path).toEqual(["c", 1]);
 	});
 
+	it("should return a type when requested", () => { //eslint-disable-line no-undef
+		const { type, data } = getIn(["a", "b", 2], {a: {b: ["a", "b", "c"]}}, {typed: true});
+		expect(type).toEqual("b");
+		expect(data).toEqual("c");
+	});
 });

@@ -60,7 +60,7 @@ class App extends React.Component {
 			</div>
 
 			<div style={{position: "absolute", top: "50px", left: "30%", width: "30%", height: "calc(100% - 60px)"}}>
-				<QueryFilters {...this.props} entity={this.props.queries.entity} onChange={this.onQueryChange.bind(this)} />
+				<QueryFilters {...this.props} onChange={this.onQueryChange.bind(this)} />
 			</div>
 			<div style={{position: "absolute", top: "50px", left: "60%", width: "40%", height: "calc(100% - 60px)"}}>
 				<pre style={{width: "100%", whiteSpace: "pre-wrap"}}>
