@@ -2,14 +2,14 @@ var keywords = require("./keywords");
 
 
 module.exports = {
-	"ckccperson": [
+	"ckccpersons": [
 		{
 			"name": "names",
 			"type": "names",
 			"options": ["FORENAME", "SURNAME", "NAME_LINK", "ROLE_NAME", "GEN_NAME"]
 		}
 	],
-	"wwperson": [
+	"wwpersons": [
 		{
 			"name": "names",
 			"type": "names",
@@ -117,7 +117,7 @@ module.exports = {
 			"path": "domain/wwpersons/autocomplete"
 		}*/
 	],
-	"wwdocument": [
+	"wwdocuments": [
 		{
 			"name": "title",
 			"type": "string"
@@ -150,8 +150,8 @@ module.exports = {
 			}
 		}
 	],
-	"wwcollective": [],
-	"wwkeyword": [
+	"wwcollectives": [],
+	"wwkeywords": [
 		{
 			"name": "type",
 			"type": "string"

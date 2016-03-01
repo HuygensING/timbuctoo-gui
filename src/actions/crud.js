@@ -37,7 +37,7 @@ const fetchEntity = (location, next, fail) =>
 const fetchFieldDescription = (domain, next, fail) =>
 	server.performXhr({
 		headers: {"Accept": "application/json"},
-		url: `${config.apiUrl.v4}/fielddefinitions/${domain}`
+		url: `${config.apiUrl.v4}/fielddefinitions/${domain}s`
 	}, (err, resp) => {
 		const fieldDefinitions = JSON.parse(resp.body);
 		next(fieldDefinitions);
