@@ -8,7 +8,7 @@ class StringField extends React.Component {
 				<label>{this.props.name}</label>
 				<Input
 					onChange={this.props.onChange.bind(this, [this.props.name])}
-					value={this.props.entity.data[this.props.name]}
+					value={this.props.entity.data[this.props.name] || ""}
 				/>
 			</div>
 		);

@@ -3,7 +3,7 @@ var bodyParser = require("body-parser");
 var clone = require("clone-deep");
 var relationTypes = require("../src/static/relationtypes");
 var keywords = require("../src/static/keywords");
-var fieldDefinitions = require("../src/static/field-definitions");
+var fieldDefinitions = require("../src/static/field-definitions2");
 app.use(bodyParser.json());
 
 

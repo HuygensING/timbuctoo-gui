@@ -4,7 +4,7 @@ import config from "../config";
 export default function(path, query, vreId, done) {
 	let options = {
 		headers: {"Accept": "application/json", "VRE_ID": vreId},
-		url: `${config.apiUrl[config.apiVersion]}/${path}?query=${query}*`
+		url: `${config.apiUrl[config.apiVersion]}/${path.replace(/^\/v[^/]+\//, "")}?query=${query}*`
 	};
 
 	let xhrDone = function(err, response, body) {
