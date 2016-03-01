@@ -56,16 +56,16 @@ export default function(state=initialState, action) {
 	let pathToQuerySelection;
 	switch (action.type) {
 		case "SELECT_QUERY":
-			current = state.queries[action.data.queryIndex] ?
+			current = state.queries[action.queryIndex] ?
 					state.queries :
-					setIn([action.data.queryIndex], makeQuery(action.data.domain, action.fieldDefinitions), state.queries);
+					setIn([action.queryIndex], makeQuery(action.domain, action.fieldDefinitions), state.queries);
 
-			pathToQuerySelection = current[action.data.queryIndex].pathToQuerySelection;
+			pathToQuerySelection = current[action.queryIndex].pathToQuerySelection;
 
 			return setQuery({
 				...state,
 				queries: current,
-				currentQuery: action.data.queryIndex
+				currentQuery: action.queryIndex
 			});
 
 		case "SET_QUERY_PATH": {
@@ -83,18 +83,6 @@ export default function(state=initialState, action) {
 				...state,
 				queries: current
 			});
-
-		case "SET_QUERY_RELATION_VALUE":
-			pathToQuerySelection = state.queries[state.currentQuery].pathToQuerySelection;
-			const newEntity = {domain: action.data.domain, fieldDefinitions: action.fieldDefinitions, data: {}};
-			action.data.value[action.data.value.length - 1].entity = newEntity;
-			current = setIn([state.currentQuery].concat(pathToQuerySelection).concat("data").concat(action.data.fieldPath), action.data.value, state.queries);
-
-			return setQuery({
-				...state,
-				queries: current
-			});
-
 
 		case "DELETE_QUERY":
 			pathToQuerySelection = clone(state.queries[action.queryIndex].pathToQuerySelection);
