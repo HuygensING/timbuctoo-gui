@@ -4,10 +4,10 @@ import MultiSelectField from "./fields/multi-select";
 const relateButton = (fieldDef, props) => (
 		<button
 			onClick={() => props.onChange(["and"], props.entity.and.concat({
-					name: fieldDef.relation.regularName,
+					name: fieldDef.relation.outName,
 					type: "relation",
-					direction: "both",
-					targetType: fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType
+					direction: fieldDef.relation.direction.toLowerCase(),
+					targetType: fieldDef.relation.targetCollection.replace(/s$/, "")
 				}))}>
 			{fieldDef.name}
 		</button>

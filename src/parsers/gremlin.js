@@ -1,6 +1,6 @@
 import clone from "clone-deep";
 
-const v2UnquotedPropVals = ["wwperson_children"];
+const v2UnquotedPropVals = ["wwperson_children", "wwcollective_type"];
 const quoteProp = (domain, prop) => v2UnquotedPropVals.indexOf(`${domain}_${prop.name}`) > -1 ? `"${prop.value}"` : `"\\"${prop.value}\\""`;
 const mappings = {
 	"v2.1": {
