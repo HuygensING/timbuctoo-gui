@@ -22,7 +22,7 @@ const makeQuery = (domain, fieldDefinitions) => {
 		domain: domain,
 		deleted: false,
 		pathToQuerySelection: ["entity"],
-		entity: {domain: domain, fieldDefinitions: fieldDefinitions, data: {}}
+		entity: {domain: domain, fieldDefinitions: fieldDefinitions, data: []}
 	};
 };
 
@@ -84,6 +84,7 @@ export default function(state=initialState, action) {
 				queries: current
 			});
 
+		// TODO: tidy up. remove pops, use slice
 		case "DELETE_QUERY":
 			pathToQuerySelection = clone(state.queries[action.queryIndex].pathToQuerySelection);
 			if(pathToQuerySelection.length === 1) {

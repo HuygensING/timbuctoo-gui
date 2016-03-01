@@ -18,20 +18,28 @@ const parseRelation = (rel, relName, path, addAlias = true) => `${rel.data.direc
 
 const parseProps = (props, domain) => {
 	if(props.length === 0) { return ""; }
-	if(props.length === 1) { return `.${MAP.parseProp(props[0], domain)}`; }
-	return `.and(${props.map((p) => MAP.parseProp(p, domain)).map((p) => "__." + p).join(", ")})`;
+	if(props.length === 1) { return `.${MAP.parseProp(props[0].value, domain)}`; }
+	return `.and(${props.map((p) => MAP.parseProp(p.value, domain)).map((p) => "__." + p).join(", ")})`;
 };
 
 const parseRelations = (rels, ent, path) => {
 	if(rels.length === 0) { return ""; }
-	if(rels.length === 1) { return `.${parseRelation(rels[0], rels[0].name, path.concat(["data", "@relations", 0]))}`; }
-	return `.and(${rels.map((r, i) => parseRelation(r, r.name, path.concat(["data", "@relations", i]), false)).join(", ")})` +
-		`.union(${rels.map((r, i) => parseRelation(r, r.name, path.concat(["data", "@relations", i]))).join(", ")})`;
+	if(rels.length === 1) { return `.${parseRelation(rels[0].value, rels[0].value.name, path.concat(["data", rels[0].index]))}`; }
+	return `.and(${rels.map((r) => parseRelation(r.value, r.value.name, path.concat(["data", r.index]), false)).join(", ")})` +
+		`.union(${rels.map((r) => parseRelation(r.value, r.value.name, path.concat(["data", r.index]))).join(", ")})`;
 };
 
 parseEntity = (ent, path = ["entity"], aliasSelf = true) => {
-	const propQ = parseProps(ent.data["@properties"] || [], ent.domain);
-	const relQ = parseRelations(ent.data["@relations"] || [], ent, path);
+	const propFilters = ent.data
+		.map((d, i) => { return { index: i, value: d }; })
+		.filter((f) => f.value.type === "property");
+
+	const relFilters = ent.data
+		.map((d, i) => { return { index: i, value: d }; })
+		.filter((f) => f.value.type === "relation");
+
+	const propQ = parseProps(propFilters, ent.domain);
+	const relQ = parseRelations(relFilters, ent, path);
 
 	if(aliasSelf) { return (path.length ? `.as("${path.join("|")}")` : `.as("result")`) + propQ + relQ; }
 

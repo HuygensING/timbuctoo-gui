@@ -5,21 +5,21 @@ import SelectList from "hire-forms-select-list";
 class MultiSelect extends React.Component {
 
 	onChange(values) {
-		const currentProps = (this.props.entity.data["@properties"] || []);
+		const currentProps = this.props.entity.data;
 
 		const current = currentProps
-			.filter((p) => p.name === this.props.name )
+			.filter((d) => d.type === "property" && d.name === this.props.name )
 			.map((p) => p.value);
 
 		const toAdd = values
 			.filter((v) => current.indexOf(v) < 0);
 
 		if(toAdd.length) {
-			this.props.onChange(["@properties"], currentProps.concat(
-				toAdd.map((v) => { return { name: this.props.name, value: v }; })
+			this.props.onChange([], currentProps.concat(
+				toAdd.map((v) => { return { type: "property", name: this.props.name, value: v }; })
 			));
 		} else {
-			this.props.onChange(["@properties"], currentProps.filter((p) => {
+			this.props.onChange([], currentProps.filter((p) => {
 				return this.props.name !== p.name || (this.props.name === p.name && values.indexOf(p.value) > -1);
 			}));
 
@@ -35,7 +35,7 @@ class MultiSelect extends React.Component {
 				<SelectList
 					onChange={this.onChange.bind(this)}
 					options={this.props.options}
-					values={(this.props.entity.data["@properties"] || []).filter((p) => p.name === this.props.name).map((p) => p.value)}
+					values={this.props.entity.data.filter((d) => d.type === "property" && d.name === this.props.name).map((p) => p.value)}
 				/>
 			</div>
 		);

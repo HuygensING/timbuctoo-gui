@@ -14,7 +14,6 @@ const fetchFieldDescription = (domain, next = () => {}) =>
 		next(fieldDefinitions)
 	);
 
-
 const selectQuery = (domain, queryIndex) => (dispatch) =>
 	fetchFieldDescription(domain, (fieldDefinitions) =>
 		dispatch({type: "SELECT_QUERY", queryIndex: queryIndex, domain: domain, fieldDefinitions: fieldDefinitions}));
@@ -26,11 +25,11 @@ const deleteQuery = (queryIndex) => (dispatch) =>
 	dispatch({type: "DELETE_QUERY", queryIndex: queryIndex});
 
 const changeQuery = (fieldPath, value) => (dispatch, getState) => {
-	if(fieldPath[0] === "@relations") {
+	if(value.length > 0 && value[value.length - 1].type === "relation") {
 		const targetDomain = DOMAIN_MAP[getState().vre.vreId][value[value.length - 1].targetType];
 
 		fetchFieldDescription(targetDomain, (fieldDefinitions) => {
-			const newEntity = {domain: targetDomain, fieldDefinitions: fieldDefinitions, data: {}};
+			const newEntity = {domain: targetDomain, fieldDefinitions: fieldDefinitions, data: []};
 			value[value.length - 1].entity = newEntity;
 			dispatch({type: "SET_QUERY_FIELD_VALUE", fieldPath: fieldPath, value: value});
 		});
