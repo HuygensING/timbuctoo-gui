@@ -22,7 +22,7 @@ const makeQuery = (domain, fieldDefinitions) => {
 		domain: domain,
 		deleted: false,
 		pathToQuerySelection: ["entity"],
-		entity: {domain: domain, fieldDefinitions: fieldDefinitions, data: []}
+		entity: {domain: domain, fieldDefinitions: fieldDefinitions, and: []}
 	};
 };
 

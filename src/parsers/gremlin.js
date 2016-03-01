@@ -24,17 +24,17 @@ const parseProps = (props, domain) => {
 
 const parseRelations = (rels, ent, path) => {
 	if(rels.length === 0) { return ""; }
-	if(rels.length === 1) { return `.${parseRelation(rels[0].value, rels[0].value.name, path.concat(["data", rels[0].index]))}`; }
-	return `.and(${rels.map((r) => parseRelation(r.value, r.value.name, path.concat(["data", r.index]), false)).join(", ")})` +
-		`.union(${rels.map((r) => parseRelation(r.value, r.value.name, path.concat(["data", r.index]))).join(", ")})`;
+	if(rels.length === 1) { return `.${parseRelation(rels[0].value, rels[0].value.name, path.concat(["and", rels[0].index]))}`; }
+	return `.and(${rels.map((r) => parseRelation(r.value, r.value.name, path.concat(["and", r.index]), false)).join(", ")})` +
+		`.union(${rels.map((r) => parseRelation(r.value, r.value.name, path.concat(["and", r.index]))).join(", ")})`;
 };
 
 parseEntity = (ent, path = ["entity"], aliasSelf = true) => {
-	const propFilters = ent.data
+	const propFilters = ent.and
 		.map((d, i) => { return { index: i, value: d }; })
 		.filter((f) => f.value.type === "property");
 
-	const relFilters = ent.data
+	const relFilters = ent.and
 		.map((d, i) => { return { index: i, value: d }; })
 		.filter((f) => f.value.type === "relation");
 
