@@ -1,5 +1,5 @@
 import clone from "clone-deep";
-import setIn from "./util/set-in";
+import setIn from "../util/set-in";
 
 // Skeleton base data per field definition
 const initialData = {
@@ -59,7 +59,7 @@ export default function(state=initialState, action) {
 
 		case "SET_ENTITY_FIELD_VALUE":
 			return {...state, ...{
-				data: setIn(action.fieldPath, action.value, clone(state.data))
+				data: setIn(action.fieldPath, action.value, state.data)
 			}};
 
 		case "RECEIVE_ENTITY_FAILURE":

@@ -1,5 +1,5 @@
 import clone from "clone-deep";
-import setIn from "./util/set-in";
+import setIn from "../util/set-in";
 import store from "../store";
 import parseGremlin from "../parsers/gremlin";
 import debounce from "lodash.debounce";
