@@ -1,4 +1,4 @@
-import sinon from "sinon";
+/*import sinon from "sinon";
 import expect from "expect";
 import server from "../../../src/actions/server";
 import saveRelations from "../../../src/actions/v2.1/save-relations";
@@ -19,14 +19,38 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 			]
 		};
 
+
+//      "name": "isPersonQuotedIn",
+//      "type": "relation",
+//      "quicksearch": "\/v2.1\/domain\/wwdocuments\/autocomplete",
+//      "relation": {
+//        "direction": "OUT",
+//        "outName": "isPersonQuotedIn",
+//        "inName": "quotesPerson",
+//        "targetCollection": "wwdocuments",
+//        "relationCollection": "wwrelations",
+//        "relationTypeId": "2586f43a-49ca-45b9-9c00-32008eecb9d5"
+//      }
+
+//		const relationSaveData = {
+//			"@type": fieldDef.relation.relationCollection.replace(/s$/, ""), // check
+//			"^sourceId": fieldDef.relation.direction === "IN" ? relation.id : data._id, // check
+//			"^sourceType": fieldDef.relation.direction === "IN" ? targetType : sourceType, // check
+//			"^targetId": fieldDef.relation.direction === "IN" ? data._id : relation.id, // check
+//			"^targetType": fieldDef.relation.direction === "IN" ? sourceType : targetType,
+//			"^typeId": fieldDef.relation.relationTypeId, // check
+//			accepted: accepted
+//		};
+
+
 		const fieldDefs = [
 			{
 				name: "relNameA",
-				relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}
+				relation: { relationCollection: "relTypeA", direction: "OUT", sourceType: "document", targetCollection: "person", typeId: "typeID"}
 			},
 			{
 				name: "relNameB",
-				relation: { type: "relTypeB", isInverseName: true, sourceType: "document", targetType: "person", typeId: "typeID"}
+				relation: { relationCollection: "relTypeB", direction: "IN", sourceType: "document", targetCollection: "person", typeId: "typeID"}
 			}
 		];
 
@@ -239,3 +263,4 @@ describe("saveRelations v2.1", () => { //eslint-disable-line no-undef
 		});
 	});
 });
+*/

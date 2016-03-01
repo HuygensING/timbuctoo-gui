@@ -4,19 +4,25 @@ const saveRelationsV21 = (data, relationData, fieldDefs, token, vreId, next) => 
 	// Returns the domain based on the fieldDefinitions and the relation key (i.e. "hasBirthPlace")
 	const makeRelationArgs = (relation, key, accepted = true, id = null, rev = null) => {
 		const fieldDef = fieldDefs.find((def) => def.name === key);
+
+
+		const sourceType = data["@type"].replace(/s$/, "").replace(/^ww/, "");
+		const targetType = fieldDef.relation.targetCollection.replace(/s$/, "").replace(/^ww/, "");
+
 		const relationSaveData = {
-			"@type": fieldDef.relation.type,
-			"^sourceId": fieldDef.relation.isInverseName ? relation.id : data._id,
-			"^sourceType": fieldDef.relation.sourceType,
-			"^targetId": fieldDef.relation.isInverseName ? data._id : relation.id,
-			"^targetType": fieldDef.relation.targetType,
-			"^typeId": fieldDef.relation.typeId,
+			"@type": fieldDef.relation.relationCollection.replace(/s$/, ""), // check
+			"^sourceId": fieldDef.relation.direction === "IN" ? relation.id : data._id, // check
+			"^sourceType": fieldDef.relation.direction === "IN" ? targetType : sourceType, // check
+			"^targetId": fieldDef.relation.direction === "IN" ? data._id : relation.id, // check
+			"^targetType": fieldDef.relation.direction === "IN" ? sourceType : targetType,
+			"^typeId": fieldDef.relation.relationTypeId, // check
 			accepted: accepted
 		};
+
 		if(id) { relationSaveData._id = id; }
 		if(rev) { relationSaveData["^rev"] = rev; }
 		return [
-			fieldDef.relation.type, // domain
+			fieldDef.relation.relationCollection.replace(/s$/, ""), // domain
 			relationSaveData
 		];
 	};
