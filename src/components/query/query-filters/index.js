@@ -10,9 +10,12 @@ class QueryFilters extends React.Component {
 		const query = queries.queries[queries.currentQuery];
 		const { data, type } = getIn(query.pathToQuerySelection, query, {typed: true});
 		if(type === "entity") {
-			return (<ul>
-				{data.fieldDefinitions.map((fieldDef, i) => <li key={i}>{mapField(fieldDef, {...this.props, entity: data})}</li> )}
-			</ul>);
+			return (<div>
+				<ul>
+					{data.fieldDefinitions.map((fieldDef, i) => <li key={i}>{mapField(fieldDef, {...this.props, entity: data})}</li> )}
+				</ul>
+				<pre style={{width: "100%", whiteSpace: "pre-wrap"}}>{JSON.stringify(query)}</pre>
+			</div>);
 		} else {
 			return null;
 		}
