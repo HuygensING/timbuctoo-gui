@@ -13,7 +13,7 @@ const MAP = mappings["v2.1"];
 
 let parseEntity;
 
-const parseRelation = (rel, relName, path, addAlias = true) => `${rel.direction}E("${relName}")${addAlias ? `.as("${path.join("|")}")` : ""}.otherV()${parseEntity(rel.entity, path.concat("entity"), addAlias)}`;
+const parseRelation = (rel, relName, path, addAlias = true) => `${rel.direction}E("${relName}")${addAlias ? `.as("${path.join("|")}")` : ""}.otherV()${parseEntity(rel.entity, path.concat("entity"), addAlias)}.dedup()`;
 
 
 const parseProps = (props, domain) => {
@@ -55,8 +55,8 @@ const parseQuery = (query) => {
 	}
 	let selectVal = path.length ? path.join("|") : "result";
 	return [
-		`${MAP.identity(query.entity.domain)}${parseEntity(query.entity)}.select("${selectVal}").dedup().range(0,10)`,
-		`${MAP.identity(query.entity.domain)}${parseEntity(query.entity)}.select("${selectVal}").dedup().count()`
+		`${MAP.identity(query.entity.domain)}${parseEntity(query.entity)}.dedup().select("${selectVal}").dedup().range(0,10)`,
+		`${MAP.identity(query.entity.domain)}${parseEntity(query.entity)}.dedup().select("${selectVal}").dedup().count()`
 	];
 };
 
