@@ -6,7 +6,7 @@ import DirectionToggle from "./direction-toggle";
 
 class RelationComponent extends React.Component {
 	onChangeDirection() {
-		switch (this.props.relation.data.direction) {
+		switch (this.props.relation.direction) {
 			case "both": return this.props.onQueryChange("direction", "out");
 			case "out": return this.props.onQueryChange("direction", "in");
 			case "in": return this.props.onQueryChange("direction", "both");
@@ -29,8 +29,8 @@ class RelationComponent extends React.Component {
 		const selected = deepEqual(path, pathToQuerySelection);
 		const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQuery(componentIndex) } translate="8 -20" />) : null;
 		const directionToggle = selected ?
-			(<DirectionToggle direction={relation.data.direction} onSelect={this.onChangeDirection.bind(this)} selected={true} />) :
-			(<DirectionToggle direction={relation.data.direction} selected={false} />);
+			(<DirectionToggle direction={relation.direction} onSelect={this.onChangeDirection.bind(this)} selected={true} />) :
+			(<DirectionToggle direction={relation.direction} selected={false} />);
 
 		return (
 			<g transform={`translate(0, ${topPosition + 10})`}>

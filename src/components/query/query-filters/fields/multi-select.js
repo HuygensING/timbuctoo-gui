@@ -15,11 +15,11 @@ class MultiSelect extends React.Component {
 			.filter((v) => current.indexOf(v) < 0);
 
 		if(toAdd.length) {
-			this.props.onChange([], currentProps.concat(
+			this.props.onChange(["data"], currentProps.concat(
 				toAdd.map((v) => { return { type: "property", name: this.props.name, value: v }; })
 			));
 		} else {
-			this.props.onChange([], currentProps.filter((p) => {
+			this.props.onChange(["data"], currentProps.filter((p) => {
 				return this.props.name !== p.name || (this.props.name === p.name && values.indexOf(p.value) > -1);
 			}));
 

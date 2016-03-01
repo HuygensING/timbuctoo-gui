@@ -3,10 +3,10 @@ import MultiSelectField from "./fields/multi-select";
 
 const relateButton = (fieldDef, props) => (
 		<button
-			onClick={() => props.onChange([], props.entity.data.concat({
+			onClick={() => props.onChange(["data"], props.entity.data.concat({
 					name: fieldDef.relation.regularName,
 					type: "relation",
-					data: {direction: "both"},
+					direction: "both",
 					targetType: fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType
 				}))} >
 			{fieldDef.name}
