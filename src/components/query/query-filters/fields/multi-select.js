@@ -5,7 +5,7 @@ import SelectList from "hire-forms-select-list";
 class MultiSelect extends React.Component {
 
 	onChange(values) {
-		const currentProps = this.props.entity.data;
+		const currentProps = this.props.entity.and;
 
 		const current = currentProps
 			.filter((d) => d.type === "property" && d.name === this.props.name )
@@ -15,11 +15,11 @@ class MultiSelect extends React.Component {
 			.filter((v) => current.indexOf(v) < 0);
 
 		if(toAdd.length) {
-			this.props.onChange(["data"], currentProps.concat(
+			this.props.onChange(["and"], currentProps.concat(
 				toAdd.map((v) => { return { type: "property", name: this.props.name, value: v }; })
 			));
 		} else {
-			this.props.onChange(["data"], currentProps.filter((p) => {
+			this.props.onChange(["and"], currentProps.filter((p) => {
 				return this.props.name !== p.name || (this.props.name === p.name && values.indexOf(p.value) > -1);
 			}));
 
@@ -35,7 +35,7 @@ class MultiSelect extends React.Component {
 				<SelectList
 					onChange={this.onChange.bind(this)}
 					options={this.props.options}
-					values={this.props.entity.data.filter((d) => d.type === "property" && d.name === this.props.name).map((p) => p.value)}
+					values={this.props.entity.and.filter((d) => d.type === "property" && d.name === this.props.name).map((p) => p.value)}
 				/>
 			</div>
 		);

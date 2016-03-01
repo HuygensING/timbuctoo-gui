@@ -29,7 +29,7 @@ const changeQuery = (fieldPath, value) => (dispatch, getState) => {
 		const targetDomain = DOMAIN_MAP[getState().vre.vreId][value[value.length - 1].targetType];
 
 		fetchFieldDescription(targetDomain, (fieldDefinitions) => {
-			const newEntity = {domain: targetDomain, fieldDefinitions: fieldDefinitions, data: []};
+			const newEntity = {domain: targetDomain, fieldDefinitions: fieldDefinitions, and: []};
 			value[value.length - 1].entity = newEntity;
 			dispatch({type: "SET_QUERY_FIELD_VALUE", fieldPath: fieldPath, value: value});
 		});
