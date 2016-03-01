@@ -13,7 +13,7 @@ const MAP = mappings["v2.1"];
 
 let parseEntity;
 
-const parseRelation = (rel, relName, path, addAlias = true) => `${rel.data.direction}E("${relName}")${addAlias ? `.as("${path.join("|")}")` : ""}.otherV()${parseEntity(rel.entity, path.concat("entity"), addAlias)}`;
+const parseRelation = (rel, relName, path, addAlias = true) => `${rel.direction}E("${relName}")${addAlias ? `.as("${path.join("|")}")` : ""}.otherV()${parseEntity(rel.entity, path.concat("entity"), addAlias)}`;
 
 
 const parseProps = (props, domain) => {

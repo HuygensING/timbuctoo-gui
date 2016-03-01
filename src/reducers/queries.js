@@ -78,7 +78,7 @@ export default function(state=initialState, action) {
 
 		case "SET_QUERY_FIELD_VALUE":
 			pathToQuerySelection = state.queries[state.currentQuery].pathToQuerySelection;
-			current = setIn([state.currentQuery].concat(pathToQuerySelection).concat("data").concat(action.fieldPath), action.value, state.queries);
+			current = setIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath), action.value, state.queries);
 			return setQuery({
 				...state,
 				queries: current
