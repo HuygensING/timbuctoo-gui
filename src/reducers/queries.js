@@ -1,9 +1,12 @@
 import clone from "clone-deep";
-import setIn from "../util/set-in";
-import store from "../store";
-import parseGremlin from "../parsers/gremlin";
 import debounce from "lodash.debounce";
 import xhr from "xhr";
+
+import setIn from "../util/set-in";
+import getIn from "../util/get-in";
+
+import store from "../store";
+import parseGremlin from "../parsers/gremlin";
 
 let initialState = {
 	queries: [],
@@ -24,8 +27,6 @@ const makeQuery = (domain, fieldDefinitions) => {
 	};
 };
 
-const getIn = (path, data) =>
-	path.length === 0 ? data : getIn(path, data[path.shift()]);
 
 
 const sendQuery = function(q) {
