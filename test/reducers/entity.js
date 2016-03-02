@@ -1,6 +1,6 @@
 import expect from "expect";
 import store from "../../src/store";
-
+import entityReducer from "../../src/reducers/entity";
 
 describe("entity reducer", () => { //eslint-disable-line no-undef
 
@@ -12,7 +12,6 @@ describe("entity reducer", () => { //eslint-disable-line no-undef
 				expect(store.getState().entity).toEqual({
 					data: null,
 					domain: null,
-					fieldDefinitions: null,
 					errorMessage: null
 				});
 				done();
@@ -24,8 +23,15 @@ describe("entity reducer", () => { //eslint-disable-line no-undef
 		store.dispatch({type: "SET_VRE", vreId: "WomenWriters"});
 	});
 
-	it("should immutably SET_ENTITY_FIELD_VALUE", (done) => { //eslint-disable-line no-undef
-		const domain = "dom";
+	it("should immutably SET_ENTITY_FIELD_VALUE", () => { //eslint-disable-line no-undef
+		const derefData = {a: "b", c: ["d", "e"]};
+		const actual = entityReducer({data: derefData}, {type: "SET_ENTITY_FIELD_VALUE", fieldPath: ["c", 0], value: "f"});
+		expect(actual).toEqual({data: {a: "b", c: ["f", "e"]}});
+		expect(actual.data === derefData).toEqual(false);
+
+
+
+/*		const domain = "dom";
 		const fieldDefinitions = [{name: "a", type: "string"}, {name: "c", type: "multiselect"}];
 
 		let unsubscribe;
@@ -52,6 +58,6 @@ describe("entity reducer", () => { //eslint-disable-line no-undef
 			store.dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: ["c", 0], value: "f"});
 		});
 
-		store.dispatch({type: "NEW_ENTITY", domain: domain, fieldDefinitions: fieldDefinitions});
+		store.dispatch({type: "NEW_ENTITY", domain: domain, fieldDefinitions: fieldDefinitions});*/
 	});
 });
