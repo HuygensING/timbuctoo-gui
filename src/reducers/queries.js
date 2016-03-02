@@ -1,4 +1,3 @@
-import clone from "clone-deep";
 import debounce from "lodash.debounce";
 
 import server from "../actions/server";
@@ -82,9 +81,8 @@ export default function(state=initialState, action) {
 				queries: current
 			});
 
-		// TODO: tidy up. remove pops, use slice
 		case "DELETE_QUERY":
-			pathToQuerySelection = clone(state.queries[action.queryIndex].pathToQuerySelection);
+			pathToQuerySelection = state.queries[action.queryIndex].pathToQuerySelection;
 			if(pathToQuerySelection.length === 1) {
 				return {
 					...state,
@@ -92,12 +90,18 @@ export default function(state=initialState, action) {
 					currentQuery: -1
 				};
 			} else {
-				let deleteRelationIndex = pathToQuerySelection.pop();
-				if(deleteRelationIndex === "entity") { deleteRelationIndex = pathToQuerySelection.pop(); }
-				let relations = getIn([state.currentQuery].concat(pathToQuerySelection), clone(state.queries));
+				let sliceEnd = pathToQuerySelection.length - 1;
+				let deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
+				if(deleteQueryFilterIndex === "entity") {
+					sliceEnd = pathToQuerySelection.length - 2;
+					deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
+				}
 
-				relations.splice(deleteRelationIndex, 1);
-				current = setIn([state.currentQuery].concat(pathToQuerySelection), relations, state.queries);
+				let queryFilters = getIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), state.queries);
+
+				queryFilters.splice(deleteQueryFilterIndex, 1);
+
+				current = setIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), queryFilters, state.queries);
 				current[state.currentQuery].pathToQuerySelection = ["entity"];
 				return setQuery({
 					...state,
