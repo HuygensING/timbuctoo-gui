@@ -3,33 +3,13 @@ import { crud } from "./crud";
 import saveRelations from "./relation-savers";
 import config from "../config";
 
-
-// 1) Fetch the fieldDefinitions for the given domain (TODO: should become server request in stead of static source file)
-// 2) Dispatch the requested actionType (RECEIVE_ENTITY or NEW_ENTITY)
-const fetchFieldDescription = (domain, actionType, data = null, errorMessage = null) => (dispatch) =>
-	crud.fetchFieldDescription(domain, (fieldDefinitions) => {
-		dispatch({
-			type: actionType,
-			domain: domain,
-			fieldDefinitions: fieldDefinitions,
-			data: data,
-			errorMessage: errorMessage
-		});
-	}, () => {
-		dispatch({
-			type: "RECEIVE_ENTITY_FAILURE",
-			errorMessage: `Failed to fetch field definitions for ${domain}`
-		});
-	});
-
-
 // 1) Fetch entity
 // 2) Fetch field description of this entity's domain
 // 3) Dispatch RECEIVE_ENTITY for render
 const selectEntity = (domain, entityId, errorMessage = null) =>
-	(dispatch) =>
-		crud.fetchEntity(`${config.apiUrl[config.apiVersion]}/domain/${domain}s/${entityId}`, (data) =>
-			dispatch(fetchFieldDescription(data["@type"], "RECEIVE_ENTITY", data, errorMessage)), () =>
+	(dispatch, getState) =>
+		crud.fetchEntity(`${config.apiUrl[config.apiVersion]}/domain/${domain}/${entityId}`, (data) =>
+			dispatch({type: "RECEIVE_ENTITY", domain: domain, data: data, fieldDefinitions: getState().vre.collections[domain], errorMessage: errorMessage}), () =>
 				dispatch({type: "RECEIVE_ENTITY_FAILURE", errorMessage: `Failed to fetch ${domain} with ID ${entityId}`}));
 
 
@@ -37,7 +17,7 @@ const selectEntity = (domain, entityId, errorMessage = null) =>
 // 1) Fetch field description for the given domain
 // 2) Dispatch NEW_ENTITY with field description for render
 const makeNewEntity = (domain, errorMessage = null) =>
-	(dispatch) => dispatch(fetchFieldDescription(domain, "NEW_ENTITY", null, errorMessage));
+	(dispatch, getState) => dispatch({type: "NEW_ENTITY", domain: domain, data: null, fieldDefinitions: getState().vre.collections[domain], errorMessage: errorMessage});
 
 const deleteEntity = () => (dispatch, getState) => {
 	crud.deleteEntity(getState().entity.domain, getState().entity.data._id, getState().user.token, getState().vre.vreId, () =>
@@ -80,5 +60,4 @@ const saveEntity = () => (dispatch, getState) => {
 	}
 };
 
-
-export { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchFieldDescription };
+export { saveEntity, selectEntity, makeNewEntity, deleteEntity };

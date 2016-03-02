@@ -13,7 +13,7 @@ class App extends React.Component {
 
 		let errorMessage = this.props.entity.errorMessage ? <div style={{fontWeight: "bold", color: "red"}}>{this.props.entity.errorMessage}</div> : null;
 
-		const domains = (this.props.vre.collections || []).map((domain) => domain.name.replace(/s$/, ""));
+		const domains = Object.keys(this.props.vre.collections || {});
 
 		let domainSelect = domains.length ? (
 			<Select
@@ -34,7 +34,7 @@ class App extends React.Component {
 				<FacetedSearch
 					config={{
 						baseURL: config.apiUrl["v2.1"],
-						searchPath: `/search/${this.props.entity.domain}s`,
+						searchPath: `/search/${this.props.entity.domain}`,
 						headers: {
 							VRE_ID: this.props.vre.vreId,
 							Accept: "application/json"
@@ -44,7 +44,7 @@ class App extends React.Component {
 						filters: SearchFilters
 					}}
 					key={this.props.entity.domain}
-					onSelect={(obj) => this.props.onSelect({id: obj.id, domain: obj.type})}
+					onSelect={(obj) => this.props.onSelect({id: obj.id, domain: `${obj.type}s`})}
 				/>
 			</div>) : null;
 

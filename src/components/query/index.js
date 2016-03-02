@@ -39,13 +39,13 @@ class App extends React.Component {
 	render() {
 		console.log(this.props.queries);
 		const [resQ, countQ] = this.props.queries.currentQuery > -1 ? parseGremlin(this.props.queries.queries[this.props.queries.currentQuery]) : ["", ""];
-		const collections = this.props.vre.collections || [];
+		const collections = this.props.vre.collections || {};
 		return (<div style={{height: "500px"}}>
 			<div style={{position: "absolute", top: 0, height: "60px"}}>
-				{collections.map((c) => (
-					<div key={c.name} style={{display: "inline-block", height: "40px", width: "40px"}}>
+				{Object.keys(collections).filter((c) => !c.match(/relations$/)).map((c) => (
+					<div key={c} style={{display: "inline-block", height: "40px", width: "40px"}}>
 						<QueryComponent
-							domain={c.name}
+							domain={c}
 							onDeleteQuery={this.onDeleteQuery.bind(this)}
 							onDeselect={(...args) => console.log(args)}
 							onQueryChange={this.onQueryChange.bind(this)}

@@ -10,7 +10,7 @@ const saveRelations = (data, relationData, fieldDefs, token, vreId, next) => {
 	const makeNewRelationArgs = (relation, key) => {
 		const fieldDef = fieldDefs.find((def) => def.name === key);
 		return [
-			fieldDef.relation.type, // domain
+			`${fieldDef.relation.type}s`, // domain
 			{
 				"@type": fieldDef.relation.type,
 				"^sourceId": fieldDef.relation.isInverseName ? relation.id : data._id,
@@ -47,7 +47,7 @@ const saveRelations = (data, relationData, fieldDefs, token, vreId, next) => {
 			// Filters out all relations which still in data["@relations"] but not in relationData
 			.filter((origRelation) => (relationData[key] || []).map((relation) => relation.id).indexOf(origRelation.id) < 0)
 			// Make argument array for deleted relations
-			.map((relation) => [fieldDefs.find((def) => def.name === key).relation.type, relation.relationId])
+			.map((relation) => [`${fieldDefs.find((def) => def.name === key).relation.type}s`, relation.relationId])
 		// Flatten nested arrays
 		).reduce((a, b) => a.concat(b), []);
 

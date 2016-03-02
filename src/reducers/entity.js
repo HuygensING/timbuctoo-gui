@@ -26,7 +26,7 @@ const nameForType = (fieldDef) =>
 const makeSkeleton = (fieldDefs, domain) =>
 	fieldDefs
 		.map((fieldDef) => [nameForType(fieldDef), initialDataForType(fieldDef)])
-		.concat([["@type", domain]])
+		.concat([["@type", domain.replace(/s$/, "")]])
 		.reduce((obj, cur) => {
 			obj[cur[0]] = cur[1];
 			return obj;

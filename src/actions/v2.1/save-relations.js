@@ -22,7 +22,7 @@ const saveRelationsV21 = (data, relationData, fieldDefs, token, vreId, next) => 
 		if(id) { relationSaveData._id = id; }
 		if(rev) { relationSaveData["^rev"] = rev; }
 		return [
-			fieldDef.relation.relationCollection.replace(/s$/, ""), // domain
+			fieldDef.relation.relationCollection, // domain
 			relationSaveData
 		];
 	};

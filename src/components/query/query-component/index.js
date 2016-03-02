@@ -30,6 +30,8 @@ QueryComponent.propTypes = {
 };
 
 export default draggable(
-	(props) => (<svg height="40" width="40">{icons[props.domain]()}</svg>),
+	(props) => (
+		<svg height="40" width="40">{icons[props.domain]()}</svg>
+	),
 	QueryComponent
 );
