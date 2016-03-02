@@ -30,7 +30,29 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 
 	it("should SELECT_QUERY"); //eslint-disable-line no-undef
 
-	it("should SET_QUERY_PATH"); //eslint-disable-line no-undef
+	it("should immutably SET_QUERY_PATH", () => { //eslint-disable-line no-undef
+		const queries = [sampleQuery];
+		const beforeState = {currentQuery: 0, queries: queries};
+		const expectedQuery = clone(sampleQuery);
+		expectedQuery.pathToQuerySelection = ["entity", "and", "0", "entity"];
+
+		const expectedState = {
+			currentQuery: 0,
+			queries: [expectedQuery],
+			resultCount: "",
+			resultCountPending: true,
+			resultsPending: true
+		};
+
+		const action = {
+			type: "SET_QUERY_PATH",
+			path: ["entity", "and", "0", "entity"]
+		};
+
+		const actual = queriesReducer(beforeState, action);
+		expect(actual).toEqual(expectedState);
+		expect(actual.queries === queries).toEqual(false);
+	});
 
 	it("should immutably SET_QUERY_FIELD_VALUE", () => {  //eslint-disable-line no-undef
 		const queries = [{}, sampleQuery];
