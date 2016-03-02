@@ -3,6 +3,19 @@ import setIn from "../../src/util/set-in";
 
 describe("setIn", () => { //eslint-disable-line no-undef
 
+	const bigObj = {};
+	const bigPath = [];
+	before(() => { //eslint-disable-line no-undef
+		let current = bigObj;
+		for(let i = 0; i < 1000; i++) {
+			current.a = {};
+			current = current.a;
+			if(i < 999) {
+				bigPath.push("a");
+			}
+		}
+	});
+
 	it("should set a value in the given object", () => { //eslint-disable-line no-undef
 
 		let obj = {a: "b", c: ["d", "e"]};
@@ -25,6 +38,14 @@ describe("setIn", () => { //eslint-disable-line no-undef
 		setIn(path, "f", obj);
 
 		expect(path).toEqual(["c", 1]);
+	});
+
+	it("should be timed", () => { //eslint-disable-line no-undef
+		const before = new Date().getTime();
+		for(let i = 0; i < 500; i++) {
+			setIn(bigPath, i, bigObj);
+		}
+		expect(new Date().getTime() - before < 500).toBe(true);
 	});
 
 });

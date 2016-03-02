@@ -1,4 +1,4 @@
-import clone from "clone-deep";
+import clone from "../util/clone-deep";
 import { crud } from "./crud";
 import saveRelations from "./relation-savers";
 import config from "../config";

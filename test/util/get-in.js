@@ -3,6 +3,19 @@ import getIn from "../../src/util/get-in";
 
 describe("getIn", () => { //eslint-disable-line no-undef
 
+	const bigObj = {};
+	const bigPath = [];
+	before(() => { //eslint-disable-line no-undef
+		let current = bigObj;
+		for(let i = 0; i < 1000; i++) {
+			current.a = {};
+			current = current.a;
+			if(i < 999) {
+				bigPath.push("a");
+			}
+		}
+	});
+
 	it("should get a value in the given object", () => { //eslint-disable-line no-undef
 
 		let obj = {a: "b", c: ["d", "e"]};
@@ -23,5 +36,13 @@ describe("getIn", () => { //eslint-disable-line no-undef
 		const { type, data } = getIn(["a", "b", 2], {a: {b: ["a", "b", "c"]}}, {typed: true});
 		expect(type).toEqual("b");
 		expect(data).toEqual("c");
+	});
+
+	it("should be timed", () => { //eslint-disable-line no-undef
+		const before = new Date().getTime();
+		for(let i = 0; i < 500; i++) {
+			getIn(bigPath, bigObj);
+		}
+		expect(new Date().getTime() - before < 250).toBe(true);
 	});
 });
