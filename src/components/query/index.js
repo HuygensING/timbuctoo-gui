@@ -8,7 +8,6 @@ import parseGremlin from "../../parsers/gremlin";
 
 class App extends React.Component {
 
-
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.queries.currentQuery > -1 && nextProps.queries !== this.props.queries) {
 			gridActions.onSetComponentProps({query: nextProps.queries.queries[nextProps.queries.currentQuery]}, nextProps.queries.currentQuery);
@@ -47,7 +46,7 @@ class App extends React.Component {
 						<QueryComponent
 							domain={c}
 							onDeleteQuery={this.onDeleteQuery.bind(this)}
-							onDeselect={(...args) => console.log(args)}
+							onDeselect={() => { }}
 							onQueryChange={this.onQueryChange.bind(this)}
 							onSelect={this.onSelectQuery.bind(this)}
 							onSetQueryPath={this.onSetQueryPath.bind(this)}
