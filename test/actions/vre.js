@@ -78,7 +78,7 @@ describe("vre", () => { //eslint-disable-line no-undef
 		sinon.stub(server, "performXhr", (options, accept, reject, operation) => {
 			try {
 				expect(options).toEqual({
-					url: `${config.apiUrl.v4}/system/vres/${vreId}`,
+					url: `${config.apiUrl.v4}/metadata/${vreId}`,
 					headers: {
 						"Accept": "application/json"
 					},

@@ -21,7 +21,7 @@ describe("entity reducer", () => { //eslint-disable-line no-undef
 			}
 		});
 
-		store.dispatch({type: "SET_VRE", vreId: "WomenWriters", collections: ["foo", "bar"]});
+		store.dispatch({type: "SET_VRE", vreId: "WomenWriters"});
 	});
 
 	it("should immutably SET_ENTITY_FIELD_VALUE", (done) => { //eslint-disable-line no-undef

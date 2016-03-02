@@ -2,13 +2,6 @@ var keywords = require("./keywords");
 
 
 module.exports = {
-	"ckccpersons": [
-		{
-			"name": "names",
-			"type": "names",
-			"options": ["FORENAME", "SURNAME", "NAME_LINK", "ROLE_NAME", "GEN_NAME"]
-		}
-	],
 	"wwpersons": [
 		{
 			"name": "names",

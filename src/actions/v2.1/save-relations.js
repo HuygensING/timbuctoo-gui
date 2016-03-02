@@ -16,7 +16,7 @@ const saveRelationsV21 = (data, relationData, fieldDefs, token, vreId, next) => 
 		if(id) { relationSaveData._id = id; }
 		if(rev) { relationSaveData["^rev"] = rev; }
 		return [
-			fieldDef.relation.type, // domain
+			`${fieldDef.relation.type}s`, // domain
 			relationSaveData
 		];
 	};

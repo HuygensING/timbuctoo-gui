@@ -15,15 +15,7 @@ var entities = {
 };
 
 var VREs = {
-	"WomenWriters": [
-		{name: "wwdocuments"},
-		{name: "wwpersons"},
-		{name: "wwcollectives"},
-		{name: "wwkeywords"}
-	],
-	"CKCC": [
-		{name: "ckccpersons"}
-	]
+	"WomenWriters": fieldDefinitions
 };
 
 app.use(function (req, res, next) {
@@ -83,9 +75,14 @@ app.get("/domain/:domain/:id", function(req, res) {
 	res.send(respData);
 });
 
-app.get("/fielddefinitions/:domain", function(req, res) {
-	res.send(fieldDefinitions[req.params.domain]);
+// app.get("/fielddefinitions/:domain", function(req, res) {
+// 	res.send(fieldDefinitions[req.params.domain]);
+// });
+
+app.get("/metadata/:vreId", function(req, res) {
+	res.send(VREs[req.params.vreId] || {});
 });
+
 
 app.put("/domain/:domain/:id", function(req, res) {
 	entities[req.params.domain][req.params.id] = req.body;

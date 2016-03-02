@@ -18,7 +18,7 @@ const setVre = (vreId) => (dispatch) =>
 		headers: {
 			"Accept": "application/json"
 		},
-		url: `${config.apiUrl.v4}/system/vres/${vreId}`
+		url: `${config.apiUrl.v4}/metadata/${vreId}`
 	}, (err, resp) => {
 		dispatch({type: "SET_VRE", vreId: vreId, collections: JSON.parse(resp.body)});
 	}, null, `Fetch VRE description for ${vreId}`);
