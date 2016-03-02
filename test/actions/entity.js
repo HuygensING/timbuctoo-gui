@@ -3,7 +3,7 @@ import expect from "expect";
 import server from "../../src/actions/server";
 import store from "../../src/store";
 import config from "../../src/config";
-import {saveEntity, selectEntity, makeNewEntity, deleteEntity, entityActions} from "../../src/actions/entity";
+import {saveEntity, selectEntity, makeNewEntity, deleteEntity} from "../../src/actions/entity";
 import relationSavers from "../../src/actions/relation-savers";
 import {crud} from "../../src/actions/crud";
 
@@ -369,7 +369,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(store.getState().entity).toEqual({
 					data: null,
 					domain: domain,
-					errorMessage: `Failed to fetch doms with ID ${entityId}`,
+					errorMessage: `Failed to fetch doms with ID ${entityId}`
 				});
 				server.performXhr.restore();
 				done();

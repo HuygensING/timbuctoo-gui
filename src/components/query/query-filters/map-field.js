@@ -25,4 +25,4 @@ const MAP = {
 	"unsupported": () => (null)
 };
 
-export default (fieldDef, props) => (MAP[fieldDef.type] || MAP["unsupported"]) (fieldDef, props);
+export default (fieldDef, props) => (MAP[fieldDef.type] || MAP.unsupported)(fieldDef, props);

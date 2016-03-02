@@ -29,8 +29,12 @@ let propertyComponent = (props) => {
 };
 
 propertyComponent.propTypes = {
-	baseHeight: React.PropTypes.number,
+	componentIndex: React.PropTypes.number,
 	name: React.PropTypes.string,
+	onDeleteQuery: React.PropTypes.func,
+	onSetQueryPath: React.PropTypes.func,
+	path: React.PropTypes.array,
+	query: React.PropTypes.object,
 	topPosition: React.PropTypes.number,
 	value: React.PropTypes.string
 };
