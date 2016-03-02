@@ -1,7 +1,6 @@
-import clone from "clone-deep";
 import debounce from "lodash.debounce";
-import xhr from "xhr";
 
+import server from "../actions/server";
 import setIn from "../util/set-in";
 import getIn from "../util/get-in";
 
@@ -29,8 +28,8 @@ const makeQuery = (domain) => {
 
 
 const sendQuery = function(q) {
-	xhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[0]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULTS", results: resp.body}); });
-	xhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[1]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}); });
+	server.fastXhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[0]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULTS", results: resp.body}); });
+	server.fastXhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[1]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}); });
 };
 
 const sendDelayedQuery = debounce(sendQuery, 2000);
@@ -60,8 +59,6 @@ export default function(state=initialState, action) {
 					state.queries :
 					setIn([action.queryIndex], makeQuery(action.domain), state.queries);
 
-			pathToQuerySelection = current[action.queryIndex].pathToQuerySelection;
-
 			return setQuery({
 				...state,
 				queries: current,
@@ -84,9 +81,8 @@ export default function(state=initialState, action) {
 				queries: current
 			});
 
-		// TODO: tidy up. remove pops, use slice
 		case "DELETE_QUERY":
-			pathToQuerySelection = clone(state.queries[action.queryIndex].pathToQuerySelection);
+			pathToQuerySelection = state.queries[action.queryIndex].pathToQuerySelection;
 			if(pathToQuerySelection.length === 1) {
 				return {
 					...state,
@@ -94,12 +90,18 @@ export default function(state=initialState, action) {
 					currentQuery: -1
 				};
 			} else {
-				let deleteRelationIndex = pathToQuerySelection.pop();
-				if(deleteRelationIndex === "entity") { deleteRelationIndex = pathToQuerySelection.pop(); }
-				let relations = getIn([state.currentQuery].concat(pathToQuerySelection), clone(state.queries));
+				let sliceEnd = pathToQuerySelection.length - 1;
+				let deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
+				if(deleteQueryFilterIndex === "entity") {
+					sliceEnd = pathToQuerySelection.length - 2;
+					deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
+				}
 
-				relations.splice(deleteRelationIndex, 1);
-				current = setIn([state.currentQuery].concat(pathToQuerySelection), relations, state.queries);
+				let queryFilters = getIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), state.queries);
+
+				queryFilters.splice(deleteQueryFilterIndex, 1);
+
+				current = setIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), queryFilters, state.queries);
 				current[state.currentQuery].pathToQuerySelection = ["entity"];
 				return setQuery({
 					...state,

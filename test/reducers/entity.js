@@ -17,4 +17,25 @@ describe("entity reducer", () => { //eslint-disable-line no-undef
 		expect(actual).toEqual({data: {a: "b", c: ["f", "e"]}});
 		expect(actual.data === derefData).toEqual(false);
 	});
+
+	it("should set entity data and domain with RECEIVE_ENTITY", () => { //eslint-disable-line no-undef
+		expect(entityReducer(
+			{data: "a", domain: "b", errorMessage: null},
+			{type: "RECEIVE_ENTITY", data: "b", domain: "a"})
+		).toEqual({
+			data: "b",
+			domain: "a",
+			errorMessage: null
+		});
+	});
+
+	it("should clear entity data with RECEIVE_ENTITY_FAILURE", () => { //eslint-disable-line no-undef
+		expect(entityReducer(
+			{data: "a"},
+			{type: "RECEIVE_ENTITY_FAILURE", errorMessage: "b"}
+		)).toEqual({
+			data: null,
+			errorMessage: "b"
+		});
+	});
 });

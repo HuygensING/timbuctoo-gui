@@ -1,4 +1,4 @@
-import clone from "clone-deep";
+import clone from "./clone-deep";
 
 // Do either of these:
 //  a) Set a value by reference if deref is not null
