@@ -64,7 +64,6 @@ describe("entity", () => { //eslint-disable-line no-undef
 						"@type": domain.replace(/s$/, "")
 					},
 					domain: domain,
-					fieldDefinitions: store.getState().vre.collections[domain],
 					errorMessage: null
 				});
 				finalize();
@@ -100,7 +99,6 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(store.getState().entity).toEqual({
 					data: responseData,
 					domain: domain,
-					fieldDefinitions: store.getState().vre.collections[domain],
 					errorMessage: null
 				});
 				finalize();
@@ -179,7 +177,6 @@ describe("entity", () => { //eslint-disable-line no-undef
 						_id: entityId
 					},
 					domain: domain,
-					fieldDefinitions: store.getState().vre.collections[domain],
 					errorMessage: null
 				});
 				expect(orderOfOperations).toEqual(["saveNewEntity", "fetchEntity", "saveRelations", "fetchEntity"]);
@@ -251,7 +248,6 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(store.getState().entity).toEqual({
 					data: data,
 					domain: domain,
-					fieldDefinitions: store.getState().vre.collections[domain],
 					errorMessage: null
 				});
 				expect(orderOfOperations).toEqual(["updateEntity", "saveRelations", "fetchEntity"]);
@@ -374,7 +370,6 @@ describe("entity", () => { //eslint-disable-line no-undef
 					data: null,
 					domain: domain,
 					errorMessage: `Failed to fetch doms with ID ${entityId}`,
-					fieldDefinitions: null
 				});
 				server.performXhr.restore();
 				done();
@@ -418,7 +413,6 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(store.getState().entity).toEqual({
 					data: data,
 					domain: domain,
-					fieldDefinitions: store.getState().vre.collections[domain],
 					errorMessage: `Failed to save ${domain} with ID ${entityId}`
 				});
 				done();
@@ -457,7 +451,6 @@ describe("entity", () => { //eslint-disable-line no-undef
 						"@type": domain.replace(/s$/, "")
 					},
 					domain: domain,
-					fieldDefinitions: store.getState().vre.collections[domain],
 					errorMessage: `Failed to save new ${domain}`
 				});
 				done();

@@ -3,21 +3,55 @@ import { crud } from "./crud";
 import saveRelations from "./relation-savers";
 import config from "../config";
 
+// Skeleton base data per field definition
+const initialData = {
+	names: [],
+	multiselect: [],
+	links: [],
+	keyword: [],
+	text: "",
+	string: "",
+	select: "",
+	datable: ""
+};
+
+// Return the initial data for the type in the field definition
+const initialDataForType = (fieldDef) =>
+	fieldDef.defaultValue || (fieldDef.type === "relation" || fieldDef.type === "keyword" ? {} : initialData[fieldDef.type]);
+
+// Return the initial name-key for a certain field type
+const nameForType = (fieldDef) =>
+	fieldDef.type === "relation" || fieldDef.type === "keyword" ? "@relations" : fieldDef.name;
+
+
+// Create a new empty entity based on the fieldDefinitions
+const makeSkeleton = (fieldDefs, domain) =>
+	fieldDefs
+		.map((fieldDef) => [nameForType(fieldDef), initialDataForType(fieldDef)])
+		.concat([["@type", domain.replace(/s$/, "")]])
+		.reduce((obj, cur) => {
+			obj[cur[0]] = cur[1];
+			return obj;
+		}, {});
+
 // 1) Fetch entity
-// 2) Fetch field description of this entity's domain
-// 3) Dispatch RECEIVE_ENTITY for render
+// 2) Dispatch RECEIVE_ENTITY for render
 const selectEntity = (domain, entityId, errorMessage = null) =>
-	(dispatch, getState) =>
+	(dispatch) =>
 		crud.fetchEntity(`${config.apiUrl[config.apiVersion]}/domain/${domain}/${entityId}`, (data) =>
-			dispatch({type: "RECEIVE_ENTITY", domain: domain, data: data, fieldDefinitions: getState().vre.collections[domain], errorMessage: errorMessage}), () =>
+			dispatch({type: "RECEIVE_ENTITY", domain: domain, data: data, errorMessage: errorMessage}), () =>
 				dispatch({type: "RECEIVE_ENTITY_FAILURE", errorMessage: `Failed to fetch ${domain} with ID ${entityId}`}));
 
 
 
-// 1) Fetch field description for the given domain
-// 2) Dispatch NEW_ENTITY with field description for render
+// 1) Dispatch NEW_ENTITY with field description for render
 const makeNewEntity = (domain, errorMessage = null) =>
-	(dispatch, getState) => dispatch({type: "NEW_ENTITY", domain: domain, data: null, fieldDefinitions: getState().vre.collections[domain], errorMessage: errorMessage});
+	(dispatch, getState) => dispatch({
+		type: "NEW_ENTITY",
+		domain: domain,
+		data: makeSkeleton(getState().vre.collections[domain], domain),
+		errorMessage: errorMessage
+	});
 
 const deleteEntity = () => (dispatch, getState) => {
 	crud.deleteEntity(getState().entity.domain, getState().entity.data._id, getState().user.token, getState().vre.vreId, () =>
@@ -40,7 +74,7 @@ const saveEntity = () => (dispatch, getState) => {
 		// 1) Update the entity with saveData
 		crud.updateEntity(getState().entity.domain, saveData, getState().user.token, getState().vre.vreId, (err, resp) =>
 			// 2) Save relations using server response for current relations to diff against relationData
-			dispatch((redispatch) => saveRelations[config.apiVersion](JSON.parse(resp.body), relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre.vreId, () =>
+			dispatch((redispatch) => saveRelations[config.apiVersion](JSON.parse(resp.body), relationData, getState().vre.collections[getState().entity.domain], getState().user.token, getState().vre.vreId, () =>
 				// 3) Refetch entity for render
 				redispatch(selectEntity(getState().entity.domain, getState().entity.data._id)))), () =>
 					// 2a) Handle error by refetching and passing along an error message
@@ -52,7 +86,7 @@ const saveEntity = () => (dispatch, getState) => {
 			// 2) Fetch entity via location header
 			dispatch((redispatch) => crud.fetchEntity(resp.headers.location, (data) =>
 				// 3) Save relations using server response for current relations to diff against relationData
-				saveRelations[config.apiVersion](data, relationData, getState().entity.fieldDefinitions, getState().user.token, getState().vre.vreId, () =>
+				saveRelations[config.apiVersion](data, relationData, getState().vre.collections[getState().entity.domain], getState().user.token, getState().vre.vreId, () =>
 					// 4) Refetch entity for render
 					redispatch(selectEntity(getState().entity.domain, data._id))))), () =>
 						// 2a) Handle error by refetching and passing along an error message
