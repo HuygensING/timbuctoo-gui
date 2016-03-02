@@ -1,7 +1,7 @@
 import clone from "clone-deep";
 import debounce from "lodash.debounce";
-import xhr from "xhr";
 
+import server from "../actions/server";
 import setIn from "../util/set-in";
 import getIn from "../util/get-in";
 
@@ -29,8 +29,8 @@ const makeQuery = (domain) => {
 
 
 const sendQuery = function(q) {
-	xhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[0]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULTS", results: resp.body}); });
-	xhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[1]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}); });
+	server.fastXhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[0]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULTS", results: resp.body}); });
+	server.fastXhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[1]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}); });
 };
 
 const sendDelayedQuery = debounce(sendQuery, 2000);
