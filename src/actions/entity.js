@@ -44,10 +44,10 @@ const selectEntity = (domain, entityId, errorMessage = null) =>
 
 
 
-// 1) Dispatch NEW_ENTITY with field description for render
+// 1) Dispatch RECEIVE_ENTITY with empty entity skeleton for render
 const makeNewEntity = (domain, errorMessage = null) =>
 	(dispatch, getState) => dispatch({
-		type: "NEW_ENTITY",
+		type: "RECEIVE_ENTITY",
 		domain: domain,
 		data: makeSkeleton(getState().vre.collections[domain], domain),
 		errorMessage: errorMessage

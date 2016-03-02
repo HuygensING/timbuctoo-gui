@@ -8,13 +8,6 @@ let initialState = {
 
 export default function(state=initialState, action) {
 	switch (action.type) {
-		case "NEW_ENTITY":
-			return {...state, ...{
-				data: action.data,
-				domain: action.domain,
-				errorMessage: action.errorMessage || null
-			}};
-
 		case "RECEIVE_ENTITY":
 			return {...state, ...{
 				data: action.data,
