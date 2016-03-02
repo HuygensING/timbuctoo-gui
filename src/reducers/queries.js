@@ -17,12 +17,12 @@ let initialState = {
 	resultCountPending: false
 };
 
-const makeQuery = (domain, fieldDefinitions) => {
+const makeQuery = (domain) => {
 	return {
 		domain: domain,
 		deleted: false,
 		pathToQuerySelection: ["entity"],
-		entity: {domain: domain, fieldDefinitions: fieldDefinitions, and: []}
+		entity: {domain: domain, and: []}
 	};
 };
 
@@ -58,7 +58,7 @@ export default function(state=initialState, action) {
 		case "SELECT_QUERY":
 			current = state.queries[action.queryIndex] ?
 					state.queries :
-					setIn([action.queryIndex], makeQuery(action.domain, action.fieldDefinitions), state.queries);
+					setIn([action.queryIndex], makeQuery(action.domain), state.queries);
 
 			pathToQuerySelection = current[action.queryIndex].pathToQuerySelection;
 
