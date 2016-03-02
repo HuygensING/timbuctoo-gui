@@ -1,7 +1,7 @@
 import React from "react";
 import { DragDropContext } from "react-dnd";
 import TouchBackend from "react-dnd-touch-backend";
-import { InfinityGrid, actions as gridActions } from "infinity-grid";
+import { InfinityGrid, actions as gridActions } from "hire-infinity-grid";
 import QueryComponent from "./query-component";
 import QueryFilters from "./query-filters";
 import parseGremlin from "../../parsers/gremlin";

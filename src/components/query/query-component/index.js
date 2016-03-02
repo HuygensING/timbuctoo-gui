@@ -1,5 +1,5 @@
 import React from "react";
-import { draggable } from "infinity-grid";
+import { draggable } from "hire-infinity-grid";
 import icons from "./icons";
 
 import EntityComponent from "./entity-component";
