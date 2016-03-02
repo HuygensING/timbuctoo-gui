@@ -60,8 +60,6 @@ export default function(state=initialState, action) {
 					state.queries :
 					setIn([action.queryIndex], makeQuery(action.domain), state.queries);
 
-			pathToQuerySelection = current[action.queryIndex].pathToQuerySelection;
-
 			return setQuery({
 				...state,
 				queries: current,

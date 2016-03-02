@@ -28,7 +28,51 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		server.fastXhr.restore();
 	});
 
-	it("should SELECT_QUERY"); //eslint-disable-line no-undef
+	it("should make a new query with SELECT_QUERY if queries does not have a query at action.queryIndex", () => { //eslint-disable-line no-undef
+		const queries = [];
+		const domain = "dom";
+		const newQuery = { domain: domain, deleted: false, pathToQuerySelection: ["entity"], entity: {domain: domain, and: []}};
+		const beforeState = {currentQuery: -1, queries: queries};
+
+		const expectedState = {
+			currentQuery: 0,
+			queries: [newQuery],
+			resultCount: "",
+			resultCountPending: true,
+			resultsPending: true
+		};
+
+		const action = {
+			type: "SELECT_QUERY",
+			queryIndex: 0,
+			domain: domain
+		};
+
+		const actual = queriesReducer(beforeState, action);
+
+		expect(actual).toEqual(expectedState);
+		expect(actual.queries === queries).toEqual(false);
+	});
+
+	it("should SELECT_QUERY at action.queryIndex", () => { //eslint-disable-line no-undef
+		const queries = [sampleQuery];
+		const beforeState = {currentQuery: -1, queries: queries};
+
+		const expectedState = {
+			currentQuery: 0,
+			queries: [sampleQuery],
+			resultCount: "",
+			resultCountPending: true,
+			resultsPending: true
+		};
+
+		const action = {
+			type: "SELECT_QUERY",
+			queryIndex: 0
+		};
+
+		expect(queriesReducer(beforeState, action)).toEqual(expectedState);
+	});
 
 	it("should immutably SET_QUERY_PATH", () => { //eslint-disable-line no-undef
 		const queries = [sampleQuery];
