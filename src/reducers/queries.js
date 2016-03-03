@@ -7,7 +7,7 @@ import getIn from "../util/get-in";
 import store from "../store";
 import parseGremlin from "../parsers/gremlin";
 
-let initialState = {
+const initialState = {
 	queries: [],
 	currentQuery: -1,
 	results: "",
@@ -32,13 +32,15 @@ const sendQuery = function(q) {
 	server.fastXhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[1]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}); });
 };
 
-const sendDelayedQuery = debounce(sendQuery, 2000);
+const debouncers = {
+	sendDelayedQuery: debounce(sendQuery, 2000)
+};
 
 
 const setQuery = (state) => {
 	if(state.currentQuery > -1) {
 		if(state.resultsPending || state.resultCountPending) {
-			sendDelayedQuery(parseGremlin(state.queries[state.currentQuery]));
+			debouncers.sendDelayedQuery(parseGremlin(state.queries[state.currentQuery]));
 		} else {
 			sendQuery(parseGremlin(state.queries[state.currentQuery]));
 		}
@@ -136,3 +138,4 @@ export default function(state=initialState, action) {
 
 	return state;
 }
+export {debouncers};
