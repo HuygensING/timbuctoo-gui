@@ -12,6 +12,7 @@ const sampleQuery = {
 
 	entity: {
 		domain: "wwperson",
+		type: "entity",
 		and: [
 			{type: "property", name: "gender", value: "FEMALE"}
 		]
@@ -31,7 +32,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 	it("should make a new query with SELECT_QUERY if queries does not have a query at action.queryIndex", () => { //eslint-disable-line no-undef
 		const queries = [];
 		const domain = "dom";
-		const newQuery = { domain: domain, deleted: false, pathToQuerySelection: ["entity"], entity: {domain: domain, and: []}};
+		const newQuery = { domain: domain, deleted: false, pathToQuerySelection: ["entity"], entity: {type: "entity", domain: domain, and: []}};
 		const beforeState = {currentQuery: -1, queries: queries};
 
 		const expectedState = {
@@ -197,6 +198,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 			pathToQuerySelection: ["entity"],
 			entity: {
 				domain: "wwperson",
+				type: "entity",
 				and: []
 			}
 		};
