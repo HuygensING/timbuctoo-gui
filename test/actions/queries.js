@@ -1,187 +1,104 @@
 import expect from "expect";
-import sinon from "sinon";
-
-import store from "../../src/store";
-import server from "../../src/actions/server";
-import { debouncers } from "../../src/reducers/queries";
-
 import { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter, deleteQueryFilter } from "../../src/actions/queries";
 
 describe("queries actions", () => { //eslint-disable-line no-undef
 
-	beforeEach((done) => { //eslint-disable-line no-undef
-		sinon.stub(server, "fastXhr");
-		sinon.stub(debouncers, "sendDelayedQuery");
-		let unsubscribe;
+	const dispatch = (func, assert, getState = () => {}) => {
+		const redispatch = (obj) => assert(obj);
+		func(redispatch, getState);
+	};
 
-		unsubscribe = store.subscribe(() => {
-			unsubscribe();
-			unsubscribe = store.subscribe(() => {
-				unsubscribe();
-				done();
-			});
-			store.dispatch(changeQuery(["and", 0], {type: "property", name: "prop", value: "propVal"}));
-		});
-		store.dispatch(selectQuery("dom0", 0));
-	});
-
-	afterEach((done) => { //eslint-disable-line no-undef
-		server.fastXhr.restore();
-		const unsubscribe = store.subscribe(() => {
-			unsubscribe();
-			done();
-		});
-		store.dispatch(setQueryPath(["entity"]));
-		debouncers.sendDelayedQuery.restore();
-	});
-
-
-
-	it("should changeQuery", (done) => {  //eslint-disable-line no-undef
-		const currentQuery = store.getState().queries.currentQuery;
-		const unsubscribe = store.subscribe(() => {
-			unsubscribe();
+	it("should addQueryFilter", (done) => { //eslint-disable-line no-undef
+		const path = ["a", 1, "2"];
+		const value = {type: "relation", targetType: "person", name: "isRelatedTo"};
+		dispatch(addQueryFilter(path, value), (obj) => {
 			try {
-				expect(store.getState().queries.queries[currentQuery].entity.and[0]).toEqual(
-					{type: "property", name: "prop", value: "alteredPropVal"}
-				);
+				expect(obj).toEqual({
+					type: "ADD_QUERY_FILTER",
+					fieldPath: path,
+					value: {
+						type: "relation",
+						name: "isRelatedTo",
+						entity: {
+							and: [],
+							domain: "wwperson"
+						}
+					}
+				});
 				done();
 			} catch (e) {
 				done(e);
 			}
-		});
-
-		store.dispatch(changeQuery(["and", 0, "value"], "alteredPropVal"));
+		}, () => { return {vre: {vreId: "WomenWriters"}}; });
 	});
 
 
 	it("should selectQuery", (done) => { //eslint-disable-line no-undef
-		let unsubscribe;
-
-		const finalize = (e) => {
-			unsubscribe();
-			done(e);
-		};
-
-		const onSelect = () => {
+		dispatch(selectQuery("dom", 1), (obj) => {
 			try {
-				expect(store.getState().queries.currentQuery).toEqual(0);
-				finalize();
-			} catch (e) {
-				finalize(e);
-			}
-		};
-
-		const onCreate = () => {
-			unsubscribe();
-			try {
-				const query = store.getState().queries.queries[store.getState().queries.currentQuery];
-				expect(store.getState().queries.currentQuery).toEqual(1);
-				expect(query.domain).toEqual("dom1");
-				expect(query.entity).toEqual({and: [], domain: "dom1"});
-
-				unsubscribe = store.subscribe(onSelect);
-				store.dispatch(selectQuery("dom0", 0));
-			} catch (e) {
-				finalize(e);
-			}
-		};
-		unsubscribe = store.subscribe(onCreate);
-		store.dispatch(selectQuery("dom1", 1));
-	});
-
-
-	it("should deleteQueryFilter", (done) => {  //eslint-disable-line no-undef
-		const currentQuery = store.getState().queries.currentQuery;
-
-		let unsubscribe;
-
-		unsubscribe = store.subscribe(() => {
-			unsubscribe();
-			unsubscribe = store.subscribe(() => {
-				unsubscribe();
-
-				try {
-					expect(store.getState().queries.queries[currentQuery]).toEqual({
-						deleted: false,
-						domain: "dom0",
-						entity: {
-							and: [],
-							domain: "dom0"
-						},
-						pathToQuerySelection: ["entity"]
-					});
-					done();
-				} catch (e) {
-					done(e);
-				}
-			});
-			store.dispatch(deleteQueryFilter(currentQuery));
-		});
-		store.dispatch(setQueryPath(["entity", "and", 0]));
-	});
-
-	it("should setQueryPath", (done) => { //eslint-disable-line no-undef
-		const path = ["a", 1, "2"];
-		const currentQuery = store.getState().queries.currentQuery;
-		const unsubscribe = store.subscribe(() => {
-			unsubscribe();
-			try {
-				expect(store.getState().queries.queries[currentQuery].pathToQuerySelection).toEqual(path);
+				expect(obj).toEqual({type: "SELECT_QUERY", domain: "dom", queryIndex: 1});
 				done();
 			} catch (e) {
 				done(e);
 			}
 		});
-		store.dispatch(setQueryPath(path));
 	});
 
-	it("should addQueryFilter", (done) => { //eslint-disable-line no-undef
-		const path = ["and"];
-		const currentQuery = store.getState().queries.currentQuery;
-		const unsubscribe = store.subscribe(() => {
-			unsubscribe();
+	it("should changeQuery", (done) => { //eslint-disable-line no-undef
+		dispatch(changeQuery(["and", 0, "value"], "alteredPropVal"), (obj) => {
 			try {
-				expect(store.getState().queries.queries[currentQuery]).toEqual({
-					deleted: false,
-					domain: "dom0",
-					entity: {
-						domain: "dom0",
-						"and": [
-							{type: "property", name: "prop", value: "propVal"},
-							{
-								type: "relation",
-								name: "isRelatedTo",
-								entity: {
-									and: [],
-									"domain": "wwperson"
-								}
-							}
-						]
-					},
-					pathToQuerySelection: ["entity"]
+				expect(obj).toEqual({
+					type: "SET_QUERY_FIELD_VALUE",
+					fieldPath: ["and", 0, "value"],
+					value: "alteredPropVal"
 				});
 				done();
 			} catch (e) {
 				done(e);
 			}
 		});
-		store.dispatch(addQueryFilter(path, {type: "relation", targetType: "person", name: "isRelatedTo"}));
 	});
 
-
-	it("should deleteQuery", (done) => { //eslint-disable-line no-undef
-		const unsubscribe = store.subscribe(() => {
-			unsubscribe();
+	it("should deleteQueryFilter", (done) => {  //eslint-disable-line no-undef
+		dispatch(deleteQueryFilter(1), (obj) => {
 			try {
-				expect(store.getState().queries.queries[0].deleted).toEqual(true);
-				expect(store.getState().queries.currentQuery).toEqual(-1);
+				expect(obj).toEqual({
+					type: "DELETE_QUERY_FILTER",
+					queryIndex: 1
+				});
 				done();
 			} catch (e) {
 				done(e);
 			}
 		});
-		store.dispatch(deleteQuery(0));
 	});
 
+	it("should deleteQuery", (done) => { //eslint-disable-line no-undef
+		dispatch(deleteQuery(1), (obj) => {
+			try {
+				expect(obj).toEqual({
+					type: "DELETE_QUERY",
+					queryIndex: 1
+				});
+				done();
+			} catch (e) {
+				done(e);
+			}
+		});
+	});
+
+	it("should setQueryPath", (done) => { //eslint-disable-line no-undef
+		const path = ["a", 1, "2"];
+		dispatch(setQueryPath(path), (obj) => {
+			try {
+				expect(obj).toEqual({
+					type: "SET_QUERY_PATH",
+					path: path
+				});
+				done();
+			} catch (e) {
+				done(e);
+			}
+		});
+	});
 });
