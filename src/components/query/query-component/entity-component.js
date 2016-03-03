@@ -7,7 +7,7 @@ import PropertyComponent from "./property-component";
 import DeleteButton from "./delete-button";
 
 const baseHeight = 60;
-const basePropertyComponentHeight = 28;
+const basePropertyComponentHeight = 32;
 
 
 class EntityComponent extends React.Component {
@@ -21,12 +21,12 @@ class EntityComponent extends React.Component {
 					baseHeight={basePropertyComponentHeight}
 					key={i}
 					name={propertyFilter.name}
+					orValues={propertyFilter.or}
 					path={path}
 					topPosition={topPosition}
-					value={propertyFilter.or.map((v) => v.value).join(", ")}
 				/>
 			),
-			height: basePropertyComponentHeight
+			height: basePropertyComponentHeight * propertyFilter.or.length
 		};
 	}
 
