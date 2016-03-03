@@ -16,20 +16,18 @@ const setQueryPath = (path) => (dispatch) =>
 const deleteQuery = (queryIndex) => (dispatch) =>
 	dispatch({type: "DELETE_QUERY", queryIndex: queryIndex});
 
-const changeQuery = (fieldPath, value) => (dispatch, getState) => {
-	if(value.length > 0 && value[value.length - 1].type === "relation") {
-		const targetDomain = DOMAIN_MAP[getState().vre.vreId][value[value.length - 1].targetType];
+const changeQuery = (fieldPath, value) => (dispatch) =>
+	dispatch({type: "SET_QUERY_FIELD_VALUE", fieldPath: fieldPath, value: value});
 
+const addQueryFilter = (fieldPath, value) => (dispatch, getState) => {
+	if(value.type === "relation") {
+		const targetDomain = DOMAIN_MAP[getState().vre.vreId][value.targetType];
 		const newEntity = {domain: targetDomain, and: []};
-		value[value.length - 1].entity = newEntity;
-		delete value[value.length - 1].targetType;
-		dispatch({type: "SET_QUERY_FIELD_VALUE", fieldPath: fieldPath, value: value});
-
-	} else {
-		dispatch({type: "SET_QUERY_FIELD_VALUE", fieldPath: fieldPath, value: value});
+		value.entity = newEntity;
+		delete value.targetType;
 	}
+	dispatch({type: "ADD_QUERY_FILTER", fieldPath: fieldPath, value: value});
 };
 
 
-
-export { deleteQuery, selectQuery, changeQuery, setQueryPath };
+export { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter };

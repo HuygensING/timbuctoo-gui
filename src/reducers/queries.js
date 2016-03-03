@@ -81,6 +81,15 @@ export default function(state=initialState, action) {
 				queries: current
 			});
 
+		case "ADD_QUERY_FILTER":
+			pathToQuerySelection = state.queries[state.currentQuery].pathToQuerySelection;
+			const filters = getIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath), state.queries);
+			current = setIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath).concat(filters.length), action.value, state.queries);
+			return setQuery({
+				...state,
+				queries: current
+			});
+
 		case "DELETE_QUERY":
 			pathToQuerySelection = state.queries[action.queryIndex].pathToQuerySelection;
 			if(pathToQuerySelection.length === 1) {

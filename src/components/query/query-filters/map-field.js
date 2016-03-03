@@ -1,14 +1,14 @@
 import React from "react";
-import MultiSelectField from "./fields/multi-select";
+import SelectField from "./fields/select";
 
 const relateButton = (fieldDef, props) => (
 		<button
-			onClick={() => props.onChange(["and"], props.entity.and.concat({
+			onClick={() => props.onAddQueryFilter(["and"], {
 					name: fieldDef.relation.regularName,
 					type: "relation",
 					direction: "both",
 					targetType: fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType
-				}))}>
+				})}>
 			{fieldDef.name}
 		</button>
 	);
@@ -18,8 +18,8 @@ const MAP = {
 //	"text": (fieldDef, props) => (<StringField {...props} name={fieldDef.name} />),
 //	"datable": (fieldDef, props) => (<DatableField {...props} name={fieldDef.name} />),
 //	"names": (fieldDef, props) => (<NamesField {...props} name={fieldDef.name} options={fieldDef.options} />),
-	"multiselect": (fieldDef, props) => (<MultiSelectField {...props} name={fieldDef.name} options={fieldDef.options} />),
-	"select": (fieldDef, props) => (<MultiSelectField {...props} name={fieldDef.name} options={fieldDef.options} />),
+	"multiselect": (fieldDef, props) => (<SelectField {...props} name={fieldDef.name} options={fieldDef.options} />),
+	"select": (fieldDef, props) => (<SelectField {...props} name={fieldDef.name} options={fieldDef.options} />),
 	"relation": relateButton,
 	"keyword": relateButton,
 	"unsupported": () => (null)
