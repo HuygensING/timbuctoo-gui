@@ -49,73 +49,82 @@ const setQuery = (state) => {
 	return state;
 };
 
+const selectQuery = (state, action) => {
+	const current = state.queries[action.queryIndex] ?
+			state.queries :
+			setIn([action.queryIndex], makeQuery(action.domain), state.queries);
+
+	return setQuery({
+		...state,
+		queries: current,
+		currentQuery: action.queryIndex
+	});
+};
+
+const setQueryPath = (state, action) => {
+	const current = setIn([state.currentQuery, "pathToQuerySelection"], action.path, state.queries);
+	return setQuery({
+		...state,
+		queries: current
+	});
+};
+
+const setQueryFieldValue = (state, action) => {
+	const pathToQuerySelection = state.queries[state.currentQuery].pathToQuerySelection;
+	const current = setIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath), action.value, state.queries);
+	return setQuery({
+		...state,
+		queries: current
+	});
+};
+
+const addQueryFilter = (state, action) => {
+	const pathToQuerySelection = state.queries[state.currentQuery].pathToQuerySelection;
+	const filters = getIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath), state.queries);
+	const current = setIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath).concat(filters.length), action.value, state.queries);
+	return setQuery({
+		...state,
+		queries: current
+	});
+};
+
+const deleteQuery = (state, action) => {
+	return {
+		...state,
+		queries: setIn([action.queryIndex], {...state.queries[action.queryIndex], deleted: true}, state.queries),
+		currentQuery: -1
+	};
+};
+
+const deleteQueryFilter = (state, action) => {
+	const pathToQuerySelection = state.queries[action.queryIndex].pathToQuerySelection;
+	let sliceEnd = pathToQuerySelection.length - 1;
+	let deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
+	if(deleteQueryFilterIndex === "entity") {
+		sliceEnd = pathToQuerySelection.length - 2;
+		deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
+	}
+
+	let queryFilters = getIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), state.queries);
+
+	queryFilters.splice(deleteQueryFilterIndex, 1);
+
+	const current = setIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), queryFilters, state.queries);
+	current[state.currentQuery].pathToQuerySelection = ["entity"];
+	return setQuery({
+		...state,
+		queries: current
+	});
+};
 
 export default function(state=initialState, action) {
-	let current;
-	let pathToQuerySelection;
 	switch (action.type) {
-		case "SELECT_QUERY":
-			current = state.queries[action.queryIndex] ?
-					state.queries :
-					setIn([action.queryIndex], makeQuery(action.domain), state.queries);
-
-			return setQuery({
-				...state,
-				queries: current,
-				currentQuery: action.queryIndex
-			});
-
-		case "SET_QUERY_PATH": {
-			current = setIn([state.currentQuery, "pathToQuerySelection"], action.path, state.queries);
-			return setQuery({
-				...state,
-				queries: current
-			});
-		}
-
-		case "SET_QUERY_FIELD_VALUE":
-			pathToQuerySelection = state.queries[state.currentQuery].pathToQuerySelection;
-			current = setIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath), action.value, state.queries);
-			return setQuery({
-				...state,
-				queries: current
-			});
-
-		case "ADD_QUERY_FILTER":
-			pathToQuerySelection = state.queries[state.currentQuery].pathToQuerySelection;
-			const filters = getIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath), state.queries);
-			current = setIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath).concat(filters.length), action.value, state.queries);
-			return setQuery({
-				...state,
-				queries: current
-			});
-
-		case "DELETE_QUERY":
-			return {
-				...state,
-				queries: setIn([action.queryIndex], {...state.queries[action.queryIndex], deleted: true}, state.queries),
-				currentQuery: -1
-			};
-
-		case "DELETE_QUERY_FILTER":
-			pathToQuerySelection = state.queries[action.queryIndex].pathToQuerySelection;
-			let sliceEnd = pathToQuerySelection.length - 1;
-			let deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
-			if(deleteQueryFilterIndex === "entity") {
-				sliceEnd = pathToQuerySelection.length - 2;
-				deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
-			}
-
-			let queryFilters = getIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), state.queries);
-
-			queryFilters.splice(deleteQueryFilterIndex, 1);
-
-			current = setIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), queryFilters, state.queries);
-			current[state.currentQuery].pathToQuerySelection = ["entity"];
-			return setQuery({
-				...state,
-				queries: current
-			});
+		case "SELECT_QUERY": return selectQuery(state, action);
+		case "SET_QUERY_PATH": return setQueryPath(state, action);
+		case "SET_QUERY_FIELD_VALUE": return setQueryFieldValue(state, action);
+		case "ADD_QUERY_FILTER": return addQueryFilter(state, action);
+		case "DELETE_QUERY": return deleteQuery(state, action);
+		case "DELETE_QUERY_FILTER": return deleteQueryFilter(state, action);
 
 		case "SET_QUERY_RESULTS":
 			return {...state, results: action.results, resultsPending: false};
