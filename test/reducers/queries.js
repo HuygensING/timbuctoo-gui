@@ -14,7 +14,13 @@ const sampleQuery = {
 		domain: "wwperson",
 		type: "entity",
 		and: [
-			{type: "property", name: "gender", value: "FEMALE"}
+			{
+				type: "property",
+				name: "gender",
+				or: [
+					{ type: "value", value: "FEMALE" }
+				]
+			}
 		]
 	}
 };
@@ -137,8 +143,8 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		const expectedQuery = clone(initialQuery);
 
 		expectedQuery.entity.and = [
-			{type: "property", name: "gender", value: "FEMALE"},
-			{type: "property", name: "gender", value: "MALE"}
+			{type: "property", name: "gender", or: [{type: "value", value: "FEMALE"}]},
+			{type: "property", name: "gender", or: [{type: "value", value: "MALE"}]}
 		];
 
 		const expectedState = {
@@ -155,7 +161,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		const action = {
 			type: "ADD_QUERY_FILTER",
 			fieldPath: ["and"],
-			value: {type: "property", name: "gender", value: "MALE"}
+			value: {type: "property", name: "gender", or: [{type: "value", value: "MALE"}]}
 		};
 
 		const actual = queriesReducer(beforeState, action);

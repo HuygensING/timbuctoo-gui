@@ -8,7 +8,7 @@ class Field extends React.Component {
 		this.props.onAddQueryFilter(["and"], {
 			type: "property",
 			name: this.props.name,
-			value: value
+			or: [{type: "value", value: value}]
 		});
 	}
 

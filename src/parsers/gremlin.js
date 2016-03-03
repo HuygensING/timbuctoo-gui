@@ -1,25 +1,32 @@
 import clone from "../util/clone-deep";
 
-const v2UnquotedPropVals = ["wwperson_children", "wwcollective_type"];
-const quoteProp = (domain, prop) => v2UnquotedPropVals.indexOf(`${domain}_${prop.name}`) > -1 ? `"${prop.value}"` : `"\\"${prop.value}\\""`;
-const mappings = {
-	"v2.1": {
-		identity: (domain) => `g.V().has("isLatest", true).filter{it.get().property("types").value().contains("\\"${domain}\\"")}`,
-		parseProp: (prop, domain) => `has("${domain}_${prop.name}").filter{it.get().property("${domain}_${prop.name}").value().contains(${quoteProp(domain, prop)})}`
-	}
-};
-
-const MAP = mappings["v2.1"];
 
 let parseEntity;
 
-const parseRelation = (rel, relName, path, addAlias = true) => `${rel.direction}E("${relName}")${addAlias ? `.as("${path.join("|")}")` : ""}.otherV()${parseEntity(rel.entity, path.concat("entity"), addAlias)}.dedup()`;
+const v2UnquotedPropVals = ["wwperson_children", "wwcollective_type"];
+const quoteProp = (domain, prop, val) => v2UnquotedPropVals.indexOf(`${domain}_${prop.name}`) > -1 ? `"${val}"` : `"\\"${val}\\""`;
 
+const identity = (domain) => `g.V().has("isLatest", true).filter{it.get().property("types").value().contains("\\"${domain}\\"")}`;
+
+const parsePropVal = (prop, val, domain) => `has("${domain}_${prop.name}").filter{it.get().property("${domain}_${prop.name}").value().contains(${quoteProp(domain, prop, val)})}`;
+
+const parseProp = (prop, domain) => {
+	if(prop.or.length === 1) { return parsePropVal(prop, prop.or[0].value, domain); }
+	return `or(${prop.or.map((pv) => parsePropVal(prop, pv.value, domain)).join(", ")})`;
+};
+
+
+
+
+
+
+
+const parseRelation = (rel, relName, path, addAlias = true) => `${rel.direction}E("${relName}")${addAlias ? `.as("${path.join("|")}")` : ""}.otherV()${parseEntity(rel.entity, path.concat("entity"), addAlias)}`;
 
 const parseProps = (props, domain) => {
 	if(props.length === 0) { return ""; }
-	if(props.length === 1) { return `.${MAP.parseProp(props[0].value, domain)}`; }
-	return `.and(${props.map((p) => MAP.parseProp(p.value, domain)).map((p) => "__." + p).join(", ")})`;
+	if(props.length === 1) { return `.${parseProp(props[0].value, domain)}`; }
+	return `.and(${props.map((p) => parseProp(p.value, domain)).join(", ")})`;
 };
 
 const parseRelations = (rels, ent, path) => {
@@ -55,8 +62,9 @@ const parseQuery = (query) => {
 	}
 	let selectVal = path.length ? path.join("|") : "result";
 	return [
-		`${MAP.identity(query.entity.domain)}${parseEntity(query.entity)}.dedup().select("${selectVal}").dedup().range(0,10)`,
-		`${MAP.identity(query.entity.domain)}${parseEntity(query.entity)}.dedup().select("${selectVal}").dedup().count()`
+
+		`${identity(query.entity.domain)}${parseEntity(query.entity)}.select("${selectVal}").dedup().range(0,10)`,
+		`${identity(query.entity.domain)}${parseEntity(query.entity)}.select("${selectVal}").dedup().count()`
 	];
 };
 

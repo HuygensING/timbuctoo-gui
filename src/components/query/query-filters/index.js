@@ -11,14 +11,18 @@ class QueryFilters extends React.Component {
 
 		const data = getIn(query.pathToQuerySelection, query);
 		if(data.type === "entity") {
-			return (
+			return (<div>
 				<ul>
 					{vre.collections[`${data.domain}s`].map((fieldDef, i) => <li key={i}>{mapField(fieldDef, {...this.props, entity: data})}</li> )}
 				</ul>
+				<pre style={{width: "100%", whiteSpace: "pre-wrap"}}>{JSON.stringify(query)}</pre>
+			</div>);
+		} else if(data.type === "property") {
+			return (
+				<div>a prop form</div>
 			);
-		} else {
-			return null;
 		}
+		return null;
 	}
 }
 

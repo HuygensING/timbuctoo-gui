@@ -8,7 +8,7 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 		func(redispatch, getState);
 	};
 
-	it("should addQueryFilter", (done) => { //eslint-disable-line no-undef
+	it("should add a relation with addQueryFilter", (done) => { //eslint-disable-line no-undef
 		const path = ["a", 1, "2"];
 		const value = {type: "relation", targetType: "wwperson", name: "isRelatedTo"};
 		dispatch(addQueryFilter(path, value), (obj) => {
@@ -25,6 +25,23 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 							domain: "wwperson"
 						}
 					}
+				});
+				done();
+			} catch (e) {
+				done(e);
+			}
+		});
+	});
+
+	it("should add a property with addQueryFilter", (done) => { //eslint-disable-line no-undef
+		const path = ["a", 1, "2"];
+		const value = {type: "property", name: "propName", or: [{type: "value", value: "val"}]};
+		dispatch(addQueryFilter(path, value), (obj) => {
+			try {
+				expect(obj).toEqual({
+					type: "ADD_QUERY_FILTER",
+					fieldPath: path,
+					value: value
 				});
 				done();
 			} catch (e) {
