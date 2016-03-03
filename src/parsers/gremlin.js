@@ -1,4 +1,5 @@
 import clone from "../util/clone-deep";
+import getIn from "../util/get-in";
 
 
 let parseEntity;
@@ -14,12 +15,6 @@ const parseProp = (prop, domain) => {
 	if(prop.or.length === 1) { return parsePropVal(prop, prop.or[0].value, domain); }
 	return `or(${prop.or.map((pv) => parsePropVal(prop, pv.value, domain)).join(", ")})`;
 };
-
-
-
-
-
-
 
 const parseRelation = (rel, relName, path, addAlias = true) => `${rel.direction}E("${relName}")${addAlias ? `.as("${path.join("|")}")` : ""}.otherV()${parseEntity(rel.entity, path.concat("entity"), addAlias)}`;
 
@@ -55,11 +50,9 @@ parseEntity = (ent, path = ["entity"], aliasSelf = true) => {
 
 const parseQuery = (query) => {
 	let path = query.pathToQuerySelection ? clone(query.pathToQuerySelection) : [];
-	if(path.length > 2 && path[path.length - 2] === "@properties") {
-		path.pop();
-		path.pop();
-		path.pop();
-	}
+	if(getIn(path, query) && getIn(path, query).type === "property") { path.pop(); path.pop(); }
+	else if(getIn(path, query) && getIn(path, query).type === "value") { path.pop(); path.pop(); path.pop(); }
+
 	let selectVal = path.length ? path.join("|") : "result";
 	return [
 

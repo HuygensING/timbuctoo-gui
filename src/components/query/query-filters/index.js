@@ -1,5 +1,6 @@
 import React from "react";
 import mapField from "./map-field";
+import mapPropField from "./map-prop-field";
 import getIn from "../../../util/get-in";
 
 class QueryFilters extends React.Component {
@@ -18,9 +19,9 @@ class QueryFilters extends React.Component {
 				<pre style={{width: "100%", whiteSpace: "pre-wrap"}}>{JSON.stringify(query)}</pre>
 			</div>);
 		} else if(data.type === "property") {
-			return (
-				<div>a prop form</div>
-			);
+			const entityData = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 2), query);
+			const fieldDef = vre.collections[`${entityData.domain}s`].filter((def) => def.name === data.name)[0]
+			return mapPropField(fieldDef, {...this.props, entity: entityData});
 		}
 		return null;
 	}
