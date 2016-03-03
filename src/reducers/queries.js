@@ -21,7 +21,11 @@ const makeQuery = (domain) => {
 		domain: domain,
 		deleted: false,
 		pathToQuerySelection: ["entity"],
-		entity: {domain: domain, and: []}
+		entity: {
+			type: "entity",
+			domain: domain,
+			and: []
+		}
 	};
 };
 

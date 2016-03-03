@@ -8,8 +8,9 @@ class QueryFilters extends React.Component {
 		const { queries, vre } = this.props;
 		if(queries.currentQuery === -1) { return null; }
 		const query = queries.queries[queries.currentQuery];
-		const { data, type } = getIn(query.pathToQuerySelection, query, {typed: true});
-		if(type === "entity") {
+
+		const data = getIn(query.pathToQuerySelection, query);
+		if(data.type === "entity") {
 			return (
 				<ul>
 					{vre.collections[`${data.domain}s`].map((fieldDef, i) => <li key={i}>{mapField(fieldDef, {...this.props, entity: data})}</li> )}

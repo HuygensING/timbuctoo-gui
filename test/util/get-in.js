@@ -32,12 +32,6 @@ describe("getIn", () => { //eslint-disable-line no-undef
 		expect(path).toEqual(["c", 1]);
 	});
 
-	it("should return a type when requested", () => { //eslint-disable-line no-undef
-		const { type, data } = getIn(["a", "b", 2], {a: {b: ["a", "b", "c"]}}, {typed: true});
-		expect(type).toEqual("b");
-		expect(data).toEqual("c");
-	});
-
 	it("should be timed", () => { //eslint-disable-line no-undef
 		const before = new Date().getTime();
 		for(let i = 0; i < 500; i++) {

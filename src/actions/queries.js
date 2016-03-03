@@ -12,7 +12,7 @@ const changeQuery = (fieldPath, value) => (dispatch) =>
 
 const addQueryFilter = (fieldPath, value) => (dispatch) => {
 	if(value.type === "relation") {
-		const newEntity = {domain: value.targetType, and: []};
+		const newEntity = {type: "entity", domain: value.targetType, and: []};
 		value.entity = newEntity;
 		delete value.targetType;
 	}
