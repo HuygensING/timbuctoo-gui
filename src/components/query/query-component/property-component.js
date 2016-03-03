@@ -7,7 +7,7 @@ let propertyComponent = (props) => {
 	const {
 		path,
 		query,
-		onDeleteQuery,
+		onDeleteQueryFilter,
 		onSetQueryPath,
 		componentIndex
 	} = props;
@@ -15,7 +15,7 @@ let propertyComponent = (props) => {
 	const pathToQuerySelection = query ? query.pathToQuerySelection : [];
 
 	const selected = deepEqual(path, pathToQuerySelection);
-	const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQuery(componentIndex) } translate="8 -10" />) : null;
+	const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="8 -10" />) : null;
 
 	return (
 		<g transform={`translate(0, ${props.topPosition})`}>
@@ -31,7 +31,7 @@ let propertyComponent = (props) => {
 propertyComponent.propTypes = {
 	componentIndex: React.PropTypes.number,
 	name: React.PropTypes.string,
-	onDeleteQuery: React.PropTypes.func,
+	onDeleteQueryFilter: React.PropTypes.func,
 	onSetQueryPath: React.PropTypes.func,
 	path: React.PropTypes.array,
 	query: React.PropTypes.object,

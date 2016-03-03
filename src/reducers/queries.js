@@ -91,33 +91,31 @@ export default function(state=initialState, action) {
 			});
 
 		case "DELETE_QUERY":
+			return {
+				...state,
+				queries: setIn([action.queryIndex], {...state.queries[action.queryIndex], deleted: true}, state.queries),
+				currentQuery: -1
+			};
+
+		case "DELETE_QUERY_FILTER":
 			pathToQuerySelection = state.queries[action.queryIndex].pathToQuerySelection;
-			if(pathToQuerySelection.length === 1) {
-				return {
-					...state,
-					queries: setIn([action.queryIndex], {...state.queries[action.queryIndex], deleted: true}, state.queries),
-					currentQuery: -1
-				};
-			} else {
-				let sliceEnd = pathToQuerySelection.length - 1;
-				let deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
-				if(deleteQueryFilterIndex === "entity") {
-					sliceEnd = pathToQuerySelection.length - 2;
-					deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
-				}
-
-				let queryFilters = getIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), state.queries);
-
-				queryFilters.splice(deleteQueryFilterIndex, 1);
-
-				current = setIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), queryFilters, state.queries);
-				current[state.currentQuery].pathToQuerySelection = ["entity"];
-				return setQuery({
-					...state,
-					queries: current
-				});
+			let sliceEnd = pathToQuerySelection.length - 1;
+			let deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
+			if(deleteQueryFilterIndex === "entity") {
+				sliceEnd = pathToQuerySelection.length - 2;
+				deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
 			}
-			break;
+
+			let queryFilters = getIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), state.queries);
+
+			queryFilters.splice(deleteQueryFilterIndex, 1);
+
+			current = setIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), queryFilters, state.queries);
+			current[state.currentQuery].pathToQuerySelection = ["entity"];
+			return setQuery({
+				...state,
+				queries: current
+			});
 
 		case "SET_QUERY_RESULTS":
 			return {...state, results: action.results, resultsPending: false};

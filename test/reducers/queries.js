@@ -188,7 +188,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		expect(actual.queries === queries).toEqual(false);
 	});
 
-	it("should delete a subquery with DELETE_QUERY if the length of the pathToQuerySelection is more than 1", () => { //eslint-disable-line no-undef
+	it("should delete a subquery with DELETE_QUERY_FILTER if the length of the pathToQuerySelection is more than 1", () => { //eslint-disable-line no-undef
 		const queries = [sampleQuery];
 		const beforeState = {currentQuery: 0, queries: queries};
 		const expectedQuery = {
@@ -212,7 +212,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		};
 
 		const action = {
-			type: "DELETE_QUERY",
+			type: "DELETE_QUERY_FILTER",
 			queryIndex: 0
 		};
 
