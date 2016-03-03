@@ -17,23 +17,32 @@ let propertyComponent = (props) => {
 	const pathToQuerySelection = query ? query.pathToQuerySelection : [];
 
 	const selected = deepEqual(path, pathToQuerySelection);
-	const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="8 -10" />) : null;
+	const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="0 -5" />) : null;
 
 	const valuesComponent = orValues.length === 1 ?
 		(
 			<g onClick={() => onSetQueryPath(path)} transform="translate(12 0)">
-				<text>{`${props.name}: ${orValues[0].value}`}</text>
+				<text>{`${props.name}:`}</text>
+				<g transform="translate(150, 0)">
+					<text>{`${orValues[0].value}`}</text>
+				</g>
 			</g>
 		) :
 		(
 			<g transform="translate(12 0)">
-				<g transform="translate(120 0)">
-					{orValues.map((v, i) => (
-						<g key={i} transform={`translate(0, ${i * baseHeight})`}>
-							<text>{v.value}</text>
-							{(i < orValues.length - 1 ? (<g transform="translate(5, 15)"><text>+</text></g>) : null)}
-						</g>
-					))}
+				<g transform="translate(150 0)">
+					{orValues.map((v, i) => {
+						const valSelected = deepEqual(path.concat(["or", i]), pathToQuerySelection);
+						const valDelete = valSelected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="-15 -5" />) : null;
+
+						return (
+							<g key={i} transform={`translate(0, ${i * baseHeight})`}>
+								<text onClick={() => onSetQueryPath(path.concat(["or", i]))}>{v.value}</text>
+								{(i < orValues.length - 1 ? (<g transform="translate(5, 15)"><text>+</text></g>) : null)}
+								{valDelete}
+							</g>
+						);
+					})}
 				</g>
 				<text onClick={() => onSetQueryPath(path)}>{`${props.name}:`}</text>
 			</g>

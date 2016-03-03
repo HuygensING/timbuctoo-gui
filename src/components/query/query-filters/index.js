@@ -11,6 +11,7 @@ class QueryFilters extends React.Component {
 		const query = queries.queries[queries.currentQuery];
 
 		const data = getIn(query.pathToQuerySelection, query);
+		if(!data) { return null; }
 		if(data.type === "entity") {
 			return (<div>
 				<ul>
