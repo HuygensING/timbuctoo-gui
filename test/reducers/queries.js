@@ -128,6 +128,41 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		expect(actual.queries === queries).toEqual(false);
 	});
 
+	it("should immutably ADD_QUERY_FILTER", () => { //eslint-disable-line no-undef
+		const initialQuery = clone(sampleQuery);
+		initialQuery.pathToQuerySelection = ["entity"];
+		const queries = [{}, initialQuery];
+		const beforeState = { currentQuery: 1, queries: queries };
+		const expectedQuery = clone(initialQuery);
+
+		expectedQuery.entity.and = [
+			{type: "property", name: "gender", value: "FEMALE"},
+			{type: "property", name: "gender", value: "MALE"}
+		];
+
+		const expectedState = {
+			currentQuery: 1,
+			queries: [
+				{},
+				expectedQuery
+			],
+			resultCount: "",
+			resultCountPending: true,
+			resultsPending: true
+		};
+
+		const action = {
+			type: "ADD_QUERY_FILTER",
+			fieldPath: ["and"],
+			value: {type: "property", name: "gender", value: "MALE"}
+		};
+
+		const actual = queriesReducer(beforeState, action);
+
+		expect(actual).toEqual(expectedState);
+		expect(actual.queries === queries).toEqual(false);
+	});
+
 	it("should delete an entire query with DELETE_QUERY if the length of the pathToQuerySelection is 1", () => { //eslint-disable-line no-undef
 		const initialQuery = clone(sampleQuery);
 		initialQuery.pathToQuerySelection = ["entity"];
