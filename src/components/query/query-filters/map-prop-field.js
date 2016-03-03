@@ -1,31 +1,15 @@
 import React from "react";
 import SelectField from "./fields/select";
 
-const relateButton = (fieldDef, props) => (
-		<button
-			onClick={() => props.onAddQueryFilter(["and"], {
-					name: fieldDef.relation.regularName,
-					type: "relation",
-					direction: "both",
-					targetType: fieldDef.relation.isInverseName ? fieldDef.relation.sourceType : fieldDef.relation.targetType
-				})}>
-			{fieldDef.name}
-		</button>
-	);
-
 const onSelectChange = (props, name, value) => {
-	props.onAddQueryFilter(["and"], {
-		type: "property",
-		name: name,
-		or: [{type: "value", value: value}]
-	});
+	console.log(props, name, value);
+
+	props.onAddQueryFilter(["or"], {type: "value", value: value});
 };
 
 const MAP = {
 	"multiselect": (fieldDef, props) => (<SelectField {...props} name={fieldDef.name} onChange={(value) => onSelectChange(props, fieldDef.name, value)} options={fieldDef.options} />),
 	"select": (fieldDef, props) => (<SelectField {...props} name={fieldDef.name} onChange={(value) => onSelectChange(props, fieldDef.name, value)} options={fieldDef.options} />),
-	"relation": relateButton,
-	"keyword": relateButton,
 	"unsupported": () => (null)
 };
 
