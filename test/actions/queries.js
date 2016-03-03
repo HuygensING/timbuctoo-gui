@@ -202,7 +202,7 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 				done(e);
 			}
 		});
-		store.dispatch(addQueryFilter(path, {type: "relation", targetType: "person", name: "isRelatedTo"}));
+		store.dispatch(addQueryFilter(path, {type: "relation", targetType: "wwperson", name: "isRelatedTo"}));
 	});
 
 
