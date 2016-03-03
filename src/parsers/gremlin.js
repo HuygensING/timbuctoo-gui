@@ -49,8 +49,9 @@ parseEntity = (ent, path = ["entity"], aliasSelf = true) => {
 
 const parseQuery = (query) => {
 	let path = query.pathToQuerySelection ? clone(query.pathToQuerySelection) : [];
+
 	if(getIn(path, query) && getIn(path, query).type === "property") { path.pop(); path.pop(); }
-	else if(getIn(path, query) && getIn(path, query).type === "value") { path.pop(); path.pop(); path.pop(); }
+	else if(getIn(path, query) && getIn(path, query).type === "value") { path.pop(); path.pop(); path.pop(); path.pop(); }
 
 	let selectVal = path.length ? path.join("|") : "result";
 	return [
