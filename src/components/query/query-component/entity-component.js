@@ -23,7 +23,7 @@ class EntityComponent extends React.Component {
 					name={propertyFilter.name}
 					path={path}
 					topPosition={topPosition}
-					value={propertyFilter.value}
+					value={propertyFilter.or.map((v) => v.value).join(", ")}
 				/>
 			),
 			height: basePropertyComponentHeight

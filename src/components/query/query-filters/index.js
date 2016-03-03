@@ -16,9 +16,12 @@ class QueryFilters extends React.Component {
 				</ul>
 				<pre style={{width: "100%", whiteSpace: "pre-wrap"}}>{JSON.stringify(query)}</pre>
 			</div>);
-		} else {
-			return null;
+		} else if(data.type === "property") {
+			return (
+				<div>a prop form</div>
+			);
 		}
+		return null;
 	}
 }
 
