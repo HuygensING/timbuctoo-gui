@@ -15,9 +15,7 @@ class App extends React.Component {
 	}
 
 	onDeleteQuery(queryIndex) {
-		if(this.props.queries.queries[queryIndex].pathToQuerySelection.length === 1) {
-			gridActions.onSetComponentProps({deleted: true }, queryIndex);
-		}
+		gridActions.onSetComponentProps({deleted: true }, queryIndex);
 		this.props.onDeleteQuery(queryIndex);
 	}
 
@@ -46,6 +44,7 @@ class App extends React.Component {
 						<QueryComponent
 							domain={c}
 							onDeleteQuery={this.onDeleteQuery.bind(this)}
+							onDeleteQueryFilter={this.props.onDeleteQueryFilter}
 							onDeselect={() => { }}
 							onQueryChange={this.onQueryChange.bind(this)}
 							onSelect={this.onSelectQuery.bind(this)}
@@ -77,6 +76,7 @@ class App extends React.Component {
 App.propTypes = {
 	entity: React.PropTypes.object,
 	onDeleteQuery: React.PropTypes.func,
+	onDeleteQueryFilter: React.PropTypes.func,
 	onQueryChange: React.PropTypes.func,
 	onSelectQuery: React.PropTypes.func,
 	onSetQueryPath: React.PropTypes.func,

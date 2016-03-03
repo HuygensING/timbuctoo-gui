@@ -29,5 +29,8 @@ const addQueryFilter = (fieldPath, value) => (dispatch, getState) => {
 	dispatch({type: "ADD_QUERY_FILTER", fieldPath: fieldPath, value: value});
 };
 
+const deleteQueryFilter = (queryIndex) => (dispatch) =>
+	dispatch({type: "DELETE_QUERY_FILTER", queryIndex: queryIndex});
 
-export { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter };
+
+export { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter, deleteQueryFilter };

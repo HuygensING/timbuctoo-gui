@@ -20,14 +20,14 @@ class RelationComponent extends React.Component {
 			relation,
 			subComponent,
 			path,
-			onDeleteQuery,
+			onDeleteQueryFilter,
 			onSetQueryPath,
 			query
 		} = this.props;
 		const pathToQuerySelection = query ? query.pathToQuerySelection : [];
 
 		const selected = deepEqual(path, pathToQuerySelection);
-		const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQuery(componentIndex) } translate="8 -20" />) : null;
+		const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="8 -20" />) : null;
 		const directionToggle = selected ?
 			(<DirectionToggle direction={relation.direction} onSelect={this.onChangeDirection.bind(this)} selected={true} />) :
 			(<DirectionToggle direction={relation.direction} selected={false} />);
@@ -58,7 +58,7 @@ class RelationComponent extends React.Component {
 RelationComponent.propTypes = {
 	baseHeight: React.PropTypes.number,
 	componentIndex: React.PropTypes.number,
-	onDeleteQuery: React.PropTypes.func,
+	onDeleteQueryFilter: React.PropTypes.func,
 	onQueryChange: React.PropTypes.func,
 	onSetQueryPath: React.PropTypes.func,
 	path: React.PropTypes.array,

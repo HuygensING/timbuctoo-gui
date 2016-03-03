@@ -102,7 +102,7 @@ class EntityComponent extends React.Component {
 				[], props, childEntityComponents);
 
 		// If the current entity is selected show a delete button
-		const deleteButton = selected ? (<DeleteButton onSelect={() => props.onDeleteQuery(props.componentIndex) } />) : null;
+		const deleteButton = selected ? (<DeleteButton onSelect={() => path.length === 1 ? props.onDeleteQuery(props.componentIndex) : props.onDeleteQueryFilter(props.componentIndex) } />) : null;
 
 		// Some fuzzy stuff to calculate the length of the vertical tree line ... for property filters
 		const propertyLineHeight = propertyFilters.length ?
