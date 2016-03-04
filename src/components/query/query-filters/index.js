@@ -20,8 +20,14 @@ class QueryFilters extends React.Component {
 			</div>);
 		} else if(data.type === "property") {
 			const entityData = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 2), query);
-			const fieldDef = vre.collections[`${entityData.domain}s`].filter((def) => def.name === data.name)[0]
-			return mapPropField(fieldDef, {...this.props, entity: entityData});
+			const fieldDef = vre.collections[`${entityData.domain}s`].filter((def) => def.name === data.name)[0];
+			return mapPropField(fieldDef, {...this.props, entity: entityData, filterPath: ["or"]});
+		} else if(data.type === "value") {
+			const entityData = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 4), query);
+			const { name } = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 2), query);
+			const fieldDef = vre.collections[`${entityData.domain}s`].filter((def) => def.name === name)[0];
+
+			return mapPropField(fieldDef, {...this.props, entity: entityData, filterPath: -1});
 		}
 		return null;
 	}

@@ -82,10 +82,22 @@ const setQueryFieldValue = (state, action) => {
 	});
 };
 
-const addQueryFilter = (state, action) => {
+const getPath = (state, action) => {
 	const pathToQuerySelection = state.queries[state.currentQuery].pathToQuerySelection;
-	const filters = getIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath), state.queries);
-	const current = setIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath).concat(filters.length), action.value, state.queries);
+	if(typeof action.fieldPath === "number") {
+		const fullPath = [state.currentQuery].concat(pathToQuerySelection);
+		return fullPath.slice(0, fullPath.length + action.fieldPath);
+	} else {
+		return [state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath);
+	}
+};
+
+const addQueryFilter = (state, action) => {
+	const pathToFilters = getPath(state, action);
+
+	const filters = getIn(pathToFilters, state.queries);
+	const current = setIn(pathToFilters.concat(filters.length), action.value, state.queries);
+
 	return setQuery({
 		...state,
 		queries: current

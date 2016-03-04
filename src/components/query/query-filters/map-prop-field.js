@@ -2,9 +2,7 @@ import React from "react";
 import SelectField from "./fields/select";
 
 const onSelectChange = (props, name, value) => {
-	console.log(props, name, value);
-
-	props.onAddQueryFilter(["or"], {type: "value", value: value});
+	props.onAddQueryFilter(props.filterPath, {type: "value", value: value});
 };
 
 const MAP = {
