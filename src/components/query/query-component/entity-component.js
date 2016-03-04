@@ -4,7 +4,8 @@ import deepEqual from "deep-equal";
 import icons from "./icons";
 import RelationComponent from "./relation-component";
 import PropertyComponent from "./property-component";
-import DeleteButton from "./delete-button";
+
+import DeleteButton from "./util/delete-button";
 
 const baseHeight = 60;
 const basePropertyComponentHeight = 32;
@@ -108,6 +109,13 @@ class EntityComponent extends React.Component {
 		const propertyLineHeight = propertyFilters.length ?
 			propertyComponentHeights.reduce((a, b) => a + b, 0) - (basePropertyComponentHeight / 2) : 0;
 
+		// ... for when there are no relation filters
+		const finalPropertyLineHeight = (relationFilters.length === 0 &&
+					propertyFilters.length > 0 &&
+					propertyFilters[propertyFilters.length - 1].value.or.length > 1
+			) ? propertyLineHeight - ((propertyFilters[propertyFilters.length - 1].value.or.length - 1) * basePropertyComponentHeight)
+			: propertyLineHeight; // do not do stuff
+
 		// ... for relation filters
 		const relationLineHeight = relationFilters.length ?
 			relationComponentHeights.reduce((a, b) => a + b, 0) -
@@ -126,7 +134,7 @@ class EntityComponent extends React.Component {
 				{deleteButton}
 
 				<g transform="translate(-20 20)">
-					<line stroke="black" x1="0" x2="0" y1="0" y2={propertyLineHeight + relationLineHeight} />
+					<line stroke="black" x1="0" x2="0" y1="0" y2={finalPropertyLineHeight + relationLineHeight} />
 				</g>
 
 				<g transform="translate(-20 40)">

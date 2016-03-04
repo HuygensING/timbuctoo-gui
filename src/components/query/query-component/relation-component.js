@@ -2,8 +2,8 @@ import React from "react";
 import deepEqual from "deep-equal";
 
 import TextBox from "./util/text-box";
-import DeleteButton from "./delete-button";
-import DirectionToggle from "./direction-toggle";
+import DeleteButton from "./util/delete-button";
+import DirectionToggle from "./util/direction-toggle";
 
 
 class RelationComponent extends React.Component {
@@ -41,18 +41,13 @@ class RelationComponent extends React.Component {
 				<g transform="translate(260 0)">
 					{subComponent}
 				</g>
-				<TextBox {...this.props} height="30" onSelect={() => onSetQueryPath(path)}
+				<TextBox {...this.props}
 					className={`relation handle ${selected ? "selected" :""}`}
+					height="30"
+					onSelect={() => onSetQueryPath(path)}
 					rx="5" ry="5" text={relation.name}
 					width="220" x="10" y="-20"
 				/>
-{/*
-				<text transform={`translate(${80 - (relation.name.length * 3)} 0)`}>{relation.name}</text>
-				<rect {...this.props}
-					className={`relation handle ${selected ? "selected" :""}`}
-					height="30"
-					onClick={() => onSetQueryPath(path)}
-					rx="5" ry="5" width="220" x="10" y="-20" />*/}
 				{deleteButton}
 				{directionToggle}
 			</g>
