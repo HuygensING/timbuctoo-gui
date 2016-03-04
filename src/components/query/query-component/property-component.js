@@ -1,7 +1,8 @@
 import React from "react";
-import DeleteButton from "./delete-button";
-
 import deepEqual from "deep-equal";
+
+import DeleteButton from "./util/delete-button";
+
 
 let propertyComponent = (props) => {
 	const {
