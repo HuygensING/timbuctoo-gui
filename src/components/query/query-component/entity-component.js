@@ -13,6 +13,27 @@ const basePropertyComponentHeight = 32;
 
 class EntityComponent extends React.Component {
 
+	// Some fuzzy stuff to calculate the length of the vertical tree line ... for property filters
+	getVerticalLineHeight(propertyFilters, relationFilters, propertyComponentHeights, relationComponentHeights) {
+		const propertyLineHeight = propertyFilters.length ?
+			propertyComponentHeights.reduce((a, b) => a + b, 0) - (basePropertyComponentHeight / 2) : 0;
+
+		// ... for when there are no relation filters
+		const finalPropertyLineHeight = (relationFilters.length === 0 &&
+					propertyFilters.length > 0 &&
+					propertyFilters[propertyFilters.length - 1].value.or.length > 1
+			) ? propertyLineHeight - ((propertyFilters[propertyFilters.length - 1].value.or.length - 1) * basePropertyComponentHeight)
+			: propertyLineHeight; // do not do stuff
+
+		// ... for relation filters
+		const relationLineHeight = relationFilters.length ?
+			relationComponentHeights.reduce((a, b) => a + b, 0) -
+				relationComponentHeights[relationComponentHeights.length - 1] + (propertyFilters.length ? 40 : 25)
+			: 0;
+
+		return finalPropertyLineHeight + relationLineHeight;
+	}
+
 	// Renders a property filter
 	renderPropFilter(propertyFilter, i, topPosition, path, props) {
 		return {
@@ -52,7 +73,7 @@ class EntityComponent extends React.Component {
 	renderFilters(filters, renderFunc, getPath, componentHeights = [], ...args) {
 		const filterComponents = filters.map((filter, i) => {
 			const { index, value } = filter;
-			const {filterComponent, height} = renderFunc(value, i, componentHeights.reduce((a, b) => a + b, 0), getPath(index), ...args);
+			const { filterComponent, height } = renderFunc(value, i, componentHeights.reduce((a, b) => a + b, 0), getPath(index), ...args);
 			componentHeights.push(height);
 			return filterComponent;
 		});
@@ -93,34 +114,17 @@ class EntityComponent extends React.Component {
 			});
 
 		// Loads all the property filters into direct child components, keeping track of their respective total height
-		let [propertyComponents, propertyComponentHeights] = this.renderFilters(propertyFilters, this.renderPropFilter.bind(this),
+		const [propertyComponents, propertyComponentHeights] = this.renderFilters(propertyFilters, this.renderPropFilter.bind(this),
 				(index) => path.concat(["and", index]),
 				[], props);
 
 		// Loads all the relation filters into direct child components, keeping track of their respective total height
-		let [relationComponents, relationComponentHeights] = this.renderFilters(relationFilters, this.renderRelation.bind(this),
+		const [relationComponents, relationComponentHeights] = this.renderFilters(relationFilters, this.renderRelation.bind(this),
 				(index) => path.concat(["and", index]),
 				[], props, childEntityComponents);
 
 		// If the current entity is selected show a delete button
 		const deleteButton = selected ? (<DeleteButton onSelect={() => path.length === 1 ? props.onDeleteQuery(props.componentIndex) : props.onDeleteQueryFilter(props.componentIndex) } />) : null;
-
-		// Some fuzzy stuff to calculate the length of the vertical tree line ... for property filters
-		const propertyLineHeight = propertyFilters.length ?
-			propertyComponentHeights.reduce((a, b) => a + b, 0) - (basePropertyComponentHeight / 2) : 0;
-
-		// ... for when there are no relation filters
-		const finalPropertyLineHeight = (relationFilters.length === 0 &&
-					propertyFilters.length > 0 &&
-					propertyFilters[propertyFilters.length - 1].value.or.length > 1
-			) ? propertyLineHeight - ((propertyFilters[propertyFilters.length - 1].value.or.length - 1) * basePropertyComponentHeight)
-			: propertyLineHeight; // do not do stuff
-
-		// ... for relation filters
-		const relationLineHeight = relationFilters.length ?
-			relationComponentHeights.reduce((a, b) => a + b, 0) -
-				relationComponentHeights[relationComponentHeights.length - 1] + (propertyFilters.length ? 40 : 25)
-			: 0;
 
 		// Render the entity into component
 		const component = (
@@ -133,9 +137,8 @@ class EntityComponent extends React.Component {
 				</g>
 				{deleteButton}
 
-				<g transform="translate(-20 20)">
-					<line stroke="black" x1="0" x2="0" y1="0" y2={finalPropertyLineHeight + relationLineHeight} />
-				</g>
+				<line stroke="black"transform="translate(-20 20)" x1="0" x2="0" y1="0"
+					y2={this.getVerticalLineHeight(propertyFilters, relationFilters, propertyComponentHeights, relationComponentHeights)} />
 
 				<g transform="translate(-20 40)">
 					{propertyComponents}
