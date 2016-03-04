@@ -8,7 +8,7 @@ import PropertyComponent from "./property-component";
 import DeleteButton from "./util/delete-button";
 
 const baseHeight = 60;
-const basePropertyComponentHeight = 32;
+const basePropertyComponentHeight = 36;
 
 
 class EntityComponent extends React.Component {
@@ -28,7 +28,7 @@ class EntityComponent extends React.Component {
 		// ... for relation filters
 		const relationLineHeight = relationFilters.length ?
 			relationComponentHeights.reduce((a, b) => a + b, 0) -
-				relationComponentHeights[relationComponentHeights.length - 1] + (propertyFilters.length ? 40 : 25)
+				relationComponentHeights[relationComponentHeights.length - 1] + (propertyFilters.length ? 43 : 25)
 			: 0;
 
 		return finalPropertyLineHeight + relationLineHeight;
