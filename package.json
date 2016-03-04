@@ -49,6 +49,7 @@
     "body-parser": "^1.15.0",
     "browser-sync": "^2.9.6",
     "browserify": "^11.2.0",
+    "clone-deep": "^0.2.4",
     "connect-modrewrite": "^0.8.2",
     "eslint": "^1.5.1",
     "eslint-plugin-react": "^3.16.1",
