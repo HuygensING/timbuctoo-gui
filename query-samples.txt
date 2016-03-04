@@ -1,8 +1,8 @@
 {
 	"domain": "wwperson",
 	"deleted": false,
-	"pathToQuerySelection": ["entity", "and", 0, "entity"],
-	"entity": {
+	"pathToQuerySelection": ["or", 0, "and", 0, "or", 0],
+	"or": [{
 		"type": "entity",
 		"domain": "wwperson",
 		"and": [
@@ -10,7 +10,7 @@
 				"name": "isCreatedBy",
 				"type": "relation",
 				"direction": "both",
-				"entity": {
+				"or": [{
 					"type": "entity",
 					"domain": "wwdocument",
 					"and": [
@@ -22,10 +22,10 @@
 							]
 						}
 					]
-				}
+				}]
 			}
 		]
-	}
+	}]
 }
 
  ||
@@ -63,69 +63,11 @@
 }
 
 
-
-                /\          ||
-==========short || === long \/ ========
-
-{
-	"domain": "wwperson",
-	"deleted": false,
-	"pathToQuerySelection": ["entity", "and", 1, "entity"],
-	"entity": {
-		"type": "entity",
-		"domain": "wwperson",
-		"and": [
-			{
-				"type": "property",
-				"name": "gender",
-				"or": [
-					{ "type": "value", "value": "MALE" },
-					{ "type": "value", "value": "UNKNOWN" }
-				]
-			},
-			{
-				"name": "isCreatedBy",
-				"type": "relation",
-				"direction": "both",
-				"entity": {
-					"type": "entity",
-					"domain": "wwdocument",
-					"and": [
-						{
-							"type": "property",
-							"name": "documentType",
-							"or": [
-								{ "type": "value", "value": "ARTICLE" }
-							]
-						},
-						{
-							"name": "isCreatedBy",
-							"type": "relation",
-							"direction": "both",
-							"entity": {
-								"type": "entity",
-								"domain": "wwperson",
-								"and": [
-									{
-										"type": "property",
-										"name": "gender",
-										"or": [
-											{ "type": "value", "value": "FEMALE" }
-										]
-									}
-								]
-							}
-						}
-					]
-				}
-			}
-		]
-	}
-}
-
- ||
- ||
- \/
+=======================
+=======================
+          ||
+          ||
+          \/
 
 {
 	"domain": "wwperson",
