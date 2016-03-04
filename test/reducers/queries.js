@@ -3,14 +3,15 @@ import sinon from "sinon";
 
 import clone from "../../src/util/clone-deep";
 import server from "../../src/actions/server";
+import { parsers } from "../../src/parsers/gremlin";
 import queriesReducer from "../../src/reducers/queries";
 
 const sampleQuery = {
 	domain: "wwperson",
 	deleted: false,
-	pathToQuerySelection: ["entity", "and", 0],
+	pathToQuerySelection: ["or", 0, "and", 0],
 
-	entity: {
+	or: [{
 		domain: "wwperson",
 		type: "entity",
 		and: [
@@ -22,23 +23,31 @@ const sampleQuery = {
 				]
 			}
 		]
-	}
+	}]
 };
 
 describe("queries reducer", () => { //eslint-disable-line no-undef
 
 	before(() => { //eslint-disable-line no-undef
 		sinon.stub(server, "fastXhr");
+		sinon.stub(parsers, "parseGremlin", () => ["", ""]);
 	});
 
 	after(() => { //eslint-disable-line no-undef
 		server.fastXhr.restore();
+		parsers.parseGremlin.restore();
 	});
 
 	it("should make a new query with SELECT_QUERY if queries does not have a query at action.queryIndex", () => { //eslint-disable-line no-undef
 		const queries = [];
 		const domain = "dom";
-		const newQuery = { domain: domain, deleted: false, pathToQuerySelection: ["entity"], entity: {type: "entity", domain: domain, and: []}};
+		const newQuery = {
+			domain: domain,
+			deleted: false,
+			pathToQuerySelection: ["or", 0],
+			or: [{type: "entity", domain: domain, and: []}]
+		};
+
 		const beforeState = {currentQuery: -1, queries: queries};
 
 		const expectedState = {
@@ -85,7 +94,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		const queries = [sampleQuery];
 		const beforeState = {currentQuery: 0, queries: queries};
 		const expectedQuery = clone(sampleQuery);
-		expectedQuery.pathToQuerySelection = ["entity", "and", "0", "entity"];
+		expectedQuery.pathToQuerySelection = ["or", 0, "and", "0", "or", 0];
 
 		const expectedState = {
 			currentQuery: 0,
@@ -97,7 +106,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 
 		const action = {
 			type: "SET_QUERY_PATH",
-			path: ["entity", "and", "0", "entity"]
+			path: ["or", 0, "and", "0", "or", 0]
 		};
 
 		const actual = queriesReducer(beforeState, action);
@@ -110,7 +119,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		const beforeState = { currentQuery: 1, queries: queries };
 		const expectedQuery = clone(sampleQuery);
 
-		expectedQuery.entity.and[0].value = "MALE";
+		expectedQuery.or[0].and[0].value = "MALE";
 
 		const expectedState = {
 			currentQuery: 1,
@@ -137,12 +146,12 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 
 	it("should immutably ADD_QUERY_FILTER", () => { //eslint-disable-line no-undef
 		const initialQuery = clone(sampleQuery);
-		initialQuery.pathToQuerySelection = ["entity"];
+		initialQuery.pathToQuerySelection = ["or", 0];
 		const queries = [{}, initialQuery];
 		const beforeState = { currentQuery: 1, queries: queries };
 		const expectedQuery = clone(initialQuery);
 
-		expectedQuery.entity.and = [
+		expectedQuery.or[0].and = [
 			{type: "property", name: "gender", or: [{type: "value", value: "FEMALE"}]},
 			{type: "property", name: "gender", or: [{type: "value", value: "MALE"}]}
 		];
@@ -172,12 +181,12 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 
 	it("should ADD_QUERY_FILTER to superObject when fieldPath is a negative number", () => { //eslint-disable-line no-undef
 		const initialQuery = clone(sampleQuery);
-		initialQuery.pathToQuerySelection = ["entity", "and", 0, "or", 0];
+		initialQuery.pathToQuerySelection = ["or", 0, "and", 0, "or", 0];
 		const queries = [{}, initialQuery];
 		const beforeState = { currentQuery: 1, queries: queries };
 		const expectedQuery = clone(initialQuery);
 
-		expectedQuery.entity.and = [
+		expectedQuery.or[0].and = [
 			{type: "property", name: "gender", or: [{type: "value", value: "FEMALE"}, {type: "value", value: "MALE"}]}
 		];
 
@@ -228,18 +237,18 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		expect(actual.queries === queries).toEqual(false);
 	});
 
-	it("should delete a subquery with DELETE_QUERY_FILTER if the length of the pathToQuerySelection is more than 1", () => { //eslint-disable-line no-undef
-		const queries = [sampleQuery];
+	it("should immutably delete a filter with DELETE_QUERY_FILTER", () => { //eslint-disable-line no-undef
+		const queries = [clone(sampleQuery)];
 		const beforeState = {currentQuery: 0, queries: queries};
 		const expectedQuery = {
 			domain: "wwperson",
 			deleted: false,
-			pathToQuerySelection: ["entity"],
-			entity: {
+			pathToQuerySelection: ["or", 0],
+			or: [{
 				domain: "wwperson",
 				type: "entity",
 				and: []
-			}
+			}]
 		};
 
 		const expectedState = {
@@ -262,6 +271,54 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		expect(actual).toEqual(expectedState);
 		expect(actual.queries === queries).toEqual(false);
 	});
+
+
+	it("should delete a filter with a subquery with DELETE_QUERY_FILTER if the current selection is a subquery (an entity)", () => { //eslint-disable-line no-undef
+		const testQuery = clone(sampleQuery);
+		testQuery.or[0].and.push(
+			{
+				type: "relation",
+				name: "isRelatedTo",
+				or: [{ "type": "entity", "domain": "wwdocument", "or": []}]
+			}
+		);
+		testQuery.pathToQuerySelection = ["or", 0, "and", 1, "or", 0];
+		const queries = [testQuery];
+		const beforeState = {currentQuery: 0, queries: queries};
+		const expectedQuery = {
+			domain: "wwperson",
+			deleted: false,
+			pathToQuerySelection: ["or", 0],
+			or: [{
+				domain: "wwperson",
+				type: "entity",
+				and: [
+					testQuery.or[0].and[0]
+				]
+			}]
+		};
+
+		const expectedState = {
+			currentQuery: 0,
+			queries: [
+				expectedQuery
+			],
+			resultCount: "",
+			resultCountPending: true,
+			resultsPending: true
+		};
+
+		const action = {
+			type: "DELETE_QUERY_FILTER",
+			queryIndex: 0
+		};
+
+		const actual = queriesReducer(beforeState, action);
+
+		expect(actual).toEqual(expectedState);
+	});
+
+
 
 	it("should SET_QUERY_RESULTS", () => { //eslint-disable-line no-undef
 		expect(queriesReducer(

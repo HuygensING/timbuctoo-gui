@@ -5,7 +5,7 @@ import setIn from "../util/set-in";
 import getIn from "../util/get-in";
 
 import store from "../store";
-import parseGremlin from "../parsers/gremlin";
+import { parsers } from "../parsers/gremlin";
 
 const initialState = {
 	queries: [],
@@ -20,12 +20,12 @@ const makeQuery = (domain) => {
 	return {
 		domain: domain,
 		deleted: false,
-		pathToQuerySelection: ["entity"],
-		entity: {
+		pathToQuerySelection: ["or", 0],
+		or: [{
 			type: "entity",
 			domain: domain,
 			and: []
-		}
+		}]
 	};
 };
 
@@ -49,9 +49,9 @@ const sendDelayedQuery = debounce(sendQuery, 2000);
 const setQuery = (state) => {
 	if(state.currentQuery > -1) {
 		if(state.resultsPending || state.resultCountPending) {
-			sendDelayedQuery(parseGremlin(state.queries[state.currentQuery]));
+			sendDelayedQuery(parsers.parseGremlin(state.queries[state.currentQuery]));
 		} else {
-			sendQuery(parseGremlin(state.queries[state.currentQuery]));
+			sendQuery(parsers.parseGremlin(state.queries[state.currentQuery]));
 		}
 
 		state = {...state, resultCount: "", resultsPending: true, resultCountPending: true};
@@ -121,19 +121,21 @@ const deleteQuery = (state, action) => {
 
 const deleteQueryFilter = (state, action) => {
 	const pathToQuerySelection = state.queries[action.queryIndex].pathToQuerySelection;
+	const currentNode = getIn([state.currentQuery].concat(pathToQuerySelection), state.queries);
 	let sliceEnd = pathToQuerySelection.length - 1;
-	let deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
-	if(deleteQueryFilterIndex === "entity") {
-		sliceEnd = pathToQuerySelection.length - 2;
+
+	if(typeof currentNode === "object" && currentNode.type === "entity") {
+		sliceEnd = pathToQuerySelection.length - 3;
 		deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
 	}
 
+	let deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
 	let queryFilters = getIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), state.queries);
 
 	queryFilters.splice(deleteQueryFilterIndex, 1);
 
 	const current = setIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), queryFilters, state.queries);
-	current[state.currentQuery].pathToQuerySelection = ["entity"];
+	current[state.currentQuery].pathToQuerySelection = ["or", 0];
 	return setQuery({
 		...state,
 		queries: current
