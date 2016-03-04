@@ -9,7 +9,7 @@ class QueryComponent extends React.Component {
 
 	render() {
 		return this.props.selected ? (
-			<g transform="scale(0.75)">
+			<g transform={`scale(${this.props.scale})`}>
 				<EntityComponent {...this.props} />
 			</g>
 		) : (

@@ -8,9 +8,25 @@ import parseGremlin from "../../parsers/gremlin";
 
 class App extends React.Component {
 
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			scale: 1
+		};
+	}
+
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.queries.currentQuery > -1 && nextProps.queries !== this.props.queries) {
 			gridActions.onSetComponentProps({query: nextProps.queries.queries[nextProps.queries.currentQuery]}, nextProps.queries.currentQuery);
+		}
+	}
+
+	componentWillUpdate(nextProps, nextState) {
+		if(this.state.scale !== nextState.scale) {
+			for(let i = 0; i < nextProps.queries.queries.length; i++) {
+				gridActions.onSetComponentProps({scale: nextState.scale}, i);
+			}
 		}
 	}
 
@@ -33,6 +49,15 @@ class App extends React.Component {
 		this.props.onSetQueryPath(path);
 	}
 
+	onWheel(ev) {
+		if(ev.deltaY < 0) {
+			this.setState({scale: this.state.scale * 1.1 });
+		} else if(ev.deltaY > 0) {
+			this.setState({scale: this.state.scale * 0.9 });
+		}
+		return ev.preventDefault();
+	}
+
 	render() {
 		console.log(this.props.queries);
 		const [resQ, countQ] = this.props.queries.currentQuery > -1 ? parseGremlin(this.props.queries.queries[this.props.queries.currentQuery]) : ["", ""];
@@ -49,11 +74,12 @@ class App extends React.Component {
 							onQueryChange={this.onQueryChange.bind(this)}
 							onSelect={this.onSelectQuery.bind(this)}
 							onSetQueryPath={this.onSetQueryPath.bind(this)}
+							scale={1}
 						/>
 					</div>
 				))}
 			</div>
-			<div style={{position: "absolute", top: "50px", left: 0, width: "30%", height: "calc(100% - 60px)"}}>
+			<div onWheel={this.onWheel.bind(this)} style={{position: "absolute", top: "50px", left: 0, width: "30%", height: "calc(100% - 60px)"}}>
 				<InfinityGrid />
 			</div>
 
