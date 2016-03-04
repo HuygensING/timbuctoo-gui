@@ -15,7 +15,7 @@ const parseProp = (prop, domain) => {
 	return `or(${prop.or.map((pv) => parsePropVal(prop, pv.value, domain)).join(", ")})`;
 };
 
-const parseRelation = (rel, relName, path, addAlias = true) => `${rel.direction}E("${relName}")${addAlias ? `.as("${path.join("|")}")` : ""}.otherV()${parseEntity(rel.entity, path.concat("entity"), addAlias)}`;
+const parseRelation = (rel, relName, path, addAlias = true) => `${rel.direction}E("${relName}")${addAlias ? `.as("${path.join("|")}")` : ""}.otherV()${parseEntity(rel.or[0], path.concat(["or", 0]), addAlias)}`;
 
 const parseProps = (props, domain) => {
 	if(props.length === 0) { return ""; }
@@ -30,7 +30,7 @@ const parseRelations = (rels, ent, path) => {
 		`.union(${rels.map((r) => parseRelation(r.value, r.value.name, path.concat(["and", r.index]))).join(", ")})`;
 };
 
-parseEntity = (ent, path = ["entity"], aliasSelf = true) => {
+parseEntity = (ent, path = ["or", 0], aliasSelf = true) => {
 	const propFilters = ent.and
 		.map((d, i) => { return { index: i, value: d }; })
 		.filter((f) => f.value.type === "property");
@@ -55,9 +55,15 @@ const parseQuery = (query) => {
 
 	let selectVal = path.length ? path.join("|") : "result";
 	return [
-		`${identity(query.entity.domain)}${parseEntity(query.entity)}.select("${selectVal}").dedup().range(0,10)`,
-		`${identity(query.entity.domain)}${parseEntity(query.entity)}.select("${selectVal}").dedup().count()`
+		`${identity(query.or[0].domain)}${parseEntity(query.or[0])}.select("${selectVal}").dedup().range(0,10)`,
+		`${identity(query.or[0].domain)}${parseEntity(query.or[0])}.select("${selectVal}").dedup().count()`
 	];
 };
 
+
+const parsers = {
+	parseGremlin: parseQuery
+};
+
 export default parseQuery;
+export { parsers };

@@ -82,11 +82,11 @@ class EntityComponent extends React.Component {
 	}
 
 	// Recursively renders the current query and returns its height
-	renderQueryEntity(props, path = ["entity"]) {
+	renderQueryEntity(props, path = ["or", 0]) {
 		// The current entity within the query tree
-		const queryEntity = props.query && props.query.entity ? props.query.entity : {domain: props.domain};
+		const queryEntity = props.query && props.query.or[0] ? props.query.or[0] : {domain: props.domain};
 		// The current entity data
-		const queryEntityData = props.query && props.query.entity ? props.query.entity.and : [];
+		const queryEntityData = props.query && props.query.or[0] ? props.query.or[0].and : [];
 		// The current query's selection path
 		const pathToQuerySelection = props.query ? props.query.pathToQuerySelection : [];
 
@@ -109,7 +109,7 @@ class EntityComponent extends React.Component {
 				const {index, value} = relation;
 				const subProps = {...props, query: {...value, pathToQuerySelection: pathToQuerySelection }};
 				// ... NOTE: recursion occurs here ...
-				const { component, height } = this.renderQueryEntity(subProps, path.concat(["and", index, "entity"]));
+				const { component, height } = this.renderQueryEntity(subProps, path.concat(["and", index, "or", 0]));
 				return { component: component, height: height };
 			});
 

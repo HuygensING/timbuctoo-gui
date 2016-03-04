@@ -23,7 +23,7 @@ const addQueryFilter = (fieldPath, value) => (dispatch, getState) => {
 	if(value.type === "relation") {
 		const targetDomain = DOMAIN_MAP[getState().vre.vreId][value.targetType];
 		const newEntity = {type: "entity", domain: targetDomain, and: []};
-		value.entity = newEntity;
+		value.or = [newEntity];
 		delete value.targetType;
 	}
 	dispatch({type: "ADD_QUERY_FILTER", fieldPath: fieldPath, value: value});
