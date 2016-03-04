@@ -5,7 +5,7 @@ import Form from "./form";
 import FacetedSearch from "hire-faceted-search";
 import RequestLog from "./request-log";
 import SearchFilters from "./search-filters";
-import config from "../config";
+import config from "../../config";
 
 class App extends React.Component {
 	render() {

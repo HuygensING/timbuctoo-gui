@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import store from "./store";
 import actions from "./actions";
 import {listVres} from "./actions/vre";
-import App from "./components";
+import App from "./components/edit";
 
 document.addEventListener("DOMContentLoaded", () => {
 
