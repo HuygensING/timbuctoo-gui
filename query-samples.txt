@@ -1,0 +1,212 @@
+{
+	"domain": "wwperson",
+	"deleted": false,
+	"pathToQuerySelection": ["entity", "and", 0, "entity"],
+	"entity": {
+		"type": "entity",
+		"domain": "wwperson",
+		"and": [
+			{
+				"name": "isCreatedBy",
+				"type": "relation",
+				"direction": "both",
+				"entity": {
+					"type": "entity",
+					"domain": "wwdocument",
+					"and": [
+						{
+							"type": "property",
+							"name": "documentType",
+							"or": [
+								{ "type": "value", "value": "ANTHOLOGY" }
+							]
+						}
+					]
+				}
+			}
+		]
+	}
+}
+
+ ||
+ ||
+ \/
+
+{
+	"domain": "wwperson",
+	"deleted": false,
+	"pathToQuerySelection": ["or", 0, "and", 0, "or", 0],
+	"or": [{
+		"type": "collectionQuery",
+		"domain": "wwperson",
+		"and": [
+			{
+				"name": "isCreatedBy",
+				"type": "relation",
+				"direction": "both",
+				"or": [{
+					"type": "collectionQuery",
+					"domain": "wwdocument",
+					"and": [
+						{
+							"type": "property",
+							"name": "documentType",
+							"or": [
+								{ "type": "value", "value": "ANTHOLOGY" }
+							]
+						}
+					]
+				}]
+			}
+		]
+	}]
+}
+
+
+
+                /\          ||
+==========short || === long \/ ========
+
+{
+	"domain": "wwperson",
+	"deleted": false,
+	"pathToQuerySelection": ["entity", "and", 1, "entity"],
+	"entity": {
+		"type": "entity",
+		"domain": "wwperson",
+		"and": [
+			{
+				"type": "property",
+				"name": "gender",
+				"or": [
+					{ "type": "value", "value": "MALE" },
+					{ "type": "value", "value": "UNKNOWN" }
+				]
+			},
+			{
+				"name": "isCreatedBy",
+				"type": "relation",
+				"direction": "both",
+				"entity": {
+					"type": "entity",
+					"domain": "wwdocument",
+					"and": [
+						{
+							"type": "property",
+							"name": "documentType",
+							"or": [
+								{ "type": "value", "value": "ARTICLE" }
+							]
+						},
+						{
+							"name": "isCreatedBy",
+							"type": "relation",
+							"direction": "both",
+							"entity": {
+								"type": "entity",
+								"domain": "wwperson",
+								"and": [
+									{
+										"type": "property",
+										"name": "gender",
+										"or": [
+											{ "type": "value", "value": "FEMALE" }
+										]
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	}
+}
+
+ ||
+ ||
+ \/
+
+{
+	"domain": "wwperson",
+	"deleted": false,
+	"pathToQuerySelection": ["or", 0, "and", 3, "or", 0],
+	"or": [
+		{
+			"type": "collectionQuery",
+			"domain": "wwperson",
+			"and": [
+				{
+					"type": "property",
+					"name": "gender",
+					"or": [
+						{"type": "value", "value": "FEMALE"}, 
+						{"type": "value", "value": "MALE"}
+					]
+				},
+				{
+					"type": "property",
+					"name": "types",
+					"or": [
+						{"type": "value", "value": "AUTHOR"}
+					]
+				},
+				{
+					"type": "property",
+					"name": "types",
+					"or": [
+						{"type": "value", "value": "READER"},
+						{"type": "value", "value": "ARCHETYPE"}
+					]
+				},
+				{
+					"type": "relation",
+					"name": "isCreatedBy",
+					"direction": "in",
+					"or": [
+						{
+							"type": "collectionQuery",
+							"domain": "wwdocument",
+							"and": [
+								{
+									"type": "property",
+									"name": "documentType",
+									"or": [
+										{"type": "value", "value": "ANTHOLOGY"}
+									]
+								}
+							]
+						},
+						{
+							"type": "collectionQuery",
+							"domain": "wwdocument",
+							"and": [
+								{
+									"type": "property",
+									"name": "documentType",
+									"or": [
+										{"type": "value", "value": "WORK"},
+										{"type": "value", "value": "ARTICLE"}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "collectionQuery",
+			"domain": "wwperson",
+			"and": [
+				{
+					"type": "property",
+					"name": "gender",
+					"or": [
+						{"type": "value", "value": "UNKNOWN"}
+					]
+				}
+			]
+		}
+	]
+}
