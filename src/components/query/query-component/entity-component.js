@@ -124,7 +124,7 @@ class EntityComponent extends React.Component {
 				[], props, childEntityComponents);
 
 		// If the current entity is selected show a delete button
-		const deleteButton = selected ? (<DeleteButton onSelect={() => path.length === 1 ? props.onDeleteQuery(props.componentIndex) : props.onDeleteQueryFilter(props.componentIndex) } />) : null;
+		const deleteButton = selected ? (<DeleteButton onSelect={() => path.length === 2 ? props.onDeleteQuery(props.componentIndex) : props.onDeleteQueryFilter(props.componentIndex) } />) : null;
 
 		// Render the entity into component
 		const component = (
