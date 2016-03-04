@@ -74,7 +74,7 @@ class App extends React.Component {
 							onQueryChange={this.onQueryChange.bind(this)}
 							onSelect={this.onSelectQuery.bind(this)}
 							onSetQueryPath={this.onSetQueryPath.bind(this)}
-							scale={1}
+							scale={this.state.scale}
 						/>
 					</div>
 				))}
