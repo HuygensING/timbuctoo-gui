@@ -170,6 +170,39 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		expect(actual.queries === queries).toEqual(false);
 	});
 
+	it("should ADD_QUERY_FILTER to superObject when fieldPath is a negative number", () => { //eslint-disable-line no-undef
+		const initialQuery = clone(sampleQuery);
+		initialQuery.pathToQuerySelection = ["entity", "and", 0, "or", 0];
+		const queries = [{}, initialQuery];
+		const beforeState = { currentQuery: 1, queries: queries };
+		const expectedQuery = clone(initialQuery);
+
+		expectedQuery.entity.and = [
+			{type: "property", name: "gender", or: [{type: "value", value: "FEMALE"}, {type: "value", value: "MALE"}]}
+		];
+
+		const expectedState = {
+			currentQuery: 1,
+			queries: [
+				{},
+				expectedQuery
+			],
+			resultCount: "",
+			resultCountPending: true,
+			resultsPending: true
+		};
+
+		const action = {
+			type: "ADD_QUERY_FILTER",
+			fieldPath: -1,
+			value: {type: "value", value: "MALE"}
+		};
+
+		const actual = queriesReducer(beforeState, action);
+
+		expect(actual).toEqual(expectedState);
+	});
+
 	it("should delete an entire query with DELETE_QUERY if the length of the pathToQuerySelection is 1", () => { //eslint-disable-line no-undef
 		const initialQuery = clone(sampleQuery);
 		initialQuery.pathToQuerySelection = ["entity"];
