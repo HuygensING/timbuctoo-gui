@@ -26,14 +26,22 @@ class PropertyValuesComponent extends React.Component {
 		} = this.props;
 
 		return (<g transform={transform}>{orValues.map((v, i) => {
-			const valSelected = deepEqual(path.concat(["or", i]), pathToQuerySelection);
-			const valDelete = valSelected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="-15 -5" />) : null;
+			const selected = deepEqual(path.concat(["or", i]), pathToQuerySelection);
+			const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="-15 -5" />) : null;
 
 			return (
 				<g key={i} transform={`translate(0, ${i * baseHeight})`}>
-					<text onClick={() => this.onClick(i)}>{v.value}</text>
-					{(i < orValues.length - 1 ? (<g transform="translate(5, 15)"><text>+</text></g>) : null)}
-					{valDelete}
+					<TextBox {...this.props}
+						className={`property-value handle ${selected ? "selected" :""}`}
+						height="21"
+						onSelect={() => this.onClick(i)}
+						rx="3" ry="3" text={v.value}
+						transform="translate(0, 3)"
+						width="130" x="-5" y="-20"
+					/>
+
+					{(i < orValues.length - 1 ? <text transform="translate(55, 15) scale(0.5)">+</text> : null)}
+					{deleteButton}
 				</g>
 			);
 		})}</g>);

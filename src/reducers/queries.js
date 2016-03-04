@@ -30,10 +30,17 @@ const makeQuery = (domain) => {
 };
 
 
-
+let lastQTime = new Date().getTime();
 const sendQuery = function(q) {
-	server.fastXhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[0]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULTS", results: resp.body}); });
-	server.fastXhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[1]}`}, (err, resp) => { store.dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}); });
+	const myQTime = new Date().getTime();
+	if(myQTime < lastQTime) { return; }
+	lastQTime = myQTime;
+	server.fastXhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[0]}`}, (err, resp) => {
+		if(myQTime >= lastQTime) { store.dispatch({type: "SET_QUERY_RESULTS", results: resp.body}); }
+	});
+	server.fastXhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[1]}`}, (err, resp) => {
+		if(myQTime >= lastQTime) { store.dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}); }
+	});
 };
 
 const sendDelayedQuery = debounce(sendQuery, 2000);

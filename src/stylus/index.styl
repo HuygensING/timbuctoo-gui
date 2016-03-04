@@ -163,7 +163,10 @@ svg text
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-
+	&.property-value
+		fill rgba(0,0,0,0.5)
+		&.selected
+			fill rgba(0,0,0,0.9)
 rect
 	stroke rgba(0,0,0,1)
 	&.handle:hover
@@ -176,6 +179,13 @@ rect
 		fill rgba(0,255,0,.1)
 		&.selected
 			fill rgba(0,255,0,.4)
+
+	&.property-value
+		stroke rgba(0,0,0,0)
+		fill rgba(128,128,128,.1)
+		&.selected
+			fill rgba(128,128,128,.4)
+
 
 .delete-button:hover
 	fill rgba(255,0,0,1)

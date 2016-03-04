@@ -12,25 +12,31 @@ class QueryFilters extends React.Component {
 
 		const data = getIn(query.pathToQuerySelection, query);
 		if(!data) { return null; }
+
+		let body;
 		if(data.type === "entity") {
-			return (<div>
+			body = (<div>
 				<ul>
 					{vre.collections[`${data.domain}s`].map((fieldDef, i) => <li key={i}>{mapField(fieldDef, {...this.props, entity: data})}</li> )}
 				</ul>
-				<pre style={{width: "100%", whiteSpace: "pre-wrap"}}>{JSON.stringify(query)}</pre>
 			</div>);
 		} else if(data.type === "property") {
 			const entityData = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 2), query);
 			const fieldDef = vre.collections[`${entityData.domain}s`].filter((def) => def.name === data.name)[0];
-			return mapPropField(fieldDef, {...this.props, entity: entityData, filterPath: ["or"]});
+			body = mapPropField(fieldDef, {...this.props, entity: entityData, filterPath: ["or"]});
 		} else if(data.type === "value") {
 			const entityData = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 4), query);
 			const { name } = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 2), query);
 			const fieldDef = vre.collections[`${entityData.domain}s`].filter((def) => def.name === name)[0];
 
-			return mapPropField(fieldDef, {...this.props, entity: entityData, filterPath: -1});
+			body = mapPropField(fieldDef, {...this.props, entity: entityData, filterPath: -1});
+		} else {
+			body = null;
 		}
-		return null;
+		return (<div>
+			{body}
+			<pre style={{width: "100%", whiteSpace: "pre-wrap"}}>{JSON.stringify(query, null, 2)}</pre>
+		</div>);
 	}
 }
 
