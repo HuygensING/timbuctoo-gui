@@ -29,7 +29,7 @@ class TextBox extends React.Component {
 		const { text, onSelect } = this.props;
 		return (
 			<g>
-				<text transform={`translate(${this.state.textLeft} 0)`}>{text}</text>
+				<text className={this.props.className} transform={`translate(${this.state.textLeft} 0)`}>{text}</text>
 				<rect {...this.props} onClick={onSelect} />
 			</g>
 		);
@@ -37,6 +37,7 @@ class TextBox extends React.Component {
 }
 
 TextBox.propTypes = {
+	className: React.PropTypes.string,
 	onSelect: React.PropTypes.func,
 	text: React.PropTypes.string
 };
