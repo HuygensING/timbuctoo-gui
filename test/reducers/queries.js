@@ -1,7 +1,7 @@
 import expect from "expect";
 import sinon from "sinon";
-import clone from "clone-deep";
 
+import clone from "../../src/util/clone-deep";
 import server from "../../src/actions/server";
 import queriesReducer from "../../src/reducers/queries";
 

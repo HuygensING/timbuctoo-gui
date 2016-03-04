@@ -1,6 +1,6 @@
 import sinon from "sinon";
 import expect from "expect";
-import clone from "clone-deep";
+import clone from "../../src/util/clone-deep";
 import store from "../../src/store";
 import server from "../../src/actions/server";
 import {listVres, setVre} from "../../src/actions/vre";
