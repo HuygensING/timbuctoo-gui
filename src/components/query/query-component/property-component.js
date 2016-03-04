@@ -17,13 +17,12 @@ let propertyComponent = (props) => {
 	const pathToQuerySelection = query ? query.pathToQuerySelection : [];
 
 	const selected = deepEqual(path, pathToQuerySelection);
-	const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="0 -2" />) : null;
+	const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="10 -14" />) : null;
 
 	return (
 		<g transform={`translate(0, ${props.topPosition})`}>
 			<line stroke="black" strokeWidth="1" x1="0" x2="10" y1="-2" y2="-2" />
 			<line stroke="black" strokeWidth="1" x1="140" x2="150" y1="-2" y2="-2" />
-			{deleteButton}
 			<g transform="translate(0, 2)">
 				<TextBox {...props}
 					className={`property handle ${selected ? "selected" :""}`}
@@ -35,6 +34,7 @@ let propertyComponent = (props) => {
 				/>
 				<PropertyValuesComponent {...props} onSelect={(subPath) => onSetQueryPath(subPath)} pathToQuerySelection={pathToQuerySelection} transform="translate(154 2)" />
 			</g>
+			{deleteButton}
 		</g>
 	);
 };

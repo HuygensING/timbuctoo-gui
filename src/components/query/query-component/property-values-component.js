@@ -27,7 +27,7 @@ class PropertyValuesComponent extends React.Component {
 
 		return (<g transform={transform}>{orValues.map((v, i) => {
 			const selected = deepEqual(path.concat(["or", i]), pathToQuerySelection);
-			const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="-15 -5" />) : null;
+			const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="-5 -16" />) : null;
 
 			return (
 				<g key={i} transform={`translate(0, ${i * baseHeight})`}>

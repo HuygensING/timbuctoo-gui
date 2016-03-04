@@ -29,7 +29,7 @@ class RelationComponent extends React.Component {
 		const pathToQuerySelection = query ? query.pathToQuerySelection : [];
 
 		const selected = deepEqual(path, pathToQuerySelection);
-		const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="8 -20" />) : null;
+		const deleteButton = selected ? (<DeleteButton onSelect={() => onDeleteQueryFilter(componentIndex) } translate="10 -20" />) : null;
 		const directionToggle = selected ?
 			(<DirectionToggle direction={relation.direction} onSelect={this.onChangeDirection.bind(this)} selected={true} />) :
 			(<DirectionToggle direction={relation.direction} selected={false} />);
