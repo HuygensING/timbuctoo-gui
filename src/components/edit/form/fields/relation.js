@@ -1,6 +1,6 @@
 import React from "react";
 import AutocompleteList from "hire-forms-autocomplete-list";
-import getAutocompleteValues from "../../../actions/autocomplete";
+import getAutocompleteValues from "../../../../actions/autocomplete";
 
 class RelationField extends React.Component {
 
