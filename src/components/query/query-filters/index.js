@@ -2,6 +2,8 @@ import React from "react";
 import mapField from "./map-field";
 import mapPropField from "./map-prop-field";
 import getIn from "../../../util/get-in";
+import IdField from "./fields/id-field";
+
 
 class QueryFilters extends React.Component {
 
@@ -16,9 +18,13 @@ class QueryFilters extends React.Component {
 		if(data.type === "entity") {
 			body = (<div>
 				<ul>
+					<li><IdField {...this.props} filterType={data.type} quickSearch={`domain/${data.domain}s/autocomplete`} /></li>
 					{vre.collections[`${data.domain}s`].map((fieldDef, i) => <li key={i}>{mapField(fieldDef, {...this.props, entity: data})}</li> )}
 				</ul>
 			</div>);
+		} else if(data.type === "property" && data.name === "tim_id") {
+			const entityData = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 2), query);
+			body = <IdField {...this.props} filterType={data.type} quickSearch={`domain/${entityData.domain}s/autocomplete`} />;
 		} else if(data.type === "property") {
 			const entityData = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 2), query);
 			const fieldDef = vre.collections[`${entityData.domain}s`].filter((def) => def.name === data.name)[0];
@@ -28,7 +34,7 @@ class QueryFilters extends React.Component {
 			const { name } = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 2), query);
 			const fieldDef = vre.collections[`${entityData.domain}s`].filter((def) => def.name === name)[0];
 
-			body = mapPropField(fieldDef, {...this.props, entity: entityData, filterPath: -1});
+			body = fieldDef ? mapPropField(fieldDef, {...this.props, entity: entityData, filterPath: -1}) : null;
 		} else {
 			body = null;
 		}

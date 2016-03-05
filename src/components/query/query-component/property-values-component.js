@@ -35,7 +35,7 @@ class PropertyValuesComponent extends React.Component {
 						className={`property-value handle ${selected ? "selected" :""}`}
 						height="21"
 						onSelect={() => this.onClick(i)}
-						rx="3" ry="3" text={v.value}
+						rx="3" ry="3" text={v.label || v.value}
 						transform="translate(0, 3)"
 						width="130" x="-5" y="-20"
 					/>
