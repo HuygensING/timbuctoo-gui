@@ -16,12 +16,18 @@ class TextBox extends React.Component {
 		this.centerTextNode();
 	}
 
+	componentDidUpdate() {
+		this.centerTextNode();
+	}
+
+
 	centerTextNode() {
 		const textBBox = ReactDOM.findDOMNode(this).querySelector("text").getBBox();
 		const rectBBox = ReactDOM.findDOMNode(this).querySelector("rect").getBBox();
 		const textLeft = rectBBox.x + ((rectBBox.width - textBBox.width) / 2);
-
-		this.setState({ textLeft: textLeft });
+		if(this.state.textLeft !== textLeft) {
+			this.setState({ textLeft: textLeft });
+		}
 	}
 
 

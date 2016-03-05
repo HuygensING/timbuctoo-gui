@@ -28,7 +28,7 @@ let propertyComponent = (props) => {
 					className={`property handle ${selected ? "selected" :""}`}
 					height="21"
 					onSelect={() => onSetQueryPath(path)}
-					rx="3" ry="3" text={props.name}
+					rx="3" ry="3" text={props.name === "tim_id" ? "is" : props.name}
 					transform="translate(0, 5)"
 					width="130" x="10" y="-20"
 				/>
