@@ -26,11 +26,25 @@ const sampleQuery = {
 	}]
 };
 
+
 describe("queries reducer", () => { //eslint-disable-line no-undef
+	let relationTestQuery;
 
 	before(() => { //eslint-disable-line no-undef
 		sinon.stub(server, "fastXhr");
 		sinon.stub(parsers, "parseGremlin", () => ["", ""]);
+	});
+
+	beforeEach(() => { //eslint-disable-line no-undef
+		relationTestQuery = clone(sampleQuery);
+		relationTestQuery.or[0].and.push(
+			{
+				type: "relation",
+				name: "isRelatedTo",
+				or: [{ "type": "entity", "domain": "wwdocument", "or": []}]
+			}
+		);
+		relationTestQuery.pathToQuerySelection = ["or", 0, "and", 1, "or", 0];
 	});
 
 	after(() => { //eslint-disable-line no-undef
@@ -273,17 +287,8 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 	});
 
 
-	it("should delete a filter with a subquery with DELETE_QUERY_FILTER if the current selection is a subquery (an entity)", () => { //eslint-disable-line no-undef
-		const testQuery = clone(sampleQuery);
-		testQuery.or[0].and.push(
-			{
-				type: "relation",
-				name: "isRelatedTo",
-				or: [{ "type": "entity", "domain": "wwdocument", "or": []}]
-			}
-		);
-		testQuery.pathToQuerySelection = ["or", 0, "and", 1, "or", 0];
-		const queries = [testQuery];
+	it("should delete a filter with one subquery with DELETE_QUERY_FILTER if the current selection is the subquery (an entity)", () => { //eslint-disable-line no-undef
+		const queries = [relationTestQuery];
 		const beforeState = {currentQuery: 0, queries: queries};
 		const expectedQuery = {
 			domain: "wwperson",
@@ -293,7 +298,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 				domain: "wwperson",
 				type: "entity",
 				and: [
-					testQuery.or[0].and[0]
+					relationTestQuery.or[0].and[0]
 				]
 			}]
 		};
@@ -318,6 +323,43 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		expect(actual).toEqual(expectedState);
 	});
 
+	it("should not delete the parent relation filter with DELETE_QUERY_FILTER if the current selection is a subquery with siblings", () => { //eslint-disable-line no-undef
+		relationTestQuery.or[0].and[1].or.push({ "type": "entity", "domain": "wwdocument", "or": []});
+		const queries = [relationTestQuery];
+		const beforeState = {currentQuery: 0, queries: queries};
+		const expectedQuery = {
+			domain: "wwperson",
+			deleted: false,
+			pathToQuerySelection: ["or", 0],
+			or: [{
+				domain: "wwperson",
+				type: "entity",
+				and: [
+					relationTestQuery.or[0].and[0],
+					{ type: "relation", name: "isRelatedTo", or: [{ "type": "entity", "domain": "wwdocument", "or": []}]}
+				]
+			}]
+		};
+
+		const expectedState = {
+			currentQuery: 0,
+			queries: [
+				expectedQuery
+			],
+			resultCount: "",
+			resultCountPending: true,
+			resultsPending: true
+		};
+
+		const action = {
+			type: "DELETE_QUERY_FILTER",
+			queryIndex: 0
+		};
+
+		const actual = queriesReducer(beforeState, action);
+
+		expect(actual).toEqual(expectedState);
+	});
 
 
 	it("should SET_QUERY_RESULTS", () => { //eslint-disable-line no-undef
