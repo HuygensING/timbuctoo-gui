@@ -83,10 +83,16 @@ class EntityComponent extends React.Component {
 
 	// Recursively renders the current query and returns its height
 	renderQueryEntity(props, path = ["or", 0]) {
+		// The index of the current query entity
+		const queryEntityIndex = path[path.length - 1];
 		// The current entity within the query tree
-		const queryEntity = props.query && props.query.or[0] ? props.query.or[0] : {domain: props.domain};
+		const queryEntity = props.query && props.query.or[queryEntityIndex] ?
+			props.query.or[queryEntityIndex] : {domain: props.domain};
+
 		// The current entity data
-		const queryEntityData = props.query && props.query.or[0] ? props.query.or[0].and : [];
+		const queryEntityData = props.query && props.query.or[queryEntityIndex] ?
+			props.query.or[queryEntityIndex].and : [];
+
 		// The current query's selection path
 		const pathToQuerySelection = props.query ? props.query.pathToQuerySelection : [];
 
@@ -109,8 +115,7 @@ class EntityComponent extends React.Component {
 				const {index, value} = relation;
 				const subProps = {...props, query: {...value, pathToQuerySelection: pathToQuerySelection }};
 				// ... NOTE: recursion occurs here ...
-				const { component, height } = this.renderQueryEntity(subProps, path.concat(["and", index, "or", 0]));
-				return { component: component, height: height };
+				return this.renderQueryEntities(subProps, path.concat(["and", index, "or"]), value.or);
 			});
 
 		// Loads all the property filters into direct child components, keeping track of their respective total height
@@ -124,7 +129,9 @@ class EntityComponent extends React.Component {
 				[], props, childEntityComponents);
 
 		// If the current entity is selected show a delete button
-		const deleteButton = selected ? (<DeleteButton onSelect={() => path.length === 2 ? props.onDeleteQuery(props.componentIndex) : props.onDeleteQueryFilter(props.componentIndex) } />) : null;
+		const deleteButton = selected ? (<DeleteButton onSelect={() => path.length === 2 && queryEntityIndex === 0 ?
+			props.onDeleteQuery(props.componentIndex) :
+			props.onDeleteQueryFilter(props.componentIndex) } />) : null;
 
 		// Render the entity into component
 		const component = (
@@ -156,15 +163,35 @@ class EntityComponent extends React.Component {
 		};
 	}
 
+	// Render list of query entities
+	renderQueryEntities(props, path, queries) {
+		let heights = [];
+		let components = [];
+		for(let i = 0; i < queries.length; i++) {
+			const { component, height } = this.renderQueryEntity(props, path.concat([i]));
+			components.push(<g transform={`translate(0, ${heights.reduce((a, b) => a + b, 0)})`}>
+				{component}
+			</g>);
+			heights.push(height);
+		}
+
+		return {
+			component: <g>{components}</g>,
+			height: heights.reduce((a, b) => a + b, 0)
+		};
+	}
+
 	render() {
-		const { component } = this.renderQueryEntity(this.props);
+		const queryEntities = this.props.query ? this.props.query.or : [];
+		const { component } = this.renderQueryEntities(this.props, ["or"], queryEntities);
 		return component;
 	}
 }
 
 
 EntityComponent.propTypes = {
-	onSetQueryPath: React.PropTypes.func
+	onSetQueryPath: React.PropTypes.func,
+	query: React.PropTypes.object
 };
 
 export default EntityComponent;
