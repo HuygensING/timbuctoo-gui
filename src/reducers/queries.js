@@ -124,7 +124,8 @@ const deleteQueryFilter = (state, action) => {
 	const currentNode = getIn([state.currentQuery].concat(pathToQuerySelection), state.queries);
 	let sliceEnd = pathToQuerySelection.length - 1;
 
-	if(typeof currentNode === "object" && currentNode.type === "entity") {
+	if(typeof currentNode === "object" && currentNode.type === "entity" &&
+		getIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), state.queries).length === 1) {
 		sliceEnd = pathToQuerySelection.length - 3;
 		deleteQueryFilterIndex = pathToQuerySelection[sliceEnd];
 	}
