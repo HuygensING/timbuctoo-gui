@@ -26,6 +26,7 @@ QueryComponent.propTypes = {
 	onDeleteQuery: React.PropTypes.func,
 	onSetQueryPath: React.PropTypes.func,
 	query: React.PropTypes.object,
+	scale: React.PropTypes.number,
 	selected: React.PropTypes.bool
 };
 
