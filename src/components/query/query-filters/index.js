@@ -7,6 +7,14 @@ import IdField from "./fields/id-field";
 
 class QueryFilters extends React.Component {
 
+	onOrButtonClick(domain, path) {
+		this.props.onAddQueryFilter(path, {
+			domain: domain,
+			type: "entity",
+			and: []
+		});
+	}
+
 	render() {
 		const { queries, vre } = this.props;
 		if(queries.currentQuery === -1) { return null; }
@@ -18,10 +26,13 @@ class QueryFilters extends React.Component {
 		if(data.type === "entity") {
 			body = (<div>
 				<ul>
+					<li><button onClick={this.onOrButtonClick.bind(this, data.domain, -1)}>OR</button></li>
 					<li><IdField {...this.props} filterType={data.type} quickSearch={`domain/${data.domain}s/autocomplete`} /></li>
 					{vre.collections[`${data.domain}s`].map((fieldDef, i) => <li key={i}>{mapField(fieldDef, {...this.props, entity: data})}</li> )}
 				</ul>
 			</div>);
+		} else if(data.type === "relation") {
+			body = <button onClick={this.onOrButtonClick.bind(this, data.targetDomain, ["or"])}>OR</button>;
 		} else if(data.type === "property" && data.name === "tim_id") {
 			const entityData = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 2), query);
 			body = <IdField {...this.props} filterType={data.type} quickSearch={`domain/${entityData.domain}s/autocomplete`} />;
