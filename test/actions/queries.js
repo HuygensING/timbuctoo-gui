@@ -19,6 +19,7 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 					value: {
 						type: "relation",
 						name: "isRelatedTo",
+						targetDomain: "wwperson",
 						or: [{
 							type: "entity",
 							and: [],
