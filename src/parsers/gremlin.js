@@ -9,7 +9,10 @@ const quoteProp = (domain, prop, val) => v2UnquotedPropVals.indexOf(`${domain}_$
 
 const identity = (domain) => `g.V().has("isLatest", true).filter{it.get().property("types").value().contains("\\"${domain}\\"")}`;
 
-const parsePropVal = (prop, val, domain) => `has("${domain}_${prop.name}").filter{it.get().property("${domain}_${prop.name}").value().contains(${quoteProp(domain, prop, val)})}`;
+const parsePropVal = (prop, val, domain) =>
+	prop.name === "tim_id" ?
+		`has("tim_id", "${val}")`
+		: `has("${domain}_${prop.name}").filter{it.get().property("${domain}_${prop.name}").value().contains(${quoteProp(domain, prop, val)})}`;
 
 const parseProp = (prop, domain) => {
 	if(prop.or.length === 1) { return parsePropVal(prop, prop.or[0].value, domain); }
