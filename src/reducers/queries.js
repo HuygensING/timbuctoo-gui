@@ -16,11 +16,12 @@ const initialState = {
 	resultCountPending: false
 };
 
-const makeQuery = (domain) => {
+const makeQuery = (domain, position) => {
 	return {
 		domain: domain,
 		deleted: false,
 		pathToQuerySelection: ["or", 0],
+		position: position,
 		or: [{
 			type: "entity",
 			domain: domain,
@@ -63,7 +64,7 @@ const setQuery = (state) => {
 const selectQuery = (state, action) => {
 	const current = state.queries[action.queryIndex] ?
 			state.queries :
-			setIn([action.queryIndex], makeQuery(action.domain), state.queries);
+			setIn([action.queryIndex], makeQuery(action.domain, action.position), state.queries);
 
 	return setQuery({
 		...state,
@@ -87,6 +88,14 @@ const setQueryFieldValue = (state, action) => {
 		...state,
 		queries: current
 	});
+};
+
+const setQueryPosition = (state, action) => {
+	const current = setIn([action.queryIndex].concat("position"), action.position, state.queries);
+	return {
+		...state,
+		queries: current
+	};
 };
 
 const getPath = (state, action) => {
@@ -148,6 +157,7 @@ export default function(state=initialState, action) {
 		case "SELECT_QUERY": return selectQuery(state, action);
 		case "SET_QUERY_PATH": return setQueryPath(state, action);
 		case "SET_QUERY_FIELD_VALUE": return setQueryFieldValue(state, action);
+		case "SET_QUERY_POSITION": return setQueryPosition(state, action);
 		case "ADD_QUERY_FILTER": return addQueryFilter(state, action);
 		case "DELETE_QUERY": return deleteQuery(state, action);
 		case "DELETE_QUERY_FILTER": return deleteQueryFilter(state, action);
