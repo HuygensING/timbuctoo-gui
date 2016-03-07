@@ -59,6 +59,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 			domain: domain,
 			deleted: false,
 			pathToQuerySelection: ["or", 0],
+			position: undefined,
 			or: [{type: "entity", domain: domain, and: []}]
 		};
 

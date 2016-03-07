@@ -9,12 +9,12 @@ class QueryComponent extends React.Component {
 
 	render() {
 		return this.props.selected ? (
-			<g transform={`scale(${this.props.scale})`}>
+			<g transform={`translate(${this.props.query.position.x} ${this.props.query.position.y}) scale(${this.props.scale})`}>
 				<EntityComponent {...this.props} />
 			</g>
 		) : (
-			<g className="query" transform="translate(-20 -20)" {...this.props}>
-				{icons[this.props.domain]({className: "handle"})}
+			<g className="query" onClick={this.props.onSelect} transform={`translate(${this.props.query.position.x} ${this.props.query.position.y}) translate(-20 -20)`} {...this.props}>
+				{icons[this.props.query.domain]({className: "handle"})}
 			</g>
 		);
 	}
@@ -30,9 +30,5 @@ QueryComponent.propTypes = {
 	selected: React.PropTypes.bool
 };
 
-export default draggable(
-	(props) => (
-		<svg height="40" width="40">{icons[props.domain]()}</svg>
-	),
-	QueryComponent
-);
+export default QueryComponent;
+

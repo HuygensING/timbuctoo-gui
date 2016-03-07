@@ -53,9 +53,9 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 
 
 	it("should selectQuery", (done) => { //eslint-disable-line no-undef
-		dispatch(selectQuery("dom", 1), (obj) => {
+		dispatch(selectQuery("dom", 1, {x: 1, y: 1}), (obj) => {
 			try {
-				expect(obj).toEqual({type: "SELECT_QUERY", domain: "dom", queryIndex: 1});
+				expect(obj).toEqual({type: "SELECT_QUERY", domain: "dom", queryIndex: 1, position: {x: 1, y: 1}});
 				done();
 			} catch (e) {
 				done(e);

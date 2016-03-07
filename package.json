@@ -30,7 +30,7 @@
     "hire-forms-select": "https://github.com/Hire-Forms/hire-forms-select.git#react-0.14",
     "hire-forms-select-list": "https://github.com/Hire-Forms/hire-forms-select-list.git#react-0.14",
     "hire-forms-textarea": "https://github.com/Hire-Forms/hire-forms-textarea.git#react-0.14",
-    "hire-infinity-grid": "https://github.com/HuygensING/hire-infinity-grid.git",
+    "hire-infinity-grid": "https://github.com/HuygensING/hire-infinity-grid.git#develop",
     "hire-login": "https://github.com/HuygensING/hire-login.git#react-0.14",
     "lodash.debounce": "^3.1.1",
     "react": "^0.14.7",

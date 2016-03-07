@@ -3,6 +3,9 @@ import { DragDropContext } from "react-dnd";
 import TouchBackend from "react-dnd-touch-backend";
 import { InfinityGrid, actions as gridActions } from "hire-infinity-grid";
 import QueryComponent from "./query-component";
+
+import DraggableIcon from "./query-component/draggable-icon";
+
 import QueryFilters from "./query-filters";
 import parseGremlin from "../../parsers/gremlin";
 
@@ -16,28 +19,32 @@ class App extends React.Component {
 		};
 	}
 
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.queries.currentQuery > -1 && nextProps.queries !== this.props.queries) {
-			gridActions.onSetComponentProps({query: nextProps.queries.queries[nextProps.queries.currentQuery]}, nextProps.queries.currentQuery);
-		}
-	}
-
-	componentWillUpdate(nextProps, nextState) {
-		if(this.state.scale !== nextState.scale) {
-			for(let i = 0; i < nextProps.queries.queries.length; i++) {
-				gridActions.onSetComponentProps({scale: nextState.scale}, i);
-			}
-		}
-	}
+//	componentWillReceiveProps(nextProps) {
+//		if (nextProps.queries.currentQuery > -1 && nextProps.queries !== this.props.queries) {
+//			gridActions.onSetComponentProps({query: nextProps.queries.queries[nextProps.queries.currentQuery]}, nextProps.queries.currentQuery);
+//		}
+//	}
+//
+//	componentWillUpdate(nextProps, nextState) {
+//		if(this.state.scale !== nextState.scale) {
+//			for(let i = 0; i < nextProps.queries.queries.length; i++) {
+//				gridActions.onSetComponentProps({scale: nextState.scale}, i);
+//			}
+//		}
+//	}
 
 	onDeleteQuery(queryIndex) {
-		gridActions.onSetComponentProps({deleted: true }, queryIndex);
 		this.props.onDeleteQuery(queryIndex);
 	}
 
-	onSelectQuery(queryIndex, props) {
+	onCreateQuery(data) {
+		const { x, y, props} = data;
+		this.onSelectQuery(this.props.queries.queries.length, props, {x: x, y: y});
+	}
+
+	onSelectQuery(queryIndex, props, position = null) {
 		if(this.props.queries.currentQuery !== queryIndex) {
-			this.props.onSelectQuery(props.domain.replace(/s$/, ""), queryIndex);
+			this.props.onSelectQuery(props.domain.replace(/s$/, ""), queryIndex, position);
 		}
 	}
 
@@ -59,28 +66,36 @@ class App extends React.Component {
 	}
 
 	render() {
-		console.log(this.props.queries);
 		const [resQ, countQ] = this.props.queries.currentQuery > -1 ? parseGremlin(this.props.queries.queries[this.props.queries.currentQuery]) : ["", ""];
 		const collections = this.props.vre.collections || {};
 		return (<div style={{height: "500px"}}>
 			<div style={{position: "absolute", top: 0, height: "60px"}}>
 				{Object.keys(collections).filter((c) => !c.match(/relations$/)).map((c) => (
 					<div key={c} style={{display: "inline-block", height: "40px", width: "40px"}}>
-						<QueryComponent
+						<DraggableIcon
 							domain={c}
-							onDeleteQuery={this.onDeleteQuery.bind(this)}
-							onDeleteQueryFilter={this.props.onDeleteQueryFilter}
-							onDeselect={() => { }}
-							onQueryChange={this.onQueryChange.bind(this)}
-							onSelect={this.onSelectQuery.bind(this)}
-							onSetQueryPath={this.onSetQueryPath.bind(this)}
-							scale={this.state.scale}
+							onDrop={this.onCreateQuery.bind(this)}
 						/>
 					</div>
 				))}
 			</div>
 			<div onWheel={this.onWheel.bind(this)} style={{position: "absolute", top: "50px", left: 0, width: "30%", height: "calc(100% - 60px)"}}>
-				<InfinityGrid />
+				<InfinityGrid>
+					{this.props.queries.queries.map((query, i) => query.deleted ? null : (
+						<QueryComponent
+							key={i}
+							onDeleteQuery={() => this.onDeleteQuery(i)}
+							onDeleteQueryFilter={() => this.props.onDeleteQueryFilter(i)}
+							onDrag={(movement) => this.props.onMoveQueryPosition(i, movement)}
+							onQueryChange={this.onQueryChange.bind(this)}
+							onSelect={() => this.onSelectQuery(i, query)}
+							onSetQueryPath={this.onSetQueryPath.bind(this)}
+							query={query}
+							scale={this.state.scale}
+							selected={i === this.props.queries.currentQuery}
+						/>
+					))}
+				</InfinityGrid>
 			</div>
 
 			<div style={{position: "absolute", top: "50px", left: "30%", width: "30%", height: "calc(100% - 60px)"}}>
