@@ -11,6 +11,7 @@ const baseHeight = 60;
 const baseWidth = baseHeight;
 const basePropertyComponentHeight = 36;
 const baseRelationComponentWidth = 190;
+const baseComponentWidthWithOnlyPropertyFilters = 240;
 
 class EntityComponent extends React.Component {
 
@@ -160,7 +161,7 @@ class EntityComponent extends React.Component {
 		// Return the total height of this entity component and the component itself
 		return {
 			width: baseWidth +
-				(childEntityComponents.length ? baseRelationComponentWidth : 0) +
+				(childEntityComponents.length ? baseRelationComponentWidth : propertyFilters.length ? baseComponentWidthWithOnlyPropertyFilters : 0) +
 				childEntityComponents.map((c) => c.width).reduce((a, b) => a > b ? a : b, 0),
 			height: baseHeight + relationComponentHeights.reduce((a, b) => a + b, 0) + propertyComponentHeights.reduce((a, b) => a + b, 0),
 			component: component

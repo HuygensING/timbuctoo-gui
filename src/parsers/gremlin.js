@@ -1,7 +1,7 @@
 import clone from "../util/clone-deep";
 import getIn from "../util/get-in";
 
-let parseEntity;
+let parseEntities;
 
 const v2UnquotedPropVals = ["wwperson_children"];
 const quoteProp = (domain, prop, val) => v2UnquotedPropVals.indexOf(`${domain}_${prop.name}`) > -1 ? `"${val}"` : `"\\"${val}\\""`;
@@ -18,7 +18,6 @@ const parseProp = (prop, domain) => {
 	return `or(${prop.or.map((pv) => parsePropVal(prop, pv.value, domain)).join(", ")})`;
 };
 
-const parseRelation = (rel, relName, path, addAlias = true) => `${rel.direction}E("${relName}")${addAlias ? `.as("${path.join("|")}")` : ""}.otherV()${parseEntity(rel.or[0], path.concat(["or", 0]), addAlias)}`;
 
 const parseProps = (props, domain) => {
 	if(props.length === 0) { return ""; }
@@ -26,14 +25,23 @@ const parseProps = (props, domain) => {
 	return `.and(${props.map((p) => parseProp(p.value, domain)).join(", ")})`;
 };
 
+const parseRelation = (rel, relName, path, addAlias = true) =>
+	`${rel.direction}E("${relName}")${addAlias ? `.as("${path.join("|")}")` : ""}.otherV()${parseEntities(rel.or, path.concat(["or"]))}`;
+
+
 const parseRelations = (rels, ent, path) => {
 	if(rels.length === 0) { return ""; }
-	if(rels.length === 1) { return `.${parseRelation(rels[0].value, rels[0].value.name, path.concat(["and", rels[0].index]))}`; }
-	return `.and(${rels.map((r) => parseRelation(r.value, r.value.name, path.concat(["and", r.index]), false)).join(", ")})` +
-		`.union(${rels.map((r) => parseRelation(r.value, r.value.name, path.concat(["and", r.index]))).join(", ")})`;
+	const relQs = rels
+		.map((r) => `__.${parseRelation(r.value, r.value.name, path.concat(["and", r.index]), false)}`);
+
+	const aliasedRelQs = rels
+		.map((r) => `__.${parseRelation(r.value, r.value.name, path.concat(["and", r.index]))}.as("${path.concat(r.index).join("|")}")`);
+
+	return `.and(${relQs.join(", ")}).union(${aliasedRelQs.join(", ")})`;
 };
 
-parseEntity = (ent, path = ["or", 0], aliasSelf = true) => {
+
+const parseEntity = (ent, path = ["or", 0]) => {
 	const propFilters = ent.and
 		.map((d, i) => { return { index: i, value: d }; })
 		.filter((f) => f.value.type === "property");
@@ -45,10 +53,25 @@ parseEntity = (ent, path = ["or", 0], aliasSelf = true) => {
 	const propQ = parseProps(propFilters, ent.domain);
 	const relQ = parseRelations(relFilters, ent, path);
 
-	if(aliasSelf) { return (path.length ? `.as("${path.join("|")}")` : `.as("result")`) + propQ + relQ; }
-
 	return propQ + relQ;
 };
+
+
+parseEntities = (queries, path = ["or"]) => {
+
+	const entityQs = queries
+		.map((q, i) => parseEntity(q, path.concat(i)))
+		.map((q) => `__${q === "" ? "()" : q}`);
+
+	const aliasedEntityQs = queries
+		.map((q, i) => parseEntity(q, path.concat(i)))
+		.map((q, i) => `__().as("${path.concat(i).join("|")}")${q}`);
+
+	return `.as("${path.join("|")}").or(${entityQs.join(", ")}).union(${aliasedEntityQs.join(", ")})`;
+};
+
+
+
 
 const parseQuery = (query) => {
 	let path = query.pathToQuerySelection ? clone(query.pathToQuerySelection) : [];
@@ -58,11 +81,10 @@ const parseQuery = (query) => {
 
 	let selectVal = path.length ? path.join("|") : "result";
 	return [
-		`${identity(query.or[0].domain)}${parseEntity(query.or[0])}.select("${selectVal}").dedup().range(0,10)`,
-		`${identity(query.or[0].domain)}${parseEntity(query.or[0])}.select("${selectVal}").dedup().count()`
+		`${identity(query.or[0].domain)}${parseEntities(query.or)}.select("${selectVal}").dedup().range(0,10)`,
+		`${identity(query.or[0].domain)}${parseEntities(query.or)}.select("${selectVal}").dedup().count()`
 	];
 };
-
 
 const parsers = {
 	parseGremlin: parseQuery
