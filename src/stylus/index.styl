@@ -167,6 +167,9 @@ svg text
 		fill rgba(0,0,0,0.5)
 		&.selected
 			fill rgba(0,0,0,0.9)
+
+svg > line
+	stroke rgba(196, 196, 196, .1)
 rect
 	stroke rgba(0,0,0,1)
 	&.handle:hover
@@ -179,12 +182,35 @@ rect
 		fill rgba(0,255,0,.1)
 		&.selected
 			fill rgba(0,255,0,.4)
-
 	&.property-value
 		stroke rgba(0,0,0,0)
 		fill rgba(128,128,128,.1)
 		&.selected
 			fill rgba(128,128,128,.4)
+	&.or-box
+		stroke rgba(128,128,128,.2)
+		fill rgba(0,0,0,0)
+
+
+		&:hover
+			stroke rgba(128,128,128,04)
+			fill rgba(0,0,255,0.05)
+			& ~ g > g > .query > g 
+				& > rect
+					fill rgba(0,0,255,.15)
+				& > text
+					fill rgba(0,0,0,.5)
+
+
+		&.selected
+			stroke rgba(128,128,128,1)
+			fill rgba(0,0,255,0.1)
+			& ~ g > g > .query > g 
+				& > rect
+					fill rgba(0,0,255,.3)
+				& > text
+					fill rgba(0,0,0,1)
+
 
 
 .delete-button:hover

@@ -8,8 +8,9 @@ import PropertyComponent from "./property-component";
 import DeleteButton from "./util/delete-button";
 
 const baseHeight = 60;
+const baseWidth = baseHeight;
 const basePropertyComponentHeight = 36;
-
+const baseRelationComponentWidth = 190;
 
 class EntityComponent extends React.Component {
 
@@ -158,6 +159,9 @@ class EntityComponent extends React.Component {
 
 		// Return the total height of this entity component and the component itself
 		return {
+			width: baseWidth +
+				(childEntityComponents.length ? baseRelationComponentWidth : 0) +
+				childEntityComponents.map((c) => c.width).reduce((a, b) => a > b ? a : b, 0),
 			height: baseHeight + relationComponentHeights.reduce((a, b) => a + b, 0) + propertyComponentHeights.reduce((a, b) => a + b, 0),
 			component: component
 		};
@@ -165,19 +169,35 @@ class EntityComponent extends React.Component {
 
 	// Render list of query entities
 	renderQueryEntities(props, path, queries) {
+
 		let heights = [];
-		let components = [];
-		for(let i = 0; i < queries.length; i++) {
-			const { component, height } = this.renderQueryEntity(props, path.concat([i]));
-			components.push(<g transform={`translate(0, ${heights.reduce((a, b) => a + b, 0)})`}>
+		let widths = [];
+		const components = queries.map((q, i) => {
+			const { component, height, width } = this.renderQueryEntity(props, path.concat([i]));
+			const output = (<g key={i} transform={`translate(0, ${heights.reduce((a, b) => a + b, 0)})`}>
 				{component}
 			</g>);
 			heights.push(height);
-		}
+			widths.push(width);
+			return output;
+		});
 
+		const width = widths.reduce((a, b) => a > b ? a : b, 0);
+		const height = heights.reduce((a, b) => a + b, 0);
+		const selected = this.props.query && this.props.query.pathToQuerySelection && deepEqual(path, this.props.query.pathToQuerySelection);
+
+		const rect = heights.length > 1 ?
+			(<rect {...this.props} className={`or-box handle ${selected ? "selected" : ""}`}
+				height={height} onClick={() => this.props.onSetQueryPath(path)}
+				rx="10" ry="10" width={width} x="-30" y="-30" />)
+			: null;
 		return {
-			component: <g>{components}</g>,
-			height: heights.reduce((a, b) => a + b, 0)
+			component: (<g>
+				{rect}
+				{components}
+			</g>),
+			height: height,
+			width: width
 		};
 	}
 
