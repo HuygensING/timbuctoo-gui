@@ -1,5 +1,4 @@
 import React from "react";
-import { draggable } from "hire-infinity-grid";
 import icons from "./icons";
 
 import EntityComponent from "./entity-component";
@@ -24,6 +23,7 @@ QueryComponent.propTypes = {
 	componentIndex: React.PropTypes.number,
 	domain: React.PropTypes.string,
 	onDeleteQuery: React.PropTypes.func,
+	onSelect: React.PropTypes.func,
 	onSetQueryPath: React.PropTypes.func,
 	query: React.PropTypes.object,
 	scale: React.PropTypes.number,
