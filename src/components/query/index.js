@@ -1,7 +1,7 @@
 import React from "react";
 import { DragDropContext } from "react-dnd";
 import TouchBackend from "react-dnd-touch-backend";
-import { InfinityGrid, actions as gridActions } from "hire-infinity-grid";
+import { InfinityGrid } from "hire-infinity-grid";
 import QueryComponent from "./query-component";
 
 import DraggableIcon from "./query-component/draggable-icon";
@@ -18,20 +18,6 @@ class App extends React.Component {
 			scale: 1
 		};
 	}
-
-//	componentWillReceiveProps(nextProps) {
-//		if (nextProps.queries.currentQuery > -1 && nextProps.queries !== this.props.queries) {
-//			gridActions.onSetComponentProps({query: nextProps.queries.queries[nextProps.queries.currentQuery]}, nextProps.queries.currentQuery);
-//		}
-//	}
-//
-//	componentWillUpdate(nextProps, nextState) {
-//		if(this.state.scale !== nextState.scale) {
-//			for(let i = 0; i < nextProps.queries.queries.length; i++) {
-//				gridActions.onSetComponentProps({scale: nextState.scale}, i);
-//			}
-//		}
-//	}
 
 	onDeleteQuery(queryIndex) {
 		this.props.onDeleteQuery(queryIndex);
@@ -118,6 +104,7 @@ App.propTypes = {
 	entity: React.PropTypes.object,
 	onDeleteQuery: React.PropTypes.func,
 	onDeleteQueryFilter: React.PropTypes.func,
+	onMoveQueryPosition: React.PropTypes.func,
 	onQueryChange: React.PropTypes.func,
 	onSelectQuery: React.PropTypes.func,
 	onSetQueryPath: React.PropTypes.func,
