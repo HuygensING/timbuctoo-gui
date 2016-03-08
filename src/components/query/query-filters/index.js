@@ -58,6 +58,7 @@ class QueryFilters extends React.Component {
 }
 
 QueryFilters.propTypes = {
+	onAddQueryFilter: React.PropTypes.func,
 	queries: React.PropTypes.object,
 	vre: React.PropTypes.object
 };
