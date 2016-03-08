@@ -12,8 +12,7 @@ class IdField extends React.Component {
 		} : {
 			type: "value", value: value.key, label: value.value
 		};
-		const path = this.props.filterType === "entity" ? 
-			["and"] : ["or"];
+		const path = this.props.filterType === "entity" ? ["and"] : ["or"];
 
 		this.props.onAddQueryFilter(path, val);
 	}
