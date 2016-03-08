@@ -80,7 +80,7 @@ class App extends React.Component {
 				))}
 			</div>
 			<div onWheel={this.onWheel.bind(this)} style={{position: "absolute", top: "50px", left: 0, width: "30%", height: "calc(100% - 60px)"}}>
-				<InfinityGrid>
+				<InfinityGrid gridSize={50}>
 					{this.props.queries.queries.map((query, i) => query.deleted ? null : (
 						<QueryComponent
 							key={i}
