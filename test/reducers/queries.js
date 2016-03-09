@@ -1,9 +1,5 @@
 import expect from "expect";
-import sinon from "sinon";
-
 import clone from "../../src/util/clone-deep";
-import server from "../../src/actions/server";
-import { parsers } from "../../src/parsers/gremlin";
 import queriesReducer from "../../src/reducers/queries";
 
 const sampleQuery = {
