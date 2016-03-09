@@ -258,6 +258,15 @@ rect
 
 .query-bar
 	width 100%
+	position fixed
+	z-index 100
+	top 0
+	left 0
+	height 60px
+	background-color #efefef
+	rect
+		fill rgba(255,255,255,.4)
+
 	.hire-input, .hire-select
 		vertical-align top
 		margin 10px
@@ -273,3 +282,27 @@ rect
 			vertical-align top
 			margin: 12px
 			margin-left 0
+
+.grid-wrapper
+	position fixed
+	top 50px
+	left 0
+	width 50%
+	height calc(100% - 60px)
+
+.filter-wrapper
+	position absolute
+	padding 20px
+	top 60px
+	background-color #fafafa
+	left 50%
+	width 20%
+	min-height calc(100% - 60px)
+
+.result-wrapper
+	position absolute
+	top 60px
+	padding 20px
+	left 70%
+	width 30%
+	min-height calc(100% - 60px)

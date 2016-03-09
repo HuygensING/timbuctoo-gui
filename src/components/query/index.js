@@ -71,8 +71,8 @@ class App extends React.Component {
 		const { savedQueries } = this.props.queries;
 		const savedQuerySelect = <Select onChange={this.props.onLoadQuery} options={savedQueries.map((q) => q.name)} placeholder="Load query..." />;
 
-		return (<div style={{height: "500px"}}>
-			<div className="query-bar" style={{position: "absolute", top: 0, height: "60px"}}>
+		return (<div>
+			<div className="query-bar">
 				{Object.keys(collections).filter((c) => !c.match(/relations$/)).map((c) => (
 					<div key={c} style={{display: "inline-block", height: "40px", width: "40px"}}>
 						<DraggableIcon
@@ -84,7 +84,7 @@ class App extends React.Component {
 				{nameInput}{saveButton}
 				{savedQuerySelect}
 			</div>
-			<div onWheel={this.onWheel.bind(this)} style={{position: "absolute", top: "50px", left: 0, width: "30%", height: "calc(100% - 60px)"}}>
+			<div className="grid-wrapper" onWheel={this.onWheel.bind(this)}>
 				<InfinityGrid gridSize={50}>
 					{this.props.queries.queries.map((query, i) => query.deleted ? null : (
 						<QueryComponent
@@ -105,10 +105,10 @@ class App extends React.Component {
 
 			</div>
 
-			<div style={{position: "absolute", top: "50px", left: "30%", width: "30%", height: "calc(100% - 60px)"}}>
+			<div className="filter-wrapper">
 				<QueryFilters {...this.props} onChange={this.onQueryChange.bind(this)} />
 			</div>
-			<div style={{position: "absolute", top: "50px", left: "60%", width: "40%", height: "calc(100% - 60px)"}}>
+			<div className="result-wrapper">
 				<pre style={{width: "100%", whiteSpace: "pre-wrap"}}>
 					{this.props.queries.resultCountPending ? "WAITING FOR RESULT COUNT...\n" : this.props.queries.resultCount}
 					{this.props.queries.resultsPending ? "WAITING FOR RESULTS...\n" : this.props.queries.results}

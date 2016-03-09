@@ -187,11 +187,12 @@ class EntityComponent extends React.Component {
 		const height = heights.reduce((a, b) => a + b, 0);
 		const selected = this.props.query && this.props.query.pathToQuerySelection && deepEqual(path, this.props.query.pathToQuerySelection);
 
-		const rect = heights.length > 1 ?
+		const rect = heights.length > 1 || path.length === 1 ?
 			(<rect {...this.props} className={`or-box handle ${selected ? "selected" : ""}`}
 				height={height} onClick={() => this.props.onSetQueryPath(path)}
 				rx="10" ry="10" width={width} x="-30" y="-30" />)
 			: null;
+
 		return {
 			component: (<g>
 				{rect}
