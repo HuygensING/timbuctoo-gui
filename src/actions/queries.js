@@ -1,3 +1,7 @@
+import { parsers } from "../parsers/gremlin";
+import server from "./server";
+
+
 const moveQueryPosition = (queryIndex, movement) => (dispatch, getState) => {
 	dispatch({type: "SET_QUERY_POSITION", queryIndex: queryIndex, position: {
 		x: getState().queries.queries[queryIndex].position.x - movement.x,
@@ -30,5 +34,14 @@ const addQueryFilter = (fieldPath, value) => (dispatch) => {
 const deleteQueryFilter = (queryIndex) => (dispatch) =>
 	dispatch({type: "DELETE_QUERY_FILTER", queryIndex: queryIndex});
 
+const submitQuery = () => (dispatch, getState) => {
+	const { queries } = getState();
+	dispatch({type: "SET_QUERY_RESULTS_PENDING"});
 
-export { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter, deleteQueryFilter, moveQueryPosition };
+	const q = parsers.parseGremlin(queries.queries[queries.currentQuery]);
+	server.fastXhr({method: "POST", url: `/api/v2.1/gremlin`, body: q[0]}, (err, resp) => dispatch({type: "SET_QUERY_RESULTS", results: resp.body}));
+	server.fastXhr({method: "POST", url: `/api/v2.1/gremlin`, body: q[1]}, (err, resp) => dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}));
+};
+
+
+export { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter, deleteQueryFilter, moveQueryPosition, submitQuery };

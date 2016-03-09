@@ -1,5 +1,28 @@
 import expect from "expect";
-import { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter, deleteQueryFilter } from "../../src/actions/queries";
+import { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter, deleteQueryFilter, submitQuery } from "../../src/actions/queries";
+import sinon from "sinon";
+import server from "../../src/actions/server";
+import { parsers } from "../../src/parsers/gremlin";
+
+const sampleQuery = {
+	domain: "wwperson",
+	deleted: false,
+	pathToQuerySelection: ["or", 0, "and", 0],
+
+	or: [{
+		domain: "wwperson",
+		type: "entity",
+		and: [
+			{
+				type: "property",
+				name: "gender",
+				or: [
+					{ type: "value", value: "FEMALE" }
+				]
+			}
+		]
+	}]
+};
 
 describe("queries actions", () => { //eslint-disable-line no-undef
 
@@ -7,6 +30,16 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 		const redispatch = (obj) => assert(obj);
 		func(redispatch, getState);
 	};
+
+	before(() => { //eslint-disable-line no-undef
+		sinon.stub(server, "fastXhr");
+		sinon.stub(parsers, "parseGremlin", () => ["", ""]);
+	});
+
+	after(() => { //eslint-disable-line no-undef
+		server.fastXhr.restore();
+		parsers.parseGremlin.restore();
+	});
 
 	it("should add a relation with addQueryFilter", (done) => { //eslint-disable-line no-undef
 		const path = ["a", 1, "2"];
@@ -119,5 +152,23 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 				done(e);
 			}
 		});
+	});
+
+	it("should submitQuery", (done) => { //eslint-disable-line no-undef
+		const state = {
+			queries: {
+				currentQuery: 0,
+				queries: [sampleQuery]
+			}
+		};
+
+		dispatch(submitQuery(), (obj) => {
+			try {
+				console.log(obj);
+				done();
+			} catch (e) {
+				done(e);
+			}
+		}, () => state);
 	});
 });

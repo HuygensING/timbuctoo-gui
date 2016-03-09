@@ -30,11 +30,6 @@ const sampleQuery = {
 describe("queries reducer", () => { //eslint-disable-line no-undef
 	let relationTestQuery;
 
-	before(() => { //eslint-disable-line no-undef
-		sinon.stub(server, "fastXhr");
-		sinon.stub(parsers, "parseGremlin", () => ["", ""]);
-	});
-
 	beforeEach(() => { //eslint-disable-line no-undef
 		relationTestQuery = clone(sampleQuery);
 		relationTestQuery.or[0].and.push(
@@ -45,11 +40,6 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 			}
 		);
 		relationTestQuery.pathToQuerySelection = ["or", 0, "and", 1, "or", 0];
-	});
-
-	after(() => { //eslint-disable-line no-undef
-		server.fastXhr.restore();
-		parsers.parseGremlin.restore();
 	});
 
 	it("should make a new query with SELECT_QUERY if queries does not have a query at action.queryIndex", () => { //eslint-disable-line no-undef
@@ -67,10 +57,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 
 		const expectedState = {
 			currentQuery: 0,
-			queries: [newQuery],
-			resultCount: "",
-			resultCountPending: true,
-			resultsPending: true
+			queries: [newQuery]
 		};
 
 		const action = {
@@ -357,6 +344,13 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 		);
 	});
 
-
+	it("should SET_QUERY_RESULTS_PENDING", () => { // eslint-disable-line no-undef
+		expect(queriesReducer(
+			{ some: "state", resultCountPending: false, resultsPending: false, results: "asd", resultCount: "123" },
+			{ type: "SET_QUERY_RESULTS_PENDING" }
+		)).toEqual(
+			{ some: "state", resultCountPending: true, resultsPending: true, results: null, resultCount: null }
+		);
+	});
 
 });

@@ -5,6 +5,8 @@ import { InfinityGrid } from "hire-infinity-grid";
 import QueryComponent from "./query-component";
 
 import DraggableIcon from "./query-component/draggable-icon";
+import SearchIcon from "./search-icon";
+
 
 import QueryFilters from "./query-filters";
 import parseGremlin from "../../parsers/gremlin";
@@ -82,6 +84,8 @@ class App extends React.Component {
 						/>
 					))}
 				</InfinityGrid>
+				{this.props.queries.currentQuery === -1 ? null : <SearchIcon onClick={this.props.onSubmitQuery} />}
+
 			</div>
 
 			<div style={{position: "absolute", top: "50px", left: "30%", width: "30%", height: "calc(100% - 60px)"}}>
@@ -89,8 +93,8 @@ class App extends React.Component {
 			</div>
 			<div style={{position: "absolute", top: "50px", left: "60%", width: "40%", height: "calc(100% - 60px)"}}>
 				<pre style={{width: "100%", whiteSpace: "pre-wrap"}}>
-					{this.props.queries.resultsPending || this.props.queries.resultCountPending ? null : this.props.queries.resultCount}
-					{this.props.queries.resultsPending || this.props.queries.resultCountPending ? "WAITING FOR RESULTS...\n" : this.props.queries.results}
+					{this.props.queries.resultCountPending ? "WAITING FOR RESULT COUNT...\n" : this.props.queries.resultCount}
+					{this.props.queries.resultsPending ? "WAITING FOR RESULTS...\n" : this.props.queries.results}
 					COUNT QUERY: {countQ}<br /><br />
 					RESULT QUERY: {resQ}
 				</pre>
@@ -108,6 +112,7 @@ App.propTypes = {
 	onQueryChange: React.PropTypes.func,
 	onSelectQuery: React.PropTypes.func,
 	onSetQueryPath: React.PropTypes.func,
+	onSubmitQuery: React.PropTypes.func,
 	queries: React.PropTypes.object,
 	vre: React.PropTypes.object
 };

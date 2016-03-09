@@ -3,6 +3,8 @@ import mapField from "./map-field";
 import mapPropField from "./map-prop-field";
 import getIn from "../../../util/get-in";
 import IdField from "./fields/id-field";
+import SelectField from "./fields/select";
+
 
 
 class QueryFilters extends React.Component {
@@ -13,6 +15,16 @@ class QueryFilters extends React.Component {
 			type: "entity",
 			and: []
 		});
+	}
+
+	onCloneButtonClick(domain, path) {
+		const query = this.props.queries.queries[this.props.queries.currentQuery];
+		const data = getIn(query.pathToQuerySelection, query);
+		this.props.onAddQueryFilter(path, data);
+	}
+
+	onChangeRelationType(value) {
+		this.props.onQueryChange(["name"], value);
 	}
 
 	render() {
@@ -27,13 +39,23 @@ class QueryFilters extends React.Component {
 		if(data.type === "entity") {
 			body = (<div>
 				<ul>
-					<li><button onClick={this.onOrButtonClick.bind(this, data.domain, -1)}>OR</button></li>
+					<li>
+						<button onClick={this.onOrButtonClick.bind(this, data.domain, -1)}>OR</button>
+						<button onClick={this.onCloneButtonClick.bind(this, data.domain, -1)}>OR copy</button>
+					</li>
 					<li><IdField {...this.props} filterType={data.type} quickSearch={`domain/${data.domain}s/autocomplete`} /></li>
 					{vre.collections[`${data.domain}s`].map((fieldDef, i) => <li key={i}>{mapField(fieldDef, {...this.props, entity: data})}</li> )}
 				</ul>
 			</div>);
 		} else if(data.type === "relation") {
-			body = <button onClick={this.onOrButtonClick.bind(this, data.targetDomain, ["or"])}>OR</button>;
+			const domain = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 2), query).domain;
+			const targetDomain = getIn(query.pathToQuerySelection, query).targetDomain;
+			const options = vre.collections[`${domain}s`]
+				.filter((fieldDef) => fieldDef.type === "relation" && targetDomain == fieldDef.relation.targetCollection.replace(/s$/, ""))
+				.map((fieldDef) => fieldDef.name);
+
+			body = <SelectField name="- Change -" onChange={this.onChangeRelationType.bind(this)} options={options} />;
+
 		} else if(data.type === "property" && data.name === "tim_id") {
 			const entityData = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 2), query);
 			body = <IdField {...this.props} filterType={data.type} quickSearch={`domain/${entityData.domain}s/autocomplete`} />;
@@ -59,6 +81,7 @@ class QueryFilters extends React.Component {
 
 QueryFilters.propTypes = {
 	onAddQueryFilter: React.PropTypes.func,
+	onQueryChange: React.PropTypes.func,
 	queries: React.PropTypes.object,
 	vre: React.PropTypes.object
 };

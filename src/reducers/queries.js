@@ -1,11 +1,5 @@
-import debounce from "lodash.debounce";
-
-import server from "../actions/server";
 import setIn from "../util/set-in";
 import getIn from "../util/get-in";
-
-import store from "../store";
-import { parsers } from "../parsers/gremlin";
 
 const initialState = {
 	queries: [],
@@ -31,65 +25,33 @@ const makeQuery = (domain, position) => {
 };
 
 
-let lastQTime = new Date().getTime();
-const sendQuery = function(q) {
-	const myQTime = new Date().getTime();
-	if(myQTime < lastQTime) { return; }
-	lastQTime = myQTime;
-	server.fastXhr({method: "POST", url: `/api/v2.1/gremlin`, body: q[0]}, (err, resp) => {
-		if(myQTime >= lastQTime) { store.dispatch({type: "SET_QUERY_RESULTS", results: resp.body}); }
-	});
-	server.fastXhr({method: "POST", url: `/api/v2.1/gremlin`, body: q[1]}, (err, resp) => {
-		if(myQTime >= lastQTime) { store.dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}); }
-	});
-};
-
-const sendDelayedQuery = debounce(sendQuery, 2000);
-
-let lastQuery = null;
-const setQuery = (state) => {
-	const newQuery = parsers.parseGremlin(state.queries[state.currentQuery]);
-	if(state.currentQuery > -1 && lastQuery !== newQuery[0]) {
-		lastQuery = newQuery[0];
-		if(state.resultsPending || state.resultCountPending) {
-			sendDelayedQuery(newQuery);
-		} else {
-			sendQuery(newQuery);
-		}
-
-		state = {...state, resultCount: "", resultsPending: true, resultCountPending: true};
-	}
-
-	return state;
-};
-
 const selectQuery = (state, action) => {
 	const current = state.queries[action.queryIndex] ?
 			state.queries :
 			setIn([action.queryIndex], makeQuery(action.domain, action.position), state.queries);
 
-	return setQuery({
+	return {
 		...state,
 		queries: current,
 		currentQuery: action.queryIndex
-	});
+	};
 };
 
 const setQueryPath = (state, action) => {
 	const current = setIn([state.currentQuery, "pathToQuerySelection"], action.path, state.queries);
-	return setQuery({
+	return {
 		...state,
 		queries: current
-	});
+	};
 };
 
 const setQueryFieldValue = (state, action) => {
 	const pathToQuerySelection = state.queries[state.currentQuery].pathToQuerySelection;
 	const current = setIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath), action.value, state.queries);
-	return setQuery({
+	return {
 		...state,
 		queries: current
-	});
+	};
 };
 
 const setQueryPosition = (state, action) => {
@@ -116,10 +78,10 @@ const addQueryFilter = (state, action) => {
 	const filters = getIn(pathToFilters, state.queries);
 	const current = setIn(pathToFilters.concat(filters.length), action.value, state.queries);
 
-	return setQuery({
+	return {
 		...state,
 		queries: current
-	});
+	};
 };
 
 const deleteQuery = (state, action) => {
@@ -148,10 +110,10 @@ const deleteQueryFilter = (state, action) => {
 
 	const current = setIn([state.currentQuery].concat(pathToQuerySelection.slice(0, sliceEnd)), queryFilters, state.queries);
 	current[state.currentQuery].pathToQuerySelection = ["or", 0];
-	return setQuery({
+	return {
 		...state,
 		queries: current
-	});
+	};
 };
 
 export default function(state=initialState, action) {
@@ -163,6 +125,9 @@ export default function(state=initialState, action) {
 		case "ADD_QUERY_FILTER": return addQueryFilter(state, action);
 		case "DELETE_QUERY": return deleteQuery(state, action);
 		case "DELETE_QUERY_FILTER": return deleteQueryFilter(state, action);
+
+		case "SET_QUERY_RESULTS_PENDING":
+			return {...state, results: null, resultCount: null, resultsPending: true, resultCountPending: true};
 
 		case "SET_QUERY_RESULTS":
 			return {...state, results: action.results, resultsPending: false};

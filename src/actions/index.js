@@ -1,6 +1,6 @@
 import store from "../store";
 import { saveEntity, selectEntity, makeNewEntity, deleteEntity } from "./entity";
-import { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter, deleteQueryFilter, moveQueryPosition } from "./queries";
+import { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter, deleteQueryFilter, moveQueryPosition, submitQuery } from "./queries";
 import { setVre } from "./vre";
 
 const setUser = (response) => {
@@ -24,5 +24,6 @@ export default {
 	onQueryChange: (fieldPath, value) => store.dispatch(changeQuery(fieldPath, value)),
 	onAddQueryFilter: (fieldPath, value) => store.dispatch(addQueryFilter(fieldPath, value)),
 	onDeleteQueryFilter: (queryIndex) => store.dispatch(deleteQueryFilter(queryIndex)),
-	onMoveQueryPosition: (queryIndex, movement) => store.dispatch(moveQueryPosition(queryIndex, movement))
+	onMoveQueryPosition: (queryIndex, movement) => store.dispatch(moveQueryPosition(queryIndex, movement)),
+	onSubmitQuery: () => store.dispatch(submitQuery())
 };
