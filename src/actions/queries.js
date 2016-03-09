@@ -1,6 +1,6 @@
 import { parsers } from "../parsers/gremlin";
 import server from "./server";
-
+import config from "../config";
 
 const moveQueryPosition = (queryIndex, movement) => (dispatch, getState) => {
 	dispatch({type: "SET_QUERY_POSITION", queryIndex: queryIndex, position: {
@@ -46,7 +46,32 @@ const submitQuery = () => (dispatch, getState) => {
 	server.fastXhr({method: "POST", url: `/api/v2.1/gremlin`, body: q[1]}, (err, resp) => dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}));
 };
 
+const saveQuery = () => (dispatch, getState) => {
+	const { queries } = getState();
+	const query = queries.queries[queries.currentQuery];
+	server.fastXhr({method: "POST", headers: {"Content-type": "application/json"}, url: `${config.apiUrl.v4}/saved-queries`, body: JSON.stringify(query)},
+		(err, resp) => dispatch({type: "SET_SAVED_QUERIES", savedQueries: JSON.parse(resp.body)})
+	);
+};
 
+const loadSavedQueries = () => (dispatch) =>
+	server.fastXhr({method: "GET", url: `${config.apiUrl.v4}/saved-queries`},
+		(err, resp) => dispatch({type: "SET_SAVED_QUERIES", savedQueries: JSON.parse(resp.body)}));
 
+const loadQuery = (name) => (dispatch) =>
+	dispatch({type: "LOAD_SAVED_QUERY", name: name});
 
-export { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter, deleteQueryFilter, moveQueryPosition, submitQuery, nameQuery };
+export {
+	deleteQuery,
+	selectQuery,
+	changeQuery,
+	setQueryPath,
+	addQueryFilter,
+	deleteQueryFilter,
+	moveQueryPosition,
+	submitQuery,
+	saveQuery,
+	nameQuery,
+	loadSavedQueries,
+	loadQuery
+};

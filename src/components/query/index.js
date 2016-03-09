@@ -8,6 +8,8 @@ import DraggableIcon from "./query-component/draggable-icon";
 import SearchIcon from "./search-icon";
 import QueryFilters from "./query-filters";
 import Input from "hire-forms-input";
+import Select from "hire-forms-select";
+
 
 import parseGremlin from "../../parsers/gremlin";
 
@@ -61,10 +63,13 @@ class App extends React.Component {
 			<Input onChange={this.props.onNameQuery} placeholder="name query" value={this.props.queries.queries[this.props.queries.currentQuery].name} /> : null;
 
 		const saveButton = this.props.queries.currentQuery > -1 ? (
-			<button disabled={ this.props.queries.queries[this.props.queries.currentQuery].name.length ? false : true } onClick={this.props.onSaveQuery} style={{verticalAlign: "top", margin: "10px"}}>
-					Save current query
+			<button disabled={ this.props.queries.queries[this.props.queries.currentQuery].name.length ? false : true } onClick={this.props.onSaveQuery}>
+				Save current query
 			</button>
 		) : null;
+
+		const { savedQueries } = this.props.queries;
+		const savedQuerySelect = <Select onChange={this.props.onLoadQuery} options={savedQueries.map((q) => q.name)} placeholder="Load query..." />;
 
 		return (<div style={{height: "500px"}}>
 			<div className="query-bar" style={{position: "absolute", top: 0, height: "60px"}}>
@@ -77,6 +82,7 @@ class App extends React.Component {
 					</div>
 				))}
 				{nameInput}{saveButton}
+				{savedQuerySelect}
 			</div>
 			<div onWheel={this.onWheel.bind(this)} style={{position: "absolute", top: "50px", left: 0, width: "30%", height: "calc(100% - 60px)"}}>
 				<InfinityGrid gridSize={50}>
@@ -119,6 +125,7 @@ App.propTypes = {
 	entity: React.PropTypes.object,
 	onDeleteQuery: React.PropTypes.func,
 	onDeleteQueryFilter: React.PropTypes.func,
+	onLoadQuery: React.PropTypes.func,
 	onMoveQueryPosition: React.PropTypes.func,
 	onNameQuery: React.PropTypes.func,
 	onQueryChange: React.PropTypes.func,

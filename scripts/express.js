@@ -23,6 +23,7 @@ var VREs = {
 app.use(function (req, res, next) {
 	console.log(req.method, req.path);
 	res.set("Access-Control-Allow-Origin", "*");
+	res.set("Access-Control-Allow-Headers", "content-type");
 	next();
 });
 
@@ -77,10 +78,6 @@ app.get("/domain/:domain/:id", function(req, res) {
 	res.send(respData);
 });
 
-// app.get("/fielddefinitions/:domain", function(req, res) {
-// 	res.send(fieldDefinitions[req.params.domain]);
-// });
-
 app.get("/metadata/:vreId", function(req, res) {
 	res.send(VREs[req.params.vreId] || {});
 });
@@ -109,9 +106,16 @@ app.get("/saved-queries", function(req, res) {
 app.post("/saved-queries", function(req, res) {
 	fs.readFile("scripts/saved-queries.json", "utf8", function(err, data) {
 		var queries = JSON.parse(data);
-		queries.push(req.body);
+		var foundIndex = queries.map(function(query) { return query.name; }).indexOf(req.body.name);
+
+		if(foundIndex > -1) {
+			queries[foundIndex] = req.body;
+		} else {
+			queries.push(req.body);
+		}
 		fs.writeFile("scripts/saved-queries.json", JSON.stringify(queries));
-		res.send(queries);
+		res.set("Content-type", "application/json")
+			.send(queries);
 	});
 });
 

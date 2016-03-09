@@ -9,7 +9,9 @@ import {
 	deleteQueryFilter,
 	moveQueryPosition,
 	submitQuery,
-	nameQuery
+	nameQuery,
+	saveQuery,
+	loadQuery
 } from "./queries";
 
 import { setVre } from "./vre";
@@ -37,5 +39,7 @@ export default {
 	onDeleteQueryFilter: (queryIndex) => store.dispatch(deleteQueryFilter(queryIndex)),
 	onMoveQueryPosition: (queryIndex, movement) => store.dispatch(moveQueryPosition(queryIndex, movement)),
 	onSubmitQuery: () => store.dispatch(submitQuery()),
-	onNameQuery: (value) => store.dispatch(nameQuery(value))
+	onNameQuery: (value) => store.dispatch(nameQuery(value)),
+	onSaveQuery: () => store.dispatch(saveQuery()),
+	onLoadQuery: (name) => store.dispatch(loadQuery(name))
 };

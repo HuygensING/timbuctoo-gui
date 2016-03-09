@@ -22,6 +22,7 @@ class IdField extends React.Component {
 		return (
 			<Autocomplete
 				async={(query, done) => getAutocompleteValues(this.props.quickSearch, query, this.props.vre.vreId, done) }
+				key={this.props.quickSearch}
 				onChange={this.onChange.bind(this)}
 				placeholder="Quick search..."
 				values={[]} />

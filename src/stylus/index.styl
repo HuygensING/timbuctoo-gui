@@ -214,7 +214,7 @@ rect
 
 
 .delete-button:hover
-	fill rgba(255,0,0,1)
+	fill rgba(255,0,0,1)s
 
 .direction-toggle
 	& > rect
@@ -256,8 +256,20 @@ rect
 		fill #aaa
 		cursor pointer
 
-.query-bar .hire-input
-	vertical-align top
-	margin 10px
-	display inline-block
-	border 1px solid #aaa
+.query-bar
+	width 100%
+	.hire-input, .hire-select
+		vertical-align top
+		margin 10px
+		margin-right 4px
+		display inline-block
+	
+	.hire-input
+		width calc(100% - 700px)
+		border 1px solid #aaa
+		& input
+			width 100%
+		& + button
+			vertical-align top
+			margin: 12px
+			margin-left 0

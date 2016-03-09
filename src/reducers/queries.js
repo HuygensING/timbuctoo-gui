@@ -3,6 +3,7 @@ import getIn from "../util/get-in";
 
 const initialState = {
 	queries: [],
+	savedQueries: [],
 	currentQuery: -1,
 	results: "",
 	resultCount: "",
@@ -35,6 +36,17 @@ const selectQuery = (state, action) => {
 		...state,
 		queries: current,
 		currentQuery: action.queryIndex
+	};
+};
+
+const loadSavedQuery = (state, action) => {
+	const newIndex = state.queries.length;
+	const current = setIn([newIndex], state.savedQueries.filter((q) => q.name === action.name)[0], state.queries);
+
+	return {
+		...state,
+		queries: current,
+		currentQuery: newIndex
 	};
 };
 
@@ -135,6 +147,7 @@ export default function(state=initialState, action) {
 		case "ADD_QUERY_FILTER": return addQueryFilter(state, action);
 		case "DELETE_QUERY": return deleteQuery(state, action);
 		case "DELETE_QUERY_FILTER": return deleteQueryFilter(state, action);
+		case "LOAD_SAVED_QUERY": return loadSavedQuery(state, action);
 
 		case "SET_QUERY_RESULTS_PENDING":
 			return {...state, results: null, resultCount: null, resultsPending: true, resultCountPending: true};
@@ -144,6 +157,9 @@ export default function(state=initialState, action) {
 
 		case "SET_QUERY_RESULT_COUNT":
 			return {...state, resultCount: action.count, resultCountPending: false};
+
+		case "SET_SAVED_QUERIES":
+			return {...state, savedQueries: action.savedQueries};
 
 	}
 
