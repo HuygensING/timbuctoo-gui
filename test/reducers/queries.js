@@ -91,10 +91,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 
 		const expectedState = {
 			currentQuery: 0,
-			queries: [sampleQuery],
-			resultCount: "",
-			resultCountPending: true,
-			resultsPending: true
+			queries: [sampleQuery]
 		};
 
 		const action = {
@@ -113,10 +110,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 
 		const expectedState = {
 			currentQuery: 0,
-			queries: [expectedQuery],
-			resultCount: "",
-			resultCountPending: true,
-			resultsPending: true
+			queries: [expectedQuery]
 		};
 
 		const action = {
@@ -141,10 +135,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 			queries: [
 				{},
 				expectedQuery
-			],
-			resultCount: "",
-			resultCountPending: true,
-			resultsPending: true
+			]
 		};
 
 		const action = {
@@ -176,10 +167,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 			queries: [
 				{},
 				expectedQuery
-			],
-			resultCount: "",
-			resultCountPending: true,
-			resultsPending: true
+			]
 		};
 
 		const action = {
@@ -210,10 +198,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 			queries: [
 				{},
 				expectedQuery
-			],
-			resultCount: "",
-			resultCountPending: true,
-			resultsPending: true
+			]
 		};
 
 		const action = {
@@ -270,10 +255,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 			currentQuery: 0,
 			queries: [
 				expectedQuery
-			],
-			resultCount: "",
-			resultCountPending: true,
-			resultsPending: true
+			]
 		};
 
 		const action = {
@@ -308,10 +290,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 			currentQuery: 0,
 			queries: [
 				expectedQuery
-			],
-			resultCount: "",
-			resultCountPending: true,
-			resultsPending: true
+			]
 		};
 
 		const action = {
@@ -346,10 +325,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 			currentQuery: 0,
 			queries: [
 				expectedQuery
-			],
-			resultCount: "",
-			resultCountPending: true,
-			resultsPending: true
+			]
 		};
 
 		const action = {

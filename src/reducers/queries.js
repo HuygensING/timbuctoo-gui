@@ -36,23 +36,25 @@ const sendQuery = function(q) {
 	const myQTime = new Date().getTime();
 	if(myQTime < lastQTime) { return; }
 	lastQTime = myQTime;
-	server.fastXhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[0]}`}, (err, resp) => {
+	server.fastXhr({method: "POST", url: `/api/v2.1/gremlin`, body: q[0]}, (err, resp) => {
 		if(myQTime >= lastQTime) { store.dispatch({type: "SET_QUERY_RESULTS", results: resp.body}); }
 	});
-	server.fastXhr({method: "GET", url: `/api/v2.1/gremlin?query=${q[1]}`}, (err, resp) => {
+	server.fastXhr({method: "POST", url: `/api/v2.1/gremlin`, body: q[1]}, (err, resp) => {
 		if(myQTime >= lastQTime) { store.dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}); }
 	});
 };
 
 const sendDelayedQuery = debounce(sendQuery, 2000);
 
-
+let lastQuery = null;
 const setQuery = (state) => {
-	if(state.currentQuery > -1) {
+	const newQuery = parsers.parseGremlin(state.queries[state.currentQuery]);
+	if(state.currentQuery > -1 && lastQuery !== newQuery[0]) {
+		lastQuery = newQuery[0];
 		if(state.resultsPending || state.resultCountPending) {
-			sendDelayedQuery(parsers.parseGremlin(state.queries[state.currentQuery]));
+			sendDelayedQuery(newQuery);
 		} else {
-			sendQuery(parsers.parseGremlin(state.queries[state.currentQuery]));
+			sendQuery(newQuery);
 		}
 
 		state = {...state, resultCount: "", resultsPending: true, resultCountPending: true};
