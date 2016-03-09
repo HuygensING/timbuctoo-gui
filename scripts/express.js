@@ -4,6 +4,8 @@ var clone = require("clone-deep");
 var relationTypes = require("../src/static/relationtypes");
 var keywords = require("../src/static/keywords");
 var fieldDefinitions = require("../src/static/field-definitions2");
+var fs = require("fs");
+
 app.use(bodyParser.json());
 
 
@@ -96,6 +98,21 @@ app.delete("/domain/:domain/:id", function(req, res) {
 	res
 		.status(204)
 		.end();
+});
+
+app.get("/saved-queries", function(req, res) {
+	fs.readFile("scripts/saved-queries.json", "utf8", function(err, data) {
+		res.send(data);
+	});
+});
+
+app.post("/saved-queries", function(req, res) {
+	fs.readFile("scripts/saved-queries.json", "utf8", function(err, data) {
+		var queries = JSON.parse(data);
+		queries.push(req.body);
+		fs.writeFile("scripts/saved-queries.json", JSON.stringify(queries));
+		res.send(queries);
+	});
 });
 
 app.get("/system/vres/:vreId", function(req, res) {

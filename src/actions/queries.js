@@ -21,6 +21,9 @@ const deleteQuery = (queryIndex) => (dispatch) =>
 const changeQuery = (fieldPath, value) => (dispatch) =>
 	dispatch({type: "SET_QUERY_FIELD_VALUE", fieldPath: fieldPath, value: value});
 
+const nameQuery = (value) => (dispatch) =>
+	dispatch({type: "SET_QUERY_NAME", value: value});
+
 const addQueryFilter = (fieldPath, value) => (dispatch) => {
 	if(value.type === "relation") {
 		const newEntity = {type: "entity", domain: value.targetType, and: []};
@@ -44,4 +47,6 @@ const submitQuery = () => (dispatch, getState) => {
 };
 
 
-export { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter, deleteQueryFilter, moveQueryPosition, submitQuery };
+
+
+export { deleteQuery, selectQuery, changeQuery, setQueryPath, addQueryFilter, deleteQueryFilter, moveQueryPosition, submitQuery, nameQuery };

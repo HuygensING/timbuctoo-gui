@@ -12,6 +12,7 @@ const initialState = {
 
 const makeQuery = (domain, position) => {
 	return {
+		name: "",
 		domain: domain,
 		deleted: false,
 		pathToQuerySelection: ["or", 0],
@@ -48,6 +49,14 @@ const setQueryPath = (state, action) => {
 const setQueryFieldValue = (state, action) => {
 	const pathToQuerySelection = state.queries[state.currentQuery].pathToQuerySelection;
 	const current = setIn([state.currentQuery].concat(pathToQuerySelection).concat(action.fieldPath), action.value, state.queries);
+	return {
+		...state,
+		queries: current
+	};
+};
+
+const setQueryName = (state, action) => {
+	const current = setIn([state.currentQuery].concat("name"), action.value, state.queries);
 	return {
 		...state,
 		queries: current
@@ -121,6 +130,7 @@ export default function(state=initialState, action) {
 		case "SELECT_QUERY": return selectQuery(state, action);
 		case "SET_QUERY_PATH": return setQueryPath(state, action);
 		case "SET_QUERY_FIELD_VALUE": return setQueryFieldValue(state, action);
+		case "SET_QUERY_NAME": return setQueryName(state, action);
 		case "SET_QUERY_POSITION": return setQueryPosition(state, action);
 		case "ADD_QUERY_FILTER": return addQueryFilter(state, action);
 		case "DELETE_QUERY": return deleteQuery(state, action);

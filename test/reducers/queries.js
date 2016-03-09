@@ -46,6 +46,7 @@ describe("queries reducer", () => { //eslint-disable-line no-undef
 			deleted: false,
 			pathToQuerySelection: ["or", 0],
 			position: undefined,
+			name: "",
 			or: [{type: "entity", domain: domain, and: []}]
 		};
 

@@ -6,9 +6,9 @@ import QueryComponent from "./query-component";
 
 import DraggableIcon from "./query-component/draggable-icon";
 import SearchIcon from "./search-icon";
-
-
 import QueryFilters from "./query-filters";
+import Input from "hire-forms-input";
+
 import parseGremlin from "../../parsers/gremlin";
 
 class App extends React.Component {
@@ -56,8 +56,18 @@ class App extends React.Component {
 	render() {
 		const [resQ, countQ] = this.props.queries.currentQuery > -1 ? parseGremlin(this.props.queries.queries[this.props.queries.currentQuery]) : ["", ""];
 		const collections = this.props.vre.collections || {};
+
+		const nameInput = this.props.queries.currentQuery > -1 ?
+			<Input onChange={this.props.onNameQuery} placeholder="name query" value={this.props.queries.queries[this.props.queries.currentQuery].name} /> : null;
+
+		const saveButton = this.props.queries.currentQuery > -1 ? (
+			<button disabled={ this.props.queries.queries[this.props.queries.currentQuery].name.length ? false : true } onClick={this.props.onSaveQuery} style={{verticalAlign: "top", margin: "10px"}}>
+					Save current query
+			</button>
+		) : null;
+
 		return (<div style={{height: "500px"}}>
-			<div style={{position: "absolute", top: 0, height: "60px"}}>
+			<div className="query-bar" style={{position: "absolute", top: 0, height: "60px"}}>
 				{Object.keys(collections).filter((c) => !c.match(/relations$/)).map((c) => (
 					<div key={c} style={{display: "inline-block", height: "40px", width: "40px"}}>
 						<DraggableIcon
@@ -66,6 +76,7 @@ class App extends React.Component {
 						/>
 					</div>
 				))}
+				{nameInput}{saveButton}
 			</div>
 			<div onWheel={this.onWheel.bind(this)} style={{position: "absolute", top: "50px", left: 0, width: "30%", height: "calc(100% - 60px)"}}>
 				<InfinityGrid gridSize={50}>
@@ -109,7 +120,9 @@ App.propTypes = {
 	onDeleteQuery: React.PropTypes.func,
 	onDeleteQueryFilter: React.PropTypes.func,
 	onMoveQueryPosition: React.PropTypes.func,
+	onNameQuery: React.PropTypes.func,
 	onQueryChange: React.PropTypes.func,
+	onSaveQuery: React.PropTypes.func,
 	onSelectQuery: React.PropTypes.func,
 	onSetQueryPath: React.PropTypes.func,
 	onSubmitQuery: React.PropTypes.func,
