@@ -8,7 +8,9 @@ class TextBox extends React.Component {
 		super(props);
 
 		this.state = {
-			textLeft: 0
+			textLeft: 0,
+			croppedText: null,
+			hovering: false
 		};
 	}
 
@@ -24,9 +26,17 @@ class TextBox extends React.Component {
 	centerTextNode() {
 		const textBBox = ReactDOM.findDOMNode(this).querySelector("text").getBBox();
 		const rectBBox = ReactDOM.findDOMNode(this).querySelector("rect").getBBox();
+		let croppedText = null;
+
+		if(!this.state.croppedText && textBBox.width > rectBBox.width) {
+			const { text } = this.props;
+			croppedText = text.substr(0, Math.floor(rectBBox.width / textBBox.width * text.length) - 1);
+			return this.setState({ croppedText: croppedText });
+		}
+
 		const textLeft = rectBBox.x + ((rectBBox.width - textBBox.width) / 2);
 		if(this.state.textLeft !== textLeft) {
-			this.setState({ textLeft: textLeft });
+			return this.setState({ textLeft: textLeft });
 		}
 	}
 
@@ -35,8 +45,11 @@ class TextBox extends React.Component {
 		const { text, onSelect } = this.props;
 		return (
 			<g>
-				<text className={this.props.className} transform={`translate(${this.state.textLeft} 0)`}>{text}</text>
-				<rect {...this.props} onClick={onSelect} />
+				<text className={`${this.state.croppedText ? "cropped-text" : ""} ${this.props.className}`}
+					transform={`translate(${this.state.textLeft} 0)`}>
+					{this.state.croppedText || text}
+				</text>
+				<rect {...this.props} onClick={onSelect} title={text} />
 			</g>
 		);
 	}
