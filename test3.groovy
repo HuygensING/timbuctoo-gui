@@ -1,5 +1,7 @@
 g.V().has("isLatest", true).filter{it.get().property("types").value().contains("\"wwperson\"")}.as("or")
 
+
+
 .or(__
 	.has("wwperson_gender").filter{it.get().property("wwperson_gender").value().contains("\"FEMALE\"")}
 	.and(__.outE("isRelatedTo").otherV().as("or|0|and|1|or").or(__()).union(__().as("or|0|and|1|or|0")))
@@ -10,40 +12,22 @@ g.V().has("isLatest", true).filter{it.get().property("types").value().contains("
 
 
 .match(
-	__.as("or|0")
-		.has("wwperson_birthDate")
-		.values("wwperson_birthDate")
-		.map{ try { return ((String) it).replace("\"", "").toInteger() } catch (Exception e) { return null; } }
-		.filter{it != null}
-		.as("pers2_birthDate"),
-
 	__.as("or|0|and|1|or|0")
 		.has("wwperson_birthDate")
 		.values("wwperson_birthDate")
 		.map{ try { return ((String) it).replace("\"", "").toInteger() } catch (Exception e) { return null; } }
 		.filter{it != null}
-		.as("pers1_birthDate"),
-
-	__.as("or|0|and|1|or|0")
-		.has("wwperson_deathDate")
-		.values("wwperson_deathDate")
-		.map{ try { return ((String) it).replace("\"", "").toInteger() } catch (Exception e) { return null; } }
-		.filter{it != null}
-		.as("pers1_deathDate"),
-
-	__.as("or|0|and|1|or|0")
-		.values("wwperson_names")
-		.map{ try { def val = (new JsonSlurper()).parseText((String) it); return val.list[0].components[0].value + " " + val.list[0].components[val.list[0].components.size() - 1].value } catch (Exception e) { return "" } }
-		.as("pers1_name"),
+		.as("val1"),
 
 	__.as("or|0")
-		.values("wwperson_names")
-		.map{ try { def val = (new JsonSlurper()).parseText((String) it); return val.list[0].components[0].value + " " + val.list[0].components[val.list[0].components.size() - 1].value } catch (Exception e) { return "" } }
-		.as("pers2_name")
+		.has("wwperson_birthDate")
+		.values("wwperson_birthDate")
+		.map{ try { return ((String) it).replace("\"", "").toInteger() } catch (Exception e) { return null; } }
+		.filter{it != null}
+		.as("val2"),
 )
 
 .where(
-	"pers2_birthDate", between("pers1_birthDate", "pers1_deathDate")
+	"val1", gt("val2")
 )
-
-.select("pers2_name", "pers2_birthDate", "pers1_birthDate", "pers1_deathDate", "pers1_name").range(0, 10)
+.select("or|0").dedup().count()
