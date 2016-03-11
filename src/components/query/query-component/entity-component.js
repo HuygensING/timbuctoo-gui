@@ -131,9 +131,9 @@ class EntityComponent extends React.Component {
 				[], props, childEntityComponents);
 
 		// If the current entity is selected show a delete button
-		const deleteButton = selected ? (<DeleteButton onSelect={() => path.length === 2 && queryEntityIndex === 0 ?
-			props.onDeleteQuery(props.componentIndex) :
-			props.onDeleteQueryFilter(props.componentIndex) } />) : null;
+		const deleteButton = selected ?
+			(props.query.or.length === 1 && path.length === 2) ? null :
+			(<DeleteButton onSelect={() => props.onDeleteQueryFilter(props.componentIndex) } />) : null;
 
 		// Render the entity into component
 		const component = (
@@ -193,10 +193,15 @@ class EntityComponent extends React.Component {
 				rx="10" ry="10" width={width} x="-30" y="-30" />)
 			: null;
 
+		const deleteButton = path.length === 1 ?
+			<DeleteButton onSelect={() => props.onDeleteQuery(props.componentIndex)} translate="-35 -35" />
+			: null;
+
 		return {
 			component: (<g>
 				{rect}
 				{components}
+				{deleteButton}
 			</g>),
 			height: height,
 			width: width
