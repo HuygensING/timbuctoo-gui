@@ -1,78 +1,66 @@
-import sinon from "sinon";
 import expect from "expect";
-import clone from "../../src/util/clone-deep";
-import store from "../../src/store";
+import sinon from "sinon";
+import config from "../../src/config";
 import server from "../../src/actions/server";
 import {listVres, setVre} from "../../src/actions/vre";
-import config from "../../src/config";
 
 
 describe("vre", () => { //eslint-disable-line no-undef
 
+	const dispatch = (func, assert, getState = () => {}) => {
+		const redispatch = (obj) => assert(obj);
+		func(redispatch, getState);
+	};
+
+
 	it("should listVres", (done) => { //eslint-disable-line no-undef
-		let unsubscribe;
-		const finalize = (e) => {
-			unsubscribe();
-			server.performXhr.restore();
-			done(e);
-		};
+		const list = ["a", "b", "c"];
 
-		unsubscribe = store.subscribe(() => {
-			try {
-				expect(store.getState().vre.list).toEqual(["a", "b", "c"]);
-				finalize();
-			} catch (e) {
-				finalize(e);
-			}
-		});
-
-
-		sinon.stub(server, "performXhr", (options, accept, reject, operation) => {
-			try {
-				expect(options).toEqual({
-					url: `${config.apiUrl["v2.1"]}/system/vres`,
-					headers: {
-						"Accept": "application/json"
-					},
-					method: "GET"
-				});
-				expect(operation).toEqual("List VREs");
-				accept(null, {body: JSON.stringify(["a", "b", "c"])});
-			} catch(e) {
-				finalize(e);
-			}
-		});
-
-		store.dispatch(listVres());
-	});
-
-	it("should setVre", (done) => { //eslint-disable-line no-undef
-		const list = clone(store.getState().vre.list);
-		const vreId = "WomenWriters";
-		const collections = ["collection-data"];
-
-		let unsubscribe;
 
 		const finalize = (e) => {
-			unsubscribe();
 			sinon.assert.calledOnce(server.performXhr);
 			server.performXhr.restore();
 			done(e);
 		};
 
-		unsubscribe = store.subscribe(() => {
-			unsubscribe();
+		sinon.stub(server, "performXhr", (opts, cb) => {
 			try {
-				expect(store.getState().vre).toEqual({
-					vreId: "WomenWriters",
-					collections: collections,
-					list: list
+				expect(opts).toEqual({
+					method: "GET",
+					headers: {
+						"Accept": "application/json"
+					},
+					url: `${config.apiUrl["v2.1"]}/system/vres`
+				});
+				cb(null, {body: JSON.stringify(list)});
+			} catch (e) {
+				finalize(e);
+			}
+		});
+
+		dispatch(listVres(), (obj) => {
+			try {
+				expect(obj).toEqual({
+					list: list,
+					type: "LIST_VRES"
 				});
 				finalize();
 			} catch (e) {
 				finalize(e);
 			}
 		});
+	});
+
+	it("should setVre", (done) => { //eslint-disable-line no-undef
+		const vreId = "WomenWriters";
+		const collections = ["collection-data"];
+
+		const finalize = (e) => {
+			sinon.assert.calledOnce(server.performXhr);
+			server.performXhr.restore();
+			done(e);
+		};
+
 
 
 		sinon.stub(server, "performXhr", (options, accept, reject, operation) => {
@@ -91,6 +79,17 @@ describe("vre", () => { //eslint-disable-line no-undef
 			}
 		});
 
-		store.dispatch(setVre("WomenWriters"));
+		dispatch(setVre("WomenWriters"), (obj) => {
+			try {
+				expect(obj).toEqual({
+					type: "SET_VRE",
+					vreId: "WomenWriters",
+					collections: collections
+				});
+				finalize();
+			} catch (e) {
+				finalize(e);
+			}
+		});
 	});
 });

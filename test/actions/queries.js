@@ -31,16 +31,6 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 		func(redispatch, getState);
 	};
 
-	before(() => { //eslint-disable-line no-undef
-		sinon.stub(server, "fastXhr");
-		sinon.stub(parsers, "parseGremlin", () => ["", ""]);
-	});
-
-	after(() => { //eslint-disable-line no-undef
-		server.fastXhr.restore();
-		parsers.parseGremlin.restore();
-	});
-
 	it("should add a relation with addQueryFilter", (done) => { //eslint-disable-line no-undef
 		const path = ["a", 1, "2"];
 		const value = {type: "relation", targetType: "wwperson", name: "isRelatedTo"};
@@ -154,6 +144,19 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 		});
 	});
 
+
+	it("TODO: make submitQuery test complete"); //eslint-disable-line no-undef
+	before(() => { //eslint-disable-line no-undef
+		sinon.stub(server, "fastXhr");
+		sinon.stub(parsers, "parseGremlin", () => ["", ""]);
+	});
+
+	after(() => { //eslint-disable-line no-undef
+		server.fastXhr.restore();
+		parsers.parseGremlin.restore();
+	});
+
+
 	it("should submitQuery", (done) => { //eslint-disable-line no-undef
 		const state = {
 			queries: {
@@ -164,7 +167,9 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 
 		dispatch(submitQuery(), (obj) => {
 			try {
-				console.log(obj);
+				expect(obj).toEqual({
+					type: "SET_QUERY_RESULTS_PENDING"
+				});
 				done();
 			} catch (e) {
 				done(e);
