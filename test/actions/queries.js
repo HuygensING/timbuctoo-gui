@@ -145,19 +145,20 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 	});
 
 
-	it("TODO: make submitQuery test complete"); //eslint-disable-line no-undef
-	before(() => { //eslint-disable-line no-undef
-		sinon.stub(server, "fastXhr");
-		sinon.stub(parsers, "parseGremlin", () => ["", ""]);
-	});
-
-	after(() => { //eslint-disable-line no-undef
-		server.fastXhr.restore();
-		parsers.parseGremlin.restore();
-	});
+//	it("TODO: make submitQuery test complete"); //eslint-disable-line no-undef
+//	before(() => { //eslint-disable-line no-undef
+//		sinon.stub(server, "fastXhr");
+//		sinon.stub(parsers, "parseGremlin", () => ["", ""]);
+//	});
+//
+//	after(() => { //eslint-disable-line no-undef
+//		server.fastXhr.restore();
+//		parsers.parseGremlin.restore();
+//	});
 
 
 	it("should submitQuery", (done) => { //eslint-disable-line no-undef
+		const responseBody = "response";
 		const state = {
 			queries: {
 				currentQuery: 0,
@@ -165,14 +166,40 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 			}
 		};
 
+		const finalize = (e) => {
+			server.fastXhr.restore();
+			done(e);
+		};
+
+		sinon.stub(server, "fastXhr", (opts, cb) => {
+			expect(opts.method).toEqual("POST");
+			expect(opts.url).toEqual("/api/v2.1/gremlin");
+			expect(typeof opts.body).toEqual("string");
+			cb(null, {body: responseBody});
+		});
+
+		let counts = 0;
 		dispatch(submitQuery(), (obj) => {
 			try {
-				expect(obj).toEqual({
-					type: "SET_QUERY_RESULTS_PENDING"
-				});
-				done();
+				counts++;
+				if(counts === 1) {
+					expect(obj).toEqual({
+						type: "SET_QUERY_RESULTS_PENDING"
+					});
+				} else if(counts === 2) {
+					expect(obj).toEqual({
+						type: "SET_QUERY_RESULTS",
+						results: responseBody
+					});
+				} else if(counts === 3) {
+					expect(obj).toEqual({
+						type: "SET_QUERY_RESULT_COUNT",
+						count: responseBody
+					});
+					done();
+				}
 			} catch (e) {
-				done(e);
+				finalize(e);
 			}
 		}, () => state);
 	});
