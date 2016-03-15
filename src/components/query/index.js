@@ -109,11 +109,15 @@ class App extends React.Component {
 				<QueryFilters {...this.props} onChange={this.onQueryChange.bind(this)} />
 			</div>
 			<div className="result-wrapper">
-				<pre style={{width: "100%", whiteSpace: "pre-wrap"}}>
+				<label>Gremlin query</label>
+				<pre style={{width: "100%", whiteSpace: "no-wrap"}}>{resQ}</pre>
+
+				<label>Results</label>
+				<pre style={{width: "100%", whiteSpace: "no-wrap"}}>
 					{this.props.queries.resultCountPending ? "WAITING FOR RESULT COUNT...\n" : this.props.queries.resultCount}
+				</pre>
+				<pre style={{width: "100%", whiteSpace: "no-wrap"}}>
 					{this.props.queries.resultsPending ? "WAITING FOR RESULTS...\n" : this.props.queries.results}
-					COUNT QUERY: {countQ}<br /><br />
-					RESULT QUERY: {resQ}
 				</pre>
 			</div>
 		</div>);
