@@ -12,7 +12,8 @@ class QueryComponent extends React.Component {
 				<EntityComponent {...this.props} />
 			</g>
 		) : (
-			<g className="query" onClick={this.props.onSelect} transform={`translate(${this.props.query.position.x} ${this.props.query.position.y}) translate(-20 -20)`} {...this.props}>
+			<g className="query" onClick={this.props.onSelect}
+				transform={`translate(${this.props.query.position.x} ${this.props.query.position.y}) translate(-20 -20) scale(${this.props.scale})`} {...this.props}>
 				{icons[this.props.query.domain]({className: "handle"})}
 			</g>
 		);
