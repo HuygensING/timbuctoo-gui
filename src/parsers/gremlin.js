@@ -8,14 +8,24 @@ const quoteProp = (domain, prop, val) => v2UnquotedPropVals.indexOf(`${domain}_$
 
 const identity = (domain) => `g.V().has("isLatest", true).filter{it.get().property("types").value().contains("\\"${domain}\\"")}`;
 
-const parsePropVal = (prop, val, domain) =>
-	prop.name === "tim_id" ?
-		`has("tim_id", "${val}")`
-		: `has("${domain}_${prop.name}").filter{it.get().property("${domain}_${prop.name}").value().contains(${quoteProp(domain, prop, val)})}`;
+
+const parsePropVal = (prop, valueFilter, domain) => {
+	if(valueFilter.type === "value") {
+		return prop.name === "tim_id" ?
+			`has("tim_id", "${valueFilter.value}")`
+			: `has("${domain}_${prop.name}").filter{it.get().property("${domain}_${prop.name}").value().contains(${quoteProp(domain, prop, valueFilter.value)})}`;
+	} else {
+		return `has("${domain}_${prop.name}")` +
+			`.where(__.values("${domain}_${prop.name}")` +
+			`.map{ try { return ((String) it).replace("\\"", "").toInteger() } catch (Exception e) { return null; } }` +
+			`.filter{it != null}` +
+			`.is(${valueFilter.type}(${valueFilter.values.join(", ")})))`;
+	}
+};
 
 const parseProp = (prop, domain) => {
-	if(prop.or.length === 1) { return parsePropVal(prop, prop.or[0].value, domain); }
-	return `or(${prop.or.map((pv) => parsePropVal(prop, pv.value, domain)).join(", ")})`;
+	if(prop.or.length === 1) { return parsePropVal(prop, prop.or[0], domain); }
+	return `or(${prop.or.map((pv) => parsePropVal(prop, pv, domain)).join(", ")})`;
 };
 
 
