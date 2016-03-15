@@ -13,9 +13,7 @@ const parsePropVal = (prop, valueFilter, domain) => {
 	if(valueFilter.type === "value") {
 		return prop.name === "tim_id" ?
 			`has("tim_id", "${valueFilter.value}")`
-			: `has("${domain}_${prop.name}")` +
-			`.where(__.values("${domain}_${prop.name}")` +
-			`.is(${quoteProp(domain, prop, valueFilter.value)}))`;
+			: `has("${domain}_${prop.name}").filter{it.get().property("${domain}_${prop.name}").value().contains(${quoteProp(domain, prop, valueFilter.value)})}`;
 	} else {
 		return `has("${domain}_${prop.name}")` +
 			`.where(__.values("${domain}_${prop.name}")` +
