@@ -10,8 +10,16 @@ const onSelectChange = (props, name, value) => {
 	});
 };
 
+const onDatableChange = (props, name, value) => {
+	props.onAddQueryFilter(["and"], {
+		type: "property",
+		name: name,
+		or: [{type: value.operation, values: value.values}]
+	});
+};
+
 const MAP = {
-	"datable": (fieldDef, props) => <DatableField {...props} name={fieldDef.name} onChange={(...args) => console.log(args)} />,
+	"datable": (fieldDef, props) => <DatableField {...props} name={fieldDef.name} onChange={(value) => onDatableChange(props, fieldDef.name, value)} />,
 	"multiselect": (fieldDef, props) => (<SelectField {...props} name={fieldDef.name} onChange={(value) => onSelectChange(props, fieldDef.name, value)} options={fieldDef.options} />),
 	"select": (fieldDef, props) => (<SelectField {...props} name={fieldDef.name} onChange={(value) => onSelectChange(props, fieldDef.name, value)} options={fieldDef.options} />),
 	"unsupported": () => (null)
