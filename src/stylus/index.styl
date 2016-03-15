@@ -272,7 +272,12 @@ rect
 		margin 10px
 		margin-right 4px
 		display inline-block
-	
+		width 600px
+		& > .input-container
+			width 100%
+		& > .hire-options
+			width 600px
+
 	.hire-input
 		width calc(100% - 700px)
 		border 1px solid #aaa
@@ -282,6 +287,11 @@ rect
 			vertical-align top
 			margin: 12px
 			margin-left 0
+		& + button + .hire-select 
+			width 200px
+			& > .hire-options
+				border-top 1px solid #dadada
+				right 96px
 
 .grid-wrapper
 	position fixed
