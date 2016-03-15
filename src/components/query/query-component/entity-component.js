@@ -10,8 +10,8 @@ import DeleteButton from "./util/delete-button";
 const baseHeight = 60;
 const baseWidth = baseHeight;
 const basePropertyComponentHeight = 36;
-const baseRelationComponentWidth = 190;
-const baseComponentWidthWithOnlyPropertyFilters = 240;
+const baseRelationComponentWidth = 130;
+const baseComponentWidthWithOnlyPropertyFilters = 190;
 
 class EntityComponent extends React.Component {
 

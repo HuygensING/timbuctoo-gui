@@ -22,7 +22,7 @@ let propertyComponent = (props) => {
 	return (
 		<g transform={`translate(0, ${props.topPosition})`}>
 			<line stroke="black" strokeWidth="1" x1="0" x2="10" y1="-2" y2="-2" />
-			<line stroke="black" strokeWidth="1" x1="140" x2="150" y1="-2" y2="-2" />
+			<line stroke="black" strokeWidth="1" x1="90" x2="100" y1="-2" y2="-2" />
 			<g transform="translate(0, 2)">
 				<TextBox {...props}
 					className={`property handle ${selected ? "selected" :""}`}
@@ -30,9 +30,9 @@ let propertyComponent = (props) => {
 					onSelect={() => onSetQueryPath(path)}
 					rx="3" ry="3" text={props.name === "tim_id" ? "is" : props.name}
 					transform="translate(0, 5)"
-					width="130" x="10" y="-20"
+					width="80" x="10" y="-20"
 				/>
-				<PropertyValuesComponent {...props} onSelect={(subPath) => onSetQueryPath(subPath)} pathToQuerySelection={pathToQuerySelection} transform="translate(154 2)" />
+				<PropertyValuesComponent {...props} onSelect={(subPath) => onSetQueryPath(subPath)} pathToQuerySelection={pathToQuerySelection} transform="translate(104 2)" />
 			</g>
 			{deleteButton}
 		</g>

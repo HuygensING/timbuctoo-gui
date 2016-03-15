@@ -37,8 +37,8 @@ class RelationComponent extends React.Component {
 		return (
 			<g transform={`translate(0, ${topPosition + 10})`}>
 				<line stroke="black" strokeWidth="1" x1="0" x2="10" y1="-5" y2="-5" />
-				<line stroke="black" strokeWidth="1" x1="230" x2="240" y1="-5" y2="-5" />
-				<g transform="translate(260 0)">
+				<line stroke="black" strokeWidth="1" x1="180" x2="190" y1="-5" y2="-5" />
+				<g transform="translate(210 0)">
 					{subComponent}
 				</g>
 				<TextBox {...this.props}
@@ -46,7 +46,7 @@ class RelationComponent extends React.Component {
 					height="30"
 					onSelect={() => onSetQueryPath(path)}
 					rx="5" ry="5" text={relation.name}
-					width="220" x="10" y="-20"
+					width="170" x="10" y="-20"
 				/>
 				{deleteButton}
 				{directionToggle}
