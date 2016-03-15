@@ -18,7 +18,7 @@ const onDatableChange = (props, name, value) => {
 	props.onAddQueryFilter(["and"], {
 		type: "property",
 		name: name,
-		or: [{type: value.operation, values: value.values, label: makeLabel()}]
+		or: [{type: value.operation, values: value.values.filter((v) => v.length), label: makeLabel()}]
 	});
 };
 
