@@ -14,7 +14,7 @@ const onDatableChange = (props, name, value) => {
 
 	props.onAddQueryFilter(props.filterPath, {
 		type: value.operation,
-		values: value.values,
+		values: value.values.filter((v) => v.length),
 		label: makeLabel()
 	});
 };
