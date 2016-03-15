@@ -3,11 +3,12 @@ import Select from "hire-forms-select";
 import Input from "hire-forms-input";
 import clone from "../../../../util/clone-deep";
 
-const operations = ["equals", "before", "after", "between", "outside"];
+const operations = ["eq", "neq", "lt", "gt", "between", "outside"];
 const inputAmounts = {
-	equals: 1,
-	before: 1,
-	after: 1,
+	eq: 1,
+	neq: 1,
+	lt: 1,
+	gt: 1,
 	between: 2,
 	outside: 2
 };
