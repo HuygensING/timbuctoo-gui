@@ -46,7 +46,8 @@ class TextBox extends React.Component {
 		return (
 			<g>
 				<text className={`${this.state.croppedText ? "cropped-text" : ""} ${this.props.className}`}
-					transform={`translate(${this.state.textLeft} 0)`}>
+					fontSize="10"
+					transform={`translate(${this.state.textLeft} -2)`}>
 					{this.state.croppedText || text}
 				</text>
 				<rect {...this.props} onClick={onSelect} title={text} />
