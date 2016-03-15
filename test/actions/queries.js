@@ -144,19 +144,6 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 		});
 	});
 
-
-//	it("TODO: make submitQuery test complete"); //eslint-disable-line no-undef
-//	before(() => { //eslint-disable-line no-undef
-//		sinon.stub(server, "fastXhr");
-//		sinon.stub(parsers, "parseGremlin", () => ["", ""]);
-//	});
-//
-//	after(() => { //eslint-disable-line no-undef
-//		server.fastXhr.restore();
-//		parsers.parseGremlin.restore();
-//	});
-
-
 	it("should submitQuery", (done) => { //eslint-disable-line no-undef
 		const responseBody = "response";
 		const state = {

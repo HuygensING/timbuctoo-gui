@@ -5,7 +5,7 @@ import getIn from "../../../util/get-in";
 import IdField from "./fields/id-field";
 import SelectField from "./fields/select";
 
-
+// TODO: test and refactor
 
 class QueryFilters extends React.Component {
 
@@ -27,6 +27,22 @@ class QueryFilters extends React.Component {
 		this.props.onQueryChange(["name"], value);
 	}
 
+	onAddRelationFilter(value) {
+		const { queries, vre } = this.props;
+		const query = queries.queries[queries.currentQuery];
+		const data = getIn(query.pathToQuerySelection, query);
+
+		const fieldDef = vre.collections[`${data.domain}s`]
+			.filter((fd) => fd.name === value)[0];
+
+		this.props.onAddQueryFilter(["and"], {
+			name: fieldDef.relation.outName,
+			type: "relation",
+			direction: fieldDef.relation.direction.toLowerCase(),
+			targetType: fieldDef.relation.targetCollection.replace(/s$/, "")
+		});
+	}
+
 	render() {
 		const { queries, vre } = this.props;
 		if(queries.currentQuery === -1) { return null; }
@@ -37,16 +53,26 @@ class QueryFilters extends React.Component {
 
 		let body;
 		if(data.type === "entity") {
-			body = (<div>
-				<ul>
+			const fieldDefs = vre.collections[`${data.domain}s`];
+			const propertyFields = fieldDefs
+				.filter((fieldDef) => fieldDef.type !== "relation" && ["select", "multiselect", "datable"].indexOf(fieldDef.type) > -1)
+				.map((fieldDef, i) => <li key={i}>{mapField(fieldDef, {...this.props, entity: data})}</li>);
+
+			const relationOptions = fieldDefs
+				.filter((fieldDef) => fieldDef.type === "relation")
+				.map((fieldDef) => fieldDef.name);
+
+			body = (
+				<ul className="entity-form">
 					<li>
 						<button onClick={this.onOrButtonClick.bind(this, data.domain, -1)}>OR</button>
 						<button onClick={this.onCloneButtonClick.bind(this, data.domain, -1)}>OR copy</button>
 					</li>
 					<li><IdField {...this.props} filterType={data.type} quickSearch={`domain/${data.domain}s/autocomplete`} /></li>
-					{vre.collections[`${data.domain}s`].map((fieldDef, i) => <li key={i}>{mapField(fieldDef, {...this.props, entity: data})}</li> )}
+					<li><SelectField name="- Add relation -" onChange={this.onAddRelationFilter.bind(this)} options={relationOptions} /></li>
+					{propertyFields}
 				</ul>
-			</div>);
+			);
 		} else if(data.type === "relation") {
 			const domain = getIn(query.pathToQuerySelection.slice(0, query.pathToQuerySelection.length - 2), query).domain;
 			const targetDomain = getIn(query.pathToQuerySelection, query).targetDomain;
