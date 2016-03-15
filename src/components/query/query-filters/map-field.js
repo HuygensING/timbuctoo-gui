@@ -11,10 +11,14 @@ const onSelectChange = (props, name, value) => {
 };
 
 const onDatableChange = (props, name, value) => {
+	const makeLabel = () => {
+		return `${value.operation}(${value.values.filter((v) => v.length).join(", ")})`;
+	};
+
 	props.onAddQueryFilter(["and"], {
 		type: "property",
 		name: name,
-		or: [{type: value.operation, values: value.values}]
+		or: [{type: value.operation, values: value.values, label: makeLabel()}]
 	});
 };
 
