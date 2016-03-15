@@ -35,6 +35,11 @@ class DatableField extends React.Component {
 		this.setState({values: values});
 	}
 
+	onCommit() {
+		this.props.onChange(this.state);
+		this.onCancel();
+	}
+
 	render() {
 		const operationSelect = this.state.operation ?
 			null : (<Select onChange={this.onSelectOperation.bind(this)}
@@ -56,7 +61,7 @@ class DatableField extends React.Component {
 
 		const buttons = this.state.operation ? (
 			<div>
-				<button>Ok</button>
+				<button onClick={this.onCommit.bind(this)} >Ok</button>
 				<button onClick={this.onCancel.bind(this)}>Cancel</button>
 			</div>
 		) : null;
@@ -74,7 +79,8 @@ class DatableField extends React.Component {
 }
 
 DatableField.propTypes = {
-	name: React.PropTypes.string
+	name: React.PropTypes.string,
+	onChange: React.PropTypes.func
 };
 
 export default DatableField;
