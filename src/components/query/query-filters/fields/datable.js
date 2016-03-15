@@ -1,12 +1,23 @@
 import React from "react";
 import Select from "hire-forms-select";
+import Input from "hire-forms-input";
+import clone from "../../../../util/clone-deep";
 
+const operations = ["equals", "before", "after", "between", "outside"];
+const inputAmounts = {
+	equals: 1,
+	before: 1,
+	after: 1,
+	between: 2,
+	outside: 2
+};
 
 class DatableField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			operation: null
+			operation: null,
+			values: ["", ""]
 		};
 	}
 
@@ -14,17 +25,41 @@ class DatableField extends React.Component {
 		this.setState({operation: value});
 	}
 
+	onCancel() {
+		this.setState({operation: null, values: ["", ""]});
+	}
+
+	onChange(idx, value) {
+		let values = clone(this.state.values);
+		values[idx] = value;
+		this.setState({values: values});
+	}
+
 	render() {
 		const operationSelect = this.state.operation ?
 			null : (<Select onChange={this.onSelectOperation.bind(this)}
-			options={["equals", "before", "after", "between", "outside"]}
+			options={operations}
 			placeholder="- select operation -" />);
 
-		const inputs = this.state.operation ?
-			<span>inputs</span> : null;
+		let inputs = null;
+		if(this.state.operation !== null) {
+			inputs = [];
+			for(let i = 0; i < inputAmounts[this.state.operation]; i++) {
+				inputs.push(<Input
+					key={i}
+					onChange={(value) => this.onChange(i, value)}
+					placeholder="year"
+					value={this.state.values[i]} />
+				);
+			}
+		}
 
-		const button = this.state.operation ?
-			<button>Ok</button> : null;
+		const buttons = this.state.operation ? (
+			<div>
+				<button>Ok</button>
+				<button onClick={this.onCancel.bind(this)}>Cancel</button>
+			</div>
+		) : null;
 
 
 		return (
@@ -32,7 +67,7 @@ class DatableField extends React.Component {
 				<label>{this.props.name} {this.state.operation}</label>
 				{operationSelect}
 				{inputs}
-				{button}
+				{buttons}
 			</div>
 		);
 	}
