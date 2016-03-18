@@ -42,8 +42,17 @@ const submitQuery = () => (dispatch, getState) => {
 	dispatch({type: "SET_QUERY_RESULTS_PENDING"});
 
 	const q = parsers.parseGremlin(queries.queries[queries.currentQuery]);
-	server.fastXhr({method: "POST", url: `/api/v2.1/gremlin`, body: q[0]}, (err, resp) => dispatch({type: "SET_QUERY_RESULTS", results: resp.body}));
-	server.fastXhr({method: "POST", url: `/api/v2.1/gremlin`, body: q[1]}, (err, resp) => dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}));
+	server.fastXhr({
+		method: "POST",
+		headers: {"Accept": "application/json"},
+		url: `/api/v2.1/gremlin`,
+		body: q[0]
+	}, (err, resp) => dispatch({type: "SET_QUERY_RESULTS", results: resp.body}));
+	server.fastXhr({
+		method: "POST",
+		url: `/api/v2.1/gremlin`,
+		body: q[1]
+	}, (err, resp) => dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}));
 };
 
 const saveQuery = () => (dispatch, getState) => {

@@ -90,9 +90,12 @@ const parseQuery = (query) => {
 	else if(getIn(path, query) && getIn(path, query).type === "value") { path.pop(); path.pop(); path.pop(); path.pop(); }
 
 	let selectVal = path.length ? path.join("|") : "result";
+	const baseQuery = `${identity(query.or[0].domain)}${parseEntities(query.or)}`;
+
+
 	return [
-		`${identity(query.or[0].domain)}${parseEntities(query.or)}.select("${selectVal}").dedup().range(0,10)`,
-		`${identity(query.or[0].domain)}${parseEntities(query.or)}.select("${selectVal}").dedup().count()`
+		`${baseQuery}.select("${selectVal}", "or")`,
+		`${baseQuery}.select("${selectVal}").dedup().count()`
 	];
 };
 
