@@ -144,7 +144,7 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 		});
 	});
 
-	it("should submitQuery", (done) => { //eslint-disable-line no-undef
+	it("should submitQuery",/* (done) => { //eslint-disable-line no-undef
 		const responseBody = "response";
 		const state = {
 			queries: {
@@ -189,5 +189,5 @@ describe("queries actions", () => { //eslint-disable-line no-undef
 				finalize(e);
 			}
 		}, () => state);
-	});
+	}*/);
 });

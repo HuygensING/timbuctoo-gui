@@ -47,7 +47,7 @@ const submitQuery = () => (dispatch, getState) => {
 		headers: {"Accept": "application/json"},
 		url: `/api/v2.1/gremlin`,
 		body: q[0]
-	}, (err, resp) => dispatch({type: "SET_QUERY_RESULTS", results: resp.body}));
+	}, (err, resp) => dispatch({type: "SET_QUERY_RESULTS", results: JSON.parse(resp.body)}));
 	server.fastXhr({
 		method: "POST",
 		url: `/api/v2.1/gremlin`,

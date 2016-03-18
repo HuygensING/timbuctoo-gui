@@ -2,7 +2,7 @@ import clone from "../util/clone-deep";
 import getIn from "../util/get-in";
 
 let parseEntities;
-
+let matchers;
 const v2UnquotedPropVals = ["wwperson_children", "wwcollective_type"];
 const quoteProp = (domain, prop, val) => v2UnquotedPropVals.indexOf(`${domain}_${prop.name}`) > -1 ? `"${val}"` : `"\\"${val}\\""`;
 
@@ -63,6 +63,10 @@ const parseEntity = (ent, path = ["or", 0]) => {
 	const propQ = parseProps(propFilters, ent.domain);
 	const relQ = parseRelations(relFilters, ent, path);
 
+	if(matchers.indexOf(path.join("|")) < 0) {
+		matchers.push(path.join("|"));
+	}
+
 	return propQ + relQ;
 };
 
@@ -77,6 +81,7 @@ parseEntities = (queries, path = ["or"]) => {
 		.map((q, i) => parseEntity(q, path.concat(i)))
 		.map((q, i) => `__().as("${path.concat(i).join("|")}")${q}`);
 
+
 	return `.as("${path.join("|")}").or(${entityQs.join(", ")}).union(${aliasedEntityQs.join(", ")})`;
 };
 
@@ -90,8 +95,9 @@ const parseQuery = (query) => {
 	else if(getIn(path, query) && getIn(path, query).type === "value") { path.pop(); path.pop(); path.pop(); path.pop(); }
 
 	let selectVal = path.length ? path.join("|") : "result";
-	const baseQuery = `${identity(query.or[0].domain)}${parseEntities(query.or)}`;
+	matchers = ["or"];
 
+	const baseQuery = `${identity(query.or[0].domain)}${parseEntities(query.or)}`;
 
 	return [
 		`${baseQuery}.select("${selectVal}", "or")`,

@@ -56,7 +56,9 @@ class App extends React.Component {
 	}
 
 	render() {
-		const [resQ, countQ] = this.props.queries.currentQuery > -1 ? parseGremlin(this.props.queries.queries[this.props.queries.currentQuery]) : ["", ""];
+		const currentQ = this.props.queries.currentQuery > -1 ? this.props.queries.queries[this.props.queries.currentQuery] : null;
+
+		const [resQ] = this.props.queries.currentQuery > -1 ? parseGremlin(this.props.queries.queries[this.props.queries.currentQuery]) : ["", ""];
 		const collections = this.props.vre.collections || {};
 
 		const nameInput = this.props.queries.currentQuery > -1 ?
@@ -70,6 +72,16 @@ class App extends React.Component {
 
 		const { savedQueries } = this.props.queries;
 		const savedQuerySelect = <Select onChange={this.props.onLoadQuery} options={savedQueries.map((q) => q.name)} placeholder="Load query..." />;
+
+		const results = currentQ && this.props.queries.results && this.props.queries.results.results[currentQ.pathToQuerySelection.join("|")] ?
+			this.props.queries.results.results[currentQ.pathToQuerySelection.join("|")].map((r, i) => (
+				<li key={i}>{r.displayName}</li>
+			)) : null;
+
+
+		const resultCount = currentQ && this.props.queries.results && this.props.queries.results.counts[currentQ.pathToQuerySelection.join("|")] ?
+			`(${this.props.queries.results.counts[currentQ.pathToQuerySelection.join("|")]})` : 
+			this.props.queries.resultsPending ? "(...)" : null;
 
 		return (<div>
 			<div className="query-bar">
@@ -112,13 +124,10 @@ class App extends React.Component {
 				<label>Gremlin query</label>
 				<pre style={{width: "100%", whiteSpace: "no-wrap"}}>{resQ}</pre>
 
-				<label>Results</label>
-				<pre style={{width: "100%", whiteSpace: "no-wrap"}}>
-					{this.props.queries.resultCountPending ? "WAITING FOR RESULT COUNT...\n" : this.props.queries.resultCount}
-				</pre>
-				<pre style={{width: "100%", whiteSpace: "no-wrap"}}>
-					{this.props.queries.resultsPending ? "WAITING FOR RESULTS...\n" : this.props.queries.results}
-				</pre>
+				<label>Results {resultCount}</label>
+				<ul className="result-list">
+					{results}
+				</ul>
 			</div>
 		</div>);
 	}
