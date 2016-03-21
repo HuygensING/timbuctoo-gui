@@ -92,7 +92,7 @@ class App extends React.Component {
 		const savedQuerySelect = <Select onChange={this.props.onLoadQuery} options={savedQueries.map((q) => q.name)} placeholder="Load query..." />;
 
 		let resultPath = currentQ ? clone(currentQ.pathToQuerySelection) : null;
-		if(currentQ) {
+		if(currentQ && resultPath && resultPath.length > 1) {
 			while(getIn(resultPath, currentQ).type !== "entity" && resultPath.length > 1) {
 				resultPath = resultPath.slice(0, resultPath.length - 1);
 			}
