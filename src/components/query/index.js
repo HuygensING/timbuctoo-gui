@@ -10,6 +10,7 @@ import QueryFilters from "./query-filters";
 import Input from "hire-forms-input";
 import Select from "hire-forms-select";
 
+import getIn from "../../util/get-in";
 
 import parseGremlin from "../../parsers/gremlin";
 
@@ -46,6 +47,23 @@ class App extends React.Component {
 		this.props.onSetQueryPath(path);
 	}
 
+	onResultClick(result) {
+		const currentQ = this.props.queries.currentQuery > -1 ? this.props.queries.queries[this.props.queries.currentQuery] : null;
+		if(!currentQ) { return; }
+		const data = getIn(currentQ.pathToQuerySelection, currentQ);
+
+		const val = data.type === "entity" ? {
+			type: "property",
+			name: "tim_id",
+			or: [{type: "value", value: result.id, label: result.displayName}]
+		} : {
+			type: "value", value: result.id, label: result.displayName
+		};
+		const path = data.type === "entity" ? ["and"] : ["or"];
+
+		this.props.onAddQueryFilter(path, val);
+	}
+
 	onWheel(ev) {
 		if(ev.deltaY < 0) {
 			this.setState({scale: this.state.scale * 1.1 });
@@ -75,12 +93,12 @@ class App extends React.Component {
 
 		const results = currentQ && this.props.queries.results && this.props.queries.results.results[currentQ.pathToQuerySelection.join("|")] ?
 			this.props.queries.results.results[currentQ.pathToQuerySelection.join("|")].map((r, i) => (
-				<li key={i}>{r.displayName}</li>
+				<li key={i} onClick={() => this.onResultClick(r)}>{r.displayName}</li>
 			)) : null;
 
 
 		const resultCount = currentQ && this.props.queries.results && this.props.queries.results.counts[currentQ.pathToQuerySelection.join("|")] ?
-			`(${this.props.queries.results.counts[currentQ.pathToQuerySelection.join("|")]})` : 
+			`(${this.props.queries.results.counts[currentQ.pathToQuerySelection.join("|")]})` :
 			this.props.queries.resultsPending ? "(...)" : null;
 
 		return (<div>
