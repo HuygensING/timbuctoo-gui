@@ -11,7 +11,7 @@ import Input from "hire-forms-input";
 import Select from "hire-forms-select";
 
 import getIn from "../../util/get-in";
-
+import clone from "../../util/clone-deep";
 import parseGremlin from "../../parsers/gremlin";
 
 class App extends React.Component {
@@ -91,14 +91,22 @@ class App extends React.Component {
 		const { savedQueries } = this.props.queries;
 		const savedQuerySelect = <Select onChange={this.props.onLoadQuery} options={savedQueries.map((q) => q.name)} placeholder="Load query..." />;
 
-		const results = currentQ && this.props.queries.results && this.props.queries.results.results[currentQ.pathToQuerySelection.join("|")] ?
-			this.props.queries.results.results[currentQ.pathToQuerySelection.join("|")].map((r, i) => (
+		let resultPath = currentQ ? clone(currentQ.pathToQuerySelection) : null;
+		if(currentQ) {
+			while(getIn(resultPath, currentQ).type !== "entity" && resultPath.length > 1) {
+				resultPath = resultPath.slice(0, resultPath.length - 1);
+			}
+		}
+
+
+		const results = currentQ && this.props.queries.results && this.props.queries.results.results[resultPath.join("|")] ?
+			this.props.queries.results.results[resultPath.join("|")].map((r, i) => (
 				<li key={i} onClick={() => this.onResultClick(r)}>{r.displayName}</li>
 			)) : null;
 
 
-		const resultCount = currentQ && this.props.queries.results && this.props.queries.results.counts[currentQ.pathToQuerySelection.join("|")] ?
-			`(${this.props.queries.results.counts[currentQ.pathToQuerySelection.join("|")]})` :
+		const resultCount = currentQ && this.props.queries.results && this.props.queries.results.counts[resultPath.join("|")] ?
+			`(${this.props.queries.results.counts[resultPath.join("|")]})` :
 			this.props.queries.resultsPending ? "(...)" : null;
 
 		return (<div>
@@ -154,6 +162,7 @@ class App extends React.Component {
 
 App.propTypes = {
 	entity: React.PropTypes.object,
+	onAddQueryFilter: React.PropTypes.func,
 	onDeleteQuery: React.PropTypes.func,
 	onDeleteQueryFilter: React.PropTypes.func,
 	onLoadQuery: React.PropTypes.func,
