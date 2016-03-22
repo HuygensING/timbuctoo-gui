@@ -100,7 +100,7 @@ class QueryFilters extends React.Component {
 		}
 		return (<div>
 			{body}
-			<pre style={{width: "100%", whiteSpace: "no-wrap" }}>{JSON.stringify(query, null, 2)}</pre>
+{/*			<pre style={{width: "100%", whiteSpace: "no-wrap" }}>{JSON.stringify(query, null, 2)}</pre>*/}
 		</div>);
 	}
 }

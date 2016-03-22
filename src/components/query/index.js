@@ -94,6 +94,7 @@ class App extends React.Component {
 		let resultPath = currentQ ? clone(currentQ.pathToQuerySelection) : null;
 		if(currentQ && resultPath && resultPath.length > 1) {
 			while(getIn(resultPath, currentQ).type !== "entity" && resultPath.length > 1) {
+				if(this.props.queries.results && this.props.queries.results.results[resultPath.join("|")]) { break; }
 				resultPath = resultPath.slice(0, resultPath.length - 1);
 			}
 		}
@@ -147,9 +148,9 @@ class App extends React.Component {
 				<QueryFilters {...this.props} onChange={this.onQueryChange.bind(this)} />
 			</div>
 			<div className="result-wrapper">
-				<label>Gremlin query</label>
+{/*				<label>Gremlin query</label>
 				<pre style={{width: "100%", whiteSpace: "no-wrap"}}>{resQ}</pre>
-
+*/}
 				<label>Results {resultCount}</label>
 				<ul className="result-list">
 					{results}
