@@ -7,7 +7,7 @@ const listVres = () => (dispatch) =>
 		headers: {
 			"Accept": "application/json"
 		},
-		url: `//acc.repository.huygens.knaw.nl/system/vres`
+		url: `${config.apiUrl.v4}/system/vres`
 	}, (err, resp) => {
 		dispatch({type: "LIST_VRES", list: JSON.parse(resp.body)});
 	}, null, "List VREs");
