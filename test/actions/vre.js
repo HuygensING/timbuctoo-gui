@@ -13,7 +13,7 @@ describe("vre", () => { //eslint-disable-line no-undef
 	};
 
 
-	it("should listVres",/* (done) => { //eslint-disable-line no-undef
+	it("should listVres"/*, (done) => { //eslint-disable-line no-undef
 		const list = ["a", "b", "c"];
 
 
