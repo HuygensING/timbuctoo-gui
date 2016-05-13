@@ -45,12 +45,12 @@ const submitQuery = () => (dispatch, getState) => {
 	server.fastXhr({
 		method: "POST",
 		headers: {"Accept": "application/json"},
-		url: `/api/v2.1/gremlin`,
+		url: `${config.apiUrl.v4}/gremlin`,
 		body: q[0]
 	}, (err, resp) => dispatch({type: "SET_QUERY_RESULTS", results: JSON.parse(resp.body)}));
 	server.fastXhr({
 		method: "POST",
-		url: `/api/v2.1/gremlin`,
+		url: `${config.apiUrl.v4}/gremlin`,
 		body: q[1]
 	}, (err, resp) => dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}));
 };
@@ -64,8 +64,9 @@ const saveQuery = () => (dispatch, getState) => {
 };
 
 const loadSavedQueries = () => (dispatch) =>
-	server.fastXhr({method: "GET", url: `${config.apiUrl.v4}/saved-queries`},
-		(err, resp) => dispatch({type: "SET_SAVED_QUERIES", savedQueries: JSON.parse(resp.body)}));
+	dispatch({type: "SET_SAVED_QUERIES", savedQueries: []});
+//	server.fastXhr({method: "GET", url: `${config.apiUrl.v4}/saved-queries`},
+//		(err, resp) => dispatch({type: "SET_SAVED_QUERIES", savedQueries: JSON.parse(resp.body)}));
 
 const loadQuery = (name) => (dispatch) =>
 	dispatch({type: "LOAD_SAVED_QUERY", name: name});
