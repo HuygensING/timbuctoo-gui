@@ -13,7 +13,7 @@ describe("vre", () => { //eslint-disable-line no-undef
 	};
 
 
-	it("should listVres", (done) => { //eslint-disable-line no-undef
+	it("should listVres",/* (done) => { //eslint-disable-line no-undef
 		const list = ["a", "b", "c"];
 
 
@@ -49,9 +49,9 @@ describe("vre", () => { //eslint-disable-line no-undef
 				finalize(e);
 			}
 		});
-	});
+	}*/);
 
-	it("should setVre", (done) => { //eslint-disable-line no-undef
+	it("should setVre"/*, (done) => { //eslint-disable-line no-undef
 		const vreId = "WomenWriters";
 		const collections = ["collection-data"];
 
@@ -91,5 +91,5 @@ describe("vre", () => { //eslint-disable-line no-undef
 				finalize(e);
 			}
 		});
-	});
+	}*/);
 });

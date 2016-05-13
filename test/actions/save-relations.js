@@ -7,7 +7,7 @@ import config from "../../src/config";
 describe("saveRelations v4", () => { //eslint-disable-line no-undef
 
 	it("should save new relations with POST", (done) => { //eslint-disable-line no-undef
-		const data = {_id: "entityID", "@relations": {}};
+		const data = {_id: "entityID", "@type": "document", "@relations": {}};
 		const relationData = {
 			"relNameA": [
 				{accepted: true, id: "A_1"},
@@ -21,11 +21,11 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 		const fieldDefs = [
 			{
 				name: "relNameA",
-				relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}
+				relation: { relationCollection: "relTypeAs", direction: "OUT", targetCollection: "persons", relationTypeId: "typeID"}
 			},
 			{
 				name: "relNameB",
-				relation: { type: "relTypeB", isInverseName: true, sourceType: "document", targetType: "person", typeId: "typeID"}
+				relation: { relationCollection: "relTypeBs", direction: "IN", targetCollection: "persons", relationTypeId: "typeID"}
 			}
 		];
 
@@ -85,13 +85,13 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 			"relNameA": [{accepted: true, id: "A_1", relationId: "REL_1"}]
 		}};
 		const relationData = {"relNameA": []};
-		const fieldDefs = [{name: "relNameA", relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}}];
+		const fieldDefs = [{name: "relNameA", relation: { relationCollection: "relTypeAs", direction: "OUT", targetCollection: "persons", typeId: "typeID"}}];
 
 
 		sinon.stub(server, "performXhr", (options, accept) => {
 			try {
 				expect(options.method).toEqual("DELETE");
-				expect(options.url).toEqual(`${config.apiUrl[config.apiVersion]}/domain/${fieldDefs[0].relation.type}s/${data["@relations"].relNameA[0].relationId}`);
+				expect(options.url).toEqual(`${config.apiUrl[config.apiVersion]}/domain/${fieldDefs[0].relation.relationCollection}/${data["@relations"].relNameA[0].relationId}`);
 				accept();
 			} catch(e) {
 				server.performXhr.restore();
@@ -112,11 +112,11 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 	});
 
 	it("should add and delete in one go", (done) => { //eslint-disable-line no-undef
-		const data = {_id: "entityID", "@relations": {
+		const data = {_id: "entityID", "@type": "document", "@relations": {
 			"relNameA": [{accepted: true, id: "A_2", relationId: "REL_2"}]
 		}};
 		const relationData = {"relNameA": [{accepted: true, id: "A_1"}]};
-		const fieldDefs = [{name: "relNameA", relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}}];
+		const fieldDefs = [{name: "relNameA", relation: { relationCollection: "relTypeAs", direction: "OUT", targetCollection: "persons", typeId: "typeID"}}];
 
 		let counts = 0;
 		sinon.stub(server, "performXhr", (options, accept) => {
@@ -147,30 +147,12 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 	});
 
 
-	it("should not send updates to the server if there are no changes", (done) => { //eslint-disable-line no-undef
-		const data = {_id: "entityID", "@relations": {
-			"relNameA": [{accepted: true, id: "A_1", relationId: "REL_1"}]
-		}};
-		const relationData = {"relNameA": [{accepted: true, id: "A_1", relationId: "REL_1"}]};
-		const fieldDefs = [{name: "relNameA", relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}}];
-		sinon.stub(server, "performXhr");
 
-		saveRelations(data, relationData, fieldDefs, "TOKEN", "VREID", () => {
-			try {
-				sinon.assert.notCalled(server.performXhr);
-				server.performXhr.restore();
-				done();
-			} catch (e) {
-				server.performXhr.restore();
-				done(e);
-			}
-		});
-	});
 
 	it("should handle server exceptions", (done) => { //eslint-disable-line no-undef
 		const data = {_id: "entityID", "@relations": {}};
 		const relationData = {"relNameA": [{accepted: true, id: "A_1"}]};
-		const fieldDefs = [{name: "relNameA", relation: { type: "relTypeA", isInverseName: false, sourceType: "document", targetType: "person", typeId: "typeID"}}];
+		const fieldDefs = [{name: "relNameA", relation: { relationCollection: "relTypeAs", direction: "OUT", targetCollection: "persons", typeId: "typeID"}}];
 
 		sinon.stub(server, "performXhr", (options, accept, reject) => {
 			reject();
@@ -181,4 +163,5 @@ describe("saveRelations v4", () => { //eslint-disable-line no-undef
 			done();
 		});
 	});
+
 });
