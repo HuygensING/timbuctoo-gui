@@ -5,23 +5,12 @@ import FacetedSearch from "hire-faceted-search";
 import SearchFilters from "./search-filters";
 import Header from "./header";
 import config from "../../config";
-
+import Messages from "./messages";
 
 class App extends React.Component {
 
 	render() {
 		console.log(this.props.vre, this.props.entity);
-		console.log(this.props.messages);
-		const { messages } = this.props;
-
-		const errorMessages = messages.log.filter((msg) => msg.type === "ERROR_MESSAGE");
-		const errorMessage = errorMessages.length ? errorMessages[errorMessages.length - 1] : null;
-
-		const errorMessageDiv = errorMessage ?
-			<div className="alert alert-danger alert-dismissible">
-				<button className="close" ><span aria-hidden="true">&times;</span></button>
-				<strong>Warning!</strong> <span>{errorMessage.message}</span>
-			</div> : null;
 
 		let businessPart = this.props.vre.vreId && this.props.entity.domain ? (
 			<div>
@@ -49,7 +38,7 @@ class App extends React.Component {
 					<Header {...this.props} />
 				</header>
 				<main>
-					{errorMessageDiv}
+					<Messages {...this.props} type="ERROR_MESSAGE" />
 					{businessPart}
 				</main>
 			</div>
