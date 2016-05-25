@@ -1,7 +1,6 @@
 import cx from "classnames";
 
 import React from "react";
-
 import Select from "hire-forms-select";
 
 import Login from "./login";
