@@ -87,6 +87,35 @@ reset-button()
 					border-color #ebccd1
 					color #a94442
 
+.names-form
+	& > ul > li
+		display inline-block
+		width 230px
+		border-radius 4px
+		margin-right 12px
+		border 1px solid #ccc
+		margin-bottom 12px
+		padding 10px
+		float left
+		height 70px
+		& > div:nth-of-type(1)
+			height 20px
+
+	button.hire-remove-form
+		reset-button()
+		width 24px
+		border-radius 2px
+		border 1px solid #ccc
+		margin-right 8px
+		position relative
+		top -4px
+
+		&:hover
+			background-color #f2dede
+			border-color #ebccd1
+			color #a94442
+
+
 .hire-select
 	& > .input-container
 		width 200px
