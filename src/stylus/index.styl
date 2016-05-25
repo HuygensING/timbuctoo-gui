@@ -119,8 +119,8 @@ reset-button()
 .hire-select
 	& > .input-container
 		width 200px
-		height 1.5em
-		line-height 1.5em
+		height 26px
+		line-height 26px
 		background-color #fff
 		border 1px solid #aaa
 
@@ -155,3 +155,40 @@ reset-button()
 			&:hover
 				cursor pointer
 				background-color #f5f5f5
+
+list-item()
+	border 1px solid #ddd
+	background-color #fcfcfc
+	border-radius 4px
+	margin-bottom 4px
+	padding 6px
+	color #666
+	cursor pointer
+
+	&:hover
+		color #333
+		border-color #ccc
+
+	button
+		reset-button()
+		border 1px solid #ccc
+		&:hover
+			background-color #f2dede
+			border-color #ebccd1
+			color #a94442
+
+.hire-list
+	.hire-list-item
+		list-item()
+
+
+.hire-forms-autocomplete
+	.hire-options
+		max-height 200px
+		overflow-y auto
+		border 1px solid #ccc
+		li
+			list-item()
+
+.hire-input > input
+	width 200px
