@@ -6,6 +6,7 @@ import FacetedSearch from "hire-faceted-search";
 import RequestLog from "./request-log";
 import SearchFilters from "./search-filters";
 import config from "../../config";
+import cx from "classnames";
 
 class App extends React.Component {
 	render() {
@@ -51,21 +52,46 @@ class App extends React.Component {
 		return (
 			<div>
 				<RequestLog {...this.props} />
-				<Login
-					appId={this.props.vre.vreId}
-					headers={{VRE_ID: "WomenWriters"}}
-					onChange={this.props.onLoginChange}
-					userUrl={`${config.apiUrl["v2.1"]}/system/users/me`}>
-					<Basic url={`${config.apiUrl["v2.1"]}/authenticate`} />
-				</Login>
+				<nav className="navbar navbar-default">
+					<div className="container-fluid">
+						<div className="collapse navbar-collapse">
+							<ul className="nav navbar-nav">
+								{this.props.vre.list.map((vreId) => (
+									<li className={cx({active: vreId === this.props.vre.vreId || null})} key={vreId}>
+										<a onClick={() => this.props.onSelectVre(vreId)}>{vreId}</a>
+									</li>
+								))}
+								<li>{domainSelect}</li>
+								<li>{addNewButton}</li>
+							</ul>
+
+
+							<ul className="nav navbar-nav navbar-right">
+								<li className={cx("dropdown", {open: true})}>
+									<a className="dropdown-toggle" role="button">
+										Login <span className="caret"></span>
+									</a>
+									<ul className="dropdown-menu">
+										<li>
+											<div style={{display: "none"}}>
+												<Login
+													appId={this.props.vre.vreId}
+													headers={{VRE_ID: "WomenWriters"}}
+													onChange={this.props.onLoginChange}
+													userUrl={`${config.apiUrl["v2.1"]}/system/users/me`} />
+											</div>
+
+											<Basic url={`${config.apiUrl["v2.1"]}/authenticate`} />
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</nav>
+
+
 				{errorMessage}
-				<ul id="vre-list">
-					{this.props.vre.list.map((vreId) => (
-						<li key={vreId} onClick={() => this.props.onSelectVre(vreId)}>{vreId}</li>
-					))}
-					<li>{domainSelect}</li>
-					<li>{addNewButton}</li>
-				</ul>
 				{businessPart}
 
 			</div>
