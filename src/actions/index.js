@@ -41,5 +41,6 @@ export default {
 	onSubmitQuery: () => store.dispatch(submitQuery()),
 	onNameQuery: (value) => store.dispatch(nameQuery(value)),
 	onSaveQuery: () => store.dispatch(saveQuery()),
-	onLoadQuery: (name) => store.dispatch(loadQuery(name))
+	onLoadQuery: (name) => store.dispatch(loadQuery(name)),
+	onDismissMessage: (messageIndex) => store.dispatch({type: "DISMISS_MESSAGE", messageIndex: messageIndex})
 };

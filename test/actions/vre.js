@@ -73,7 +73,7 @@ describe("vre", () => { //eslint-disable-line no-undef
 					method: "GET"
 				});
 				expect(operation).toEqual(`Fetch VRE description for ${vreId}`);
-				accept(null, {body: JSON.stringify(collections)});
+				accept(null, {statusCode: 200, body: JSON.stringify(collections)});
 			} catch(e) {
 				finalize(e);
 			}

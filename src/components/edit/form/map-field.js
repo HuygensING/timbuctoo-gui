@@ -12,7 +12,7 @@ import KeywordField from "./fields/keyword";
 
 const MAP = {
 	"string": (fieldDef, props) => (<StringField {...props} name={fieldDef.name} />),
-	"text": (fieldDef, props) => (<TextField {...props} name={fieldDef.name} />),
+	"text": (fieldDef, props) => (<StringField {...props} name={fieldDef.name} />),
 	"links": (fieldDef, props) => (<LinksField {...props} name={fieldDef.name} />),
 	"datable": (fieldDef, props) => (<DatableField {...props} name={fieldDef.name} />),
 	"names": (fieldDef, props) => (<NamesField {...props} name={fieldDef.name} options={fieldDef.options} />),
@@ -22,4 +22,4 @@ const MAP = {
 	"keyword": (fieldDef, props) => (<KeywordField {...props} fieldDefinition={fieldDef} name={fieldDef.name} />)
 };
 
-export default (fieldDef, props) => MAP[fieldDef.type](fieldDef, props);
+export default (fieldDef, props) => (MAP[fieldDef.type] || MAP.string)(fieldDef, props);

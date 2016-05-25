@@ -20,7 +20,10 @@ const setVre = (vreId) => (dispatch) =>
 		},
 		url: `${config.apiUrl.v4}/metadata/${vreId}`
 	}, (err, resp) => {
-		dispatch({type: "SET_VRE", vreId: vreId, collections: JSON.parse(resp.body)});
-	}, null, `Fetch VRE description for ${vreId}`);
+		if (resp.statusCode === 200) {
+			dispatch({type: "SET_VRE", vreId: vreId, collections: JSON.parse(resp.body)});
+		}
+	}, () => dispatch({type: "SET_VRE", vreId: vreId, collections: []}), `Fetch VRE description for ${vreId}`);
+
 
 export {listVres, setVre};

@@ -3,7 +3,7 @@
 mkdir -p build/development/js
 mkdir -p build/development/css
 
-cp src/index.html build/development/index.html
+cp src/query.html build/development/index.html
 
 node_modules/.bin/browserify \
 	--require classnames \
@@ -17,7 +17,7 @@ node_modules/.bin/browserify \
 	--compress \
 	--out build/development/css/index.css \
 	--watch \
-	src/stylus/index.styl &
+	src/stylus/query.styl &
 
 node_modules/.bin/watchify src/query-index.js \
 	--outfile build/development/js/index.js \

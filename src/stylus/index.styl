@@ -1,105 +1,138 @@
-@import "./reset"
+ol, ul {
+	list-style: none;
+	padding 0;
+}
 
-body
-	font-family sans-serif
+main
+	padding-left 20px
+	padding-right 20px
 
+a
+	cursor pointer
 
-#app
-	margin-top 20px
-	padding 1em
-	ul#form
-		display inline-block
-		width 50%
-		margin-top 1em
-		& > li
-			padding 0.5em
-			&:nth-child(even)
-				background-color #ddf
-			&:nth-child(odd)
-				background-color #dfd
-			& > div
-				label
-					vertical-align top
-					display inline-block
-					width 175px
-					& + *
-						display inline-block
+/* bootstrap: .btn.btn-default */
+button 
+	-moz-user-select none
+	border 1px solid transparent
+	border-radius 4px
+	cursor pointer
+	display inline-block
+	font-size 14px
+	font-weight 400
+	line-height 1.42857
+	margin-bottom 0
+	padding 6px 12px
+	text-align center
+	vertical-align middle
+	white-space nowrap
 
-	.hire-faceted-search
-		vertical-align top
-		margin-top 1em
-		display inline-block
-		width 100%
-		padding 0
-		& > .hire-faceted-search-results
-			width 100%
-			padding 0
+	color #333
+	background-color #fff
+	border-color #ccc
 
-	ul#form + .hire-faceted-search
-		padding-left 1em
-		width 50%
+	&[disabled]
+		cursor default
+		background-color #ddd
+		color #888
+	&:active
+		color: #333;
+		background-color: #e6e6e6;
+		border-color: #adadad;
+	&:hover
+		color: #333;
+		background-color: #e6e6e6;
+		border-color: #adadad;
+	&:active:hover
+		color: #333;
+		background-color: #d4d4d4;
+		border-color: #8c8c8c;
 
-#app .hire-faceted-search .hire-faceted-search-results svg.loader,
-svg.loader
-	position absolute
-	z-index 1000
-	margin 0 auto
-	top 300px
-	width 200px
+reset-button()
 	padding 0
-	& > circle
-		fill #009688
+	border none
 
-#vre-list
-	& > li
-		display inline-block
-		margin-right 6px
-		&:hover
-			text-decoration underline
-			cursor pointer
 
-#request-log
-	position absolute
-	z-index 999
-	top 0
-	left 0
-	height 24px
-	line-height 20px
-	width 100%
-	font-family courier, serif
-	font-size 0.75em
-	background-color #aaa
-	padding 4px
-
-	&.close
-		height 100%
-	button
-		position absolute
-		bottom 2px
-		right 20px
-
-	& > div
-		height 100%
-		overflow-y auto
-		.msg
-			margin-left 6px
-		.time
-			margin-right 6px
-		.ERROR_MESSAGE
-			color #f00
-			font-weight bold
-
-.hire-input
-	height 1.5em
+.login-dropdown-list-item div.login-sub-component
+	padding 10px
 	& > input
-		height 100%
-		border 0
+		padding 0 10px 0 10px
+		margin-bottom 10px
+
+.hire-login
+	& > .login-status
+		color #777
+		margin-right 8px
+
+.edit-form 
+	width 50%
+	display inline-block
+	float left
+	.panel-heading > h3
+		white-space nowrap;
+		overflow hidden;
+		text-overflow ellipsis;
+		line-height normal;
+		width calc(100% - 210px);
+		padding-top 8px;
+	.list-group
+		max-height 650px
+		overflow-y auto
+
+.hire-faceted-search
+	width 50%
+	display inline-block
+
+.hire-multi-form
+	& > .form-list
+		& > .form
+			margin-top 20px
+			border 1px solid #f0f0f0
+			border-radius 4px
+			padding 12px
+			& > .hire-forms-form
+				width calc(100% - 60px)
+				display inline-block
+			& > button.hire-remove-form
+				float right
+				&:hover
+					background-color #f2dede
+					border-color #ebccd1
+					color #a94442
+
+.names-form
+	& > ul > li
+		display inline-block
+		width 230px
+		border-radius 4px
+		margin-right 12px
+		border 1px solid #ccc
+		margin-bottom 12px
+		padding 10px
+		float left
+		height 70px
+		& > div:nth-of-type(1)
+			height 20px
+
+	button.hire-remove-form
+		reset-button()
+		width 24px
+		border-radius 2px
+		border 1px solid #ccc
+		margin-right 8px
+		position relative
+		top -4px
+
+		&:hover
+			background-color #f2dede
+			border-color #ebccd1
+			color #a94442
+
 
 .hire-select
 	& > .input-container
 		width 200px
-		height 1.5em
-		line-height 1.5em
+		height 26px
+		line-height 26px
 		background-color #fff
 		border 1px solid #aaa
 
@@ -107,6 +140,7 @@ svg.loader
 		padding-left 6px
 
 		& > button
+			reset-button()
 			height 100%
 			width 25px
 			float right
@@ -132,219 +166,41 @@ svg.loader
 			display block
 			&:hover
 				cursor pointer
-				background-color #ddf
+				background-color #f5f5f5
 
-.hire-multi-form
-	& >.form-list
-		& > .form
-			margin-top 1em
-			& > div
-				float right
-				width calc(100% - 40px)
-				& > ul
-					clear both
-					margin-bottom 1em
-			& > .hire-remove-form
-				float left
-				margin-right 15px
-				width 25px
+list-item()
+	border 1px solid #ddd
+	background-color #fcfcfc
+	border-radius 4px
+	margin-bottom 4px
+	padding 6px
+	color #666
+	cursor pointer
 
-.names-form
-	& > ul
-		& > li
-			display inline-block
-			margin-right 0.5em
-
-.hire-login
-	float right
-	margin-right 400px
-
-svg text
-	-moz-user-select: -moz-none;
-	-khtml-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	&.property-value
-		fill rgba(0,0,0,0.5)
-		&.selected
-			fill rgba(0,0,0,0.9)
-
-svg > line
-	stroke rgba(196, 196, 196, .4)
-rect
-	stroke rgba(0,0,0,1)
-	&.handle:hover
-		cursor pointer
-	&.relation
-		fill rgba(255,0,0,.1)
-		&.selected
-			fill rgba(255,0,0,.4)
-	&.property
-		fill rgba(0,255,0,.1)
-		&.selected
-			fill rgba(0,255,0,.4)
-	&.property-value
-		stroke rgba(0,0,0,0)
-		fill rgba(128,128,128,.1)
-		&.selected
-			fill rgba(128,128,128,.4)
-	&.or-box
-		stroke rgba(128,128,128,.2)
-		fill rgba(0,0,0,0)
-
-
-		&:hover
-			stroke rgba(128,128,128,04)
-			fill rgba(0,0,255,0.05)
-			& ~ g > g > .query > g 
-				& > rect
-					fill rgba(0,0,255,.15)
-				& > text
-					fill rgba(0,0,0,.5)
-
-
-		&.selected
-			stroke rgba(128,128,128,1)
-			fill rgba(0,0,255,0.1)
-			& ~ g > g > .query > g 
-				& > rect
-					fill rgba(0,0,255,.3)
-				& > text
-					fill rgba(0,0,0,1)
-
-
-
-.delete-button:hover
-	fill rgba(255,0,0,1)
-
-.direction-toggle
-	& > rect
-		fill rgba(0,0,0,0)
-		stroke rgba(0,0,0,0)
-	& > line
-		stroke rgba(0,0,0,0.4)
-
-	&.selected
-		cursor pointer
-
-	&.selected > line
-		stroke-width 2
-		stroke rgba(0,0,0,1)
-
-	&.selected:hover > line
-		stroke rgba(0,0,255,1)
-
-.query
-	text
-		fill rgba(0,0,0,.2)
-	rect
-		fill rgba(0,0,0,0.2)
-
-	&.selected
-		text
-			fill rgba(0,0,0,1)
-		rect
-			stroke rgba(0,0,0,1)
-			fill rgba(0,0,255,0.4)
-
-.search-icon
-	position absolute
-	top 15px
-	right 15px
-	width 30px
-	height 30px
 	&:hover
-		fill #aaa
-		cursor pointer
+		color #333
+		border-color #ccc
 
-.query-bar
-	width 100%
-	position fixed
-	z-index 100
-	top 0
-	left 0
-	height 60px
-	background-color #efefef
-	rect
-		fill rgba(255,255,255,.4)
-
-	.hire-input, .hire-select
-		vertical-align top
-		margin 10px
-		margin-right 4px
-		display inline-block
-		width 600px
-		& > .input-container
-			width 100%
-		& > .hire-options
-			width 600px
-
-	.hire-input
-		width calc(100% - 700px)
-		border 1px solid #aaa
-		& input
-			width 100%
-		& + button
-			vertical-align top
-			margin: 12px
-			margin-left 0
-		& + button + .hire-select 
-			width 200px
-			& > .hire-options
-				border-top 1px solid #dadada
-				right 96px
-
-.grid-wrapper
-	position fixed
-	top 50px
-	left 0
-	width 50%
-	height calc(100% - 60px)
-
-.filter-wrapper
-	position fixed
-	padding 20px
-	top 60px
-	background-color #fafafa
-	left 50%
-	width 20%
-	min-height calc(100% - 60px)
-	pre
-		max-height 400px
-		overflow auto
-	.entity-form 
-		.hire-input
-			margin-top 6px
-			input
-				border 1px solid #aaa
-				border-radius 4px
-				padding-left 6px
-		& > li
-			margin-bottom 12px
-
-
-.result-wrapper
-	position absolute
-	top 60px
-	padding 20px
-	left 70%
-	width 30%
-	min-height calc(100% - 60px)
-
-ul.result-list
-	& > li
-		height 2em
-		line-height 2em
-		padding-left 1em
-		border 1px solid #ddd
-		background-color #fafafa
-		border-radius 4px
-		margin-top 6px
-		overflow hidden
-		white-space nowrap
-		text-overflow ellipsis
-		cursor pointer
+	button
+		reset-button()
+		border 1px solid #ccc
 		&:hover
-			background-color white
-			text-decoration underline
+			background-color #f2dede
+			border-color #ebccd1
+			color #a94442
+
+.hire-list
+	.hire-list-item
+		list-item()
+
+
+.hire-forms-autocomplete
+	.hire-options
+		max-height 200px
+		overflow-y auto
+		border 1px solid #ccc
+		li
+			list-item()
+
+.hire-input > input
+	width 200px
