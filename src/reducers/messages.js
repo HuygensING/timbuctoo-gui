@@ -9,6 +9,9 @@ export default function(state=initialState, action) {
 		case "REQUEST_MESSAGE":
 			state.log.push({message: action.message, type: action.type, time: new Date()});
 			return state;
+		case "SUCCESS_MESSAGE":
+			state.log.push({message: action.message, type: action.type, time: new Date()});
+			return state;
 		case "ERROR_MESSAGE":
 			state.log.push({message: action.message, type: action.type, time: new Date()});
 			return state;

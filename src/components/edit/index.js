@@ -38,7 +38,7 @@ class App extends React.Component {
 					<Header {...this.props} />
 				</header>
 				<main>
-					<Messages {...this.props} type="ERROR_MESSAGE" />
+					<Messages {...this.props} types={["ERROR_MESSAGE", "SUCCESS_MESSAGE"]} />
 					{businessPart}
 				</main>
 			</div>
