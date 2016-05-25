@@ -12,8 +12,7 @@ const listVres = () => (dispatch) =>
 		dispatch({type: "LIST_VRES", list: JSON.parse(resp.body)});
 	}, null, "List VREs");
 
-const setVre = (vreId) => (dispatch) =>	{
-	dispatch({type: "SET_VRE", vreId: vreId, collections: []});
+const setVre = (vreId) => (dispatch) =>
 	server.performXhr({
 		method: "GET",
 		headers: {
@@ -25,6 +24,6 @@ const setVre = (vreId) => (dispatch) =>	{
 			dispatch({type: "SET_VRE", vreId: vreId, collections: JSON.parse(resp.body)});
 		}
 	}, () => dispatch({type: "SET_VRE", vreId: vreId, collections: []}), `Fetch VRE description for ${vreId}`);
-};
+
 
 export {listVres, setVre};
