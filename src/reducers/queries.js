@@ -153,7 +153,7 @@ export default function(state=initialState, action) {
 			return {...state, results: null, resultCount: null, resultsPending: true, resultCountPending: true};
 
 		case "SET_QUERY_RESULTS":
-			return {...state, results: action.results, resultsPending: false};
+			return {...state, results: {or: action.results.or, root: action.results.results }, resultCount: action.results.resultCount, resultCountPending: false};
 
 		case "SET_QUERY_RESULT_COUNT":
 			return {...state, resultCount: action.count, resultCountPending: false};

@@ -51,7 +51,7 @@ class App extends React.Component {
 		const currentQ = this.props.queries.currentQuery > -1 ? this.props.queries.queries[this.props.queries.currentQuery] : null;
 		if(!currentQ) { return; }
 		const data = getIn(currentQ.pathToQuerySelection, currentQ);
-
+		if (data.type === "relation") { return; }
 		const val = data.type === "entity" ? {
 			type: "property",
 			name: "tim_id",
@@ -92,23 +92,32 @@ class App extends React.Component {
 		const savedQuerySelect = <Select onChange={this.props.onLoadQuery} options={savedQueries.map((q) => q.name)} placeholder="Load query..." />;
 
 		let resultPath = currentQ ? clone(currentQ.pathToQuerySelection) : null;
+
 		if(currentQ && resultPath && resultPath.length > 1) {
 			while(getIn(resultPath, currentQ).type !== "entity" && resultPath.length > 1) {
-				if(this.props.queries.results && this.props.queries.results.results[resultPath.join("|")]) { break; }
+				if(this.props.queries.results && getIn(resultPath, this.props.queries.results)) { break; }
 				resultPath = resultPath.slice(0, resultPath.length - 1);
 			}
 		}
 
 
-		const results = currentQ && this.props.queries.results && this.props.queries.results.results[resultPath.join("|")] ?
-			this.props.queries.results.results[resultPath.join("|")].map((r, i) => (
+		let results = currentQ && this.props.queries.results && getIn(resultPath, this.props.queries.results)  && getIn(resultPath, this.props.queries.results).results ?
+			getIn(resultPath, this.props.queries.results).results.map((r, i) => (
 				<li key={i} onClick={() => this.onResultClick(r)}>{r.displayName}</li>
 			)) : null;
+		if (currentQ && this.props.queries.results && resultPath.length === 1) {
+			results = getIn(["root"], this.props.queries.results).map((r, i) => (
+				<li key={i} onClick={() => this.onResultClick(r)}>{r.displayName}</li>
+			));
+		}
 
-
-		const resultCount = currentQ && this.props.queries.results && this.props.queries.results.counts[resultPath.join("|")] ?
-			`(${this.props.queries.results.counts[resultPath.join("|")]})` :
+		let resultCount = currentQ && this.props.queries.results && getIn(resultPath, this.props.queries.results) && getIn(resultPath, this.props.queries.results).resultCount ?
+			`(${getIn(resultPath, this.props.queries.results).resultCount})` :
 			this.props.queries.resultsPending ? "(...)" : null;
+
+		if (currentQ && this.props.queries.results && resultPath.length === 1) {
+			resultCount = `(${this.props.queries.resultCount})`;
+		}
 
 		return (<div>
 			<div className="query-bar">

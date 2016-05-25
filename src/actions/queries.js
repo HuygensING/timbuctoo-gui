@@ -44,15 +44,15 @@ const submitQuery = () => (dispatch, getState) => {
 	const q = parsers.parseGremlin(queries.queries[queries.currentQuery]);
 	server.fastXhr({
 		method: "POST",
-		headers: {"Accept": "application/json"},
+		headers: {"Accept": "application/json", "Content-type": "application/json"},
 		url: `${config.apiUrl.v4}/gremlin`,
-		body: q[0]
+		body: JSON.stringify({ or: queries.queries[queries.currentQuery]["or"]})
 	}, (err, resp) => dispatch({type: "SET_QUERY_RESULTS", results: JSON.parse(resp.body)}));
-	server.fastXhr({
+/*	server.fastXhr({
 		method: "POST",
 		url: `${config.apiUrl.v4}/gremlin`,
 		body: q[1]
-	}, (err, resp) => dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}));
+	}, (err, resp) => dispatch({type: "SET_QUERY_RESULT_COUNT", count: resp.body}));*/
 };
 
 const saveQuery = () => (dispatch, getState) => {
