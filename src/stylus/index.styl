@@ -63,24 +63,30 @@ reset-button()
 		color #777
 		margin-right 8px
 
+.edit-form,
+.edit-form + div
+	.panel-heading 
+		& > h3
+			white-space nowrap
+			overflow hidden
+			text-overflow ellipsis
+			line-height normal
+			width calc(100% - 210px)
+			padding-top 8px
+	.list-group
+		height 650px
+		overflow-y auto
+
+
 .edit-form 
 	width 50%
 	display inline-block
 	float left
-	.panel-heading > h3
-		white-space nowrap;
-		overflow hidden;
-		text-overflow ellipsis;
-		line-height normal;
-		width calc(100% - 210px);
-		padding-top 8px;
-	.list-group
-		max-height 650px
-		overflow-y auto
 
-.hire-faceted-search
-	width 50%
-	display inline-block
+	& + div
+		width calc(50% - 20px)
+		display inline-block
+		margin-left 20px
 
 .hire-multi-form
 	& > .form-list

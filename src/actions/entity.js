@@ -97,4 +97,9 @@ const saveEntity = () => (dispatch, getState) => {
 	}
 };
 
-export { saveEntity, selectEntity, makeNewEntity, deleteEntity };
+const fetchEntityList = (domain) => (dispatch) => {
+	crud.fetchEntityList(domain, (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data}));
+};
+
+
+export { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList };

@@ -44,6 +44,7 @@ class Header extends React.Component {
 	onDomainSelect(domain) {
 		this.setState({openMenuVreId: "none"});
 		this.props.onNew(domain);
+		this.props.onSelectDomain(domain);
 	}
 
 	render() {
@@ -85,6 +86,7 @@ Header.propTypes = {
 	entity: React.PropTypes.object,
 	onLoginChange: React.PropTypes.func,
 	onNew: React.PropTypes.func,
+	onSelectDomain: React.PropTypes.func,
 	onSelectVre: React.PropTypes.func,
 	vre: React.PropTypes.object
 };

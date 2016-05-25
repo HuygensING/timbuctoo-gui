@@ -1,5 +1,5 @@
 import store from "../store";
-import { saveEntity, selectEntity, makeNewEntity, deleteEntity } from "./entity";
+import { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList } from "./entity";
 import {
 	deleteQuery,
 	selectQuery,
@@ -31,6 +31,9 @@ export default {
 	onChange: (fieldPath, value) => store.dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
 	onLoginChange: (response) => store.dispatch(setUser(response)),
 	onSelectVre: (vreId) => store.dispatch(setVre(vreId)),
+	onDismissMessage: (messageIndex) => store.dispatch({type: "DISMISS_MESSAGE", messageIndex: messageIndex}),
+	onSelectDomain: (domain) => store.dispatch(fetchEntityList(domain)),
+
 	onSelectQuery: (domain, queryIndex, position = null) => store.dispatch(selectQuery(domain, queryIndex, position)),
 	onDeleteQuery: (queryIndex) => store.dispatch(deleteQuery(queryIndex)),
 	onSetQueryPath: (path) => store.dispatch(setQueryPath(path)),
@@ -42,5 +45,4 @@ export default {
 	onNameQuery: (value) => store.dispatch(nameQuery(value)),
 	onSaveQuery: () => store.dispatch(saveQuery()),
 	onLoadQuery: (name) => store.dispatch(loadQuery(name)),
-	onDismissMessage: (messageIndex) => store.dispatch({type: "DISMISS_MESSAGE", messageIndex: messageIndex})
 };

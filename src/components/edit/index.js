@@ -1,11 +1,9 @@
 import React from "react";
 
 import Form from "./form";
-import FacetedSearch from "hire-faceted-search";
-import SearchFilters from "./search-filters";
 import Header from "./header";
-import config from "../../config";
 import Messages from "./messages";
+import EntityList from "./entity-list";
 
 class App extends React.Component {
 
@@ -15,21 +13,7 @@ class App extends React.Component {
 		let businessPart = this.props.vre.vreId && this.props.entity.domain ? (
 			<div>
 				<Form {...this.props} />
-				<FacetedSearch
-					config={{
-						baseURL: config.apiUrl["v2.1"],
-						searchPath: `/search/${this.props.entity.domain}`,
-						headers: {
-							VRE_ID: this.props.vre.vreId,
-							Accept: "application/json"
-						}
-					}}
-					customComponents={{
-						filters: SearchFilters
-					}}
-					key={this.props.entity.domain}
-					onSelect={(obj) => this.props.onSelect({id: obj.id, domain: `${obj.type}s`})}
-				/>
+				<EntityList {...this.props} />
 			</div>) : null;
 
 		return (
