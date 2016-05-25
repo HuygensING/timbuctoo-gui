@@ -50,9 +50,6 @@ class Header extends React.Component {
 		const { vre } = this.props;
 		const domains = Object.keys(vre.collections || {});
 		const { openMenuVreId } = this.state;
-		const addNewButton = this.props.vre.vreId && this.props.entity.domain ?
-			<button onClick={() => this.props.onNew(this.props.entity.domain)}>Add new</button>
-			: null;
 
 		return (
 			<nav className="navbar navbar-default">
@@ -76,7 +73,6 @@ class Header extends React.Component {
 									</ul>
 								</li>
 							))}
-							<li>{addNewButton}</li>
 						</ul>
 
 				</div>

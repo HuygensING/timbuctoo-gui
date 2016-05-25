@@ -25,6 +25,11 @@ button
 	background-color #fff
 	border-color #ccc
 
+	&[disabled]
+		cursor default
+		background-color #ddd
+		color #888
+
 .login-dropdown-list-item div.login-sub-component
 	padding 10px
 	& > input
@@ -35,6 +40,25 @@ button
 	& > .login-status
 		color #777
 		margin-right 8px
+
+.edit-form 
+	width 50%
+	display inline-block
+	float left
+	.panel-heading > h3
+		white-space nowrap;
+		overflow hidden;
+		text-overflow ellipsis;
+		line-height normal;
+		width calc(100% - 210px);
+		padding-top 8px;
+	.list-group
+		max-height 650px
+		overflow-y auto
+
+.hire-faceted-search
+	width 50%
+	display inline-block
 
 #request-log
 	display none
