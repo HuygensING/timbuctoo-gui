@@ -22,4 +22,4 @@ const MAP = {
 	"keyword": (fieldDef, props) => (<KeywordField {...props} fieldDefinition={fieldDef} name={fieldDef.name} />)
 };
 
-export default (fieldDef, props) => MAP[fieldDef.type](fieldDef, props);
+export default (fieldDef, props) => (MAP[fieldDef.type] || MAP.string)(fieldDef, props);

@@ -1,24 +1,55 @@
 import cx from "classnames";
 
 import React from "react";
-import Select from "hire-forms-select";
-
 import Login from "./login";
+
+
+const dropDownIsActive = (currentVre, vre) => currentVre === vre.vreId || null;
 
 
 class Header extends React.Component {
 
-	render() {
-		const domains = Object.keys(this.props.vre.collections || {});
-		const domainSelect = domains.length ? (
-			<Select
-				onChange={(domain) => this.props.onNew(domain)}
-				options={domains}
-				placeholder="- select a domain - "
-				value={this.props.entity.domain || ""}
-			/>
-		) : null;
+	constructor(props) {
+		super(props);
 
+		this.state = {
+			openMenuVreId: "none"
+		};
+
+		this.documentClickListener = this.handleDocumentClick.bind(this);
+	}
+
+	componentDidMount() {
+		document.addEventListener("click", this.documentClickListener, false);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener("click", this.documentClickListener, false);
+	}
+
+	handleDocumentClick(ev) {
+		const { openMenuVreId } = this.state;
+		if (this.state.openMenuVreId !== "none" && !document.querySelector(`.dropdown.${openMenuVreId}`).contains(ev.target)) {
+			this.setState({
+				openMenuVreId: "none"
+			});
+		}
+	}
+
+	onVreMenuClick(currentVre) {
+		this.setState({openMenuVreId: currentVre});
+		this.props.onSelectVre(currentVre);
+	}
+
+	onDomainSelect(domain) {
+		this.setState({openMenuVreId: "none"});
+		this.props.onNew(domain);
+	}
+
+	render() {
+		const { vre } = this.props;
+		const domains = Object.keys(vre.collections || {});
+		const { openMenuVreId } = this.state;
 		const addNewButton = this.props.vre.vreId && this.props.entity.domain ?
 			<button onClick={() => this.props.onNew(this.props.entity.domain)}>Add new</button>
 			: null;
@@ -26,19 +57,28 @@ class Header extends React.Component {
 		return (
 			<nav className="navbar navbar-default">
 				<div className="container-fluid">
-					<div className="collapse navbar-collapse">
+						<Login {...this.props} />
 						<ul className="nav navbar-nav navbar-left">
-							{this.props.vre.list.map((vreId) => (
-								<li className={cx({active: vreId === this.props.vre.vreId || null})} key={vreId}>
-									<a onClick={() => this.props.onSelectVre(vreId)}>{vreId}</a>
+							{vre.list.map((currentVre) => (
+								<li className={cx("dropdown", currentVre, {
+									active: dropDownIsActive(currentVre, vre),
+									open: currentVre === openMenuVreId
+								})} key={currentVre}>
+
+									<a className="dropdown-toggle" onClick={this.onVreMenuClick.bind(this, currentVre)}>
+										{currentVre}
+										<span className="caret"></span>
+									</a>
+									<ul className="dropdown-menu">
+										{domains.map((domain, i) => (<li key={i}>
+											<a onClick={() => this.onDomainSelect(domain)}>{domain}</a>
+										</li>))}
+									</ul>
 								</li>
 							))}
-							<li>{domainSelect}</li>
 							<li>{addNewButton}</li>
 						</ul>
 
-						<Login {...this.props} />
-					</div>
 				</div>
 			</nav>
 		);

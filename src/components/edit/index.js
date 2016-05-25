@@ -2,7 +2,6 @@ import React from "react";
 
 import Form from "./form";
 import FacetedSearch from "hire-faceted-search";
-import RequestLog from "./request-log";
 import SearchFilters from "./search-filters";
 import Header from "./header";
 import config from "../../config";
@@ -12,8 +11,17 @@ class App extends React.Component {
 
 	render() {
 		console.log(this.props.vre, this.props.entity);
+		console.log(this.props.messages);
+		const { messages } = this.props;
 
-		let errorMessage = this.props.entity.errorMessage ? <div style={{fontWeight: "bold", color: "red"}}>{this.props.entity.errorMessage}</div> : null;
+		const errorMessages = messages.log.filter((msg) => msg.type === "ERROR_MESSAGE");
+		const errorMessage = errorMessages.length ? errorMessages[errorMessages.length - 1] : null;
+
+		const errorMessageDiv = errorMessage ?
+			<div className="alert alert-danger alert-dismissible">
+				<button className="close" ><span aria-hidden="true">&times;</span></button>
+				<strong>Warning!</strong> <span>{errorMessage.message}</span>
+			</div> : null;
 
 		let businessPart = this.props.vre.vreId && this.props.entity.domain ? (
 			<div>
@@ -37,12 +45,13 @@ class App extends React.Component {
 
 		return (
 			<div>
-				<RequestLog {...this.props} />
-				<Header {...this.props} />
-
-				{errorMessage}
-				{businessPart}
-
+				<header>
+					<Header {...this.props} />
+				</header>
+				<main>
+					{errorMessageDiv}
+					{businessPart}
+				</main>
 			</div>
 		);
 	}
@@ -50,6 +59,7 @@ class App extends React.Component {
 
 App.propTypes = {
 	entity: React.PropTypes.object,
+	messages: React.PropTypes.object,
 	onLoginChange: React.PropTypes.func,
 	onNew: React.PropTypes.func,
 	onSelect: React.PropTypes.func,
