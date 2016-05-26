@@ -64,7 +64,8 @@ describe("entity", () => { //eslint-disable-line no-undef
 						"@type": domain.replace(/s$/, "")
 					},
 					domain: domain,
-					errorMessage: null
+					errorMessage: null,
+					list: []
 				});
 				finalize();
 			} catch (e) {
@@ -99,7 +100,8 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(store.getState().entity).toEqual({
 					data: responseData,
 					domain: domain,
-					errorMessage: null
+					errorMessage: null,
+					list: []
 				});
 				finalize();
 			} catch (e) {
@@ -177,7 +179,8 @@ describe("entity", () => { //eslint-disable-line no-undef
 						_id: entityId
 					},
 					domain: domain,
-					errorMessage: null
+					errorMessage: null,
+					list: []
 				});
 				expect(orderOfOperations).toEqual(["saveNewEntity", "fetchEntity", "saveRelations", "fetchEntity"]);
 				finalize();
@@ -248,7 +251,8 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(store.getState().entity).toEqual({
 					data: data,
 					domain: domain,
-					errorMessage: null
+					errorMessage: null,
+					list: []
 				});
 				expect(orderOfOperations).toEqual(["updateEntity", "saveRelations", "fetchEntity"]);
 
@@ -369,7 +373,8 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(store.getState().entity).toEqual({
 					data: null,
 					domain: domain,
-					errorMessage: `Failed to fetch doms with ID ${entityId}`
+					errorMessage: `Failed to fetch doms with ID ${entityId}`,
+					list: []
 				});
 				server.performXhr.restore();
 				done();
@@ -413,7 +418,8 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(store.getState().entity).toEqual({
 					data: data,
 					domain: domain,
-					errorMessage: `Failed to save ${domain} with ID ${entityId}`
+					errorMessage: `Failed to save ${domain} with ID ${entityId}`,
+					list: []
 				});
 				done();
 			} catch (e) {
@@ -451,7 +457,8 @@ describe("entity", () => { //eslint-disable-line no-undef
 						"@type": domain.replace(/s$/, "")
 					},
 					domain: domain,
-					errorMessage: `Failed to save new ${domain}`
+					errorMessage: `Failed to save new ${domain}`,
+					list: []
 				});
 				done();
 			} catch (e) {

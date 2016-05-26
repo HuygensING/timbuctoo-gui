@@ -7,7 +7,8 @@ describe("entity reducer", () => { //eslint-disable-line no-undef
 		expect(entityReducer({data: "x", domain: "y", errorMessage: "z"}, {type: "SET_VRE"})).toEqual({
 			data: null,
 			domain: null,
-			errorMessage: null
+			errorMessage: null,
+			list: []
 		});
 	});
 
