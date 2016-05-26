@@ -1,5 +1,5 @@
 import store from "../store";
-import { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList } from "./entity";
+import { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateLeft, paginateRight } from "./entity";
 import {
 	deleteQuery,
 	selectQuery,
@@ -23,6 +23,9 @@ const setUser = (response) => {
 	};
 };
 
+
+
+
 export default {
 	onNew: (domain) => store.dispatch(makeNewEntity(domain)),
 	onSelect: (record) => store.dispatch(selectEntity(record.domain, record.id)),
@@ -33,6 +36,8 @@ export default {
 	onSelectVre: (vreId) => store.dispatch(setVre(vreId)),
 	onDismissMessage: (messageIndex) => store.dispatch({type: "DISMISS_MESSAGE", messageIndex: messageIndex}),
 	onSelectDomain: (domain) => store.dispatch(fetchEntityList(domain)),
+	onPaginateLeft: () => store.dispatch(paginateLeft()),
+	onPaginateRight: () => store.dispatch(paginateRight()),
 
 	onSelectQuery: (domain, queryIndex, position = null) => store.dispatch(selectQuery(domain, queryIndex, position)),
 	onDeleteQuery: (queryIndex) => store.dispatch(deleteQuery(queryIndex)),
@@ -44,5 +49,5 @@ export default {
 	onSubmitQuery: () => store.dispatch(submitQuery()),
 	onNameQuery: (value) => store.dispatch(nameQuery(value)),
 	onSaveQuery: () => store.dispatch(saveQuery()),
-	onLoadQuery: (name) => store.dispatch(loadQuery(name)),
+	onLoadQuery: (name) => store.dispatch(loadQuery(name))
 };

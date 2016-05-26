@@ -34,11 +34,11 @@ const fetchEntity = (location, next, fail) =>
 		next(data);
 	}, fail, "Fetch entity");
 
-const fetchEntityList = (domain, next) =>
+const fetchEntityList = (domain, start, rows, next) =>
 	server.performXhr({
 		method: "GET",
 		headers: {"Accept": "application/json"},
-		url: `${config.apiUrl[config.apiVersion]}/domain/${domain}?rows=50`
+		url: `${config.apiUrl[config.apiVersion]}/domain/${domain}?rows=${rows}&start=${start}`
 	}, (err, resp) => {
 		const data = JSON.parse(resp.body);
 		next(data);
