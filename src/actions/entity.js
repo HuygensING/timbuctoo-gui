@@ -102,7 +102,7 @@ const saveEntity = () => (dispatch, getState) => {
 			// 2) Save relations using server response for current relations to diff against relationData
 			dispatch((redispatch) => saveRelations[config.apiVersion](JSON.parse(resp.body), relationData, getState().vre.collections[getState().entity.domain], getState().user.token, getState().vre.vreId, () =>
 				// 3) Refetch entity for render
-				redispatch(selectEntity(getState().entity.domain, getState().entity.data._id, null, `Succesfully saved ${getState().entity.domain} with ID ${getState().entity.data._id}`)))), () =>
+				redispatch(selectEntity(getState().entity.domain, getState().entity.data._id, null, `Succesfully saved ${getState().entity.domain} with ID ${getState().entity.data._id}`, () => dispatch(fetchEntityList(getState().entity.domain)))))), () =>
 					// 2a) Handle error by refetching and passing along an error message
 					dispatch(selectEntity(getState().entity.domain, getState().entity.data._id, `Failed to save ${getState().entity.domain} with ID ${getState().entity.data._id}`)));
 

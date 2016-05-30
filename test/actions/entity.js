@@ -202,13 +202,14 @@ describe("entity", () => { //eslint-disable-line no-undef
 		const data = {"_id": entityId, "title": "a title", "@type": "dom", "@relations": {"foo": "bar"}};
 		const expectedUrl = `${config.apiUrl[config.apiVersion]}/domain/${domain}/${entityId}`;
 
-		let orderOfOperations = [];
+		let orderOfOperations = [], exception = null;
 
 
 		const finalize = (e) => {
 			unsubscribe();
 			crud.fetchEntity.restore();
 			crud.updateEntity.restore();
+			crud.fetchEntityList.restore();
 			relationSavers["v2.1"].restore();
 			relationSavers.v4.restore();
 			done(e);
@@ -233,7 +234,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(location).toEqual(expectedUrl);
 				next(data);
 			} catch (e) {
-				finalize(e);
+				exception = e;
 			}
 		});
 
@@ -246,8 +247,12 @@ describe("entity", () => { //eslint-disable-line no-undef
 				orderOfOperations.push("updateEntity");
 				next(null, {body: JSON.stringify(data)});
 			} catch(e) {
-				finalize(e);
+				exception = e;
 			}
+		});
+
+		sinon.stub(crud, "fetchEntityList", () => {
+			finalize(exception);
 		});
 
 		const assertSaveComplete = () => {
@@ -260,9 +265,8 @@ describe("entity", () => { //eslint-disable-line no-undef
 				});
 				expect(orderOfOperations).toEqual(["updateEntity", "saveRelations", "fetchEntity"]);
 
-				finalize();
 			} catch (e) {
-				finalize(e);
+				exception = e;
 			}
 		};
 
