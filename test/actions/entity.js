@@ -290,7 +290,9 @@ describe("entity", () => { //eslint-disable-line no-undef
 			}
 		});
 
+		let counts = 0;
 		const assertDeleteComplete = () => {
+			if (++counts < 2) { return; }
 			try {
 				expect(orderOfOperations).toEqual(["deleteEntity"]);
 				expect(store.getState().entity.data).toEqual({
