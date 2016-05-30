@@ -54,15 +54,16 @@ const paginateRight = () => (dispatch, getState) => {
 
 // 1) Fetch entity
 // 2) Dispatch RECEIVE_ENTITY for render
-const selectEntity = (domain, entityId, errorMessage = null, successMessage = null) =>
-	(dispatch) =>
+const selectEntity = (domain, entityId, errorMessage = null, successMessage = null, next = () => { }) =>
+	(dispatch) => {
 		crud.fetchEntity(`${config.apiUrl[config.apiVersion]}/domain/${domain}/${entityId}`, (data) => {
 			dispatch({type: "RECEIVE_ENTITY", domain: domain, data: data, errorMessage: errorMessage});
 			if (successMessage !== null) {
 				dispatch({type: "SUCCESS_MESSAGE", message: successMessage});
 			}
 		}, () => dispatch({type: "RECEIVE_ENTITY_FAILURE", errorMessage: `Failed to fetch ${domain} with ID ${entityId}`}));
-
+		next();
+	};
 
 
 // 1) Dispatch RECEIVE_ENTITY with empty entity skeleton for render
@@ -95,7 +96,7 @@ const saveEntity = () => (dispatch, getState) => {
 	// Delete the relation data from the saveData as it is not expected by the server
 	delete saveData["@relations"];
 
-	if(getState().entity.data._id) {
+	if (getState().entity.data._id) {
 		// 1) Update the entity with saveData
 		crud.updateEntity(getState().entity.domain, saveData, getState().user.token, getState().vre.vreId, (err, resp) =>
 			// 2) Save relations using server response for current relations to diff against relationData
@@ -113,7 +114,7 @@ const saveEntity = () => (dispatch, getState) => {
 				// 3) Save relations using server response for current relations to diff against relationData
 				saveRelations[config.apiVersion](data, relationData, getState().vre.collections[getState().entity.domain], getState().user.token, getState().vre.vreId, () =>
 					// 4) Refetch entity for render
-					redispatch(selectEntity(getState().entity.domain, data._id, null, `Succesfully saved ${getState().entity.domain}`))))), () =>
+					redispatch(selectEntity(getState().entity.domain, data._id, null, `Succesfully saved ${getState().entity.domain}`, () => dispatch(fetchEntityList(getState().entity.domain))))))), () =>
 						// 2a) Handle error by refetching and passing along an error message
 						dispatch(makeNewEntity(getState().entity.domain, `Failed to save new ${getState().entity.domain}`)));
 	}

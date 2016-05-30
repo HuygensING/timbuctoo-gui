@@ -120,12 +120,13 @@ describe("entity", () => { //eslint-disable-line no-undef
 		const data = {"title": "a title", "@type": "dom", "@relations": {"x": "y"}};
 		const expectedUrl = `${config.apiUrl[config.apiVersion]}/domain/${domain}/${entityId}`;
 
-		let orderOfOperations = [];
+		let orderOfOperations = [], exception = null;
 
 		const finalize = (e) => {
 			unsubscribe();
 			crud.fetchEntity.restore();
 			crud.saveNewEntity.restore();
+			crud.fetchEntityList.restore();
 			relationSavers["v2.1"].restore();
 			relationSavers.v4.restore();
 			done(e);
@@ -141,7 +142,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 				orderOfOperations.push("saveRelations");
 				next();
 			} catch (e) {
-				finalize(e);
+				exception = e;
 			}
 		};
 
@@ -157,7 +158,7 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(vreId).toEqual(store.getState().vre.vreId);
 				next(null, {headers: {location: expectedUrl}});
 			} catch (e) {
-				finalize(e);
+				exception = e;
 			}
 		});
 
@@ -167,8 +168,12 @@ describe("entity", () => { //eslint-disable-line no-undef
 				expect(location).toEqual(expectedUrl);
 				next({...data, _id: entityId});
 			} catch (e) {
-				finalize(e);
+				exception = e;
 			}
+		});
+
+		sinon.stub(crud, "fetchEntityList", () => {
+			finalize(exception);
 		});
 
 		const assertSaveComplete = () => {
@@ -183,9 +188,8 @@ describe("entity", () => { //eslint-disable-line no-undef
 					list: []
 				});
 				expect(orderOfOperations).toEqual(["saveNewEntity", "fetchEntity", "saveRelations", "fetchEntity"]);
-				finalize();
 			} catch (e) {
-				finalize(e);
+				exception = e;
 			}
 		};
 
