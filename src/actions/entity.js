@@ -34,6 +34,24 @@ const makeSkeleton = (fieldDefs, domain) =>
 			return obj;
 		}, {});
 
+
+const fetchEntityList = (domain) => (dispatch, getState) => {
+	dispatch({type: "SET_PAGINATION_START", start: 0});
+	crud.fetchEntityList(domain, 0, getState().pagination.rows, (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data}));
+};
+
+const paginateLeft = () => (dispatch, getState) => {
+	const newStart = getState().pagination.start - getState().pagination.rows;
+	dispatch({type: "SET_PAGINATION_START", start: newStart < 0 ? 0 : newStart});
+	crud.fetchEntityList(getState().entity.domain, newStart < 0 ? 0 : newStart, getState().pagination.rows, (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data}));
+};
+
+const paginateRight = () => (dispatch, getState) => {
+	const newStart = getState().pagination.start + getState().pagination.rows;
+	dispatch({type: "SET_PAGINATION_START", start: newStart});
+	crud.fetchEntityList(getState().entity.domain, newStart, getState().pagination.rows, (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data}));
+};
+
 // 1) Fetch entity
 // 2) Dispatch RECEIVE_ENTITY for render
 const selectEntity = (domain, entityId, errorMessage = null, successMessage = null) =>
@@ -61,6 +79,7 @@ const deleteEntity = () => (dispatch, getState) => {
 		() => {
 			dispatch({type: "SUCCESS_MESSAGE", message: `Sucessfully deleted ${getState().entity.domain} with ID ${getState().entity.data._id}`});
 			dispatch(makeNewEntity(getState().entity.domain));
+			dispatch(fetchEntityList(getState().entity.domain));
 		},
 		() => dispatch(selectEntity(getState().entity.domain, getState().entity.data._id, `Failed to delete ${getState().entity.domain} with ID ${getState().entity.data._id}`)));
 };
@@ -100,21 +119,5 @@ const saveEntity = () => (dispatch, getState) => {
 	}
 };
 
-const fetchEntityList = (domain) => (dispatch, getState) => {
-	dispatch({type: "SET_PAGINATION_START", start: 0});
-	crud.fetchEntityList(domain, 0, getState().pagination.rows, (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data}));
-};
-
-const paginateLeft = () => (dispatch, getState) => {
-	const newStart = getState().pagination.start - getState().pagination.rows;
-	dispatch({type: "SET_PAGINATION_START", start: newStart < 0 ? 0 : newStart});
-	crud.fetchEntityList(getState().entity.domain, newStart < 0 ? 0 : newStart, getState().pagination.rows, (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data}));
-};
-
-const paginateRight = () => (dispatch, getState) => {
-	const newStart = getState().pagination.start + getState().pagination.rows;
-	dispatch({type: "SET_PAGINATION_START", start: newStart});
-	crud.fetchEntityList(getState().entity.domain, newStart, getState().pagination.rows, (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data}));
-};
 
 export { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateRight, paginateLeft };

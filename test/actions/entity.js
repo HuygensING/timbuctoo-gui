@@ -269,12 +269,17 @@ describe("entity", () => { //eslint-disable-line no-undef
 	it("should delete an entity with deleteEntity", (done) => { //eslint-disable-line no-undef
 		const data = {_id: "entId"};
 		let orderOfOperations = [];
+		let counts = 0, exception = null;
 
 		const finalize = (e) => {
 			unsubscribe();
 			crud.deleteEntity.restore();
+			crud.fetchEntityList.restore();
 			done(e);
 		};
+
+
+		sinon.stub(crud, "fetchEntityList", () => { finalize(exception); });
 
 
 		sinon.stub(crud, "deleteEntity", (dom, entId, token, vreId, next) => {
@@ -286,25 +291,26 @@ describe("entity", () => { //eslint-disable-line no-undef
 				orderOfOperations.push("deleteEntity");
 				next();
 			} catch(e) {
-				finalize(e);
+				exception = e;
 			}
 		});
 
-		let counts = 0;
+
 		const assertDeleteComplete = () => {
-			if (++counts < 2) { return; }
-			try {
-				expect(orderOfOperations).toEqual(["deleteEntity"]);
-				expect(store.getState().entity.data).toEqual({
-					"@type": domain.replace(/s$/, ""),
-					"testField1": "",
-					"testField2": [],
-					"@relations": {}
-				});
-				expect(store.getState().entity.domain).toEqual(domain);
-				finalize();
-			} catch(e) {
-				finalize(e);
+			if (++counts === 1) { return; }
+			else if (counts === 2) {
+				try {
+					expect(orderOfOperations).toEqual(["deleteEntity"]);
+					expect(store.getState().entity.data).toEqual({
+						"@type": domain.replace(/s$/, ""),
+						"testField1": "",
+						"testField2": [],
+						"@relations": {}
+					});
+					expect(store.getState().entity.domain).toEqual(domain);
+				} catch(e) {
+					exception = e;
+				}
 			}
 		};
 
