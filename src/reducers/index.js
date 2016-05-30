@@ -3,7 +3,7 @@ import messages from "./messages";
 import user from "./user";
 import vre from "./vre";
 import queries from "./queries";
-import pagination from "./pagination";
+import quickSearch from "./quick-search";
 
 export default {
 	vre: vre,
@@ -11,5 +11,5 @@ export default {
 	user: user,
 	messages: messages,
 	queries: queries,
-	pagination: pagination
+	quickSearch: quickSearch
 };

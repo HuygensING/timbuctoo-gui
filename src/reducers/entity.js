@@ -2,7 +2,6 @@ import setIn from "../util/set-in";
 
 let initialState = {
 	data: null,
-	list: [],
 	domain: null,
 	errorMessage: null
 };
@@ -14,11 +13,6 @@ export default function(state=initialState, action) {
 				data: action.data,
 				domain: action.domain,
 				errorMessage: action.errorMessage || null
-			}};
-
-		case "RECEIVE_ENTITY_LIST":
-			return {...state, ...{
-				list: action.data
 			}};
 
 		case "SET_ENTITY_FIELD_VALUE":
