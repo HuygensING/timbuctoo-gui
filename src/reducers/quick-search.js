@@ -1,7 +1,8 @@
 let initialState = {
 	start: 0,
 	list: [],
-	rows: 50
+	rows: 50,
+	query: ""
 };
 
 export default function(state=initialState, action) {
@@ -12,6 +13,11 @@ export default function(state=initialState, action) {
 			return {...state, ...{
 				list: action.data
 			}};
+		case "SET_QUICKSEARCH_QUERY": {
+			return {...state, ...{
+				query: action.value
+			}};
+		}
 		default:
 			return state;
 	}

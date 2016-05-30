@@ -1,9 +1,10 @@
 import React from "react";
+import Input from "hire-forms-input";
 
 class EntityList extends React.Component {
 
 	render() {
-		const { entity, quickSearch, onPaginateLeft, onPaginateRight } = this.props;
+		const { entity, quickSearch, onPaginateLeft, onPaginateRight, onQuickSearchQueryChange, onQuickSearch } = this.props;
 
 		const leftButton = quickSearch.start > 0 ?
 			<button onClick={onPaginateLeft}><span className="glyphicon glyphicon-chevron-left"></span></button> :
@@ -14,7 +15,7 @@ class EntityList extends React.Component {
 			<button onClick={onPaginateRight}><span className="glyphicon glyphicon-chevron-right"></span></button>;
 
 		return (
-			<div className="panel panel-default">
+			<div className="panel panel-default entity-list">
 				<div className="panel-heading">
 					<h3 className="panel-title">List of: {entity.domain}</h3>
 				</div>
@@ -22,6 +23,13 @@ class EntityList extends React.Component {
 					{leftButton}
 					<span style={{margin: "20px"}}>{quickSearch.start + 1} - {quickSearch.start + quickSearch.rows}</span>
 					{rightButton}
+					<Input onChange={onQuickSearchQueryChange} placeholder="Quick search..." value={quickSearch.query} />
+					<button onClick={onQuickSearch}>
+						<span className="glyphicon glyphicon-search"></span>
+					</button>
+					<button onClick={() => { onQuickSearchQueryChange(""); onQuickSearch(); }}>
+						<span className="glyphicon glyphicon-remove"></span>
+					</button>
 				</div>
 				<ul className="list-group">
 					{quickSearch.list.map((entry, i) => (
@@ -40,6 +48,8 @@ EntityList.propTypes = {
 	entity: React.PropTypes.object,
 	onPaginateLeft: React.PropTypes.func,
 	onPaginateRight: React.PropTypes.func,
+	onQuickSearch: React.PropTypes.func,
+	onQuickSearchQueryChange: React.PropTypes.func,
 	onSelect: React.PropTypes.func,
 	quickSearch: React.PropTypes.object
 };

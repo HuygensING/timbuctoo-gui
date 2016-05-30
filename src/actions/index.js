@@ -1,5 +1,5 @@
 import store from "../store";
-import { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateLeft, paginateRight } from "./entity";
+import { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateLeft, paginateRight, sendQuickSearch } from "./entity";
 import {
 	deleteQuery,
 	selectQuery,
@@ -38,6 +38,8 @@ export default {
 	onSelectDomain: (domain) => store.dispatch(fetchEntityList(domain)),
 	onPaginateLeft: () => store.dispatch(paginateLeft()),
 	onPaginateRight: () => store.dispatch(paginateRight()),
+	onQuickSearchQueryChange: (value) => store.dispatch({type: "SET_QUICKSEARCH_QUERY", value: value}),
+	onQuickSearch: () => store.dispatch(sendQuickSearch()),
 
 	onSelectQuery: (domain, queryIndex, position = null) => store.dispatch(selectQuery(domain, queryIndex, position)),
 	onDeleteQuery: (queryIndex) => store.dispatch(deleteQuery(queryIndex)),

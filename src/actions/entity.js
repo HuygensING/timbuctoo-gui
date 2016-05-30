@@ -2,6 +2,7 @@ import clone from "../util/clone-deep";
 import { crud } from "./crud";
 import saveRelations from "./relation-savers";
 import config from "../config";
+import autocomplete from "./autocomplete";
 
 // Skeleton base data per field definition
 const initialData = {
@@ -52,6 +53,21 @@ const paginateRight = () => (dispatch, getState) => {
 	const newStart = getState().quickSearch.start + getState().quickSearch.rows;
 	dispatch({type: "SET_PAGINATION_START", start: newStart});
 	crud.fetchEntityList(getState().entity.domain, newStart, getState().quickSearch.rows, (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data}));
+};
+
+const sendQuickSearch = () => (dispatch, getState) => {
+	const { quickSearch, entity, vre } = getState();
+	if (quickSearch.query.length) {
+		const callback =  (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data.map((d) => (
+			{
+				_id: d.key.replace(/.*\//, ""),
+				"@displayName": d.value
+			}
+		))});
+		autocomplete(`domain/${entity.domain}/autocomplete`, quickSearch.query, vre.vreId, callback);
+	} else {
+		dispatch(fetchEntityList(entity.domain));
+	}
 };
 
 // 1) Fetch entity
@@ -123,4 +139,4 @@ const saveEntity = () => (dispatch, getState) => {
 };
 
 
-export { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateRight, paginateLeft };
+export { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateRight, paginateLeft, sendQuickSearch };
