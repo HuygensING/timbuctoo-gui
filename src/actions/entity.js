@@ -9,6 +9,8 @@ const initialData = {
 	multiselect: [],
 	links: [],
 	keyword: [],
+	"list-of-strings": [],
+	altnames: [],
 	text: "",
 	string: "",
 	select: "",
