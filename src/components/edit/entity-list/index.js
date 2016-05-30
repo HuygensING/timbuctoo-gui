@@ -27,7 +27,7 @@ class EntityList extends React.Component {
 					{entity.list.map((entry, i) => (
 						<li className="list-group-item" key={i}>
 							<span style={{marginRight: "20px"}}>{i + pagination.start + 1}.</span>
-							<a onClick={() => this.props.onSelect({domain: entity.domain, id: entry._id})} >{entry.displayName}</a>
+							<a onClick={() => this.props.onSelect({domain: entity.domain, id: entry._id})} >{entry["@displayName"]}</a>
 						</li>
 					))}
 				</ul>
