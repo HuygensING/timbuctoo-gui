@@ -16,8 +16,6 @@ class AltNames extends React.Component {
 	}
 
 	render() {
-		console.log("ALTNAMES", this.props.entity.data[this.props.name]);
-
 		return (
 			<div>
 				<label>{this.props.name}</label>
