@@ -1,5 +1,4 @@
 import React from "react";
-import Input from "hire-forms-input";
 
 class EntityList extends React.Component {
 
@@ -23,7 +22,10 @@ class EntityList extends React.Component {
 					{leftButton}
 					<span style={{margin: "20px"}}>{quickSearch.start + 1} - {quickSearch.start + quickSearch.rows}</span>
 					{rightButton}
-					<Input onChange={onQuickSearchQueryChange} placeholder="Quick search..." value={quickSearch.query} />
+					<input onChange={(ev) => onQuickSearchQueryChange(ev.target.value)}
+						onKeyPress={(ev) => ev.key === "Enter" ? onQuickSearch() : false}
+						placeholder="Quick search..."
+						value={quickSearch.query} />
 					<button onClick={onQuickSearch}>
 						<span className="glyphicon glyphicon-search"></span>
 					</button>

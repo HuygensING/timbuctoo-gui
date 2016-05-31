@@ -58,7 +58,8 @@ const paginateRight = () => (dispatch, getState) => {
 const sendQuickSearch = () => (dispatch, getState) => {
 	const { quickSearch, entity, vre } = getState();
 	if (quickSearch.query.length) {
-		const callback =  (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data.map((d) => (
+		dispatch({type: "SET_PAGINATION_START", start: 0});
+		const callback = (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data.map((d) => (
 			{
 				_id: d.key.replace(/.*\//, ""),
 				"@displayName": d.value
