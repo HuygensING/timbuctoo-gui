@@ -60,11 +60,10 @@ reset-button()
 
 .hire-login
 	& > .login-status
-		color #777
-		margin-right 8px
+		display none
 
 .edit-form,
-.edit-form + div
+.entity-list
 	.panel-heading 
 		& > h3
 			white-space nowrap
@@ -74,19 +73,16 @@ reset-button()
 			width calc(100% - 210px)
 			padding-top 8px
 	.list-group
-		height 650px
+		height 560px
 		overflow-y auto
 
+.entity-list
+	.panel-body
+		height 60px
+	.list-group
+		height 500px
 
-.edit-form 
-	width 50%
-	display inline-block
-	float left
 
-	& + div
-		width calc(50% - 20px)
-		display inline-block
-		margin-left 20px
 
 .hire-multi-form
 	& > .form-list
@@ -213,5 +209,9 @@ list-item()
 
 .entity-list
 	input
-		margin-left 20px
-		margin-right 8px
+		width calc(100% - 300px)
+		margin-left 10px
+		margin-right 10px
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form
+	border none

@@ -29,14 +29,16 @@ class Form extends React.Component {
 		const formFields = vre.collections[entity.domain].map((fieldDef, i) => <li className="list-group-item" key={i}>{mapField(fieldDef, this.props)}</li> );
 
 		return (
-			<div className="panel panel-default edit-form">
-				<div className="panel-heading">
-					{addNewButton}{saveButton}{deleteButton}
-					<h3 className="panel-title">{MODE_LABELS[currentMode]}: {entity.domain.replace(/s$/, "")}</h3>
+			<div className="col-sm-6">
+				<div className="panel panel-default edit-form">
+					<div className="panel-heading">
+						{addNewButton}{saveButton}{deleteButton}
+						<h3 className="panel-title">{MODE_LABELS[currentMode]}: {entity.domain.replace(/s$/, "")}</h3>
+					</div>
+					<ul className="list-group">
+						{formFields}
+					</ul>
 				</div>
-				<ul className="list-group">
-					{formFields}
-				</ul>
 			</div>
 		);
 	}

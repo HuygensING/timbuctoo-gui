@@ -55,7 +55,7 @@ class Header extends React.Component {
 		return (
 			<nav className="navbar navbar-default">
 				<div className="container-fluid">
-						<Login {...this.props} />
+					<div className="col-sm-10">
 						<ul className="nav navbar-nav navbar-left">
 							{vre.list.map((currentVre) => (
 								<li className={cx("dropdown", currentVre, {
@@ -75,7 +75,10 @@ class Header extends React.Component {
 								</li>
 							))}
 						</ul>
-
+					</div>
+					<div className="col-sm-2">
+						<Login {...this.props} />
+					</div>
 				</div>
 			</nav>
 		);

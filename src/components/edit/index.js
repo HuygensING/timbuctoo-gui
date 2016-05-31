@@ -11,7 +11,7 @@ class App extends React.Component {
 		console.log(this.props.vre, this.props.entity);
 
 		let businessPart = this.props.vre.vreId && this.props.entity.domain ? (
-			<div>
+			<div className="container-fluid">
 				<Form {...this.props} />
 				<EntityList {...this.props} />
 			</div>) : null;

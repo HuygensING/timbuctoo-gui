@@ -14,33 +14,35 @@ class EntityList extends React.Component {
 			<button onClick={onPaginateRight}><span className="glyphicon glyphicon-chevron-right"></span></button>;
 
 		return (
-			<div className="panel panel-default entity-list">
-				<div className="panel-heading">
-					<h3 className="panel-title">List of: {entity.domain}</h3>
+			<div className="col-sm-6">
+				<div className="panel panel-default entity-list">
+					<div className="panel-heading">
+						<h3 className="panel-title">List of: {entity.domain}</h3>
+					</div>
+					<div className="panel-body">
+						{leftButton}
+						<span style={{margin: "10px"}}>{quickSearch.start + 1} - {quickSearch.start + quickSearch.rows}</span>
+						{rightButton}
+						<input onChange={(ev) => onQuickSearchQueryChange(ev.target.value)}
+							onKeyPress={(ev) => ev.key === "Enter" ? onQuickSearch() : false}
+							placeholder="Quick search..."
+							value={quickSearch.query} />
+						<button onClick={onQuickSearch}>
+							<span className="glyphicon glyphicon-search"></span>
+						</button>
+						<button onClick={() => { onQuickSearchQueryChange(""); onQuickSearch(); }}>
+							<span className="glyphicon glyphicon-remove"></span>
+						</button>
+					</div>
+					<ul className="list-group">
+						{quickSearch.list.map((entry, i) => (
+							<li className="list-group-item" key={i}>
+								<span style={{marginRight: "20px"}}>{i + quickSearch.start + 1}.</span>
+								<a onClick={() => this.props.onSelect({domain: entity.domain, id: entry._id})} >{entry["@displayName"]}</a>
+							</li>
+						))}
+					</ul>
 				</div>
-				<div className="panel-body">
-					{leftButton}
-					<span style={{margin: "20px"}}>{quickSearch.start + 1} - {quickSearch.start + quickSearch.rows}</span>
-					{rightButton}
-					<input onChange={(ev) => onQuickSearchQueryChange(ev.target.value)}
-						onKeyPress={(ev) => ev.key === "Enter" ? onQuickSearch() : false}
-						placeholder="Quick search..."
-						value={quickSearch.query} />
-					<button onClick={onQuickSearch}>
-						<span className="glyphicon glyphicon-search"></span>
-					</button>
-					<button onClick={() => { onQuickSearchQueryChange(""); onQuickSearch(); }}>
-						<span className="glyphicon glyphicon-remove"></span>
-					</button>
-				</div>
-				<ul className="list-group">
-					{quickSearch.list.map((entry, i) => (
-						<li className="list-group-item" key={i}>
-							<span style={{marginRight: "20px"}}>{i + quickSearch.start + 1}.</span>
-							<a onClick={() => this.props.onSelect({domain: entity.domain, id: entry._id})} >{entry["@displayName"]}</a>
-						</li>
-					))}
-				</ul>
 			</div>
 		);
 	}
