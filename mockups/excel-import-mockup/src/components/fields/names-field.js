@@ -12,13 +12,13 @@ class NamesField extends React.Component {
 			<ul className="list-group">
 
 				<BoolField id="name-position" label="Name position"
-					labelFalse="Self defined"
-					labelTrue="Order of appearance"
+					labelFalse="This table has multiple names"
+					labelTrue="This table has only one name"
 					onChange={(val) => onChange("orderOfAppearance", val)}
 					value={value.orderOfAppearance} />
 				{ value.orderOfAppearance ? null : (
 					<li className="list-group-item">
-						<label>Choose name component position</label>
+						<label>Choose name position</label>
 						<input onChange={(ev) => onChange("listPosition", ev.target.value) } type="number" value={value.listPosition} />
 					</li>
 				) }
