@@ -1,0 +1,14 @@
+import {createStore, applyMiddleware, combineReducers} from "redux";
+import reducers from "./index";
+import thunkMiddleware from "redux-thunk";
+
+const logger = () => next => action => {
+	if (action.hasOwnProperty("type")) {
+		console.log("[REDUX]", action.type, action);
+	}
+	return next(action);
+};
+
+let data = combineReducers(reducers);
+
+export default createStore(data, applyMiddleware(logger, thunkMiddleware));
