@@ -2,6 +2,8 @@ import React from "react";
 import CollectionIndex from "./collection-index";
 import CollectionTable from "./collection-table";
 import VariableForm from "./variable-form";
+import CollectionForm from "./collection-form";
+
 
 class App extends React.Component {
 
@@ -22,6 +24,7 @@ class App extends React.Component {
 					<CollectionIndex {...this.props} />
 				</nav>
 				<main className="col-sm-10">
+					<CollectionForm {...this.props} />
 					<VariableForm {...this.props} />
 					<CollectionTable {...this.props} />
 				</main>

@@ -3,12 +3,20 @@ import ReactDOM from "react-dom";
 import store from "./reducers/store";
 import actions from "./actions";
 import App from "./components";
+import relationTypes from "./relationtypes";
+
+// import xhr from "xhr";
+
+
+store.subscribe(() =>
+	ReactDOM.render(<App {...store.getState()} {...actions} />, document.getElementById("app"))
+);
 
 document.addEventListener("DOMContentLoaded", () => {
+	ReactDOM.render(<p>fetching relation types</p>, document.getElementById("app"));
 
-	store.subscribe(() =>
-		ReactDOM.render(<App {...store.getState()} {...actions} />, document.getElementById("app"))
-	);
-
-	ReactDOM.render(<App {...store.getState()} {...actions} />, document.getElementById("app"));
+	store.dispatch({type: "SET_RELATION_TYPES", data: relationTypes});
+/*	xhr("http://test.repository.huygens.knaw.nl/v2.1/system/relationtypes", (err, resp) => {
+		store.dispatch({type: "SET_RELATION_TYPES", data: JSON.parse(resp.body)});
+	});*/
 });

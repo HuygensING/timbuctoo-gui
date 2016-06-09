@@ -1,5 +1,7 @@
 import importData from "./import-data";
+import relationTypes from "./relation-types";
 
 export default {
-	importData: importData
+	importData: importData,
+	relationTypes: relationTypes
 };

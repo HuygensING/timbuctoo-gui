@@ -17,6 +17,11 @@ const defaultTypeSpecs = {
 		componentType: "forename",
 		componentOrderOfAppearance: true,
 		componentListPosition: 1
+	},
+	relation: {
+		linksToOtherSheet: true,
+		reusesRelationType: true,
+		relationType: null
 	}
 
 };
@@ -47,7 +52,9 @@ const scaffoldSheets = () => [
 			GeschrevenDocument: scaffoldVariableDesc("GeschrevenDocument"),
 			Meegeschreven: scaffoldVariableDesc("Meegeschreven"),
 			"Is getrouwd met": scaffoldVariableDesc("Is getrouwd met")
-		}
+		},
+		extendsCollection: true,
+		extendedCollection: null
 	},
 	{
 		collection: "mockdocuments",
@@ -61,12 +68,16 @@ const scaffoldSheets = () => [
 			datum: scaffoldVariableDesc("datum"),
 			url: scaffoldVariableDesc("url"),
 			referentie: scaffoldVariableDesc("referentie")
-		}
+		},
+		extendsCollection: true,
+		extendedCollection: null
 	}
 ];
 
-const updateVariable = (state, key, value) => {
+const updateVariable = (state, key, actionValue) => {
 	const sheetIndex = state.sheets.map((sheet) => sheet.collection).indexOf(state.activeCollection);
+	const value = key === "name" ? actionValue.replace(/\s+/g, "_") : actionValue;
+
 	let newSheets = setIn([sheetIndex, "variables", state.activeVariable, key], value, state.sheets);
 	if (key === "type") {
 		if (["names", "altnames", "links"].indexOf(value) > -1) {
@@ -79,6 +90,7 @@ const updateVariable = (state, key, value) => {
 		}
 	}
 
+
 	if (key !== "confirmed") {
 		newSheets = setIn([sheetIndex, "variables", state.activeVariable, "confirmed"], false, newSheets);
 	}
@@ -90,10 +102,24 @@ const updateVariableTypeSpec = (state, key, value) => {
 	const sheetIndex = state.sheets.map((sheet) => sheet.collection).indexOf(state.activeCollection);
 	let newSheets = setIn([sheetIndex, "variables", state.activeVariable, "typeSpec", key], value, state.sheets);
 
-
 	if (key !== "confirmed") {
 		newSheets = setIn([sheetIndex, "variables", state.activeVariable, "confirmed"], false, newSheets);
 	}
+
+	if (key === "linksToOtherSheet") {
+		newSheets = setIn([sheetIndex, "variables", state.activeVariable, "typeSpec", "targetCollection"], null, newSheets);
+		newSheets = setIn([sheetIndex, "variables", state.activeVariable, "typeSpec", "relationType"], null, newSheets);
+	}
+
+	if (key === "targetCollection") {
+		newSheets = setIn([sheetIndex, "variables", state.activeVariable, "typeSpec", "relationType"], null, newSheets);
+	}
+
+	if (key === "relationType") {
+		newSheets = setIn([sheetIndex, "variables", state.activeVariable, "name"], value, newSheets);
+
+	}
+
 	return {...state, sheets: newSheets};
 };
 
@@ -114,6 +140,13 @@ export default function(state=initialState, action) {
 			return {...state, activeVariable: action.variable};
 		case "UPDATE_VARIABLE":
 			return updateVariable(state, action.key, action.value);
+
+		case "UPDATE_COLLECTION":
+			const sheetIndex = state.sheets.map((sheet) => sheet.collection).indexOf(action.collection);
+			const newSheets = setIn([sheetIndex, action.key], action.value, state.sheets);
+			return {...state, sheets: newSheets };
+
+
 		case "UPDATE_VARIABLE_TYPE_SPEC":
 			return updateVariableTypeSpec(state, action.key, action.value);
 	}

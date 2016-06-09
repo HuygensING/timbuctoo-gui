@@ -4,7 +4,7 @@ import SelectField from "./fields/select-field";
 import LinksField from "./fields/links-field";
 import AltnamesField from "./fields/altnames-field";
 import NamesField from "./fields/names-field";
-
+import RelationField from "./fields/relation-field";
 
 const fieldMap = {
 	text: () => null,
@@ -13,14 +13,14 @@ const fieldMap = {
 	names: (props) => <NamesField {...props} />,
 	links: (props) => <LinksField {...props} />,
 	altnames: (props) => <AltnamesField {...props} />,
-	relation: () => null
+	relation: (props) => <RelationField {...props} />
 };
 
 class VariableForm extends React.Component {
 
 
 	render() {
-		const { importData, onUpdateVariable, onUpdateVariableTypeSpec } = this.props;
+		const { importData, onUpdateVariable, onUpdateVariableTypeSpec, relationTypes } = this.props;
 		const { activeVariable, activeCollection, sheets } = importData;
 
 		if (!activeVariable) { return null; }
@@ -31,7 +31,7 @@ class VariableForm extends React.Component {
 		const fieldNameInput = variable.importValue ? (
 				<li className="list-group-item">
 					<label>Name</label>
-					<input onChange={(ev) => onUpdateVariable("name", ev.target.value)} value={variable.name} />
+					<input disabled={variable.type === "relation" && variable.typeSpec.reusesRelationType} onChange={(ev) => onUpdateVariable("name", ev.target.value)} value={variable.name} />
 				</li>
 			) : null;
 
@@ -43,7 +43,13 @@ class VariableForm extends React.Component {
 			<button className="btn btn-danger" onClick={() => onUpdateVariable("confirmed", !variable.confirmed)}>Remove confirmation</button> :
 			<button className="btn btn-success" onClick={() => onUpdateVariable("confirmed", !variable.confirmed)}>Confirm</button>;
 
-		const typeField = fieldMap[variable.type]({onChange: (key, value) => onUpdateVariableTypeSpec(key, value), value: variable.typeSpec});
+		const typeField = fieldMap[variable.type]({
+			onChange: (key, value) => onUpdateVariableTypeSpec(key, value),
+			collectionData: collectionData,
+			importData: importData,
+			relationTypes: relationTypes,
+			value: variable.typeSpec
+		});
 
 		const typeFieldInstruction = typeField ? (
 				<div className="panel-body">
@@ -82,7 +88,8 @@ class VariableForm extends React.Component {
 VariableForm.propTypes = {
 	importData: React.PropTypes.object,
 	onUpdateVariable: React.PropTypes.func,
-	onUpdateVariableTypeSpec: React.PropTypes.func
+	onUpdateVariableTypeSpec: React.PropTypes.func,
+	relationTypes: React.PropTypes.array
 };
 
 export default VariableForm;
