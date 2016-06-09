@@ -20,7 +20,7 @@ class SelectField extends React.Component {
 		document.removeEventListener("click", this.documentClickListener, false);
 	}
 
-	toggleSelect(ev) {
+	toggleSelect() {
 		if(this.state.isOpen) {
 			this.setState({isOpen: false});
 		} else {

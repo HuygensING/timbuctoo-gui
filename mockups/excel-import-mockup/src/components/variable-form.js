@@ -3,16 +3,17 @@ import BoolField from "./fields/bool-field";
 import SelectField from "./fields/select-field";
 import LinksField from "./fields/links-field";
 import AltnamesField from "./fields/altnames-field";
+import NamesField from "./fields/names-field";
 
 
 const fieldMap = {
-	text: (props) => null,
-	number: (props) => null,
-	date: (props) => null,
-	names: (props) => null,
+	text: () => null,
+	number: () => null,
+	date: () => null,
+	names: (props) => <NamesField {...props} />,
 	links: (props) => <LinksField {...props} />,
-	altnames: (props = null) => <AltnamesField {...props} />,
-	relation: (props = null) => null
+	altnames: (props) => <AltnamesField {...props} />,
+	relation: () => null
 };
 
 class VariableForm extends React.Component {

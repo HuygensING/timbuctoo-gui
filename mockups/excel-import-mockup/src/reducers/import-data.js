@@ -10,7 +10,15 @@ const defaultTypeSpecs = {
 		type: "",
 		orderOfAppearance: true,
 		listPosition: 1
+	},
+	names: {
+		orderOfAppearance: true,
+		listPosition: 1,
+		componentType: "forename",
+		componentOrderOfAppearance: true,
+		componentListPosition: 1
 	}
+
 };
 
 const scaffoldVariableDesc = (name) => ({
@@ -71,6 +79,10 @@ const updateVariable = (state, key, value) => {
 		}
 	}
 
+	if (key !== "confirmed") {
+		newSheets = setIn([sheetIndex, "variables", state.activeVariable, "confirmed"], false, newSheets);
+	}
+
 	return {...state, sheets: newSheets};
 };
 
@@ -78,6 +90,10 @@ const updateVariableTypeSpec = (state, key, value) => {
 	const sheetIndex = state.sheets.map((sheet) => sheet.collection).indexOf(state.activeCollection);
 	let newSheets = setIn([sheetIndex, "variables", state.activeVariable, "typeSpec", key], value, state.sheets);
 
+
+	if (key !== "confirmed") {
+		newSheets = setIn([sheetIndex, "variables", state.activeVariable, "confirmed"], false, newSheets);
+	}
 	return {...state, sheets: newSheets};
 };
 
