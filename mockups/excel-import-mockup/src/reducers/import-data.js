@@ -1,10 +1,25 @@
 import setIn from "./set-in";
 
+const defaultTypeSpecs = {
+	links: {
+		type: "url",
+		orderOfAppearance: true,
+		listPosition: 1
+	},
+	altnames: {
+		type: "",
+		orderOfAppearance: true,
+		listPosition: 1
+	}
+};
+
 const scaffoldVariableDesc = (name) => ({
 	identifyingColumn: false,
 	importValue: false,
 	name: name.replace(/\s+/g, "_"),
-	type: "text"
+	type: "text",
+	confirmed: false,
+	typeSpec: {}
 });
 
 const scaffoldSheets = () => [
@@ -29,16 +44,42 @@ const scaffoldSheets = () => [
 	{
 		collection: "mockdocuments",
 		rows: [
-			["titel", "datum"],
-			["Tekst 1", "1850"],
-			["Tekst 2", "1860"]
+			["titel", "datum", "referentie", "url"],
+			["Tekst 1", "1850", "voorbeeld", "http://example.com"],
+			["Tekst 2", "1860", null, null]
 		],
 		variables: {
 			titel: scaffoldVariableDesc("titel"),
-			datum: scaffoldVariableDesc("datum")
+			datum: scaffoldVariableDesc("datum"),
+			url: scaffoldVariableDesc("url"),
+			referentie: scaffoldVariableDesc("referentie")
 		}
 	}
 ];
+
+const updateVariable = (state, key, value) => {
+	const sheetIndex = state.sheets.map((sheet) => sheet.collection).indexOf(state.activeCollection);
+	let newSheets = setIn([sheetIndex, "variables", state.activeVariable, key], value, state.sheets);
+	if (key === "type") {
+		if (["names", "altnames", "links"].indexOf(value) > -1) {
+			newSheets = setIn([sheetIndex, "variables", state.activeVariable, "name"], value, newSheets);
+		}
+		if (defaultTypeSpecs[value]) {
+			newSheets = setIn([sheetIndex, "variables", state.activeVariable, "typeSpec"], defaultTypeSpecs[value], newSheets);
+		} else {
+			newSheets = setIn([sheetIndex, "variables", state.activeVariable, "typeSpec"], {}, newSheets);
+		}
+	}
+
+	return {...state, sheets: newSheets};
+};
+
+const updateVariableTypeSpec = (state, key, value) => {
+	const sheetIndex = state.sheets.map((sheet) => sheet.collection).indexOf(state.activeCollection);
+	let newSheets = setIn([sheetIndex, "variables", state.activeVariable, "typeSpec", key], value, state.sheets);
+
+	return {...state, sheets: newSheets};
+};
 
 const initialState = {
 	sheets: [],
@@ -56,10 +97,9 @@ export default function(state=initialState, action) {
 		case "SET_ACTIVE_VARIABLE":
 			return {...state, activeVariable: action.variable};
 		case "UPDATE_VARIABLE":
-			const sheetIndex = state.sheets.map((sheet) => sheet.collection).indexOf(state.activeCollection);
-			const newSheets = setIn([sheetIndex, "variables", state.activeVariable, action.key], action.value, state.sheets);
-			return {...state, sheets: newSheets};
-
+			return updateVariable(state, action.key, action.value);
+		case "UPDATE_VARIABLE_TYPE_SPEC":
+			return updateVariableTypeSpec(state, action.key, action.value);
 	}
 
 	return state;

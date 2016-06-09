@@ -17,14 +17,12 @@ class App extends React.Component {
 							&nbsp;
 							Upload
 						</button>
-						<div className="pull-right col-sm-10">
-							<VariableForm {...this.props} />
-						</div>
 				</header>
 				<nav className="col-sm-2">
 					<CollectionIndex {...this.props} />
 				</nav>
 				<main className="col-sm-10">
+					<VariableForm {...this.props} />
 					<CollectionTable {...this.props} />
 				</main>
 			</div>
