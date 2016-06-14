@@ -30,7 +30,7 @@ class CollectionTable extends React.Component {
 					<thead>
 						<tr>
 							{rows[0].map((header, i) => (
-								<th className={cx({success: activeCol === i || confirmedCols.indexOf(i) > -1, info: confirmedCols.indexOf(i) < 0 && activeCol !== i})} key={i} onClick={() => onSelectVariable(header)}>
+								<th className={cx({success: confirmedCols.indexOf(i) > -1, info: confirmedCols.indexOf(i) < 0})} key={i} onClick={() => onSelectVariable(header)}>
 									{header}
 									<span className={cx("pull-right", "glyphicon", {"glyphicon-question-sign": confirmedCols.indexOf(i) < 0, "glyphicon-ok-sign": confirmedCols.indexOf(i) > -1})}>
 									</span>
@@ -40,7 +40,7 @@ class CollectionTable extends React.Component {
 					</thead>
 					<tbody>
 						{ rows.map((row, i) => i == 0 ? null : <tr key={i}>{row.map((cell, j) =>
-							<td className={cx({active: activeCol === j})} key={j} onClick={() => onSelectVariable(rows[0][j])} >{cell}</td>)}</tr>
+							<td key={j} onClick={() => onSelectVariable(rows[0][j])} >{cell}</td>)}</tr>
 						)}
 					</tbody>
 				</table>

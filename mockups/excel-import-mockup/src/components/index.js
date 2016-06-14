@@ -25,7 +25,6 @@ class App extends React.Component {
 				</nav>
 				<main className="col-sm-10">
 					<CollectionForm {...this.props} />
-					<VariableForm {...this.props} />
 					<CollectionTable {...this.props} />
 				</main>
 			</div>

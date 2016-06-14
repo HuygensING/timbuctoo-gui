@@ -28,9 +28,9 @@ class RelationField extends React.Component {
 
 		let relationTypeSelect = null, warningExtendsNone = null, warningTargetExtendsNone = null;
 		if (value.reusesRelationType && value.targetCollection && collectionData.extendsCollection && targetCollectionData.extendsCollection) {
-			const sourceTypeName = (collectionData.extendedCollection || "").replace(/s$/, "");
+			const sourceTypeName = (collectionData.archetypeName || "").replace(/s$/, "");
 			const targetTypeName = value.linksToOtherSheet ?
-				(targetCollectionData.extendedCollection || "").replace(/s$/, "") :
+				(targetCollectionData.archetypeName || "").replace(/s$/, "") :
 				value.targetCollection.replace(/s$/, "");
 			const selectOptions = relationTypes.filter((relType) => 
 				relType.sourceTypeName === sourceTypeName && relType.targetTypeName === targetTypeName ||

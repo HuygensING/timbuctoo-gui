@@ -4,8 +4,7 @@ import store from "./reducers/store";
 import actions from "./actions";
 import App from "./components";
 import relationTypes from "./relationtypes";
-
-// import xhr from "xhr";
+import xhr from "xhr";
 
 
 store.subscribe(() =>
@@ -16,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	ReactDOM.render(<p>fetching relation types</p>, document.getElementById("app"));
 
 	store.dispatch({type: "SET_RELATION_TYPES", data: relationTypes});
-/*	xhr("http://test.repository.huygens.knaw.nl/v2.1/system/relationtypes", (err, resp) => {
-		store.dispatch({type: "SET_RELATION_TYPES", data: JSON.parse(resp.body)});
-	});*/
+	xhr("http://test.repository.huygens.knaw.nl/v2.1/metadata/Admin", (err, resp) => {
+		store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
+	});
 });

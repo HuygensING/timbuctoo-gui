@@ -35,8 +35,8 @@ const scaffoldVariableDesc = (name) => ({
 	typeSpec: {}
 });
 
-const scaffoldSheets = () => [
-	{
+const scaffoldSheets = (state) => {
+	const sheets = [{
 		collection: "mockpersons",
 		rows: [
 			["ID", "Voornaam", "tussenvoegsel", "Achternaam", "GeschrevenDocument", "Meegeschreven", "Is getrouwd met"],
@@ -54,7 +54,7 @@ const scaffoldSheets = () => [
 			"Is getrouwd met": scaffoldVariableDesc("Is getrouwd met")
 		},
 		extendsCollection: true,
-		extendedCollection: null
+		archetypeName: null
 	},
 	{
 		collection: "mockdocuments",
@@ -70,9 +70,15 @@ const scaffoldSheets = () => [
 			referentie: scaffoldVariableDesc("referentie")
 		},
 		extendsCollection: true,
-		extendedCollection: null
-	}
-];
+		archetypeName: null
+	}];
+
+	return {
+		...state,
+		sheets: sheets,
+		activeCollection: "mockpersons"
+	};
+};
 
 const updateVariable = (state, key, actionValue) => {
 	const sheetIndex = state.sheets.map((sheet) => sheet.collection).indexOf(state.activeCollection);
@@ -133,7 +139,7 @@ const initialState = {
 export default function(state=initialState, action) {
 	switch (action.type) {
 		case "UPLOAD":
-			return {...state, sheets: scaffoldSheets() };
+			return scaffoldSheets(state);
 		case "SET_ACTIVE_COLLECTION":
 			return {...state, activeCollection: action.collection, activeVariable: null};
 		case "SET_ACTIVE_VARIABLE":
