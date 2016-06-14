@@ -1,7 +1,6 @@
 import React from "react";
 import CollectionIndex from "./collection-index";
 import CollectionTable from "./collection-table";
-import VariableForm from "./variable-form";
 import CollectionForm from "./collection-form";
 
 

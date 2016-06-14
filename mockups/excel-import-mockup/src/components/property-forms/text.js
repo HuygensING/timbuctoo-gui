@@ -15,28 +15,27 @@ class TextPropertyForm extends React.Component {
 
 
 	render() {
-		const { name, collectionData } = this.props;
+		const { name, collectionData, onAddFieldMapping, mappings } = this.props;
 		const { isOpen } = this.state;
 
+		console.log(mappings);
 		return isOpen ? (
 			<ul className="list-group">
-				<li className="list-group-item">
-					<h4>
-					<a onClick={() => this.setState({isOpen: false})}><span className="glyphicon glyphicon-triangle-top"></span></a>
+				<li className="list-group-item dropup" onClick={() => this.setState({isOpen: false})}>
+					<span className="caret"></span>
 					&nbsp;
-					Describe property <strong>{name}</strong>
-					</h4>
+					{name}
 				</li>
 
-				<SelectField label={`Select column for ${name}`} onChange={(value) => console.log(value)}
-					options={Object.keys(collectionData.variables)} value={""} />
+				<SelectField label={`Select column for ${name}`} onChange={(value) => onAddFieldMapping(collectionData.collection, name, value)}
+					options={collectionData.variables} value={""} />
 			</ul>
 		) : (
 			<ul className="list-group">
-				<li className="list-group-item">
-					<a onClick={() => this.setState({isOpen: true})}>
-						{name} <span className="caret"></span>
-					</a>
+				<li className="list-group-item" onClick={() => this.setState({isOpen: true})}>
+					<span className="caret"></span>
+					&nbsp;
+					{name}
 				</li>
 			</ul>
 		);
@@ -45,8 +44,9 @@ class TextPropertyForm extends React.Component {
 
 TextPropertyForm.propTypes = {
 	collectionData: React.PropTypes.object,
+	mappings: React.PropTypes.object,
 	name: React.PropTypes.string,
-	onUpdateVariable: React.PropTypes.func
+	onAddFieldMapping: React.PropTypes.func
 };
 
 export default TextPropertyForm;
