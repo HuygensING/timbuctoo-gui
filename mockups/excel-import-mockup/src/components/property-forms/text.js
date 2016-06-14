@@ -5,37 +5,31 @@ import SelectField from "../fields/select-field";
 
 class TextPropertyForm extends React.Component {
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			isOpen: false
-		};
-	}
-
 
 	render() {
-		const { name, collectionData, onAddFieldMapping, mappings } = this.props;
-		const { isOpen } = this.state;
+		const { name, collectionData, onSetFieldMapping, mappings, onConfirmFieldMappings, onUnconfirmFieldMappings } = this.props;
 
-		console.log(mappings);
-		return isOpen ? (
-			<ul className="list-group">
-				<li className="list-group-item dropup" onClick={() => this.setState({isOpen: false})}>
-					<span className="caret"></span>
-					&nbsp;
-					{name}
-				</li>
+		const mapping = mappings.collections[collectionData.collection].mappings;
 
-				<SelectField label={`Select column for ${name}`} onChange={(value) => onAddFieldMapping(collectionData.collection, name, value)}
-					options={collectionData.variables} value={""} />
-			</ul>
-		) : (
+		console.log(mappings.collections[collectionData.collection]);
+				const propertyMapping = mapping.find((m) => m.property === name) || {};
+		const selectedVariable = propertyMapping.variable || null;
+		const confirmed = propertyMapping.confirmed || false;
+
+		const confirmButton = selectedVariable && !confirmed ?
+				<button className="btn btn-success btn-sm" onClick={() => { onConfirmFieldMappings(collectionData.collection, name); }}>Confirm</button> : confirmed ?
+				<button className="btn btn-danger btn-sm" onClick={() => { onUnconfirmFieldMappings(collectionData.collection, name); }}>Unconfirm</button> : null;
+
+
+		return (
 			<ul className="list-group">
-				<li className="list-group-item" onClick={() => this.setState({isOpen: true})}>
-					<span className="caret"></span>
+				<li className="list-group-item">
+					<label><strong>{name}</strong></label>
+					<SelectField onChange={(value) => onSetFieldMapping(collectionData.collection, name, value)}
+						placeholder="Select a column..."
+						options={collectionData.variables} value={selectedVariable} />
 					&nbsp;
-					{name}
+					{confirmButton}
 				</li>
 			</ul>
 		);
@@ -46,7 +40,9 @@ TextPropertyForm.propTypes = {
 	collectionData: React.PropTypes.object,
 	mappings: React.PropTypes.object,
 	name: React.PropTypes.string,
-	onAddFieldMapping: React.PropTypes.func
+	onConfirmFieldMappings: React.PropTypes.func,
+	onSetFieldMapping: React.PropTypes.func,
+	onUnconfirmFieldMappings: React.PropTypes.func
 };
 
 export default TextPropertyForm;

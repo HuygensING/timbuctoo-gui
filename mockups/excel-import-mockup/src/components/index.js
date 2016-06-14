@@ -18,6 +18,7 @@ class App extends React.Component {
 							&nbsp;
 							Upload
 						</button>
+						<a href="http://10.152.32.34/MOCK_V1/">GA NAAR ORIGINELE MOCKUP</a>
 				</header>
 				<nav className="col-sm-2">
 					<CollectionIndex {...this.props} />

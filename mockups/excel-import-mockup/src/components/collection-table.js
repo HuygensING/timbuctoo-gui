@@ -4,8 +4,8 @@ import cx from "classnames";
 class CollectionTable extends React.Component {
 
 	render() {
-		const { importData, onSelectVariable } = this.props;
-		const { sheets, activeCollection, activeVariable } = importData;
+		const { importData, mappings } = this.props;
+		const { sheets, activeCollection } = importData;
 		const collectionData = sheets.find((sheet) => sheet.collection === activeCollection);
 
 		if (!collectionData) { return null; }

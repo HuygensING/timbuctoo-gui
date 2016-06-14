@@ -1,17 +1,20 @@
 import setIn from "./set-in";
+import getIn from "./get-in";
 
-const newVariableDesc = (variableName) => ({
-	importVariable: variableName
+const newVariableDesc = (property, variableName) => ({
+	property: property,
+	variable: variableName,
+	confirmed: false
 });
 
 const scaffoldCollectionMappings = () => ({
 	mockpersons: {
 		archetypeName: null,
-		mappings: {}
+		mappings: []
 	},
 	mockdocuments: {
 		archetypeName: null,
-		mappings: {}
+		mappings: []
 	}
 });
 
@@ -20,12 +23,34 @@ const initialState = {
 };
 
 const mapCollectionArchetype = (state, action) => {
-	const newCollections = setIn(["collections", action.collection, "archetypeName"], action.value, state.collections);
+	let newCollections = setIn([action.collection, "archetypeName"], action.value, state.collections);
+	newCollections = setIn([action.collection, "mappings"], [], newCollections);
+
 	return {...state, collections: newCollections};
 };
 
-const addFieldMapping = (state, action) => {
-	const newCollections = setIn(["collections", action.collection, "mappings", action.propertyField], [newVariableDesc(action.importedField)], state.collections);
+const upsertFieldMapping = (state, action) => {
+	
+	const idx =
+		state.collections[action.collection].mappings
+			.map((m, i) => ({index: i, m: m}))
+			.filter((mSpec) => mSpec.m.property === action.propertyField)
+			.reduce((prev, cur) => cur.index, state.collections[action.collection].mappings.length);
+
+	console.log("FOUND idx", idx);
+
+	const newCollections = setIn([action.collection, "mappings", idx],
+		newVariableDesc(action.propertyField, action.importedField), state.collections);
+
+
+	return {...state, collections: newCollections};
+};
+
+const setFieldConfirmation = (state, action, value) => {
+	const current = (getIn([action.collection, "mappings"], state.collections) || [])
+		.map((vm) => ({...vm, confirmed: action.propertyField === vm.property ? value : vm.confirmed}));
+	const newCollections = setIn([action.collection, "mappings"], current, state.collections);
+
 	return {...state, collections: newCollections};
 };
 
@@ -37,10 +62,16 @@ export default function(state=initialState, action) {
 		case "MAP_COLLECTION_ARCHETYPE":
 			return mapCollectionArchetype(state, action);
 
-		case "ADD_FIELD_MAPPING":
-			return addFieldMapping(state, action);
-	}
+		case "SET_FIELD_MAPPING":
+			return upsertFieldMapping(state, action);
 
+		case "CONFIRM_FIELD_MAPPINGS":
+			return setFieldConfirmation(state, action, true);
+
+		case "UNCONFIRM_FIELD_MAPPINGS":
+			return setFieldConfirmation(state, action, false);
+
+	}
 	return state;
 }
 

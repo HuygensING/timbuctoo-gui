@@ -38,8 +38,11 @@ class CollectionForm extends React.Component {
 				</div>
 
 				<ul className="list-group">
-					<SelectField label="Select archetype" onChange={(value) => onMapCollectionArchetype(activeCollection, value)}
-						options={Object.keys(archetype).filter((domain) => domain !== "relations")} value={mappings.collections[activeCollection].archetypeName} />
+					<li className="list-group-item">
+						<label>Select archetype</label>
+						<SelectField onChange={(value) => onMapCollectionArchetype(activeCollection, value)}
+							options={Object.keys(archetype).filter((domain) => domain !== "relations")} value={mappings.collections[activeCollection].archetypeName} />
+					</li>
 				</ul>
 				{propertyForms}
 			</div>

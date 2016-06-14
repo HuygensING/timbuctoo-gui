@@ -30,7 +30,7 @@ class SelectField extends React.Component {
 
 	handleDocumentClick(ev) {
 		const { isOpen } = this.state;
-		if (isOpen && !ReactDOM.findDOMNode(this).querySelector(".dropdown").contains(ev.target)) {
+		if (isOpen && !ReactDOM.findDOMNode(this).contains(ev.target)) {
 			this.setState({
 				isOpen: false
 			});
@@ -38,34 +38,35 @@ class SelectField extends React.Component {
 	}
 
 	render() {
-		const { label, options, onChange, value } = this.props;
+		const { options, onChange, placeholder, value } = this.props;
 
 		return (
-			<li className="list-group-item">
-				<label>{label}</label>
-				<span className={cx("dropdown", {open: this.state.isOpen})}>
-					<button className="btn btn-default btn-sx dropdown-toggle" onClick={this.toggleSelect.bind(this)}>
-						{value} <span className="caret"></span>
-					</button>
 
-					<ul className="dropdown-menu">
-						{options.map((option, i) => (
-							<li key={i}>
-								<a onClick={() => { onChange(option); this.toggleSelect(); }}>{option}</a>
-							</li>
-						))}
-					</ul>
-				</span>
-			</li>
+			<span className={cx("dropdown", {open: this.state.isOpen})}>
+				<button className="btn btn-default btn-sx dropdown-toggle"
+					onClick={this.toggleSelect.bind(this)}
+					style={value ? {color: "#666"} : {color: "#aaa"} }>
+
+					{value || placeholder} <span className="caret"></span>
+				</button>
+
+				<ul className="dropdown-menu">
+					{options.map((option, i) => (
+						<li key={i}>
+							<a onClick={() => { onChange(option); this.toggleSelect(); }}>{option}</a>
+						</li>
+					))}
+				</ul>
+			</span>
 		);
 	}
 
 }
 
 SelectField.propTypes = {
-	label: React.PropTypes.string,
 	onChange: React.PropTypes.func,
 	options: React.PropTypes.array,
+	placeholder: React.PropTypes.string,
 	value: React.PropTypes.string
 };
 
