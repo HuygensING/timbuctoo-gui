@@ -7,7 +7,7 @@ export default {
 
 	onMapCollectionArchetype: (collection, value) => store.dispatch({type: "MAP_COLLECTION_ARCHETYPE", collection: collection, value: value}),
 
-	onConfirmCollectionMappings: () => store.dispatch({type: "CONFIRM_COLLECTION_MAPPINGS"}),
+	onConfirmCollectionArchetypeMappings: () => store.dispatch({type: "CONFIRM_COLLECTION_ARCHETYPE_MAPPINGS"}),
 
 	onSetFieldMapping: (collection, propertyField, importedField) =>
 		store.dispatch({type: "SET_FIELD_MAPPING", collection: collection, propertyField: propertyField, importedField: importedField}),

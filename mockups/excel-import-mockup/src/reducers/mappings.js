@@ -84,7 +84,7 @@ export default function(state=initialState, action) {
 		case "MAP_COLLECTION_ARCHETYPE":
 			return mapCollectionArchetype(state, action);
 
-		case "CONFIRM_COLLECTION_MAPPINGS":
+		case "CONFIRM_COLLECTION_ARCHETYPE_MAPPINGS":
 			return {...state, confirmed: true};
 
 		case "SET_FIELD_MAPPING":
