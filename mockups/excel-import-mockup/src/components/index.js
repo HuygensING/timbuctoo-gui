@@ -13,16 +13,33 @@ class App extends React.Component {
 		const collectionsAreMapped = Object.keys(mappings.collections).length > 0 &&
 			Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName).indexOf(null) < 0;
 
+		const datasheetMappings = importData.sheets && collectionsAreMapped && mappings.confirmed ?
+			<DatasheetMappings {...this.props} /> : null;
 
-		if (importData.sheets && collectionsAreMapped && mappings.confirmed) {
-			return <DatasheetMappings {...this.props} />
-		}
+		const archetypeMappings = !datasheetMappings && importData.sheets ?
+			<ArchetypeMappings {...this.props} collectionsAreMapped={collectionsAreMapped} /> : null;
 
-		if (importData.sheets) {
-			return <ArchetypeMappings {...this.props} collectionsAreMapped={collectionsAreMapped} />;
-		}
+		const uploadSplashScreen = !datasheetMappings && !archetypeMappings ?
+			<UploadSplashScreen {...this.props} /> : null;
 
-		return <UploadSplashScreen {...this.props} />;
+		const nav = !uploadSplashScreen ? (
+			<nav>TODO: wizard steps - will act as state skipper in the mock stage</nav>
+		) : null;
+
+		return (
+			<div>
+				<div className="row centered-form center-block">
+					<div className="container col-md-10 col-md-offset-1">
+						{nav}
+						<main>
+							{datasheetMappings}
+							{archetypeMappings}
+							{uploadSplashScreen}
+						</main>
+					</div>
+				</div>
+			</div>
+		)
 	}
 }
 
