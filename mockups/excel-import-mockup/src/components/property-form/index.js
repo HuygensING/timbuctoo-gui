@@ -3,12 +3,12 @@ import React from "react";
 import Links from "./links";
 import Text from "./text";
 import Select from "./select";
-
+import Names from "./names";
 
 const typeMap = {
 	text: (props) => <Text {...props} />,
 	datable: (props) => <Text {...props} />,
-	names: (props) => null,
+	names: (props) => <Names {...props} />,
 	links: (props) => <Links {...props} />,
 	select: (props) => <Select {...props} />,
 	multiselect: (props) => <Select {...props} />
