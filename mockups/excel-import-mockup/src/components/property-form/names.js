@@ -12,6 +12,14 @@ class Form extends React.Component {
 		onSetFieldMapping(collectionData.collection, name, variableSpec);
 	}
 
+	onRemoveComponent(propertyMapping, mappingIndex) {
+		const { collectionData, onSetFieldMapping, name } = this.props;
+		const variableSpec = propertyMapping.variable
+			.filter((v, i) => i !== mappingIndex);
+
+		onSetFieldMapping(collectionData.collection, name, variableSpec);
+	}
+
 	render() {
 		const {collectionData, onSetFieldMapping, mappings, name, archetype} = this.props;
 
@@ -20,19 +28,27 @@ class Form extends React.Component {
 		const components = archetype[mappings.collections[collectionData.collection].archetypeName].find((a) => a.name === name).options;
 
 		return (
-			<span>
+			<div style={{margin: "12px"}}>
 				{(propertyMapping.variable || []).map((v, i) => (
-
-					<SelectField key={i} onChange={(value) => this.onComponentChange(propertyMapping, i, value)}
-						options={collectionData.variables}
-						placeholder={`Select column for ${v.component}`}
-						value={v.variableName} />
+					<span key={i} style={{display: "inline-block", margin: "8px"}}>
+						<div style={{marginBottom: "2px"}}>
+							<a className="pull-right btn-danger btn-xs" onClick={() => this.onRemoveComponent(propertyMapping, i)}>
+								<span className="glyphicon glyphicon-remove" />
+							</a>
+							{v.component}&nbsp;
+						</div>
+						<SelectField onChange={(value) => this.onComponentChange(propertyMapping, i, value)}
+							options={collectionData.variables}
+							placeholder={`Select column for ${v.component}`}
+							value={v.variableName} />
+					</span>
 				))}
-
-				<SelectField onChange={(value) => onSetFieldMapping(collectionData.collection, name, [...(propertyMapping.variable || []), {component: value}])}
-					options={components} placeholder="Add name component..."
-					value={null} />
-			</span>
+				<span style={{display: "inline-block", margin: "8px"}}>
+					<SelectField onChange={(value) => onSetFieldMapping(collectionData.collection, name, [...(propertyMapping.variable || []), {component: value}])}
+						options={components} placeholder="Add name component..."
+						value={null} />
+				</span>
+			</div>
 		);
 	}
 }
