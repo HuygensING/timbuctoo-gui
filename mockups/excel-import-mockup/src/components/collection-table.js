@@ -17,9 +17,10 @@ class CollectionTable extends React.Component {
 		const confirmedCols = rows[0]
 			.map((value, i) => ({value: value, index: i}))
 			.filter((colSpec) => mappings.collections[activeCollection].mappings
-					.filter((m) => m.confirmed)
-					.map((m) => m.variable)
-					.indexOf(colSpec.value) > -1
+				.filter((m) => m.confirmed)
+				.map((m) => m.variable.map((v) => v.variableName))
+				.reduce((a, b) => a.concat(b), [])
+				.indexOf(colSpec.value) > -1
 			).map((colSpec) => colSpec.index);
 
 		return (

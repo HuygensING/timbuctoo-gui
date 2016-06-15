@@ -1,9 +1,10 @@
 import setIn from "./set-in";
 import getIn from "./get-in";
 
-const newVariableDesc = (property, variableName) => ({
+const newVariableDesc = (property, variableSpec) => ({
 	property: property,
-	variable: variableName,
+	variable: variableSpec,
+	defaultValue: [],
 	confirmed: false,
 	valueMappings: {}
 });
@@ -27,7 +28,7 @@ const getMappingIndex = (state, action) =>
 	state.collections[action.collection].mappings
 		.map((m, i) => ({index: i, m: m}))
 		.filter((mSpec) => mSpec.m.property === action.propertyField)
-		.reduce((prev, cur) => cur.index, state.collections[action.collection].mappings.length);
+		.reduce((prev, cur) => cur.index, -1);
 
 const mapCollectionArchetype = (state, action) => {
 	let newCollections = setIn([action.collection, "archetypeName"], action.value, state.collections);
@@ -37,7 +38,8 @@ const mapCollectionArchetype = (state, action) => {
 };
 
 const upsertFieldMapping = (state, action) => {
-	const newCollections = setIn([action.collection, "mappings", getMappingIndex(state, action)],
+	const foundIdx = getMappingIndex(state, action);
+	const newCollections = setIn([action.collection, "mappings", foundIdx < 0 ? getIn([action.collection, "mappings"], state.collections).length : foundIdx],
 		newVariableDesc(action.propertyField, action.importedField), state.collections);
 
 
@@ -45,8 +47,13 @@ const upsertFieldMapping = (state, action) => {
 };
 
 const setDefaultValue = (state, action) => {
-	const newCollections = setIn([action.collection, "mappings", getMappingIndex(state, action), "defaultValue"], action.value, state.collections);
-	return {...state, collections: newCollections};
+	const foundIdx = getMappingIndex(state, action);
+	if (foundIdx > -1) {
+		const newCollections = setIn([action.collection, "mappings", foundIdx, "defaultValue"], action.value, state.collections);
+		return {...state, collections: newCollections};
+	}
+
+	return state;
 };
 
 const setFieldConfirmation = (state, action, value) => {
@@ -58,10 +65,14 @@ const setFieldConfirmation = (state, action, value) => {
 };
 
 const setValueMapping = (state, action) => {
-	const newCollections = setIn([action.collection, "mappings", getMappingIndex(state, action), "valueMappings", action.timValue],
-		action.mapValue, state.collections);
+	const foundIdx = getMappingIndex(state, action);
 
-	return {...state, collections: newCollections};
+	if (foundIdx > -1) {
+		const newCollections = setIn([action.collection, "mappings", foundIdx, "valueMappings", action.timValue],
+			action.mapValue, state.collections);
+		return {...state, collections: newCollections};
+	}
+	return state;
 };
 
 export default function(state=initialState, action) {

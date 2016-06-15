@@ -10,17 +10,17 @@ class Form extends React.Component {
 
 		const mapping = mappings.collections[collectionData.collection].mappings;
 		const propertyMapping = mapping.find((m) => m.property === name) || {};
-		const selectedVariable = propertyMapping.variable || null;
-		const defaultValue = propertyMapping.defaultValue || "";
+		const selectedVariable = propertyMapping.variable && propertyMapping.variable.length ? propertyMapping.variable[0] : {};
+		const defaultValue = propertyMapping.defaultValue && propertyMapping.defaultValue.length ? propertyMapping.defaultValue[0] : {};
 
 		return (
 			<span>
-				<SelectField onChange={(value) => onSetFieldMapping(collectionData.collection, name, value)}
+				<SelectField onChange={(value) => onSetFieldMapping(collectionData.collection, name, [{variableName: value}])}
 					options={collectionData.variables} placeholder="Select a column..."
-					value={selectedVariable} />
+					value={selectedVariable.variableName || null} />
 				&nbsp;
-				<input onChange={(ev) => onSetDefaultValue(collectionData.collection, name, ev.target.value)}
-					placeholder="Default value..." type="text" value={defaultValue} />
+				<input onChange={(ev) => onSetDefaultValue(collectionData.collection, name, [{value: ev.target.value}])}
+					placeholder="Default value..." type="text" value={defaultValue.value || null} />
 			</span>
 		);
 	}
@@ -28,10 +28,10 @@ class Form extends React.Component {
 
 Form.propTypes = {
 	collectionData: React.PropTypes.object,
-	onSetFieldMapping: React.PropTypes.func,
-	onSetDefaultValue: React.PropTypes.func,
 	mappings: React.PropTypes.object,
-	name: React.PropTypes.string
+	name: React.PropTypes.string,
+	onSetDefaultValue: React.PropTypes.func,
+	onSetFieldMapping: React.PropTypes.func
 };
 
 export default Form;
