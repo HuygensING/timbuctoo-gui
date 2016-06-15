@@ -4,7 +4,8 @@ import getIn from "./get-in";
 const newVariableDesc = (property, variableName) => ({
 	property: property,
 	variable: variableName,
-	confirmed: false
+	confirmed: false,
+	valueMappings: {}
 });
 
 const scaffoldCollectionMappings = () => ({
@@ -56,6 +57,13 @@ const setFieldConfirmation = (state, action, value) => {
 	return {...state, collections: newCollections};
 };
 
+const setValueMapping = (state, action) => {
+	const newCollections = setIn([action.collection, "mappings", getMappingIndex(state, action), "valueMappings", action.timValue],
+		action.mapValue, state.collections);
+
+	return {...state, collections: newCollections};
+};
+
 export default function(state=initialState, action) {
 	switch (action.type) {
 		case "UPLOAD":
@@ -70,13 +78,14 @@ export default function(state=initialState, action) {
 		case "SET_DEFAULT_VALUE":
 			return setDefaultValue(state, action);
 
-
 		case "CONFIRM_FIELD_MAPPINGS":
 			return setFieldConfirmation(state, action, true);
 
 		case "UNCONFIRM_FIELD_MAPPINGS":
 			return setFieldConfirmation(state, action, false);
 
+		case "SET_VALUE_MAPPING":
+			return setValueMapping(state, action);
 	}
 	return state;
 }

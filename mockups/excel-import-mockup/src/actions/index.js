@@ -16,11 +16,9 @@ export default {
 		store.dispatch({type: "CONFIRM_FIELD_MAPPINGS", collection: collection, propertyField: propertyField}),
 
 	onUnconfirmFieldMappings: (collection, propertyField) =>
-		store.dispatch({type: "UNCONFIRM_FIELD_MAPPINGS", collection: collection, propertyField: propertyField})
+		store.dispatch({type: "UNCONFIRM_FIELD_MAPPINGS", collection: collection, propertyField: propertyField}),
 
+	onSetValueMapping: (collection, propertyField, timValue, mapValue) =>
+		store.dispatch({type: "SET_VALUE_MAPPING", collection: collection, propertyField: propertyField, timValue: timValue, mapValue: mapValue})
 
-/*
-	onUpdateVariable: (variableName, assignments = []) => store.dispatch({type: "UPDATE_VARIABLE", variableName: variableName, assignments: assignments}),
-	onUpdateVariableTypeSpec: (variableName, key, value) => store.dispatch({type: "UPDATE_VARIABLE_TYPE_SPEC", value: value, variableName: variableName, key: key})
-*/
 };
