@@ -14,8 +14,14 @@ main
 		&:checked + label
 			color #000
 
-input[disabled]
-	background-color #ddd
+input
+	position relative
+	top 1px
+	height 33px
+	border-radius 4px
+	padding-left 6px
+	&[disabled]
+		background-color #ddd
 
 .panel
 	p

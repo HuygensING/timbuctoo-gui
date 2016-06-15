@@ -1,16 +1,6 @@
 import React from "react";
 import SelectField from "./fields/select-field";
-import TextPropForm from "./property-forms/text";
-
-const typeMap = {
-	text: (props) => <TextPropForm {...props} />,
-	datable: (props) => <TextPropForm {...props} />,
-	names: (props) => <TextPropForm {...props} />,
-	links: (props) => <TextPropForm {...props} />,
-	select: (props) => <TextPropForm {...props} />,
-	multiselect: (props) => <TextPropForm {...props} />
-};
-
+import PropertyForm from "./property-form";
 
 class CollectionForm extends React.Component {
 
@@ -27,9 +17,7 @@ class CollectionForm extends React.Component {
 		const archeTypePropFields = archetypeFields.filter((af) => af.type !== "relation");
 
 
-		const propertyForms = archeTypePropFields.map((af, i) => typeMap[af.type]({
-			...this.props, name: af.name, key: i, collectionData: collectionData
-		}));
+		const propertyForms = archeTypePropFields.map((af, i) => <PropertyForm {...this.props} collectionData={collectionData} key={i} name={af.name} type={af.type} />);
 
 		return (
 			<div className="panel panel-default">

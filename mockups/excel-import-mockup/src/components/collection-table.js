@@ -16,8 +16,11 @@ class CollectionTable extends React.Component {
 
 		const confirmedCols = rows[0]
 			.map((value, i) => ({value: value, index: i}))
-			.filter((colSpec) => false)
-			.map((colSpec) => colSpec.index);
+			.filter((colSpec) => mappings.collections[activeCollection].mappings
+					.filter((m) => m.confirmed)
+					.map((m) => m.variable)
+					.indexOf(colSpec.value) > -1
+			).map((colSpec) => colSpec.index);
 
 		return (
 			<div className="panel panel-default">
@@ -50,6 +53,7 @@ class CollectionTable extends React.Component {
 
 CollectionTable.propTypes = {
 	importData: React.PropTypes.object,
+	mappings: React.PropTypes.object,
 	onSelectVariable: React.PropTypes.func
 };
 

@@ -9,7 +9,7 @@ class App extends React.Component {
 
 	render() {
 		const { onUpload } = this.props;
-
+		console.log("MAPPINGS=", this.props.mappings);
 		return (
 			<div>
 				<header className="well">

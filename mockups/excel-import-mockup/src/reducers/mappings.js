@@ -22,6 +22,12 @@ const initialState = {
 	collections: {}
 };
 
+const getMappingIndex = (state, action) =>
+	state.collections[action.collection].mappings
+		.map((m, i) => ({index: i, m: m}))
+		.filter((mSpec) => mSpec.m.property === action.propertyField)
+		.reduce((prev, cur) => cur.index, state.collections[action.collection].mappings.length);
+
 const mapCollectionArchetype = (state, action) => {
 	let newCollections = setIn([action.collection, "archetypeName"], action.value, state.collections);
 	newCollections = setIn([action.collection, "mappings"], [], newCollections);
@@ -30,19 +36,15 @@ const mapCollectionArchetype = (state, action) => {
 };
 
 const upsertFieldMapping = (state, action) => {
-	
-	const idx =
-		state.collections[action.collection].mappings
-			.map((m, i) => ({index: i, m: m}))
-			.filter((mSpec) => mSpec.m.property === action.propertyField)
-			.reduce((prev, cur) => cur.index, state.collections[action.collection].mappings.length);
-
-	console.log("FOUND idx", idx);
-
-	const newCollections = setIn([action.collection, "mappings", idx],
+	const newCollections = setIn([action.collection, "mappings", getMappingIndex(state, action)],
 		newVariableDesc(action.propertyField, action.importedField), state.collections);
 
 
+	return {...state, collections: newCollections};
+};
+
+const setDefaultValue = (state, action) => {
+	const newCollections = setIn([action.collection, "mappings", getMappingIndex(state, action), "defaultValue"], action.value, state.collections);
 	return {...state, collections: newCollections};
 };
 
@@ -64,6 +66,10 @@ export default function(state=initialState, action) {
 
 		case "SET_FIELD_MAPPING":
 			return upsertFieldMapping(state, action);
+
+		case "SET_DEFAULT_VALUE":
+			return setDefaultValue(state, action);
+
 
 		case "CONFIRM_FIELD_MAPPINGS":
 			return setFieldConfirmation(state, action, true);

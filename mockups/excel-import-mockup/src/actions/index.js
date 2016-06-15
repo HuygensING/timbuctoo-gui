@@ -9,12 +9,15 @@ export default {
 	onSetFieldMapping: (collection, propertyField, importedField) =>
 		store.dispatch({type: "SET_FIELD_MAPPING", collection: collection, propertyField: propertyField, importedField: importedField}),
 
+	onSetDefaultValue: (collection, propertyField, value) =>
+		store.dispatch({type: "SET_DEFAULT_VALUE", collection: collection, propertyField: propertyField, value: value}),
 
 	onConfirmFieldMappings: (collection, propertyField) =>
 		store.dispatch({type: "CONFIRM_FIELD_MAPPINGS", collection: collection, propertyField: propertyField}),
 
 	onUnconfirmFieldMappings: (collection, propertyField) =>
 		store.dispatch({type: "UNCONFIRM_FIELD_MAPPINGS", collection: collection, propertyField: propertyField})
+
 
 /*
 	onUpdateVariable: (variableName, assignments = []) => store.dispatch({type: "UPDATE_VARIABLE", variableName: variableName, assignments: assignments}),

@@ -1,18 +1,26 @@
 import React from "react";
 
-import SelectField from "../fields/select-field";
+import Text from "./text";
+import Select from "./select";
 
+const typeMap = {
+	text: (props) => <Text {...props} />,
+	datable: (props) => <Text {...props} />,
+	names: (props) => null,
+	links: (props) => null,
+	select: (props) => <Select {...props} />,
+	multiselect: (props) => <Select {...props} />
+};
 
-class TextPropertyForm extends React.Component {
+class PropertyForm extends React.Component {
 
 
 	render() {
-		const { name, collectionData, onSetFieldMapping, mappings, onConfirmFieldMappings, onUnconfirmFieldMappings } = this.props;
+		const { name, collectionData, type, mappings, onConfirmFieldMappings, onUnconfirmFieldMappings } = this.props;
 
 		const mapping = mappings.collections[collectionData.collection].mappings;
 
-		console.log(mappings.collections[collectionData.collection]);
-				const propertyMapping = mapping.find((m) => m.property === name) || {};
+		const propertyMapping = mapping.find((m) => m.property === name) || {};
 		const selectedVariable = propertyMapping.variable || null;
 		const confirmed = propertyMapping.confirmed || false;
 
@@ -21,13 +29,13 @@ class TextPropertyForm extends React.Component {
 				<button className="btn btn-danger btn-sm" onClick={() => { onUnconfirmFieldMappings(collectionData.collection, name); }}>Unconfirm</button> : null;
 
 
+		const formComponent = typeMap[type](this.props);
+
 		return (
 			<ul className="list-group">
 				<li className="list-group-item">
-					<label><strong>{name}</strong></label>
-					<SelectField onChange={(value) => onSetFieldMapping(collectionData.collection, name, value)}
-						placeholder="Select a column..."
-						options={collectionData.variables} value={selectedVariable} />
+					<label><strong>{name}</strong> ({type})</label>
+					{formComponent}
 					&nbsp;
 					{confirmButton}
 				</li>
@@ -36,13 +44,13 @@ class TextPropertyForm extends React.Component {
 	}
 }
 
-TextPropertyForm.propTypes = {
+PropertyForm.propTypes = {
 	collectionData: React.PropTypes.object,
 	mappings: React.PropTypes.object,
 	name: React.PropTypes.string,
 	onConfirmFieldMappings: React.PropTypes.func,
-	onSetFieldMapping: React.PropTypes.func,
-	onUnconfirmFieldMappings: React.PropTypes.func
+	onUnconfirmFieldMappings: React.PropTypes.func,
+	type: React.PropTypes.string
 };
 
-export default TextPropertyForm;
+export default PropertyForm;

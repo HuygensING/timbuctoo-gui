@@ -46,7 +46,6 @@ class SelectField extends React.Component {
 				<button className="btn btn-default btn-sx dropdown-toggle"
 					onClick={this.toggleSelect.bind(this)}
 					style={value ? {color: "#666"} : {color: "#aaa"} }>
-
 					{value || placeholder} <span className="caret"></span>
 				</button>
 
