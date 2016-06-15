@@ -1,18 +1,17 @@
 a
 	cursor pointer
 
-main
-	label:first-of-type
-		color #666
+label:first-of-type
+	color #666
+	font-weight normal
+	diplay inline-block
+	width 200px
+input[type=radio] 
+	& + label
 		font-weight normal
-		diplay inline-block
-		width 200px
-	input[type=radio] 
-		& + label
-			font-weight normal
-			color #666
-		&:checked + label
-			color #000
+		color #666
+	&:checked + label
+		color #000
 
 input
 	position relative

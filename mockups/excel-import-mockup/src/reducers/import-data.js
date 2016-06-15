@@ -12,8 +12,7 @@ const scaffoldSheets = (state) => {
 			["2", "Klaas", "", "Klaassen", "Tekst 2", null, null],
 			["3", "Ina", "van der", "Poel - Jansen", null, null, "1"]
 		],
-		variables: mockPersonsHeader,
-		archetypeName: null
+		variables: mockPersonsHeader
 	},
 	{
 		collection: "mockdocuments",
@@ -22,8 +21,7 @@ const scaffoldSheets = (state) => {
 			["Tekst 1", "1850", "voorbeeld", "http://example.com"],
 			["Tekst 2", "1860", null, null]
 		],
-		variables: mockDocumentsHeader,
-		archetypeName: null
+		variables: mockDocumentsHeader
 	}];
 
 	return {
@@ -36,7 +34,7 @@ const scaffoldSheets = (state) => {
 
 
 const initialState = {
-	sheets: [],
+	sheets: null,
 	activeCollection: null
 };
 

@@ -21,7 +21,8 @@ const scaffoldCollectionMappings = () => ({
 });
 
 const initialState = {
-	collections: {}
+	collections: {},
+	confirmed: false
 };
 
 const getMappingIndex = (state, action) =>
@@ -82,6 +83,9 @@ export default function(state=initialState, action) {
 
 		case "MAP_COLLECTION_ARCHETYPE":
 			return mapCollectionArchetype(state, action);
+
+		case "CONFIRM_COLLECTION_MAPPINGS":
+			return {...state, confirmed: true};
 
 		case "SET_FIELD_MAPPING":
 			return upsertFieldMapping(state, action);

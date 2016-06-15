@@ -6,7 +6,7 @@ class CollectionForm extends React.Component {
 
 
 	render() {
-		const { importData, onMapCollectionArchetype, archetype, mappings } = this.props;
+		const { importData, archetype, mappings } = this.props;
 		const { activeCollection, sheets } = importData;
 
 		if (!activeCollection) { return null; }
@@ -25,13 +25,6 @@ class CollectionForm extends React.Component {
 					Collection settings: {activeCollection}
 				</div>
 
-				<ul className="list-group">
-					<li className="list-group-item">
-						<label>Select archetype</label>
-						<SelectField onChange={(value) => onMapCollectionArchetype(activeCollection, value)}
-							options={Object.keys(archetype).filter((domain) => domain !== "relations")} value={mappings.collections[activeCollection].archetypeName} />
-					</li>
-				</ul>
 				{propertyForms}
 			</div>
 		);

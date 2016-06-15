@@ -9,7 +9,10 @@ class Form extends React.Component {
 		const variableSpec = propertyMapping.variable
 			.map((v, i) => i === mappingIndex ? {...v, variableName: variableName} : v);
 
-		onSetFieldMapping(collectionData.collection, name, variableSpec);
+		if (variableSpec.length > 0) {
+			onSetFieldMapping(collectionData.collection, name, variableSpec);
+		}
+		// TODO: onRemoveFieldMapping.
 	}
 
 	onRemoveComponent(propertyMapping, mappingIndex) {
@@ -32,7 +35,7 @@ class Form extends React.Component {
 				{propertyMapping.variable && propertyMapping.variable.length ? (
 				<div style={{marginBottom: "12px"}}>
 					{(propertyMapping.variable || []).map((v, i) => (
-						<span key={i} style={{display: "inline-block", margin: "8px"}}>
+						<span key={i} style={{display: "inline-block", margin: "8px 8px 0 0"}}>
 							<div style={{marginBottom: "2px"}}>
 								<a className="pull-right btn-danger btn-xs" onClick={() => this.onRemoveComponent(propertyMapping, i)}>
 									<span className="glyphicon glyphicon-remove" />
