@@ -13,11 +13,13 @@ const newVariableDesc = (property, variableSpec) => ({
 const scaffoldCollectionMappings = () => ({
 	mockpersons: {
 		archetypeName: null,
-		mappings: []
+		mappings: [],
+		ignoredColumns: []
 	},
 	mockdocuments: {
 		archetypeName: null,
-		mappings: []
+		mappings: [],
+		ignoredColumns: []
 	}
 });
 
@@ -82,7 +84,14 @@ const setDefaultValue = (state, action) => {
 const setFieldConfirmation = (state, action, value) => {
 	const current = (getIn([action.collection, "mappings"], state.collections) || [])
 		.map((vm) => ({...vm, confirmed: action.propertyField === vm.property ? value : vm.confirmed}));
-	const newCollections = setIn([action.collection, "mappings"], current, state.collections);
+	let newCollections = setIn([action.collection, "mappings"], current, state.collections);
+
+	if (value === true) {
+		const confirmedVariableNames = current.map((m) => m.variable.map((v) => v.variableName)).reduce((a, b) => a.concat(b));
+		const newIgnoredColums = getIn([action.collection, "ignoredColumns"], state.collections)
+			.filter((ic) => confirmedVariableNames.indexOf(ic) < 0);
+		newCollections = setIn([action.collection, "ignoredColumns"], newIgnoredColums, newCollections);
+	}
 
 	return {...state, collections: newCollections};
 };
@@ -96,6 +105,18 @@ const setValueMapping = (state, action) => {
 		return {...state, collections: newCollections};
 	}
 	return state;
+};
+
+const toggleIgnoredColumn = (state, action) => {
+	let current = getIn([action.collection, "ignoredColumns"], state.collections);
+
+	if (current.indexOf(action.variableName) < 0) {
+		current.push(action.variableName);
+	} else {
+		current = current.filter((c) => c !== action.variableName);
+	}
+
+	return {...state, collections: setIn([action.collection, "ignoredColumns"], current, state.collections) };
 };
 
 export default function(state=initialState, action) {
@@ -126,6 +147,9 @@ export default function(state=initialState, action) {
 
 		case "SET_VALUE_MAPPING":
 			return setValueMapping(state, action);
+
+		case "TOGGLE_IGNORED_COLUMN":
+			return toggleIgnoredColumn(state, action);
 	}
 	return state;
 }

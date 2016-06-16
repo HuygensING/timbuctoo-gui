@@ -25,6 +25,8 @@ export default {
 		store.dispatch({type: "UNCONFIRM_FIELD_MAPPINGS", collection: collection, propertyField: propertyField}),
 
 	onSetValueMapping: (collection, propertyField, timValue, mapValue) =>
-		store.dispatch({type: "SET_VALUE_MAPPING", collection: collection, propertyField: propertyField, timValue: timValue, mapValue: mapValue})
+		store.dispatch({type: "SET_VALUE_MAPPING", collection: collection, propertyField: propertyField, timValue: timValue, mapValue: mapValue}),
 
+	onIgnoreColumnToggle: (collection, variableName) =>
+		store.dispatch({type: "TOGGLE_IGNORED_COLUMN", collection: collection, variableName: variableName})
 };
