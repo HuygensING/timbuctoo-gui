@@ -8,7 +8,6 @@ const scaffoldSheets = (state) => {
 	const sheets = [{
 		collection: "mockpersons",
 		rows: [
-			mockPersonsHeader,
 			["1", "Jan", "", "Jansen", "Tekst 1", "Tekst 2", null],
 			["2", "Klaas", "", "Klaassen", "Tekst 2", null, null],
 			["3", "Ina", "van der", "Poel - Jansen", null, null, "1"]
@@ -18,7 +17,6 @@ const scaffoldSheets = (state) => {
 	{
 		collection: "mockdocuments",
 		rows: [
-			mockDocumentsHeader,
 			["Tekst 1", "1850", "voorbeeld", "http://example.com"],
 			["Tekst 2", "1860", null, null]
 		],

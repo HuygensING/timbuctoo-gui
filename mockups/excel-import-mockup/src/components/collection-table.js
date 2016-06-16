@@ -8,13 +8,9 @@ class CollectionTable extends React.Component {
 		const { sheets, activeCollection } = importData;
 		const collectionData = sheets.find((sheet) => sheet.collection === activeCollection);
 
-		if (!collectionData) { return null; }
+		const { rows, collection, variables } = collectionData;
 
-		const { rows, collection } = collectionData;
-
-		if (!rows.length) { return null; }
-
-		const confirmedCols = rows[0]
+		const confirmedCols = variables
 			.map((value, i) => ({value: value, index: i}))
 			.filter((colSpec) => mappings.collections[activeCollection].mappings
 				.filter((m) => m.confirmed)
@@ -35,7 +31,7 @@ class CollectionTable extends React.Component {
 					<thead>
 						<tr>
 						{/* extract: */}
-							{rows[0].map((header, i) => (
+							{variables.map((header, i) => (
 								<th className={cx({
 									success: confirmedCols.indexOf(i) > -1,
 									info: confirmedCols.indexOf(i) < 0 && ignoredColumns.indexOf(header) < 0,
@@ -56,7 +52,7 @@ class CollectionTable extends React.Component {
 					</thead>
 					<tbody>
 					{/* extract: */}
-						{ rows.map((row, i) => i == 0 ? null : (
+						{ rows.map((row, i) => (
 							<tr key={i}>{row.map((cell, j) => (
 								<td className={cx({
 									ignored: confirmedCols.indexOf(j) < 0 && ignoredColumns.indexOf(cell) > -1
