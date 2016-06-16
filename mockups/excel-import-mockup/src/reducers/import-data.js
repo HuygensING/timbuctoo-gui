@@ -2,7 +2,7 @@ import setIn from "./set-in";
 import { getItem } from "./persist";
 
 
-const mockPersonsHeader = ["ID", "Voornaam", "tussenvoegsel", "Achternaam", "GeschrevenDocument", "Meegeschreven", "Is getrouwd met"];
+const mockPersonsHeader = ["ID", "Voornaam", "tussenvoegsel", "Achternaam", "GeschrevenDocument", "Genoemd in", "Is getrouwd met"];
 const mockDocumentsHeader = ["titel", "datum", "referentie", "url"];
 
 const scaffoldSheets = (state) => {

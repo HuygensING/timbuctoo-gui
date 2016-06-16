@@ -4,6 +4,7 @@ import Links from "./links";
 import Text from "./text";
 import Select from "./select";
 import Names from "./names";
+import Relation from "./relation";
 
 const typeMap = {
 	text: (props) => <Text {...props} />,
@@ -12,14 +13,17 @@ const typeMap = {
 	links: (props) => <Links {...props} />,
 	select: (props) => <Select {...props} />,
 	multiselect: (props) => <Select {...props} />,
-	relation: (props) => null
+	relation: (props) => <Relation {...props} />
 };
 
 class PropertyForm extends React.Component {
 
 	canConfirm(variable) {
+		const { type } = this.props;
 		if (!variable || variable.length === 0) { return false; }
-
+		if (type === "relation") {
+			return variable[0].variableName && variable[0].targetCollection && variable[0].targetVariableName;
+		}
 		return variable.filter((m) => m.variableName).length === variable.length;
 	}
 
