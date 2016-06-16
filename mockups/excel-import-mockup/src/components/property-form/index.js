@@ -24,7 +24,7 @@ class PropertyForm extends React.Component {
 	}
 
 	render() {
-		const { name, collectionData, type, mappings, onConfirmFieldMappings, onUnconfirmFieldMappings } = this.props;
+		const { custom, name, collectionData, type, mappings, onConfirmFieldMappings, onUnconfirmFieldMappings, onRemoveCustomProperty } = this.props;
 
 		const mapping = mappings.collections[collectionData.collection].mappings;
 
@@ -32,30 +32,35 @@ class PropertyForm extends React.Component {
 		const confirmed = propertyMapping.confirmed || false;
 
 		const confirmButton = this.canConfirm(propertyMapping.variable || null) && !confirmed ?
-				<button className="btn btn-success btn-sm" onClick={() => { onConfirmFieldMappings(collectionData.collection, name); }}>Confirm</button> : confirmed ?
-				<button className="btn btn-danger btn-sm" onClick={() => { onUnconfirmFieldMappings(collectionData.collection, name); }}>Unconfirm</button> : null;
+				<button className="btn btn-success btn-sm" onClick={() => onConfirmFieldMappings(collectionData.collection, name)}>Confirm</button> : confirmed ?
+				<button className="btn btn-danger btn-sm" onClick={() => onUnconfirmFieldMappings(collectionData.collection, name)}>Unconfirm</button> : null;
 
 
 		const formComponent = typeMap[type](this.props);
 
 		return (
-			<ul className="list-group">
-				<li className="list-group-item">
-					<label><strong>{name}</strong> ({type})</label>
-					{formComponent}
-					&nbsp;
-					{confirmButton}
-				</li>
-			</ul>
+			<li className="list-group-item">
+				{custom ? (
+					<a className="pull-right btn-danger btn-xs" onClick={() => onRemoveCustomProperty(collectionData.collection, name)}>
+						<span className="glyphicon glyphicon-remove" />
+					</a>) : null}
+
+				<label><strong>{name}</strong> ({type})</label>
+				{formComponent}
+				&nbsp;
+				{confirmButton}
+			</li>
 		);
 	}
 }
 
 PropertyForm.propTypes = {
 	collectionData: React.PropTypes.object,
+	custom: React.PropTypes.bool,
 	mappings: React.PropTypes.object,
 	name: React.PropTypes.string,
 	onConfirmFieldMappings: React.PropTypes.func,
+	onRemoveCustomProperty: React.PropTypes.func,
 	onUnconfirmFieldMappings: React.PropTypes.func,
 	type: React.PropTypes.string
 };

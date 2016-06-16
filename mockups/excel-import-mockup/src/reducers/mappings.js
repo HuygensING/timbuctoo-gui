@@ -63,7 +63,6 @@ const clearFieldMapping = (state, action) => {
 	if (current.length > 0) {
 		newCollections = setIn([action.collection, "mappings", foundIdx, "variable"], current, state.collections);
 	} else {
-		console.log(getIn([action.collection, "mappings"], state.collections));
 		const newMappings = getIn([action.collection, "mappings"], state.collections)
 			.filter((m, i) => i !== foundIdx);
 		newCollections = setIn([action.collection, "mappings"], newMappings, state.collections);
@@ -123,7 +122,24 @@ const toggleIgnoredColumn = (state, action) => {
 
 const addCustomProperty = (state, action) => {
 	const current = getIn([action.collection, "customProperties"], state.collections);
-	const newCollections = setIn([action.collection, "customProperties", current.length], {name: action.propertyName, type: action.propertyType}, state.collections);
+	const newCollections = setIn([action.collection, "customProperties", current.length], {name: action.propertyField, type: action.propertyType}, state.collections);
+
+	return {...state, collections: newCollections};
+};
+
+const removeCustomProperty = (state, action) => {
+	const foundIdx = getMappingIndex(state, action);
+
+	const current = getIn([action.collection, "customProperties"], state.collections)
+		.filter((cp) => cp.name !== action.propertyField);
+
+	let newCollections = setIn([action.collection, "customProperties"], current, state.collections);
+
+	if (foundIdx > -1) {
+		const newMappings = getIn([action.collection, "mappings"], state.collections)
+			.filter((m, i) => i !== foundIdx);
+		newCollections = setIn([action.collection, "mappings"], newMappings, newCollections);
+	}
 
 	return {...state, collections: newCollections};
 };
@@ -162,6 +178,9 @@ export default function(state=initialState, action) {
 
 		case "ADD_CUSTOM_PROPERTY":
 			return addCustomProperty(state, action);
+
+		case "REMOVE_CUSTOM_PROPERTY":
+			return removeCustomProperty(state, action);
 	}
 	return state;
 }

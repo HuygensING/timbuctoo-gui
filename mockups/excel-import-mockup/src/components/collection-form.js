@@ -14,7 +14,7 @@ class CollectionForm extends React.Component {
 	}
 
 	render() {
-		const { importData, archetype, onAddCustomProperty, mappings } = this.props;
+		const { importData, archetype, onAddCustomProperty, mappings, relationTypes } = this.props;
 		const { newName, newType } = this.state;
 
 		const { activeCollection, sheets } = importData;
@@ -23,9 +23,16 @@ class CollectionForm extends React.Component {
 
 		const collectionData = sheets.find((sheet) => sheet.collection === activeCollection);
 
-		const archetypeFields = mappings.collections[activeCollection].archetypeName ? archetype[mappings.collections[activeCollection].archetypeName] : [];
+		const { archetypeName } = mappings.collections[activeCollection];
+		const archetypeFields = archetypeName ? archetype[archetypeName] : [];
 		const archeTypePropFields = archetypeFields.filter((af) => af.type !== "relation");
 
+		const availableArchetypes = Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName);
+
+		const relationTypeOptions = relationTypes.data
+			.filter((relType) => `${relType.sourceTypeName}s` === archetypeName || `${relType.targetTypeName}s` === archetypeName)
+			.filter((relType) => availableArchetypes.indexOf(`${relType.sourceTypeName}s`) > -1 && availableArchetypes.indexOf(`${relType.targetTypeName}s`) > -1)
+			.map((relType) => `${relType.sourceTypeName}s` === archetypeName ? relType.regularName : relType.inverseName);
 
 		const propertyForms = archeTypePropFields
 			.map((af, i) => <PropertyForm {...this.props} collectionData={collectionData} custom={false} key={i} name={af.name} type={af.type} />);
@@ -39,9 +46,9 @@ class CollectionForm extends React.Component {
 					Collection settings: {activeCollection}
 				</div>
 
-				{propertyForms}
-				{customPropertyForms}
 				<ul className="list-group">
+					{propertyForms}
+					{customPropertyForms}
 					<li className="list-group-item">
 						<label><strong>Add property</strong></label>
 						<SelectField
@@ -52,7 +59,12 @@ class CollectionForm extends React.Component {
 							value={newType} />
 						&nbsp;
 						{ newType === "relation" ?
-							(null)
+							<SelectField
+								onChange={(value) => this.setState({newName: value})}
+								onClear={() => this.setState({newName: null})}
+								options={relationTypeOptions}
+								placeholder="Choose a type..."
+								value={newName} />
 							:
 							(<input onChange={(ev) => this.setState({newName: ev.target.value })} placeholder="Property name" value={newName} />)
 						}
@@ -76,7 +88,8 @@ CollectionForm.propTypes = {
 	importData: React.PropTypes.object,
 	mappings: React.PropTypes.object,
 	onAddCustomProperty: React.PropTypes.func,
-	onMapCollectionArchetype: React.PropTypes.func
+	onMapCollectionArchetype: React.PropTypes.func,
+	relationTypes: React.PropTypes.object
 };
 
 export default CollectionForm;

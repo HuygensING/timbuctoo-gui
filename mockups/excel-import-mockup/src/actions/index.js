@@ -31,6 +31,8 @@ export default {
 		store.dispatch({type: "TOGGLE_IGNORED_COLUMN", collection: collection, variableName: variableName}),
 
 	onAddCustomProperty: (collection, propertyName, propertyType) =>
-		store.dispatch({type: "ADD_CUSTOM_PROPERTY", collection: collection, propertyName: propertyName, propertyType: propertyType})
+		store.dispatch({type: "ADD_CUSTOM_PROPERTY", collection: collection, propertyField: propertyName, propertyType: propertyType}),
 
+	onRemoveCustomProperty: (collection, propertyName) =>
+		store.dispatch({type: "REMOVE_CUSTOM_PROPERTY", collection: collection, propertyField: propertyName})
 };
