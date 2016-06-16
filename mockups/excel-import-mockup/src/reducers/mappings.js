@@ -1,5 +1,6 @@
 import setIn from "./set-in";
 import getIn from "./get-in";
+import { getItem } from "./persist";
 
 const newVariableDesc = (property, variableSpec) => ({
 	property: property,
@@ -20,7 +21,7 @@ const scaffoldCollectionMappings = () => ({
 	}
 });
 
-const initialState = {
+const initialState = getItem("mappings") || {
 	collections: {},
 	confirmed: false
 };

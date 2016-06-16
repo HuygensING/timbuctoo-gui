@@ -1,6 +1,7 @@
 import {createStore, applyMiddleware, combineReducers} from "redux";
 import reducers from "./index";
 import thunkMiddleware from "redux-thunk";
+import { persist } from "./persist";
 
 const logger = () => next => action => {
 	if (action.hasOwnProperty("type")) {
@@ -11,4 +12,8 @@ const logger = () => next => action => {
 
 let data = combineReducers(reducers);
 
-export default createStore(data, applyMiddleware(logger, thunkMiddleware));
+let store = createStore(data, applyMiddleware(logger, thunkMiddleware));
+
+window.onbeforeunload = () => persist(store.getState());
+
+export default store;

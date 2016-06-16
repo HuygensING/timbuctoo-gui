@@ -1,4 +1,6 @@
-const initialState = {};
+import { getItem } from "./persist";
+
+const initialState = getItem("archetype") || {};
 
 
 export default function(state=initialState, action) {
