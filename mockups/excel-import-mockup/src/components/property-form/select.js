@@ -23,7 +23,9 @@ class Form extends React.Component {
 					options={collectionData.variables} placeholder="Select a column..."
 					value={selectedVariable.variableName} />
 				&nbsp;
-				{selectedVariable.variableName ? (<SelectField onChange={(value) => onSetDefaultValue(collectionData.collection, name, [{value: value}])}
+				{selectedVariable.variableName ? (<SelectField
+					onChange={(value) => onSetDefaultValue(collectionData.collection, name, [{value: value}])}
+					onClear={() => onSetDefaultValue(collectionData.collection, name, [{value: null}])}
 					options={defaultOptions} placeholder="Select a default value..."
 					value={defaultValue.value} />) : null }
 
