@@ -8,7 +8,7 @@ class ArchetypeMappings extends React.Component {
 	render() {
 		const { archetype, importData, onMapCollectionArchetype, mappings, collectionsAreMapped, onConfirmCollectionArchetypeMappings } = this.props;
 		return (
-			<div className="panel panel-default col-sm-10">
+			<div className="panel panel-default col-md-6 col-md-offset-3">
 				<div className="panel-body">
 					You have uploaded test.xlsx. We found 2 tabs.<br />
 					Connect the tabs to the timbuctoo archetypes
