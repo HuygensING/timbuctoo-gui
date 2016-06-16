@@ -1,5 +1,7 @@
 import React from "react";
-import cx from "classnames";
+import DataRow from "./table/data-row";
+import HeaderCell from "./table/header-cell";
+
 
 class CollectionTable extends React.Component {
 
@@ -30,39 +32,28 @@ class CollectionTable extends React.Component {
 				<table className="table table-bordered">
 					<thead>
 						<tr>
-						{/* extract: */}
 							{variables.map((header, i) => (
-								<th className={cx({
-									success: confirmedCols.indexOf(i) > -1,
-									info: confirmedCols.indexOf(i) < 0 && ignoredColumns.indexOf(header) < 0,
-									ignored: confirmedCols.indexOf(i) < 0 && ignoredColumns.indexOf(header) > -1
-								})} key={i}>
-
-									{header}
-									<a className={cx("pull-right", "glyphicon", {
-										"glyphicon-ok-sign": confirmedCols.indexOf(i) > -1,
-										"glyphicon-question-sign": confirmedCols.indexOf(i) < 0 && ignoredColumns.indexOf(header) < 0,
-										"glyphicon-remove": confirmedCols.indexOf(i) < 0 && ignoredColumns.indexOf(header) > -1
-									})} onClick={() => confirmedCols.indexOf(i) < 0 ? onIgnoreColumnToggle(activeCollection, header) : null } >
-									</a>
-								</th>
+								<HeaderCell
+									activeCollection={activeCollection}
+									header={header}
+									isConfirmed={confirmedCols.indexOf(i) > -1}
+									isIgnored={ignoredColumns.indexOf(header) > -1}
+									key={i}
+									onIgnoreColumnToggle={onIgnoreColumnToggle}
+								/>
 							))}
-						{/* /extract */}
 						</tr>
 					</thead>
 					<tbody>
-					{/* extract: */}
-						{ rows.map((row, i) => (
-							<tr key={i}>{row.map((cell, j) => (
-								<td className={cx({
-									ignored: confirmedCols.indexOf(j) < 0 && ignoredColumns.indexOf(cell) > -1
-								})} key={j}>
-									{cell}
-								</td>
-							))}
-							</tr>
-						))}
-					{/* /extract */}
+					{ rows.map((row, i) => (
+						<DataRow
+							confirmedCols={confirmedCols}
+							ignoredColumns={ignoredColumns}
+							key={i}
+							row={row}
+							variables={variables}
+						/>
+					))}
 					</tbody>
 				</table>
 			</div>
