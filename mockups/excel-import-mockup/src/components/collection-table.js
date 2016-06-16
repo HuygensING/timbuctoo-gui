@@ -34,6 +34,7 @@ class CollectionTable extends React.Component {
 				<table className="table table-bordered">
 					<thead>
 						<tr>
+						{/* extract: */}
 							{rows[0].map((header, i) => (
 								<th className={cx({
 									success: confirmedCols.indexOf(i) > -1,
@@ -50,9 +51,11 @@ class CollectionTable extends React.Component {
 									</a>
 								</th>
 							))}
+						{/* /extract */}
 						</tr>
 					</thead>
 					<tbody>
+					{/* extract: */}
 						{ rows.map((row, i) => i == 0 ? null : (
 							<tr key={i}>{row.map((cell, j) => (
 								<td className={cx({
@@ -63,6 +66,7 @@ class CollectionTable extends React.Component {
 							))}
 							</tr>
 						))}
+					{/* /extract */}
 					</tbody>
 				</table>
 			</div>

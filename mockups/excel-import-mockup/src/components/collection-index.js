@@ -12,18 +12,16 @@ class CollectionIndex extends React.Component {
 			.reduce((a, b) => a.concat(b), [])
 			.length;
 
-
-		console.log(confirmedColCount + mappings.collections[sheet.collection].ignoredColumns.length);
 		return confirmedColCount + mappings.collections[sheet.collection].ignoredColumns.length === sheet.variables.length;
 	}
 
-	someMappingsAreIncomplete() {
+	allMappingsAreIncomplete() {
 		const { importData } = this.props;
 		const { sheets } = importData;
 		return sheets
 			.map((sheet) => this.mappingsAreComplete(sheet))
 			.filter((result) => result !== true)
-			.length !== 0;
+			.length === 0;
 	}
 
 	render() {
@@ -48,7 +46,7 @@ class CollectionIndex extends React.Component {
 					<li className="list-group-item">
 						<button className="btn btn-success">Save</button>
 						&nbsp;
-						<button className="btn btn-success" disabled={this.someMappingsAreIncomplete()}>Publish</button>
+						<button className="btn btn-success" disabled={!this.allMappingsAreIncomplete()}>Publish</button>
 					</li>
 				</div>
 			</div>

@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	ReactDOM.render(<p>fetching relation types</p>, document.getElementById("app"));
 
 	store.dispatch({type: "SET_RELATION_TYPES", data: relationTypes});
-	xhr("http://test.repository.huygens.knaw.nl/v2.1/metadata/Admin", (err, resp) => {
+	xhr("http://acc.repository.huygens.knaw.nl/v2.1/metadata/Admin", (err, resp) => {
 		store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
 	});
 });

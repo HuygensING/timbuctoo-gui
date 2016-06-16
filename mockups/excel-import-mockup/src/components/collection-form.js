@@ -49,6 +49,8 @@ class CollectionForm extends React.Component {
 				<ul className="list-group">
 					{propertyForms}
 					{customPropertyForms}
+
+				{/* extract: */}
 					<li className="list-group-item">
 						<label><strong>Add property</strong></label>
 						<SelectField
@@ -77,6 +79,7 @@ class CollectionForm extends React.Component {
 							Add
 						</button>
 					</li>
+				{/* /extract */}
 				</ul>
 			</div>
 		);

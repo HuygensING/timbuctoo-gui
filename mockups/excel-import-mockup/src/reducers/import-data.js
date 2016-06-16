@@ -1,4 +1,3 @@
-import setIn from "./set-in";
 import { getItem } from "./persist";
 
 
@@ -47,11 +46,6 @@ export default function(state=initialState, action) {
 			return scaffoldSheets(state);
 		case "SET_ACTIVE_COLLECTION":
 			return {...state, activeCollection: action.collection};
-
-		case "UPDATE_COLLECTION":
-			const sheetIndex = state.sheets.map((sheet) => sheet.collection).indexOf(action.collection);
-			const newSheets = setIn([sheetIndex, action.key], action.value, state.sheets);
-			return {...state, sheets: newSheets };
 	}
 
 	return state;
