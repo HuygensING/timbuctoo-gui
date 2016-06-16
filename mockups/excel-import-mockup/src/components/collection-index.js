@@ -28,18 +28,23 @@ class CollectionIndex extends React.Component {
 		const { importData, onSelectCollection } = this.props;
 		const { sheets } = importData;
 
-		return sheets.length > 0 ? (
+		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
 					Collections
 				</div>
 				<div className="list-group">
 					{ sheets.map((sheet, i) => (
-						<a className={cx("list-group-item", { active: sheet.collection === importData.activeCollection })} key={i} onClick={() => onSelectCollection(sheet.collection)}>
+						<a
+							className={cx("list-group-item", {active: sheet.collection === importData.activeCollection })}
+							key={i}
+							onClick={() => onSelectCollection(sheet.collection)}
+						>
 							<span className={cx("glyphicon", "pull-right", {
 								"glyphicon-question-sign": !this.mappingsAreComplete(sheet),
 								"glyphicon-ok-sign": this.mappingsAreComplete(sheet)
-							})}></span>
+							})}>
+							</span>
 							{sheet.collection}
 						</a>
 					)) }
@@ -50,7 +55,7 @@ class CollectionIndex extends React.Component {
 					</li>
 				</div>
 			</div>
-		) : null;
+		);
 	}
 }
 
