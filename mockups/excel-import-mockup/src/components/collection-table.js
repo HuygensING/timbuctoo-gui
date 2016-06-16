@@ -77,8 +77,7 @@ class CollectionTable extends React.Component {
 CollectionTable.propTypes = {
 	importData: React.PropTypes.object,
 	mappings: React.PropTypes.object,
-	onIgnoreColumnToggle: React.PropTypes.func,
-	onSelectVariable: React.PropTypes.func
+	onIgnoreColumnToggle: React.PropTypes.func
 };
 
 export default CollectionTable;

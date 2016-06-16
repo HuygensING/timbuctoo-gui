@@ -53,10 +53,10 @@ class Form extends React.Component {
 
 Form.propTypes = {
 	collectionData: React.PropTypes.object,
+	importData: React.PropTypes.object,
 	mappings: React.PropTypes.object,
 	name: React.PropTypes.string,
 	onClearFieldMapping: React.PropTypes.func,
-	onSetDefaultValue: React.PropTypes.func,
 	onSetFieldMapping: React.PropTypes.func,
 	relationTypes: React.PropTypes.object
 };

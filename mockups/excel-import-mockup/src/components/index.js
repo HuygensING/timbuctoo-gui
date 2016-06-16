@@ -43,12 +43,8 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-	archetype: React.PropTypes.object,
 	importData: React.PropTypes.object,
-	mappings: React.PropTypes.object,
-	onConfirmCollectionArchetypeMappings: React.PropTypes.func,
-	onMapCollectionArchetype: React.PropTypes.func,
-	onUpload: React.PropTypes.func
+	mappings: React.PropTypes.object
 };
 
 export default App;

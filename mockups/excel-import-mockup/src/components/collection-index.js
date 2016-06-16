@@ -56,8 +56,8 @@ class CollectionIndex extends React.Component {
 
 CollectionIndex.propTypes = {
 	importData: React.PropTypes.object,
-	onSelectCollection: React.PropTypes.func,
-	mappings: React.PropTypes.object
+	mappings: React.PropTypes.object,
+	onSelectCollection: React.PropTypes.func
 };
 
 export default CollectionIndex;
