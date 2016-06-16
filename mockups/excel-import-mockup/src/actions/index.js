@@ -12,6 +12,9 @@ export default {
 	onSetFieldMapping: (collection, propertyField, importedField) =>
 		store.dispatch({type: "SET_FIELD_MAPPING", collection: collection, propertyField: propertyField, importedField: importedField}),
 
+	onClearFieldMapping: (collection, propertyField, clearIndex) =>
+		store.dispatch({type: "CLEAR_FIELD_MAPPING", collection: collection, propertyField: propertyField, clearIndex: clearIndex}),
+
 	onSetDefaultValue: (collection, propertyField, value) =>
 		store.dispatch({type: "SET_DEFAULT_VALUE", collection: collection, propertyField: propertyField, value: value}),
 

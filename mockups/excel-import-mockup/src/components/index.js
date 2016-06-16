@@ -1,11 +1,12 @@
 import React from "react";
 
-
 import UploadSplashScreen from "./upload-splash-screen";
 import ArchetypeMappings from "./archetype-mappings";
 import DatasheetMappings from "./datasheet-mappings";
 
 import { disablePersist } from "../reducers/persist";
+
+
 
 class App extends React.Component {
 
@@ -24,16 +25,11 @@ class App extends React.Component {
 		const uploadSplashScreen = !datasheetMappings && !archetypeMappings ?
 			<UploadSplashScreen {...this.props} /> : null;
 
-		const nav = !uploadSplashScreen ? (
-			<nav>TODO: wizard steps - will act as state skipper in the mock stage</nav>
-		) : null;
-
 		return (
 			<div>
 				<a onClick={() => { disablePersist(); location.reload(); }} style={{position: "absolute", top: 0, right: 0, zIndex: 10}}>clear state</a>
 				<div className="row centered-form center-block">
 					<div className="container col-md-12">
-						{nav}
 						<main>
 							{datasheetMappings}
 							{archetypeMappings}

@@ -16,6 +16,11 @@ const typeMap = {
 
 class PropertyForm extends React.Component {
 
+	canConfirm(variable) {
+		if (!variable || variable.length === 0) { return false; }
+
+		return variable.filter((m) => m.variableName).length === variable.length;
+	}
 
 	render() {
 		const { name, collectionData, type, mappings, onConfirmFieldMappings, onUnconfirmFieldMappings } = this.props;
@@ -23,10 +28,9 @@ class PropertyForm extends React.Component {
 		const mapping = mappings.collections[collectionData.collection].mappings;
 
 		const propertyMapping = mapping.find((m) => m.property === name) || {};
-		const selectedVariable = propertyMapping.variable || null;
 		const confirmed = propertyMapping.confirmed || false;
 
-		const confirmButton = selectedVariable && !confirmed ?
+		const confirmButton = this.canConfirm(propertyMapping.variable || null) && !confirmed ?
 				<button className="btn btn-success btn-sm" onClick={() => { onConfirmFieldMappings(collectionData.collection, name); }}>Confirm</button> : confirmed ?
 				<button className="btn btn-danger btn-sm" onClick={() => { onUnconfirmFieldMappings(collectionData.collection, name); }}>Unconfirm</button> : null;
 

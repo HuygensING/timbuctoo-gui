@@ -6,7 +6,7 @@ class Form extends React.Component {
 
 
 	render() {
-		const {collectionData, onSetFieldMapping, onSetDefaultValue, mappings, name} = this.props;
+		const {collectionData, onSetFieldMapping, onClearFieldMapping, onSetDefaultValue, mappings, name} = this.props;
 
 		const mapping = mappings.collections[collectionData.collection].mappings;
 		const propertyMapping = mapping.find((m) => m.property === name) || {};
@@ -18,7 +18,9 @@ class Form extends React.Component {
 
 		return (
 			<span>
-				<SelectField onChange={(value) => onSetFieldMapping(collectionData.collection, name, [{...selectedVariableUrl}, {...selectedVariableLabel, field: "label", variableName: value}])}
+				<SelectField
+					onChange={(value) => onSetFieldMapping(collectionData.collection, name, [{...selectedVariableUrl}, {...selectedVariableLabel, field: "label", variableName: value}])}
+					onClear={() => onClearFieldMapping(collectionData.collection, name, (propertyMapping.variable || []).map((v) => v.field).indexOf("label"))}
 					options={collectionData.variables} placeholder="Select label column..."
 					value={selectedVariableLabel.variableName || null} />
 				&nbsp;
@@ -28,7 +30,9 @@ class Form extends React.Component {
 						placeholder="Default value..." type="text" value={defaultValueLabel.value || null} />) : null}
 
 				&nbsp;
-				<SelectField onChange={(value) => onSetFieldMapping(collectionData.collection, name, [{...selectedVariableUrl, field: "url", variableName: value}, {...selectedVariableLabel}])}
+				<SelectField
+					onChange={(value) => onSetFieldMapping(collectionData.collection, name, [{...selectedVariableUrl, field: "url", variableName: value}, {...selectedVariableLabel}])}
+					onClear={() => onClearFieldMapping(collectionData.collection, name, (propertyMapping.variable || []).map((v) => v.field).indexOf("url"))}
 					options={collectionData.variables} placeholder="Select URL column..."
 					value={selectedVariableUrl.variableName || null} />
 				&nbsp;
@@ -44,6 +48,7 @@ Form.propTypes = {
 	collectionData: React.PropTypes.object,
 	mappings: React.PropTypes.object,
 	name: React.PropTypes.string,
+	onClearFieldMapping: React.PropTypes.func,
 	onSetDefaultValue: React.PropTypes.func,
 	onSetFieldMapping: React.PropTypes.func
 };

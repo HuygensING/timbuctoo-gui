@@ -17,7 +17,9 @@ class ArchetypeMappings extends React.Component {
 					{importData.sheets.map((sheet, i) => (
 						<li className="list-group-item" key={i}>
 							<label>{i + 1} {sheet.collection}</label>
-							<SelectField onChange={(value) => onMapCollectionArchetype(sheet.collection, value)}
+							<SelectField
+								onChange={(value) => onMapCollectionArchetype(sheet.collection, value)}
+								onClear={() => onMapCollectionArchetype(sheet.collection, null) }
 								options={Object.keys(archetype).filter((domain) => domain !== "relations")}
 								placeholder={`Archetype for ${sheet.collection}`}
 								value={mappings.collections[sheet.collection].archetypeName} />

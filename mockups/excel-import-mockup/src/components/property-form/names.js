@@ -12,19 +12,11 @@ class Form extends React.Component {
 		if (variableSpec.length > 0) {
 			onSetFieldMapping(collectionData.collection, name, variableSpec);
 		}
-		// TODO: onRemoveFieldMapping.
 	}
 
-	onRemoveComponent(propertyMapping, mappingIndex) {
-		const { collectionData, onSetFieldMapping, name } = this.props;
-		const variableSpec = propertyMapping.variable
-			.filter((v, i) => i !== mappingIndex);
-
-		onSetFieldMapping(collectionData.collection, name, variableSpec);
-	}
 
 	render() {
-		const {collectionData, onSetFieldMapping, mappings, name, archetype} = this.props;
+		const {collectionData, onSetFieldMapping, onClearFieldMapping, mappings, name, archetype} = this.props;
 
 		const mapping = mappings.collections[collectionData.collection].mappings;
 		const propertyMapping = mapping.find((m) => m.property === name) || {};
@@ -37,12 +29,14 @@ class Form extends React.Component {
 					{(propertyMapping.variable || []).map((v, i) => (
 						<span key={i} style={{display: "inline-block", margin: "8px 8px 0 0"}}>
 							<div style={{marginBottom: "2px"}}>
-								<a className="pull-right btn-danger btn-xs" onClick={() => this.onRemoveComponent(propertyMapping, i)}>
+								<a className="pull-right btn-danger btn-xs" onClick={() => onClearFieldMapping(collectionData.collection, name, i)}>
 									<span className="glyphicon glyphicon-remove" />
 								</a>
 								{v.component}&nbsp;
 							</div>
-							<SelectField onChange={(value) => this.onComponentChange(propertyMapping, i, value)}
+							<SelectField
+								onChange={(value) => this.onComponentChange(propertyMapping, i, value)}
+								onClear={() => onClearFieldMapping(collectionData.collection, name, i)}
 								options={collectionData.variables}
 								placeholder={`Select column for ${v.component}`}
 								value={v.variableName} />
@@ -63,6 +57,7 @@ Form.propTypes = {
 	collectionData: React.PropTypes.object,
 	mappings: React.PropTypes.object,
 	name: React.PropTypes.string,
+	onClearFieldMapping: React.PropTypes.func,
 	onSetFieldMapping: React.PropTypes.func
 };
 

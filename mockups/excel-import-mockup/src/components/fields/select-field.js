@@ -38,7 +38,7 @@ class SelectField extends React.Component {
 	}
 
 	render() {
-		const { options, onChange, placeholder, value } = this.props;
+		const { options, onChange, onClear, placeholder, value } = this.props;
 
 		return (
 
@@ -55,6 +55,13 @@ class SelectField extends React.Component {
 							<a onClick={() => { onChange(option); this.toggleSelect(); }}>{option}</a>
 						</li>
 					))}
+					{ value ? (
+						<li>
+							<a onClick={() => { onClear(); this.toggleSelect();}}>
+								- clear -
+							</a>
+						</li>
+					) : null}
 				</ul>
 			</span>
 		);
@@ -64,6 +71,7 @@ class SelectField extends React.Component {
 
 SelectField.propTypes = {
 	onChange: React.PropTypes.func,
+	onClear: React.PropTypes.func,
 	options: React.PropTypes.array,
 	placeholder: React.PropTypes.string,
 	value: React.PropTypes.string

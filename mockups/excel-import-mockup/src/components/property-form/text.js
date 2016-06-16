@@ -6,7 +6,7 @@ class Form extends React.Component {
 
 
 	render() {
-		const {collectionData, onSetFieldMapping, onSetDefaultValue, mappings, name} = this.props;
+		const {collectionData, onSetFieldMapping, onClearFieldMapping, onSetDefaultValue, mappings, name} = this.props;
 
 		const mapping = mappings.collections[collectionData.collection].mappings;
 		const propertyMapping = mapping.find((m) => m.property === name) || {};
@@ -15,7 +15,9 @@ class Form extends React.Component {
 
 		return (
 			<span>
-				<SelectField onChange={(value) => onSetFieldMapping(collectionData.collection, name, [{variableName: value}])}
+				<SelectField
+					onChange={(value) => onSetFieldMapping(collectionData.collection, name, [{variableName: value}])}
+					onClear={() => onClearFieldMapping(collectionData.collection, name, 0)}
 					options={collectionData.variables} placeholder="Select a column..."
 					value={selectedVariable.variableName || null} />
 				&nbsp;
@@ -30,6 +32,7 @@ Form.propTypes = {
 	collectionData: React.PropTypes.object,
 	mappings: React.PropTypes.object,
 	name: React.PropTypes.string,
+	onClearFieldMapping: React.PropTypes.func,
 	onSetDefaultValue: React.PropTypes.func,
 	onSetFieldMapping: React.PropTypes.func
 };

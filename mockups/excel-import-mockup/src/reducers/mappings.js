@@ -48,6 +48,27 @@ const upsertFieldMapping = (state, action) => {
 	return {...state, collections: newCollections};
 };
 
+const clearFieldMapping = (state, action) => {
+	const foundIdx = getMappingIndex(state, action);
+	if (foundIdx < 0) { return state; }
+
+	const current = getIn([action.collection, "mappings", foundIdx, "variable"], state.collections)
+		.filter((m, i) => i !== action.clearIndex);
+
+	let newCollections;
+	if (current.length > 0) {
+		newCollections = setIn([action.collection, "mappings", foundIdx, "variable"], current, state.collections);
+	} else {
+		console.log(getIn([action.collection, "mappings"], state.collections));
+		const newMappings = getIn([action.collection, "mappings"], state.collections)
+			.filter((m, i) => i !== foundIdx);
+		newCollections = setIn([action.collection, "mappings"], newMappings, state.collections);
+	}
+
+
+	return {...state, collections: newCollections};
+};
+
 const setDefaultValue = (state, action) => {
 	const foundIdx = getMappingIndex(state, action);
 	if (foundIdx > -1) {
@@ -90,6 +111,9 @@ export default function(state=initialState, action) {
 
 		case "SET_FIELD_MAPPING":
 			return upsertFieldMapping(state, action);
+
+		case "CLEAR_FIELD_MAPPING":
+			return clearFieldMapping(state, action);
 
 		case "SET_DEFAULT_VALUE":
 			return setDefaultValue(state, action);
