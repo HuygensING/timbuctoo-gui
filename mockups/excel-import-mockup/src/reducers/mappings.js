@@ -1,6 +1,6 @@
-import setIn from "./set-in";
-import getIn from "./get-in";
-import { getItem } from "./persist";
+import setIn from "../util/set-in";
+import getIn from "../util/get-in";
+import { getItem } from "../util/persist";
 
 const newVariableDesc = (property, variableSpec) => ({
 	property: property,

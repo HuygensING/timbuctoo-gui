@@ -1,7 +1,8 @@
 import {createStore, applyMiddleware, combineReducers} from "redux";
-import reducers from "./index";
 import thunkMiddleware from "redux-thunk";
-import { persist } from "./persist";
+
+import { persist } from "../util/persist";
+import reducers from "./index";
 
 const logger = () => next => action => {
 	if (action.hasOwnProperty("type")) {

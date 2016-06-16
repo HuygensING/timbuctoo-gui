@@ -4,7 +4,7 @@ import UploadSplashScreen from "./upload-splash-screen";
 import ArchetypeMappings from "./archetype-mappings";
 import DatasheetMappings from "./datasheet-mappings";
 
-import { disablePersist } from "../reducers/persist";
+import { disablePersist } from "../util/persist";
 
 
 

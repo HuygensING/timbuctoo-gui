@@ -1,4 +1,4 @@
-import { getItem } from "./persist";
+import { getItem } from "../util/persist";
 
 const initialState = getItem("archetype") || {};
 

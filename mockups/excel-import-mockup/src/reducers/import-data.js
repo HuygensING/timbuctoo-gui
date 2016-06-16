@@ -1,4 +1,4 @@
-import { getItem } from "./persist";
+import { getItem } from "../util/persist";
 
 
 const mockPersonsHeader = ["ID", "Voornaam", "tussenvoegsel", "Achternaam", "GeschrevenDocument", "Genoemd in", "Is getrouwd met"];
