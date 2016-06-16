@@ -52,7 +52,6 @@ export default function(state=initialState, action) {
 			const sheetIndex = state.sheets.map((sheet) => sheet.collection).indexOf(action.collection);
 			const newSheets = setIn([sheetIndex, action.key], action.value, state.sheets);
 			return {...state, sheets: newSheets };
-
 	}
 
 	return state;
