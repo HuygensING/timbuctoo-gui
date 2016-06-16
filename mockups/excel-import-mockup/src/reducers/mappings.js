@@ -14,12 +14,14 @@ const scaffoldCollectionMappings = () => ({
 	mockpersons: {
 		archetypeName: null,
 		mappings: [],
-		ignoredColumns: []
+		ignoredColumns: [],
+		customProperties: []
 	},
 	mockdocuments: {
 		archetypeName: null,
 		mappings: [],
-		ignoredColumns: []
+		ignoredColumns: [],
+		customProperties: []
 	}
 });
 
@@ -119,6 +121,13 @@ const toggleIgnoredColumn = (state, action) => {
 	return {...state, collections: setIn([action.collection, "ignoredColumns"], current, state.collections) };
 };
 
+const addCustomProperty = (state, action) => {
+	const current = getIn([action.collection, "customProperties"], state.collections);
+	const newCollections = setIn([action.collection, "customProperties", current.length], {name: action.propertyName, type: action.propertyType}, state.collections);
+
+	return {...state, collections: newCollections};
+};
+
 export default function(state=initialState, action) {
 	switch (action.type) {
 		case "UPLOAD":
@@ -150,6 +159,9 @@ export default function(state=initialState, action) {
 
 		case "TOGGLE_IGNORED_COLUMN":
 			return toggleIgnoredColumn(state, action);
+
+		case "ADD_CUSTOM_PROPERTY":
+			return addCustomProperty(state, action);
 	}
 	return state;
 }

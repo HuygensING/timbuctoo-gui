@@ -13,7 +13,7 @@ class Form extends React.Component {
 		const selectedVariable = propertyMapping.variable && propertyMapping.variable.length ? propertyMapping.variable[0] : {};
 		const defaultValue = propertyMapping.defaultValue && propertyMapping.defaultValue.length ? propertyMapping.defaultValue[0] : {};
 		const valueMappings = propertyMapping.valueMappings || {};
-		const defaultOptions = archetype[mappings.collections[collectionData.collection].archetypeName].find((a) => a.name === name).options;
+		const defaultOptions = (archetype[mappings.collections[collectionData.collection].archetypeName] || []).find((a) => a.name === name).options || [];
 
 		return (
 			<span>

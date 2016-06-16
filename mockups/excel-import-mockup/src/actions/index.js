@@ -28,5 +28,9 @@ export default {
 		store.dispatch({type: "SET_VALUE_MAPPING", collection: collection, propertyField: propertyField, timValue: timValue, mapValue: mapValue}),
 
 	onIgnoreColumnToggle: (collection, variableName) =>
-		store.dispatch({type: "TOGGLE_IGNORED_COLUMN", collection: collection, variableName: variableName})
+		store.dispatch({type: "TOGGLE_IGNORED_COLUMN", collection: collection, variableName: variableName}),
+
+	onAddCustomProperty: (collection, propertyName, propertyType) =>
+		store.dispatch({type: "ADD_CUSTOM_PROPERTY", collection: collection, propertyName: propertyName, propertyType: propertyType})
+
 };

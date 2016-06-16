@@ -11,7 +11,8 @@ const typeMap = {
 	names: (props) => <Names {...props} />,
 	links: (props) => <Links {...props} />,
 	select: (props) => <Select {...props} />,
-	multiselect: (props) => <Select {...props} />
+	multiselect: (props) => <Select {...props} />,
+	relation: (props) => null
 };
 
 class PropertyForm extends React.Component {
