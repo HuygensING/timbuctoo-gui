@@ -6,7 +6,7 @@
 a,
 a:focus,
 a:hover {
-  color: #fff;
+  color: #45DAFF;
 }
 
 /* Custom default button */
@@ -34,6 +34,12 @@ body {
   text-align: center;
 
 }
+
+h1 {
+	font-family: 'Raleway', sans-serif;
+	font-weight:100;
+	text-transform:uppercase;
+	}
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
 .site-wrapper {
@@ -103,17 +109,6 @@ body {
 }
 
 
-/*
- * Cover
- */
-
-.cover {
-  padding: 0 20px;
-}
-.cover .btn-lg {
-  padding: 10px 20px;
-  font-weight: bold;
-}
 
 
 /*
