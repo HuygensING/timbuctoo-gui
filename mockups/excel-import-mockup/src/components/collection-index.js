@@ -10,6 +10,7 @@ class CollectionIndex extends React.Component {
 			.filter((m) => m.confirmed)
 			.map((m) => m.variable.map((v) => v.variableName))
 			.reduce((a, b) => a.concat(b), [])
+			.filter((x, idx, self) => self.indexOf(x) === idx)
 			.length;
 
 		return confirmedColCount + mappings.collections[sheet.collection].ignoredColumns.length === sheet.variables.length;
