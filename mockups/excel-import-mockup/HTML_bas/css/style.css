@@ -30,10 +30,14 @@ body {
   
 }
 body {
-  color: #fff;
+  color: #222;
   text-align: center;
 
 }
+
+.white {
+	color: #fff !important;
+	}
 
 h1 {
 	font-family: 'Raleway', sans-serif;
