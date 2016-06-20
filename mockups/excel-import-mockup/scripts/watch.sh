@@ -1,9 +1,9 @@
 #!/bin/sh
 
-mkdir -p build/development/js
-mkdir -p build/development/css
+mkdir -p build/development
+mkdir build/development/js
+cp -R src/static/* build/development/
 
-cp src/index.html build/development/index.html
 
 node_modules/.bin/browserify \
 	--require react \

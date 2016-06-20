@@ -2,21 +2,23 @@ import React from "react";
 import CollectionIndex from "./collection-index";
 import CollectionTable from "./collection-table";
 import CollectionForm from "./collection-form";
-
+import { disablePersist } from "../util/persist";
 
 class DatasheetMappings extends React.Component {
 
 	render() {
-
 		return (
-			<div>
-				<nav className="col-sm-2">
-					<CollectionIndex {...this.props} />
-				</nav>
-				<main className="col-sm-10">
-					<CollectionForm {...this.props} />
-					<CollectionTable {...this.props} />
-				</main>
+			<div className="row" style={{textAlign: "left"}}>
+				<a onClick={() => { disablePersist(); location.reload(); }} style={{position: "absolute", top: 0, right: 0, zIndex: 10}}>clear state</a>
+				<div className="container col-md-12">
+					<nav className="col-sm-2">
+						<CollectionIndex {...this.props} />
+					</nav>
+					<main className="col-sm-10">
+						<CollectionForm {...this.props} />
+						<CollectionTable {...this.props} />
+					</main>
+				</div>
 			</div>
 		);
 	}
