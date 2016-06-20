@@ -41,6 +41,11 @@ h1 {
 	text-transform:uppercase;
 	}
 
+.logo {
+	width:1em;
+	height:auto
+	}
+
 /* Extra markup and styles for table-esque vertical and horizontal centering */
 .site-wrapper {
   display: table;
@@ -107,6 +112,11 @@ h1 {
     float: right;
   }
 }
+
+
+.underMargin {
+	margin-bottom:1em;
+	}
 
 
 
