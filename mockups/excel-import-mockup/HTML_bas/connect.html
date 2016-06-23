@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>Timbuctoo start | Connect</title>
+<link href="https://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+<nav class="navbar big-margin">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+      <a class="navbar-brand" href="#"> Timbuctoo</a> </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="active"><a href="./">Upload new project <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Browse and explore</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </div>
+    <!--/.nav-collapse --> 
+  </div>
+  <!--/.container-fluid --> 
+</nav>
+
+<!--/     STEPS      -->
+<div class="container steps lead big-margin">
+  <div class="step_indicator step_success" id="step_upload"><span class="glyphicon glyphicon-ok"></span> Upload</div>
+  <img src="images/step_connect_line.svg" class="step_connector"/>
+  <div class="step_indicator step_active" id="step_connect">Connect</div>
+  <img src="images/step_connect_line.svg" class="step_connector"/>
+  <div class="step_indicator " id="step_config">Configurate</div>
+  <img src="images/step_connect_line.svg" class="step_connector"/>
+  <div class="step_indicator " id="step_curate">Curate</div>
+  <img src="images/step_connect_line.svg" class="step_connector"/>
+  <div class="step_indicator " id="step_publish">Publish</div>
+</div>
+
+<!--/     CONNECT      -->
+<div class="container connect lead big-margin" id="tab-connect">
+  <p class="lead small-margin">You have uploaded test.xlsx. We found 2 tabs.<br>
+    Connect the tabs to the Timbuctoo Architypes.</p>
+  <div class="row text-left small-margin">
+    <div class="col-md-3"></div>
+    <div class="col-md-3 text-right">mockpersons</div>
+    <div class="col-md-3">
+      <div class="dropdown">
+        <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a>persons</a></li>
+          <li><a>documents</a></li>
+          <li><a>collectives</a></li>
+          <li><a>keywords</a></li>
+          <li><a>languages</a></li>
+          <li><a>locations</a></li>
+          <li><a>archives</a></li>
+          <li><a>archivers</a></li>
+          <li><a>legislations</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+  <div class="row text-left small-margin">
+    <div class="col-md-3"></div>
+    <div class="col-md-3 text-right">mockdocuments</div>
+    <div class="col-md-3">
+      <div class="dropdown">
+        <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a>persons</a></li>
+          <li><a>documents</a></li>
+          <li><a>collectives</a></li>
+          <li><a>keywords</a></li>
+          <li><a>languages</a></li>
+          <li><a>locations</a></li>
+          <li><a>archives</a></li>
+          <li><a>archivers</a></li>
+          <li><a>legislations</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+  <div class="row text-left small-margin">
+    <div class="col-md-3"></div>
+    <div class="col-md-3 text-right"></div>
+    <div class="col-md-3">
+      <button type="button" class="btn btn-primary" id="connectOK">Connect</button>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+</div>
+
+<!--/     CONFIGURATE      -->
+<div class="container big-margin text-left" id="tab-config">
+  <p class="lead small-margin text-center">It's time to dive into your data.</p>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#">Persons</a></li>
+          <li><a href="#">Documents</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-2">
+        <ul class="nav nav-pills nav-stacked">
+          <li class="active step_success" data-toggle="tab"><a href="#per-name"><span class="glyphicon glyphicon-ok"></span> Names</a></li>
+          <li><a href="#per-gender" data-toggle="tab">Gender</a></li>
+          <li><a href="#per-types" data-toggle="tab">Types</a></li>
+          <li><a href="#per-new" data-toggle="tab">Add neww</a></li>
+        </ul>
+      </div>
+      <div class="col-md-6 tab-content">
+        <div id="per-name" class="tab-pane fade in active ">
+          <h3>Names</h3>
+          <p class="underMargin">Configure the names by adding name components and connect them to your columns.</p>
+          <div class="name-component-box">Forname <span class="glyphicon glyphicon-remove-sign name-component-remove"></span><br>
+            <div class="dropdown">
+              <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">Select from sheet <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li><a href="#">Col name 1</a></li>
+                <li><a href="#">Col name 2</a></li>
+                <li><a href="#">Col name 3</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="name-component-box">Surname <span class="glyphicon glyphicon-remove-sign name-component-remove"></span><br>
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Select from sheet <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li><a href="#">Col name 1</a></li>
+                <li><a href="#">Col name 2</a></li>
+                <li><a href="#">Col name 3</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="name-component-box">&nbsp;<br>
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Add name component <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li><a href="#">Forname</a></li>
+                <li><a href="#">Surname</a></li>
+                <li><a href="#">Name link</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div id="per-gender" class="tab-pane fade in ">
+          <h3>Gender</h3>
+          <p>Select a gender column.</p>
+          <p>
+          <div class="dropdown">
+            <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Select from sheet <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="#">Col name 1</a></li>
+              <li><a href="#">Col name 2</a></li>
+              <li><a href="#">Col name 3</a></li>
+            </ul>
+          </div>
+          </p>
+        </div>
+        <div id="per-types" class="tab-pane fade in ">
+          <h3>Types</h3>
+          <p>Select the column that contains the rows. Multiple columns can be selecterd</p>
+          <p>
+          <div class="dropdown">
+            <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Select from sheet <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="#">Col name 1</a></li>
+              <li><a href="#">Col name 2</a></li>
+              <li><a href="#">Col name 3</a></li>
+            </ul>
+          </div>
+          </p>
+        </div>
+        <div id="per-new" class="tab-pane fade in">
+          <h3>New</h3>
+          <p>Add a new one here.</p>
+        </div>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</div>
+
+<!--/    EXCEL TABLE      -->
+<div class="container-fluid" id="tabs-excel">
+  <div class="container text-left">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-2"><br>
+        <img src="images/Microsoft_Excel_2013_logo.svg" alt="Excel" class="file-icon"/> Test.xlsx</div>
+      <div class="col-md-6">
+        <h3>Mockpersons</h3>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Firstname</th>
+              <th>Lastname</th>
+              <th>Age</th>
+              <th>City</th>
+              <th>Country</th>
+              <th>#</th>
+              <th>Firstname</th>
+              <th>Lastname</th>
+              <th>Age</th>
+              <th>City</th>
+              <th>Country</th>
+              <th>#</th>
+              <th>Firstname</th>
+              <th>Lastname</th>
+              <th>Age</th>
+              <th>City</th>
+              <th>Country</th>
+              <th>#</th>
+              <th>Firstname</th>
+              <th>Lastname</th>
+              <th>Age</th>
+              <th>City</th>
+              <th>Country</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Anna</td>
+              <td>Pitt</td>
+              <td>35</td>
+              <td>New York</td>
+              <td>USA</td>
+              <td>1</td>
+              <td>Anna</td>
+              <td>Pitt</td>
+              <td>35</td>
+              <td>New York</td>
+              <td>USA</td>
+              <td>1</td>
+              <td>Anna</td>
+              <td>Pitt</td>
+              <td>35</td>
+              <td>New York</td>
+              <td>USA</td>
+              <td>1</td>
+              <td>Anna</td>
+              <td>Pitt</td>
+              <td>35</td>
+              <td>New York</td>
+              <td>USA</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Anna</td>
+              <td>Pitt</td>
+              <td>35</td>
+              <td>New York</td>
+              <td>USA</td>
+              <td>1</td>
+              <td>Anna</td>
+              <td>Pitt</td>
+              <td>35</td>
+              <td>New York</td>
+              <td>USA</td>
+              <td>1</td>
+              <td>Anna</td>
+              <td>Pitt</td>
+              <td>35</td>
+              <td>New York</td>
+              <td>USA</td>
+              <td>1</td>
+              <td>Anna</td>
+              <td>Pitt</td>
+              <td>35</td>
+              <td>New York</td>
+              <td>USA</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Anna</td>
+              <td>Pitt</td>
+              <td>35</td>
+              <td>New York</td>
+              <td>USA</td>
+              <td>1</td>
+              <td>Anna</td>
+              <td>Pitt</td>
+              <td>35</td>
+              <td>New York</td>
+              <td>USA</td>
+              <td>1</td>
+              <td>Anna</td>
+              <td>Pitt</td>
+              <td>35</td>
+              <td>New York</td>
+              <td>USA</td>
+              <td>1</td>
+              <td>Anna</td>
+              <td>Pitt</td>
+              <td>35</td>
+              <td>New York</td>
+              <td>USA</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/tmp.js"></script>
+</body>
+</html>

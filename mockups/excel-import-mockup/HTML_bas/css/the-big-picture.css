@@ -15,3 +15,8 @@ body {
   -o-background-size: cover;
   background-size: cover;
 }
+  
+.fullsize_background a {
+  color: #45DAFF;
+	
+}

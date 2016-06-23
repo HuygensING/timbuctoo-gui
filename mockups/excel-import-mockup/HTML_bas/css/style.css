@@ -6,7 +6,7 @@
 a,
 a:focus,
 a:hover {
-  color: #45DAFF;
+ 
 }
 
 /* Custom default button */
@@ -48,7 +48,13 @@ h1 {
 .logo {
 	width:1em;
 	height:auto
-	}
+}
+
+.branding-logo {
+	width:1em;
+	height:auto;
+	color:#269075;
+}
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
 .site-wrapper {
@@ -71,6 +77,18 @@ h1 {
  
 }
 
+
+.small-margin {
+	margin-bottom:1em;
+	}
+	
+.default-margin {
+	margin-bottom:3em;
+	}
+
+.big-margin {
+	margin-bottom:4em;
+	}
 
 /*
  * Header
@@ -121,7 +139,64 @@ h1 {
 .underMargin {
 	margin-bottom:1em;
 	}
+.underPadding {
+	padding-top:2em;
+	}
 
+
+/*
+ * Steps
+ */
+
+.step_indicator {
+	display:inline-block;
+	border-radius: 3px;
+  	background: #fff;
+	border:1px solid #A9A9A9;
+	padding:.4em .6em;
+	}
+
+.step_connector {
+	display:inline-block;
+	width:2em;
+	height:auto;
+	}
+
+.step_success {
+	background-color:#5ba670;
+	border:1px solid #5ba670;
+	color:#fff;
+	}
+
+.step_success a{
+	color:#fff;
+	border:none;
+	}
+
+.step_active {
+	background-color:#9ebada;
+	border:1px solid #9ebada;
+	}
+
+
+/*
+ * Name component
+ */
+.name-component-box {
+	display:inline-block;
+	width:auto;
+	margin-right:2em;
+	}
+
+.name-component-remove {
+	float:right;
+	cursor:pointer;
+	}
+
+.file-icon {
+	width:1.5em;
+	height:auto;
+	}
 
 
 
