@@ -21,7 +21,10 @@ class RelationField extends React.Component {
 	}
 
 	render() {
-		const values = this.props.entity.data["@relations"][this.props.name] || [];
+		const values = this.props.entity.data["@relations"][this.props.name] ||
+			// TODO: this is a temporary hack to enable showing RDF imported data that could not be mapped to a known archetype, i.e.:
+			// concept --> (inverse:regularName) --> concept
+			this.props.entity.data["@relations"][`inverse:${this.props.name}`] || [];
 
 		return (
 			<div>
