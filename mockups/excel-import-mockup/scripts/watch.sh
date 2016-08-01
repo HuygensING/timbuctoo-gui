@@ -17,9 +17,10 @@ node_modules/.bin/browserify \
 	src/stylus/index.styl &
 
 node_modules/.bin/watchify src/index.js \
+	--debug \
 	--outfile build/development/js/index.js \
 	--external react \
 	--external react-dom \
 	--standalone ExcelImportMock \
-	--transform [ babelify ] \
+	--transform [ babelify --presets [ es2015 react ] --plugins [ transform-es2015-destructuring transform-object-rest-spread transform-object-assign] ] \
 	--verbose
