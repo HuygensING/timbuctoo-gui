@@ -1,6 +1,5 @@
 import React from "react";
 import SelectField from "./fields/select-field";
-import { disablePersist } from "../util/persist";
 
 class ArchetypeMappings extends React.Component {
 
@@ -10,12 +9,11 @@ class ArchetypeMappings extends React.Component {
 		const { archetype, importData, onMapCollectionArchetype, mappings, collectionsAreMapped, onConfirmCollectionArchetypeMappings } = this.props;
 		return (
 			<div className="row centered-form center-block">
-				<a onClick={() => { disablePersist(); location.reload(); }} style={{position: "absolute", top: 0, right: 0, zIndex: 10}}>clear state</a>
 				<div className="container col-md-12" style={{textAlign: "left"}}>
 					<main>
 						<div className="panel panel-default col-md-6 col-md-offset-3">
 							<div className="panel-body">
-								You have uploaded test.xlsx. We found 2 tabs.<br />
+								You have uploaded {importData.filename}. We found {importData.sheets.length} tabs.<br />
 								Connect the tabs to the timbuctoo archetypes
 							</div>
 							<ul className="list-group">

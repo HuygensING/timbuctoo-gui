@@ -6,13 +6,31 @@ import App from "./components";
 import relationTypes from "./relationtypes";
 import xhr from "xhr";
 
-
 store.subscribe(() =>
-	ReactDOM.render(<App {...store.getState()} {...actions} />, document.getElementById("app"))
+	ReactDOM.render(
+		<App
+			{...store.getState()}
+			{...actions} />,
+		document.getElementById("app")
+	)
 );
+
+function checkTokenInUrl() {
+	let path = window.location.search.substr(1);
+	let params = path.split('&');
+
+	for(let i in params) {
+		let [key, value] = params[i].split('=');
+		if(key === 'hsid') {
+			store.dispatch({type: "LOGIN", data: value});
+			break;
+		}
+	}
+}
 
 document.addEventListener("DOMContentLoaded", () => {
 	ReactDOM.render(<p>fetching relation types</p>, document.getElementById("app"));
+	checkTokenInUrl();
 
 	store.dispatch({type: "SET_RELATION_TYPES", data: relationTypes});
 	xhr("http://acc.repository.huygens.knaw.nl/v2.1/metadata/Admin", (err, resp) => {

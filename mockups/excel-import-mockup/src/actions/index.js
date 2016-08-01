@@ -1,8 +1,20 @@
 import store from "../reducers/store";
 
 export default {
-	onUpload: () =>
-		store.dispatch({type: "UPLOAD"}),
+	onUpload: (files) =>
+		function (dispatch) {
+			let formData = new FormData();
+			formData.append(file.name, file);
+			formData.append("vre", file.name);
+			let xhr = new XMLHttpRequest();
+			xhr.open('POST', url, true);
+			xhr.onload = function(e) {
+				let result = xhr.getResponseHeader("Location");
+				dispatch({type: "UPLOAD", location: result})
+			};
+			xhr.setRequestHeader("Authorization", state.userdata.userId)
+			xhr.send(formData);  // multipart/form-data
+		},
 
 	onSelectCollection: (collection) =>
 		store.dispatch({type: "SET_ACTIVE_COLLECTION", collection: collection}),
@@ -38,5 +50,5 @@ export default {
 		store.dispatch({type: "ADD_CUSTOM_PROPERTY", collection: collection, propertyField: propertyName, propertyType: propertyType}),
 
 	onRemoveCustomProperty: (collection, propertyName) =>
-		store.dispatch({type: "REMOVE_CUSTOM_PROPERTY", collection: collection, propertyField: propertyName})
+		store.dispatch({type: "REMOVE_CUSTOM_PROPERTY", collection: collection, propertyField: propertyName}),
 };
