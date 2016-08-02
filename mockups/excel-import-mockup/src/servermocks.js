@@ -45,13 +45,65 @@ export default function setupMocks(xhrmock, orig) {
           collections: [
         		{
         			name: "mockpersons",
-        			variables: ["ID", "Voornaam", "tussenvoegsel", "Achternaam", "GeschrevenDocument", "Genoemd in", "Is getrouwd met"]
+        			variables: ["ID", "Voornaam", "tussenvoegsel", "Achternaam", "GeschrevenDocument", "Genoemd in", "Is getrouwd met"],
+              data: "<<url for person data>>"
         		},
         		{
         			name: "mockdocuments",
-        			variables: ["titel", "datum", "referentie", "url"]
+        			variables: ["titel", "datum", "referentie", "url"],
+              data: "<<url for document data>>"
         		}
         	]
+        }));
+    })
+    .get("<<url for person data>>", function (req, resp) {
+      console.log("get person items data");
+      return resp
+        .status(200)
+        .body(JSON.stringify({
+        	"name": "someCollection",
+        	"variables": ["tim_id", "var1", "var2"],
+        	"items": [{
+        		"tim_id": "1",
+            "ID": "ID",
+            "Voornaam": "Voornaam",
+            "tussenvoegsel": "tussenvoegsel",
+            "Achternaam": "Achternaam",
+            "GeschrevenDocument": "GeschrevenDocument",
+            "Genoemd in": "Genoemd in",
+            "Is getrouwd met": "Is getrouwd met",
+        	}, {
+            "tim_id": "2",
+            "ID": "ID",
+            "Voornaam": "Voornaam",
+            "tussenvoegsel": "tussenvoegsel",
+            "Achternaam": "Achternaam",
+            "GeschrevenDocument": "GeschrevenDocument",
+            "Genoemd in": "Genoemd in",
+            "Is getrouwd met": "Is getrouwd met",
+        	}]
+        }));
+    })
+    .get("<<url for document data>>", function (req, resp) {
+      console.log("get person items data");
+      return resp
+        .status(200)
+        .body(JSON.stringify({
+        	"name": "someCollection",
+        	"variables": ["tim_id", "var1", "var2"],
+        	"items": [{
+        		"tim_id": "1",
+            "titel": "titel",
+            "datum": "datum",
+            "referentie": "referentie",
+            "url": "url",
+        	}, {
+            "tim_id": "2",
+            "titel": "titel",
+            "datum": "datum",
+            "referentie": "referentie",
+            "url": "url",
+        	}]
         }));
     })
     .mock(function (req, resp) {

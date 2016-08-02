@@ -27,13 +27,13 @@ store.subscribe(() =>
 	)
 );
 
-function checkTokenInUrl() {
+function checkTokenInUrl(state) {
 	let path = window.location.search.substr(1);
 	let params = path.split('&');
 
 	for(let i in params) {
 		let [key, value] = params[i].split('=');
-		if(key === 'hsid') {
+		if(key === 'hsid' && !state.userdata.userId) {
 			store.dispatch({type: "LOGIN", data: value});
 			break;
 		}
@@ -41,11 +41,25 @@ function checkTokenInUrl() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-	ReactDOM.render(<p>fetching relation types</p>, document.getElementById("app"));
-	checkTokenInUrl();
+	let state = store.getState();
+	checkTokenInUrl(state);
 
-	store.dispatch({type: "SET_RELATION_TYPES", data: relationTypes});
-	xhr("http://acc.repository.huygens.knaw.nl/v2.1/metadata/Admin", (err, resp) => {
-		store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
-	});
+	// fixme get relation types through ajax as well
+	// xhr("http://acc.repository.huygens.knaw.nl/v2.1/metadata/Admin", (err, resp) => {
+	// 	store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
+	// });
+	if (!state.relationTypes || !state.relationTypes.data || state.relationTypes.data.length === 0) {
+		store.dispatch({type: "SET_RELATION_TYPES", data: relationTypes});
+	}
+	if (!state.archetype || Object.keys(state.archetype).length === 0) {
+		xhr("http://acc.repository.huygens.knaw.nl/v2.1/metadata/Admin", (err, resp) => {
+			store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
+		});
+	}
+	ReactDOM.render(
+		<App
+			{...state}
+			{...actions} />,
+		document.getElementById("app")
+	)
 });

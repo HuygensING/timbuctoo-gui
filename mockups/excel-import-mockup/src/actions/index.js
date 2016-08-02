@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === "development") {
 	}
 }
 
-export default {
+var actions = {
 	onUploadFileSelect: function (files) {
 		let file = files[0];
 		let formData = new FormData();
@@ -79,14 +79,44 @@ export default {
 		});
 	},
 
-	onSelectCollection: (collection) =>
-		store.dispatch({type: "SET_ACTIVE_COLLECTION", collection: collection}),
+	onSelectCollection: (collection) => {
+		store.dispatch({type: "SET_ACTIVE_COLLECTION", collection: collection});
+		store.dispatch(function (dispatch, getState) {
+			var state = getState();
+			var currentSheet = state.importData.sheets.find(x => x.collection === collection);
+			if (currentSheet.rows.length === 0 && currentSheet.nextUrl && !currentSheet.isLoading) {
+				var payload = {
+					headers: {
+						"Authorization": state.userdata.userId
+					}
+				};
+				dispatch({type: "COLLECTION_ITEMS_LOADING" })
+				xhr.get(currentSheet.nextUrl, payload, function (err, resp, body) {
+					if (err) {
+						dispatch({type: "COLLECTION_ITEMS_LOADING_ERROR", collection: collection, error: err })
+					} else {
+						try {
+							dispatch({type: "COLLECTION_ITEMS_LOADING_SUCCEEDED", collection: collection, data: JSON.parse(body)});
+						} catch(e) {
+							dispatch({type: "COLLECTION_ITEMS_LOADING_ERROR", collection: collection, error: e })
+						}
+					}
+					dispatch({type: "COLLECTION_ITEMS_LOADING_FINISHED", collection: collection})
+				});
+			}
+		});
+	},
 
 	onMapCollectionArchetype: (collection, value) =>
 		store.dispatch({type: "MAP_COLLECTION_ARCHETYPE", collection: collection, value: value}),
 
-	onConfirmCollectionArchetypeMappings: () =>
-		store.dispatch({type: "CONFIRM_COLLECTION_ARCHETYPE_MAPPINGS"}),
+	onConfirmCollectionArchetypeMappings: () => {
+		store.dispatch({type: "CONFIRM_COLLECTION_ARCHETYPE_MAPPINGS"})
+		store.dispatch(function (dispatch, getState) {
+			let state = getState();
+			actions.onSelectCollection(state.importData.activeCollection);
+		})
+	},
 
 	onSetFieldMapping: (collection, propertyField, importedField) =>
 		store.dispatch({type: "SET_FIELD_MAPPING", collection: collection, propertyField: propertyField, importedField: importedField}),
@@ -115,3 +145,5 @@ export default {
 	onRemoveCustomProperty: (collection, propertyName) =>
 		store.dispatch({type: "REMOVE_CUSTOM_PROPERTY", collection: collection, propertyField: propertyName}),
 };
+
+export default actions;
