@@ -10,20 +10,16 @@ const newVariableDesc = (property, variableSpec) => ({
 	valueMappings: {}
 });
 
-const scaffoldCollectionMappings = () => ({
-	mockpersons: {
-		archetypeName: null,
-		mappings: [],
-		ignoredColumns: [],
-		customProperties: []
-	},
-	mockdocuments: {
-		archetypeName: null,
-		mappings: [],
-		ignoredColumns: [],
-		customProperties: []
-	}
-});
+function scaffoldCollectionMappings(init, sheet){
+	return Object.assign(init, {
+		[sheet.collection]: {
+			archetypeName: null,
+			mappings: [],
+			ignoredColumns: [],
+			customProperties: []
+		}
+	});
+}
 
 const initialState = getItem("mappings") || {
 	collections: {},
@@ -146,8 +142,8 @@ const removeCustomProperty = (state, action) => {
 
 export default function(state=initialState, action) {
 	switch (action.type) {
-		case "UPLOAD":
-			return {...state, collections: scaffoldCollectionMappings()};
+		case "FINISH_UPLOAD":
+			return {...state, collections: action.data.sheets.reduce(scaffoldCollectionMappings, {})};
 
 		case "MAP_COLLECTION_ARCHETYPE":
 			return mapCollectionArchetype(state, action);

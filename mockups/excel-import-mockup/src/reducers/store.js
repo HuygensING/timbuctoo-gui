@@ -1,18 +1,18 @@
-import {createStore, applyMiddleware, combineReducers} from "redux";
+import {createStore, applyMiddleware, combineReducers, compose} from "redux";
 import thunkMiddleware from "redux-thunk";
 
 import { persist } from "../util/persist";
 import reducers from "./index";
 
-const logger = store => next => action => {
-  let result = next(action)
-	console.log("[REDUX]", action.type, action, store.getState());
-  return result
-}
-
-let data = combineReducers(reducers);
-
-let store = createStore(data, applyMiddleware(logger, thunkMiddleware));
+let store = createStore(
+  combineReducers(reducers),
+  compose(
+    applyMiddleware(
+      thunkMiddleware
+    ),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
+  )
+);
 
 window.onbeforeunload = () => persist(store.getState());
 

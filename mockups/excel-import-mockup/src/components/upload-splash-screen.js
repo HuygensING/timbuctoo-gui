@@ -1,20 +1,25 @@
 import React from "react";
-
+import classnames from 'classnames';
 class UploadSplashScreen extends React.Component {
 
-
 	render() {
-		const { onUpload, userdata: {userId}, onLogin} = this.props;
+		const { onUploadFileSelect, userdata: {userId}, onLogin, importData: {isUploading}} = this.props;
 
 		let uploadButton;
 		if (userId) {
 			uploadButton = (
 				<div>
-					<p className="lead">
-						<a className="btn btn-lg btn-default underMargin" onClick={onUpload}>
-							<span className="glyphicon glyphicon-cloud-upload"></span> Upload
-						</a>
-					</p>
+					<div className="login-sub-component lead">
+						<label className={classnames("btn", "btn-lg", "btn-default", "underMargin", {disabled: isUploading})}>
+							<span className="glyphicon glyphicon-cloud-upload"></span>
+							{isUploading ? "Uploading..." : "Browse"}
+							<input
+								disabled={isUploading}
+								type="file"
+								style={{display: "none"}}
+								onChange={e => onUploadFileSelect(e.target.files)}/>
+						</label>
+					</div>
 					<p className="lead">
 						Don't have a dataset handy? Here’s an <a href="/static/example.xlsx"><em>example excel sheet</em></a>
 					</p>
@@ -62,7 +67,10 @@ UploadSplashScreen.propTypes = {
 	onUpload: React.PropTypes.func,
 	userdata: React.PropTypes.shape({
 		userId: React.PropTypes.string
-  })
+  }),
+	importData: React.PropTypes.shape({
+		isUploading: React.PropTypes.boolean
+	})
 };
 
 export default UploadSplashScreen;

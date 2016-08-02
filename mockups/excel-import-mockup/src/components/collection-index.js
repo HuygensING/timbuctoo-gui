@@ -26,7 +26,7 @@ class CollectionIndex extends React.Component {
 	}
 
 	render() {
-		const { importData, onSelectCollection } = this.props;
+		const { onSaveMappings, onPublishData, importData, onSelectCollection } = this.props;
 		const { sheets } = importData;
 
 		return (
@@ -50,9 +50,9 @@ class CollectionIndex extends React.Component {
 						</a>
 					)) }
 					<li className="list-group-item">
-						<button className="btn btn-success">Save</button>
+						<button className="btn btn-success" onClick={onSaveMappings}>Save</button>
 						&nbsp;
-						<button className="btn btn-success" disabled={!this.allMappingsAreIncomplete()}>Publish</button>
+						<button className="btn btn-success" onClick={onPublishData} disabled={!this.allMappingsAreIncomplete()}>Publish</button>
 					</li>
 				</div>
 			</div>
@@ -61,6 +61,8 @@ class CollectionIndex extends React.Component {
 }
 
 CollectionIndex.propTypes = {
+	onSaveMappings: React.PropTypes.func,
+	onPublishData: React.PropTypes.func,
 	importData: React.PropTypes.object,
 	mappings: React.PropTypes.object,
 	onSelectCollection: React.PropTypes.func

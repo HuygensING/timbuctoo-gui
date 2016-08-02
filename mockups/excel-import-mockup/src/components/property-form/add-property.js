@@ -35,7 +35,7 @@ class AddProperty extends React.Component {
 				<SelectField
 					onChange={(value) => this.setState({newType: value, newName: value === "relation" ? null : newName})}
 					onClear={() => this.setState({newType: null})}
-					options={["text", "datable", "relation"]}
+					options={["text", "relation"]}
 					placeholder="Choose a type..."
 					value={newType} />
 				&nbsp;

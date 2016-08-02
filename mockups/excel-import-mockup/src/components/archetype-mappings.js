@@ -13,7 +13,7 @@ class ArchetypeMappings extends React.Component {
 					<main>
 						<div className="panel panel-default col-md-6 col-md-offset-3">
 							<div className="panel-body">
-								You have uploaded {importData.filename}. We found {importData.sheets.length} tabs.<br />
+								We found {importData.sheets.length} collections in the file.<br />
 								Connect the tabs to the timbuctoo archetypes
 							</div>
 							<ul className="list-group">
@@ -23,7 +23,7 @@ class ArchetypeMappings extends React.Component {
 										<SelectField
 											onChange={(value) => onMapCollectionArchetype(sheet.collection, value)}
 											onClear={() => onMapCollectionArchetype(sheet.collection, null) }
-											options={Object.keys(archetype).filter((domain) => domain !== "relations")}
+											options={Object.keys(archetype).filter((domain) => domain !== "relations").sort()}
 											placeholder={`Archetype for ${sheet.collection}`}
 											value={mappings.collections[sheet.collection].archetypeName} />
 									</li>

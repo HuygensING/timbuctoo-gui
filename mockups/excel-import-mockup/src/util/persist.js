@@ -18,5 +18,6 @@ const disablePersist = () => {
 	localStorage.clear();
 	persistDisabled = true;
 };
+window.disablePersist = disablePersist;
 
 export { persist, getItem, disablePersist };

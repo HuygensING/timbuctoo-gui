@@ -50,11 +50,6 @@ class SelectField extends React.Component {
 				</button>
 
 				<ul className="dropdown-menu">
-					{options.map((option, i) => (
-						<li key={i}>
-							<a onClick={() => { onChange(option); this.toggleSelect(); }}>{option}</a>
-						</li>
-					))}
 					{ value ? (
 						<li>
 							<a onClick={() => { onClear(); this.toggleSelect();}}>
@@ -62,6 +57,11 @@ class SelectField extends React.Component {
 							</a>
 						</li>
 					) : null}
+					{options.map((option, i) => (
+						<li key={i}>
+							<a onClick={() => { onChange(option); this.toggleSelect(); }}>{option}</a>
+						</li>
+					))}
 				</ul>
 			</span>
 		);

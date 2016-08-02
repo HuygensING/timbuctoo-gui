@@ -8,7 +8,11 @@ storiesOf('upload-splash-screen', module)
   .addDecorator(toplevelWrapper)
   .add('logged out', function () {
     var data = {
-      userdata: {}
+      userdata: {
+      },
+      importData: {
+        isUploading: false
+      }
     };
     return <UploadSplashScreen {...data} {...actions} />
   })
@@ -16,6 +20,20 @@ storiesOf('upload-splash-screen', module)
     var data = {
       userdata: {
         userId: "some string"
+      },
+      importData: {
+        isUploading: false
+      }
+    };
+    return <UploadSplashScreen {...data} {...actions} />
+  })
+  .add('uploading', function () {
+    var data = {
+      userdata: {
+        userId: "some string"
+      },
+      importData: {
+        isUploading: true
       }
     };
     return <UploadSplashScreen {...data} {...actions} />

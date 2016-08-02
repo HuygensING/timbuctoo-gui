@@ -5,6 +5,18 @@ import actions from "./actions";
 import App from "./components";
 import relationTypes from "./relationtypes";
 import xhr from "xhr";
+import xhrmock from "xhr-mock";
+import setupMocks from "./servermocks";
+
+if (process.env.NODE_ENV === "development") {
+	var orig = window.XMLHttpRequest;
+	xhrmock.setup(); //mock window.XMLHttpRequest usages
+	var mock = window.XMLHttpRequest;
+	window.XMLHttpRequest = orig;
+	xhr.XMLHttpRequest = mock;
+	xhr.XDomainRequest = mock;
+	setupMocks(xhrmock, orig);
+}
 
 store.subscribe(() =>
 	ReactDOM.render(

@@ -1,20 +1,83 @@
 import store from "../reducers/store";
+import xhr from "xhr";
+import mappingToJsonLdRml from "../util/mappingToJsonLdRml"
+var toJson;
+if (process.env.NODE_ENV === "development") {
+	toJson = function toJson(data) {
+		return JSON.stringify(data, undefined, 2);
+	}
+} else {
+	toJson = function toJson(data) {
+		return JSON.stringify(data);
+	}
+}
 
 export default {
-	onUpload: (files) =>
-		function (dispatch) {
-			let formData = new FormData();
-			formData.append(file.name, file);
-			formData.append("vre", file.name);
-			let xhr = new XMLHttpRequest();
-			xhr.open('POST', url, true);
-			xhr.onload = function(e) {
-				let result = xhr.getResponseHeader("Location");
-				dispatch({type: "UPLOAD", location: result})
+	onUploadFileSelect: function (files) {
+		let file = files[0];
+		let formData = new FormData();
+		formData.append(file.name, file);
+		formData.append("vre", file.name);
+		store.dispatch({type: "START_UPLOAD"})
+		store.dispatch(function (dispatch, getState) {
+			var state = getState();
+			var payload = {
+				body: formData,
+				headers: {
+					"Authorization": state.userdata.userId
+				}
 			};
-			xhr.setRequestHeader("Authorization", state.userdata.userId)
-			xhr.send(formData);  // multipart/form-data
-		},
+			xhr.post("http://acc.repository.huygens.knaw.nl/v2.1/bulk-upload", payload, function (err, resp) {
+				let location = resp.headers.location;
+				xhr.get(location, function (err, resp, body) {
+					dispatch({type: "FINISH_UPLOAD", data: JSON.parse(body)})
+				});
+			});
+		});
+	},
+
+	onSaveMappings: function () {
+		store.dispatch({type: "SAVE_STARTED"})
+		store.dispatch(function (dispatch, getState) {
+			var state = getState();
+			var payload = {
+				body: toJson(mappingToJsonLdRml(state.mappings, state.importData.vre)),
+				headers: {
+					"Authorization": state.userdata.userId
+				}
+			};
+
+			xhr.post(state.importData.saveMappingUrl, payload, function (err, resp) {
+				if (err) {
+					store.dispatch({type: "SAVE_HAD_ERROR"})
+				} else {
+					store.dispatch({type: "SAVE_SUCCEEDED"})
+				}
+				store.dispatch({type: "SAVE_FINISHED"})
+			});
+		});
+	},
+
+	onPublishData: function (){
+		store.dispatch({type: "PUBLISH_STARTED"})
+		store.dispatch(function (dispatch, getState) {
+			var state = getState();
+			var payload = {
+				headers: {
+					"Authorization": state.userdata.userId
+				}
+			};
+
+			xhr.post(state.importData.executeMappingUrl, payload, function (err, resp) {
+				if (err) {
+					store.dispatch({type: "PUBLISH_HAD_ERROR"})
+				} else {
+					store.dispatch({type: "PUBLISH_SUCCEEDED"})
+				}
+				store.dispatch({type: "PUBLISH_FINISHED"})
+			});
+		});
+	},
 
 	onSelectCollection: (collection) =>
 		store.dispatch({type: "SET_ACTIVE_COLLECTION", collection: collection}),
