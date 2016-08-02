@@ -12,7 +12,7 @@ const newVariableDesc = (property, variableSpec) => ({
 
 function scaffoldCollectionMappings(init, sheet){
 	return Object.assign(init, {
-		[sheet.collection]: {
+		[sheet.name]: {
 			archetypeName: null,
 			mappings: [],
 			ignoredColumns: [],
@@ -143,7 +143,7 @@ const removeCustomProperty = (state, action) => {
 export default function(state=initialState, action) {
 	switch (action.type) {
 		case "FINISH_UPLOAD":
-			return {...state, collections: action.data.sheets.reduce(scaffoldCollectionMappings, {})};
+			return {...state, collections: action.data.collections.reduce(scaffoldCollectionMappings, {})};
 
 		case "MAP_COLLECTION_ARCHETYPE":
 			return mapCollectionArchetype(state, action);

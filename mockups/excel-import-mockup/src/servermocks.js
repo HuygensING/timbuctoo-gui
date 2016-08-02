@@ -42,22 +42,13 @@ export default function setupMocks(xhrmock, orig) {
           vre: "thevrename",
           saveMapping: "<<The save mapping url that the server provides>>",
           executeMapping: "<<The execute mapping url that the server provides>>",
-          sheets: [
+          collections: [
         		{
-        			collection: "mockpersons",
-        			rows: [
-        				["1", "Jan", "", "Jansen", "Tekst 1", "Tekst 2", null],
-        				["2", "Klaas", "", "Klaassen", "Tekst 2", null, null],
-        				["3", "Ina", "van der", "Poel - Jansen", null, null, "1"]
-        			],
+        			name: "mockpersons",
         			variables: ["ID", "Voornaam", "tussenvoegsel", "Achternaam", "GeschrevenDocument", "Genoemd in", "Is getrouwd met"]
         		},
         		{
-        			collection: "mockdocuments",
-        			rows: [
-        				["Tekst 1", "1850", "voorbeeld", "http://example.com"],
-        				["Tekst 2", "1860", null, null]
-        			],
+        			name: "mockdocuments",
         			variables: ["titel", "datum", "referentie", "url"]
         		}
         	]

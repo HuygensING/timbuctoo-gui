@@ -12,8 +12,12 @@ export default function(state=initialState, action) {
 			return {...state, isUploading: true};
 		case "FINISH_UPLOAD":
 			return {...state,
-				sheets: action.data.sheets,
-				activeCollection: action.data.sheets[0].collection,
+				sheets: action.data.collections.map(coll => ({
+					collection: coll.name,
+					variables: coll.variables,
+					rows: []
+				})),
+				activeCollection: action.data.collections[0].name,
 				vre: action.data.vre,
 				saveMappingUrl: action.data.saveMapping,
 				executeMappingUrl: action.data.executeMapping
