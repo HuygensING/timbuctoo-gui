@@ -1,8 +1,8 @@
 import {createStore, applyMiddleware, combineReducers, compose} from "redux";
 import thunkMiddleware from "redux-thunk";
 
-import { persist } from "../util/persist";
-import reducers from "./index";
+import { persist } from "./util/persist";
+import reducers from "./reducers";
 
 let store = createStore(
   combineReducers(reducers),

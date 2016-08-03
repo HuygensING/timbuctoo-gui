@@ -1,4 +1,4 @@
-import store from "../reducers/store";
+import store from "../store";
 import xhr from "xhr";
 import mappingToJsonLdRml from "../util/mappingToJsonLdRml"
 var toJson;
@@ -49,11 +49,11 @@ export default {
 
 			xhr.post(state.importData.saveMappingUrl, payload, function (err, resp) {
 				if (err) {
-					store.dispatch({type: "SAVE_HAD_ERROR"})
+					dispatch({type: "SAVE_HAD_ERROR"})
 				} else {
-					store.dispatch({type: "SAVE_SUCCEEDED"})
+					dispatch({type: "SAVE_SUCCEEDED"})
 				}
-				store.dispatch({type: "SAVE_FINISHED"})
+				dispatch({type: "SAVE_FINISHED"})
 			});
 		});
 	},
@@ -70,11 +70,11 @@ export default {
 
 			xhr.post(state.importData.executeMappingUrl, payload, function (err, resp) {
 				if (err) {
-					store.dispatch({type: "PUBLISH_HAD_ERROR"})
+					dispatch({type: "PUBLISH_HAD_ERROR"})
 				} else {
-					store.dispatch({type: "PUBLISH_SUCCEEDED"})
+					dispatch({type: "PUBLISH_SUCCEEDED"})
 				}
-				store.dispatch({type: "PUBLISH_FINISHED"})
+				dispatch({type: "PUBLISH_FINISHED"})
 			});
 		});
 	},

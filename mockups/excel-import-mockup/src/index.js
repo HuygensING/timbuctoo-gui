@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import store from "./reducers/store";
+import store from "./store";
 import actions from "./actions";
 import App from "./components";
 import relationTypes from "./relationtypes";
