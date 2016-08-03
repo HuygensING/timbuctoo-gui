@@ -14,20 +14,19 @@ class AddProperty extends React.Component {
 
 
 	render() {
-		const { importData, relationTypes, mappings, onAddCustomProperty } = this.props;
+		const { importData, archetype: allArchetypes, mappings, onAddCustomProperty } = this.props;
 		const { newType, newName } = this.state;
 
 		const { activeCollection } = importData;
 
 		const { archetypeName } = mappings.collections[activeCollection];
+		const archetype = allArchetypes[archetypeName];
 
 		const availableArchetypes = Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName);
-
-
-		const relationTypeOptions = relationTypes.data
-			.filter((relType) => `${relType.sourceTypeName}s` === archetypeName || `${relType.targetTypeName}s` === archetypeName)
-			.filter((relType) => availableArchetypes.indexOf(`${relType.sourceTypeName}s`) > -1 && availableArchetypes.indexOf(`${relType.targetTypeName}s`) > -1)
-			.map((relType) => `${relType.sourceTypeName}s` === archetypeName ? relType.regularName : relType.inverseName);
+		const relationTypeOptions = archetype
+			.filter((prop) => prop.type === "relation")
+			.filter((prop) => availableArchetypes.indexOf(prop.relation.targetCollection) > -1)
+			.map((prop) => prop.name);
 
 		return (
 			<li className="list-group-item">
@@ -65,8 +64,7 @@ class AddProperty extends React.Component {
 AddProperty.propTypes = {
 	importData: React.PropTypes.object,
 	mappings: React.PropTypes.object,
-	onAddCustomProperty: React.PropTypes.func,
-	relationTypes: React.PropTypes.object
+	onAddCustomProperty: React.PropTypes.func
 };
 
 export default AddProperty;
