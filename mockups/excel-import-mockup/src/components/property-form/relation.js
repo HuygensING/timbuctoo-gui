@@ -6,45 +6,49 @@ class Form extends React.Component {
 
 
 	render() {
-		const {collectionData, onSetFieldMapping, onClearFieldMapping, mappings, name, importData, relationTypes} = this.props;
+		const ownSheet = this.props.collectionData;
+		const allSheets = this.props.importData.sheets;
+		const allSheetMappings = this.props.mappings.collections;
+		const mapping = this.props.mappingData.mappings.find(prop => prop.property === this.props.name);
+		//at one point the mapping does not yet exists, but a custom property reference containing the name does exist
+		const customProperty = this.props.mappingData.customProperties.find(prop => prop.name === this.props.name);
+		const ownArchetype = this.props.archetype[this.props.mappingData.archetypeName];
+		const onSetFieldMapping = this.props.onSetFieldMapping.bind(null, ownSheet.collection, this.props.name);
+		const onClearFieldMapping = this.props.onClearFieldMapping.bind(null, ownSheet.collection, this.props.name);
 
-		const mapping = mappings.collections[collectionData.collection].mappings;
-		const propertyMapping = mapping.find((m) => m.property === name) || {};
-		const selectedVariable = propertyMapping.variable && propertyMapping.variable.length ? propertyMapping.variable[0] : {};
-		const relationType = relationTypes.data.find((relType) => relType.regularName === name || relType.inverseName === name);
-		const isInverse = relationType.inverseName === name;
-		const availableCollections = Object.keys(mappings.collections)
-			.map((key) => ({
-				archetype: mappings.collections[key].archetypeName,
-				collection: key
-			})).filter((ac) => ac.archetype === (isInverse ? `${relationType.sourceTypeName}s` :  `${relationType.targetTypeName}s`))
-			.map((ac) => ac.collection);
+		const relationInfo = mapping && mapping.variable && mapping.variable.length > 0
+			? mapping.variable[0]
+			: {};
+		const propertyMetadata = ownArchetype.find(metadata => metadata.name === (mapping ? mapping.property : customProperty.name));
 
-		const availableTargetColumns = (importData.sheets.find((sheet) => sheet.collection === selectedVariable.targetCollection) || {}).variables;
+		const availableSheets = Object.keys(allSheetMappings)
+			.filter(key => allSheetMappings[key].archetypeName === propertyMetadata.relation.targetCollection);
+
+		const linkedSheet = relationInfo.targetCollection ? allSheets
+			.find(sheet => sheet.collection === relationInfo.targetCollection) : null;
 
 		return (
 			<span>
 				<SelectField
-					onChange={(value) => onSetFieldMapping(collectionData.collection, name, [{...selectedVariable, variableName: value}])}
-					onClear={() => onClearFieldMapping(collectionData.collection, name, 0)}
-					options={collectionData.variables} placeholder="Select source column..."
-					value={selectedVariable.variableName || null} />
+					onChange={(value) => onSetFieldMapping([{...relationInfo, variableName: value}])}
+					onClear={() => onClearFieldMapping(0)}
+					options={ownSheet.variables} placeholder="Select source column..."
+					value={relationInfo.variableName || null} />
 				&nbsp;
-				{selectedVariable.variableName ? (
-					<SelectField
-						onChange={(value) => onSetFieldMapping(collectionData.collection, name, [{...selectedVariable, targetCollection: value}])}
-						onClear={() => onClearFieldMapping(collectionData.collection, name, 0)}
-						options={availableCollections} placeholder="Select a target collection..."
-						value={selectedVariable.targetCollection || null} />
-				) : null}
+				<SelectField
+					onChange={(value) => onSetFieldMapping([{...relationInfo, targetCollection: value}])}
+					onClear={() => onClearFieldMapping(0)}
+					options={availableSheets} placeholder="Select a target collection..."
+					value={relationInfo.targetCollection || null} />
 				&nbsp;
-				{selectedVariable.targetCollection ? (
-					<SelectField
-						onChange={(value) => onSetFieldMapping(collectionData.collection, name, [{...selectedVariable, targetVariableName: value}])}
-						onClear={() => onClearFieldMapping(collectionData.collection, name, 0)}
-						options={availableTargetColumns} placeholder="Select a target column..."
-						value={selectedVariable.targetVariableName || null} />
-				) : null}
+				{linkedSheet
+					? <SelectField
+							onChange={(value) => onSetFieldMapping([{...relationInfo, targetVariableName: value}])}
+							onClear={() => onClearFieldMapping(0)}
+							options={linkedSheet.variables} placeholder="Select a target column..."
+							value={relationInfo.targetVariableName || null} />
+					: null
+				}
 
 			</span>
 		);
@@ -57,8 +61,7 @@ Form.propTypes = {
 	mappings: React.PropTypes.object,
 	name: React.PropTypes.string,
 	onClearFieldMapping: React.PropTypes.func,
-	onSetFieldMapping: React.PropTypes.func,
-	relationTypes: React.PropTypes.object
+	onSetFieldMapping: React.PropTypes.func
 };
 
 export default Form;

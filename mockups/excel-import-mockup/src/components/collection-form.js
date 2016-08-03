@@ -11,16 +11,17 @@ class CollectionForm extends React.Component {
 
 
 		const collectionData = sheets.find((sheet) => sheet.collection === activeCollection);
+		const mappingData = mappings.collections[activeCollection];
 
 		const { archetypeName } = mappings.collections[activeCollection];
 		const archetypeFields = archetypeName ? archetype[archetypeName] : [];
 		const archeTypePropFields = archetypeFields.filter((af) => af.type !== "relation");
 
 		const propertyForms = archeTypePropFields
-			.map((af, i) => <PropertyForm {...this.props} collectionData={collectionData} custom={false} key={i} name={af.name} type={af.type} />);
+			.map((af, i) => <PropertyForm {...this.props} collectionData={collectionData} mappingData={mappingData} custom={false} key={i} name={af.name} type={af.type} />);
 
 		const customPropertyForms = mappings.collections[activeCollection].customProperties
-			.map((cf, i) => <PropertyForm {...this.props} collectionData={collectionData} custom={true} key={i} name={cf.name} type={cf.type} />);
+			.map((cf, i) => <PropertyForm {...this.props} collectionData={collectionData} mappingData={mappingData} custom={true} key={i} name={cf.name} type={cf.type} />);
 
 		return (
 			<div className="panel panel-default">
