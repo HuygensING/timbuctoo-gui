@@ -8,6 +8,32 @@ export default function setupMocks(xhrmock, orig) {
             {
               "name": "name",
               "type": "text"
+            },
+            {
+              "name": "hasWritten",
+              "type": "relation",
+              "quicksearch": "/v2.1/domain/documents/autocomplete",
+              "relation": {
+                "direction": "OUT",
+                "outName": "hasWritten",
+                "inName": "wasWrittenBy",
+                "targetCollection": "documents",
+                "relationCollection": "relations",
+                "relationTypeId": "bba10d37-86cc-4f1f-ba2d-016af2b21aa4"
+              }
+            },
+            {
+              "name": "isRelatedTo",
+              "type": "relation",
+              "quicksearch": "/v2.1/domain/persons/autocomplete",
+              "relation": {
+                "direction": "OUT",
+                "outName": "isRelatedTo",
+                "inName": "isRelatedTo",
+                "targetCollection": "persons",
+                "relationCollection": "relations",
+                "relationTypeId": "cba10d37-86cc-4f1f-ba2d-016af2b21aa5"
+              }
             }
           ],
           "documents": [

@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import store from "./store";
 import actions from "./actions";
 import App from "./components";
-import relationTypes from "./relationtypes";
 import xhr from "xhr";
 import xhrmock from "xhr-mock";
 import setupMocks from "./servermocks";
@@ -44,13 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	let state = store.getState();
 	checkTokenInUrl(state);
 
-	// fixme get relation types through ajax as well
-	// xhr("http://acc.repository.huygens.knaw.nl/v2.1/metadata/Admin", (err, resp) => {
-	// 	store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
-	// });
-	if (!state.relationTypes || !state.relationTypes.data || state.relationTypes.data.length === 0) {
-		store.dispatch({type: "SET_RELATION_TYPES", data: relationTypes});
-	}
 	if (!state.archetype || Object.keys(state.archetype).length === 0) {
 		xhr("http://acc.repository.huygens.knaw.nl/v2.1/metadata/Admin", (err, resp) => {
 			store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});

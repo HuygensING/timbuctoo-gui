@@ -20,9 +20,6 @@ var baseData = function () {
     archetype: {
       "legislations": []
     },
-    relationTypes: {
-      data: []
-    },
     mappings: {
       "collections": {
         "mockpersons": {
