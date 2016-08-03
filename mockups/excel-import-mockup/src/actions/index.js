@@ -27,7 +27,7 @@ var actions = {
 					"Authorization": state.userdata.userId
 				}
 			};
-			xhr.post("http://acc.repository.huygens.knaw.nl/v2.1/bulk-upload", payload, function (err, resp) {
+			xhr.post(process.env.server + "/v2.1/bulk-upload", payload, function (err, resp) {
 				let location = resp.headers.location;
 				xhr.get(location, function (err, resp, body) {
 					dispatch({type: "FINISH_UPLOAD", data: JSON.parse(body)})

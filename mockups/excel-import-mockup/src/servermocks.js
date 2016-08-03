@@ -1,6 +1,6 @@
 export default function setupMocks(xhrmock, orig) {
   xhrmock
-    .get("http://acc.repository.huygens.knaw.nl/v2.1/metadata/Admin", function (req, resp) {
+    .get("http://test.repository.huygens.knaw.nl/v2.1/metadata/Admin", function (req, resp) {
       return resp
         .status(200)
         .body(`{
@@ -44,7 +44,7 @@ export default function setupMocks(xhrmock, orig) {
           ]
         }`)
     })
-    .post("http://acc.repository.huygens.knaw.nl/v2.1/bulk-upload", function (req, resp) {
+    .post("http://test.repository.huygens.knaw.nl/v2.1/bulk-upload", function (req, resp) {
       console.log("bulk-upload")
       return resp
         .status(200)

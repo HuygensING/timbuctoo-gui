@@ -7,7 +7,7 @@ import xhr from "xhr";
 import xhrmock from "xhr-mock";
 import setupMocks from "./servermocks";
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.USE_MOCK === "true") {
 	var orig = window.XMLHttpRequest;
 	xhrmock.setup(); //mock window.XMLHttpRequest usages
 	var mock = window.XMLHttpRequest;
