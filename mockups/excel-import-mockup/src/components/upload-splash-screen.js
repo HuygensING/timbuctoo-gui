@@ -28,14 +28,14 @@ class UploadSplashScreen extends React.Component {
 		} else {
 			uploadButton = (
 				<div>
-					<p className="lead">
+					<div className="lead">
 						<form className="login-sub-component" action="https://secure.huygens.knaw.nl/saml2/login" method="POST">
 						 	<input name="hsurl"  type="hidden" value={window.location.href} />
 						 	<button type="submit" className="btn btn-lg btn-default underMargin">
 						 		<span className="glyphicon glyphicon-log-in"></span> Log in
 						 	</button>
 						</form>
-					</p>
+					</div>
 					<p className="lead">
 						Most university accounts will work. You can also log in using google, twitter or facebook.
 					</p>
