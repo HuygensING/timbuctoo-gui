@@ -17,14 +17,15 @@ if (process.env.NODE_ENV === "development") {
 	setupMocks(xhrmock, orig);
 }
 
-store.subscribe(() =>
+store.subscribe(() => {
+	var state = store.getState();
 	ReactDOM.render(
 		<App
-			{...store.getState()}
+			{...state}
 			{...actions} />,
 		document.getElementById("app")
 	)
-);
+});
 
 function checkTokenInUrl(state) {
 	let path = window.location.search.substr(1);
@@ -41,17 +42,17 @@ function checkTokenInUrl(state) {
 
 document.addEventListener("DOMContentLoaded", () => {
 	let state = store.getState();
-	checkTokenInUrl(state);
-
-	if (!state.archetype || Object.keys(state.archetype).length === 0) {
-		xhr("http://acc.repository.huygens.knaw.nl/v2.1/metadata/Admin", (err, resp) => {
-			store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
-		});
-	}
 	ReactDOM.render(
 		<App
 			{...state}
 			{...actions} />,
 		document.getElementById("app")
 	)
+	checkTokenInUrl(state);
+
+	if (!state.archetype || Object.keys(state.archetype).length === 0) {
+		xhr(process.env.server + "/v2.1/metadata/Admin", (err, resp) => {
+			store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
+		});
+	}
 });
