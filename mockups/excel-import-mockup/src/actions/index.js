@@ -16,7 +16,7 @@ var actions = {
 	onUploadFileSelect: function (files) {
 		let file = files[0];
 		let formData = new FormData();
-		formData.append(file.name, file);
+		formData.append("file", file);
 		formData.append("vre", file.name);
 		store.dispatch({type: "START_UPLOAD"})
 		store.dispatch(function (dispatch, getState) {
