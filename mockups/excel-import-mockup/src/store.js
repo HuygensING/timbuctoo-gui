@@ -14,6 +14,6 @@ let store = createStore(
   )
 );
 
-window.onbeforeunload = () => persist(store.getState());
+// window.onbeforeunload = () => persist(store.getState());
 
 export default store;
