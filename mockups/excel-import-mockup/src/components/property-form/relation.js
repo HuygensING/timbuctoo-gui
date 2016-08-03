@@ -19,13 +19,18 @@ class Form extends React.Component {
 		const relationInfo = mapping && mapping.variable && mapping.variable.length > 0
 			? mapping.variable[0]
 			: {};
+
 		const propertyMetadata = ownArchetype.find(metadata => metadata.name === (mapping ? mapping.property : customProperty.name));
 
-		const availableSheets = Object.keys(allSheetMappings)
-			.filter(key => allSheetMappings[key].archetypeName === propertyMetadata.relation.targetCollection);
+		const availableSheets = propertyMetadata
+			? Object.keys(allSheetMappings)
+				.filter(key => allSheetMappings[key].archetypeName === propertyMetadata.relation.targetCollection)
+			: [];
 
-		const linkedSheet = relationInfo.targetCollection ? allSheets
-			.find(sheet => sheet.collection === relationInfo.targetCollection) : null;
+		const linkedSheet = relationInfo.targetCollection
+			? allSheets
+				.find(sheet => sheet.collection === relationInfo.targetCollection)
+			: null;
 
 		return (
 			<span>
