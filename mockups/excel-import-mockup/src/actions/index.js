@@ -41,7 +41,7 @@ var actions = {
 		store.dispatch(function (dispatch, getState) {
 			var state = getState();
 			var payload = {
-				body: toJson(mappingToJsonLdRml(state.mappings, state.importData.vre)),
+				json: mappingToJsonLdRml(state.mappings, state.importData.vre),
 				headers: {
 					"Authorization": state.userdata.userId
 				}
