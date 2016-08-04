@@ -87,11 +87,10 @@ export default function setupMocks(xhrmock, orig) {
       return resp
         .status(200)
         .body(JSON.stringify({
-        	"name": "someCollection",
-        	"variables": ["tim_id", "var1", "var2"],
+          "_next": "<<more data>>",
         	"items": [{
         		"tim_id": "1",
-            "ID": "ID",
+            "ID": "1",
             "Voornaam": "Voornaam",
             "tussenvoegsel": "tussenvoegsel",
             "Achternaam": "Achternaam",
@@ -100,7 +99,31 @@ export default function setupMocks(xhrmock, orig) {
             "Is getrouwd met": "Is getrouwd met",
         	}, {
             "tim_id": "2",
-            "ID": "ID",
+            "ID": "2",
+            "Voornaam": "Voornaam",
+            "tussenvoegsel": "tussenvoegsel",
+            "Achternaam": "Achternaam",
+            "GeschrevenDocument": "GeschrevenDocument",
+            "Genoemd in": "Genoemd in",
+            "Is getrouwd met": "Is getrouwd met",
+        	}]
+        }));
+    })
+    .get("<<more data>>", function (req, resp) {
+      console.log("get person items data");
+      return resp
+        .status(200)
+        .body(JSON.stringify({
+        	"items": [{
+            "ID": "3",
+            "Voornaam": "Voornaam",
+            "tussenvoegsel": "tussenvoegsel",
+            "Achternaam": "Achternaam",
+            "GeschrevenDocument": "GeschrevenDocument",
+            "Genoemd in": "Genoemd in",
+            "Is getrouwd met": "Is getrouwd met",
+        	}, {
+            "ID": "4",
             "Voornaam": "Voornaam",
             "tussenvoegsel": "tussenvoegsel",
             "Achternaam": "Achternaam",

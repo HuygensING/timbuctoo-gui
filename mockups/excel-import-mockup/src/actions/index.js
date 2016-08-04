@@ -13,6 +13,29 @@ if (process.env.NODE_ENV === "development") {
 }
 
 var actions = {
+	onLoadMoreClick: function (url, collection) {
+		store.dispatch((dispatch, getState) => {
+			var state = getState();
+			var payload = {
+				headers: {
+					"Authorization": state.userdata.userId
+				}
+			};
+			xhr.get(url, payload, function (err, resp, body) {
+				if (err) {
+					dispatch({type: "COLLECTION_ITEMS_LOADING_ERROR", collection: collection, error: err })
+				} else {
+					try {
+						dispatch({type: "COLLECTION_ITEMS_LOADING_SUCCEEDED", collection: collection, data: JSON.parse(body)});
+					} catch(e) {
+						dispatch({type: "COLLECTION_ITEMS_LOADING_ERROR", collection: collection, error: e })
+					}
+				}
+				dispatch({type: "COLLECTION_ITEMS_LOADING_FINISHED", collection: collection})
+			});
+		})
+
+	},
 	onUploadFileSelect: function (files) {
 		let file = files[0];
 		let formData = new FormData();

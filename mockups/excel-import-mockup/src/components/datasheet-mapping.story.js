@@ -11,8 +11,11 @@ var baseData = function () {
       "sheets": [
         {
           "collection": "mockpersons",
-          "variables": [],
-          rows: []
+          "variables": ["a", "b"],
+          rows: [
+            ["a", "b"]
+          ],
+          nextUrl: "some url"
         }
       ],
       activeCollection: "mockpersons"

@@ -24,38 +24,41 @@ class CollectionTable extends React.Component {
 		const { ignoredColumns } = mappings.collections[activeCollection];
 
 		return (
-			<div className="panel panel-default">
-				<div className="panel-heading">
-					Collection: {collection}
-				</div>
+			<div>
+				<div className="panel panel-default">
+					<div className="panel-heading">
+						Collection: {collection}
+					</div>
 
-				<table className="table table-bordered">
-					<thead>
-						<tr>
-							{variables.map((header, i) => (
-								<HeaderCell
-									activeCollection={activeCollection}
-									header={header}
-									isConfirmed={confirmedCols.indexOf(i) > -1}
-									isIgnored={ignoredColumns.indexOf(header) > -1}
-									key={i}
-									onIgnoreColumnToggle={onIgnoreColumnToggle}
-								/>
-							))}
-						</tr>
-					</thead>
-					<tbody>
-					{ rows.map((row, i) => (
-						<DataRow
-							confirmedCols={confirmedCols}
-							ignoredColumns={ignoredColumns}
-							key={i}
-							row={row}
-							variables={variables}
-						/>
-					))}
-					</tbody>
-				</table>
+					<table className="table table-bordered">
+						<thead>
+							<tr>
+								{variables.map((header, i) => (
+									<HeaderCell
+										activeCollection={activeCollection}
+										header={header}
+										isConfirmed={confirmedCols.indexOf(i) > -1}
+										isIgnored={ignoredColumns.indexOf(header) > -1}
+										key={i}
+										onIgnoreColumnToggle={onIgnoreColumnToggle}
+									/>
+								))}
+							</tr>
+						</thead>
+						<tbody>
+						{ rows.map((row, i) => (
+							<DataRow
+								confirmedCols={confirmedCols}
+								ignoredColumns={ignoredColumns}
+								key={i}
+								row={row}
+								variables={variables}
+							/>
+						))}
+						</tbody>
+					</table>
+				</div>
+				<button onClick={() => this.props.onLoadMoreClick && this.props.onLoadMoreClick(collectionData.nextUrl, collection)} disabled={!collectionData.nextUrl} className="btn btn-default" style={{color: "#333", backgroundColor: "#fff", "borderColor": "#ccc", float: "right"}}>more...</button>
 			</div>
 		);
 	}
