@@ -52,7 +52,7 @@ var actions = {
 			};
 			xhr.post(process.env.server + "/v2.1/bulk-upload", payload, function (err, resp) {
 				let location = resp.headers.location;
-				xhr.get(location, function (err, resp, body) {
+				xhr.get(location, {headers: {"Authorization": state.userdata.userId}}, function (err, resp, body) {
 					dispatch({type: "FINISH_UPLOAD", data: JSON.parse(body)})
 				});
 			});
