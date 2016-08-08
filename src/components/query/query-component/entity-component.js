@@ -1,17 +1,16 @@
 import React from "react";
 import deepEqual from "deep-equal";
 
-import icons from "./icons";
 import RelationComponent from "./relation-component";
 import PropertyComponent from "./property-component";
 
 import DeleteButton from "./util/delete-button";
 
 const baseHeight = 60;
-const baseWidth = baseHeight;
+const baseWidth = 170;
 const basePropertyComponentHeight = 36;
-const baseRelationComponentWidth = 130;
-const baseComponentWidthWithOnlyPropertyFilters = 190;
+const baseRelationComponentWidth = 20;
+const baseComponentWidthWithOnlyPropertyFilters = 80;
 
 class EntityComponent extends React.Component {
 
@@ -142,7 +141,8 @@ class EntityComponent extends React.Component {
 					className={`${selected ? "selected " : ""}query`}
 					onClick={() => this.props.onSetQueryPath(path)}
 					transform="translate(-20 -20)">
-					{icons[queryEntity.domain]({className: "handle"})}
+					<text x="13" y="25">{queryEntity.domain}</text>
+					<rect className="handle" fill="rgba(0,0,0,0)" height="40" width="150" x="0" y="0"/>
 				</g>
 				{deleteButton}
 

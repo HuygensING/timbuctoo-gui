@@ -76,20 +76,8 @@ class App extends React.Component {
 	render() {
 		const currentQ = this.props.queries.currentQuery > -1 ? this.props.queries.queries[this.props.queries.currentQuery] : null;
 
-		const [resQ] = this.props.queries.currentQuery > -1 ? parseGremlin(this.props.queries.queries[this.props.queries.currentQuery]) : ["", ""];
+/*		const [resQ] = this.props.queries.currentQuery > -1 ? parseGremlin(this.props.queries.queries[this.props.queries.currentQuery]) : ["", ""];*/
 		const collections = this.props.vre.collections || {};
-
-		const nameInput = this.props.queries.currentQuery > -1 ?
-			<Input onChange={this.props.onNameQuery} placeholder="name query" value={this.props.queries.queries[this.props.queries.currentQuery].name} /> : null;
-
-		const saveButton = this.props.queries.currentQuery > -1 ? (
-			<button disabled={ this.props.queries.queries[this.props.queries.currentQuery].name.length ? false : true } onClick={this.props.onSaveQuery}>
-				Save current query
-			</button>
-		) : null;
-
-		const { savedQueries } = this.props.queries;
-		const savedQuerySelect = <Select onChange={this.props.onLoadQuery} options={savedQueries.map((q) => q.name)} placeholder="Load query..." />;
 
 		let resultPath = currentQ ? clone(currentQ.pathToQuerySelection) : null;
 
@@ -122,15 +110,13 @@ class App extends React.Component {
 		return (<div>
 			<div className="query-bar">
 				{Object.keys(collections).filter((c) => !c.match(/relations$/)).map((c) => (
-					<div key={c} style={{display: "inline-block", height: "40px", width: "40px"}}>
+					<div key={c} style={{display: "inline-block", height: "40px", width: "150px"}}>
 						<DraggableIcon
 							domain={c}
 							onDrop={this.onCreateQuery.bind(this)}
 						/>
 					</div>
 				))}
-				{nameInput}{saveButton}
-				{savedQuerySelect}
 			</div>
 			<div className="grid-wrapper" onWheel={this.onWheel.bind(this)}>
 				<InfinityGrid gridSize={50}>

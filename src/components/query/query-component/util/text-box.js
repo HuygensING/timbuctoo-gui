@@ -42,7 +42,11 @@ class TextBox extends React.Component {
 
 
 	render() {
-		const { text, onSelect } = this.props;
+		const { text } = this.props;
+
+		const rect = this.props.onSelect ?
+			<rect {...this.props} onClick={this.props.onSelect} title={text} /> :
+			<rect {...this.props} title={text} />;
 		return (
 			<g>
 				<text className={`${this.state.croppedText ? "cropped-text" : ""} ${this.props.className}`}
@@ -50,7 +54,7 @@ class TextBox extends React.Component {
 					transform={`translate(${this.state.textLeft} -2)`}>
 					{this.state.croppedText || text}
 				</text>
-				<rect {...this.props} onClick={onSelect} title={text} />
+				{rect}
 			</g>
 		);
 	}
