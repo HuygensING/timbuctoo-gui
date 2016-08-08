@@ -10,6 +10,7 @@ class UploadSplashScreen extends React.Component {
 			uploadButton = (
 				<div>
 					<div className="login-sub-component lead">
+						<form>
 						<label className={classnames("btn", "btn-lg", "btn-default", "underMargin", {disabled: isUploading})}>
 							<span className="glyphicon glyphicon-cloud-upload"></span>
 							{isUploading ? "Uploading..." : "Browse"}
@@ -19,26 +20,23 @@ class UploadSplashScreen extends React.Component {
 								style={{display: "none"}}
 								onChange={e => onUploadFileSelect(e.target.files)}/>
 						</label>
-					</div>
-					<p className="lead">
+						</form>
+						<small>
 						Don't have a dataset handy? Here’s an <a href="/static/example.xlsx"><em>example excel sheet</em></a>
-					</p>
+						</small>
+					</div>
 				</div>
 			);
 		} else {
 			uploadButton = (
 				<div>
-					<div className="lead">
-						<form className="login-sub-component" action="https://secure.huygens.knaw.nl/saml2/login" method="POST">
-						 	<input name="hsurl"  type="hidden" value={window.location.href} />
-						 	<button type="submit" className="btn btn-lg btn-default underMargin">
-						 		<span className="glyphicon glyphicon-log-in"></span> Log in
-						 	</button>
-						</form>
-					</div>
-					<p className="lead">
-						Most university accounts will work. You can also log in using google, twitter or facebook.
-					</p>
+					<form className="login-sub-component" action="https://secure.huygens.knaw.nl/saml2/login" method="POST">
+					 	<input name="hsurl"  type="hidden" value={window.location.href} />
+					 	<button type="submit" className="btn btn-lg btn-default underMargin">
+					 		<span className="glyphicon glyphicon-log-in"></span> Log in to upload
+					 	</button>
+					</form>
+					<small>Most university accounts will work. You can also log in using google, twitter or facebook.</small>
 				</div>
 			);
 		}
@@ -52,11 +50,15 @@ class UploadSplashScreen extends React.Component {
 							TIMBUCTOO
 						</h1>
 						<p className="lead underMargin">
-							Get your data stored and connected to the world.<br />
-							Start uploading your data.
+							Connect your data to the world&hellip;
 						</p>
 						{uploadButton}
 					</div>
+				</div>
+				<div style={{position:"absolute", bottom: 0, textAlign: "right", width: "100%", paddingRight: "1em", paddingBottom: "1em"}} className="white">
+				<p className="lead" style={{margin: 0}}>
+					&hellip;or <a href="#">browse</a> the world's data
+				</p>
 				</div>
 			</div>
 		);
