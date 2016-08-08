@@ -46,7 +46,7 @@ class AddProperty extends React.Component {
 						placeholder="Choose a type..."
 						value={newName} />
 					:
-					(<input onChange={(ev) => this.setState({newName: ev.target.value })} placeholder="Property name" value={newName} />)
+					(<input className="input-property" onChange={(ev) => this.setState({newName: ev.target.value })} placeholder="Property name" value={newName} />)
 				}
 				&nbsp;
 				<button className="btn btn-success" disabled={!(newName && newType)}
