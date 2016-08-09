@@ -53,7 +53,7 @@ export default function(state=initialState, action) {
 					{
 						...state.sheets[sheetIdx],
 						rows: addRows(state.sheets[sheetIdx].rows, action.data.items, state.sheets[sheetIdx].variables),
-						nextUrl: action.data.next
+						nextUrl: action.data._next
 					},
 					...state.sheets.slice(sheetIdx + 1)
 				]

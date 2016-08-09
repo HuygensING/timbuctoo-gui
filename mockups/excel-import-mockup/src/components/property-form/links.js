@@ -26,7 +26,7 @@ class Form extends React.Component {
 				&nbsp;
 
 				{selectedVariableUrl.variableName && selectedVariableLabel.variableName ? (
-					<input onChange={(ev) => onSetDefaultValue(collectionData.collection, name, [{...defaultValueUrl}, {...defaultValueLabel, field: "label", value: ev.target.value}])}
+					<input className="input-property" onChange={(ev) => onSetDefaultValue(collectionData.collection, name, [{...defaultValueUrl}, {...defaultValueLabel, field: "label", value: ev.target.value}])}
 						placeholder="Default value..." type="text" value={defaultValueLabel.value || null} />) : null}
 
 				&nbsp;
@@ -37,7 +37,7 @@ class Form extends React.Component {
 					value={selectedVariableUrl.variableName || null} />
 				&nbsp;
 				{selectedVariableUrl.variableName && selectedVariableLabel.variableName ? (
-					<input onChange={(ev) => onSetDefaultValue(collectionData.collection, name, [{...defaultValueUrl, field: "url", value: ev.target.value}, {...defaultValueLabel}])}
+					<input className="input-property" onChange={(ev) => onSetDefaultValue(collectionData.collection, name, [{...defaultValueUrl, field: "url", value: ev.target.value}, {...defaultValueLabel}])}
 						placeholder="Default value..." type="text" value={defaultValueUrl.value || null} />) : null}
 			</span>
 		);

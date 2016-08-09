@@ -21,7 +21,7 @@ class Form extends React.Component {
 					options={collectionData.variables} placeholder="Select a column..."
 					value={selectedVariable.variableName || null} />
 				&nbsp;
-				<input onChange={(ev) => onSetDefaultValue(collectionData.collection, name, [{value: ev.target.value}])}
+				<input className="input-property" onChange={(ev) => onSetDefaultValue(collectionData.collection, name, [{value: ev.target.value}])}
 					placeholder="Default value..." type="text" value={defaultValue.value || null} />
 			</span>
 		);

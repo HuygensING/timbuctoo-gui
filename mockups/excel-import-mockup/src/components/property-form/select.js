@@ -35,7 +35,7 @@ class Form extends React.Component {
 						{defaultOptions.map((selectOption, i) => (
 							<li className="list-group-item" key={i}>
 								<label>{selectOption}</label>
-								<input onChange={(ev) => onSetValueMapping(collectionData.collection, name, selectOption, ev.target.value)}
+								<input className="input-property" onChange={(ev) => onSetValueMapping(collectionData.collection, name, selectOption, ev.target.value)}
 									type="text" value={valueMappings[selectOption] || ""} />
 							</li>
 						))}
