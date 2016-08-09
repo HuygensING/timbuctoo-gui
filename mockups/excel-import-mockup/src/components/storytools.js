@@ -1,6 +1,6 @@
 import React from 'react';
 import { action } from '@kadira/storybook';
-import origActions from "../actions"
+import actionsMaker from "../actions"
 
 function toplevelWrapper(story) {
   return <div id="app" className="site-wrapper">
@@ -9,6 +9,6 @@ function toplevelWrapper(story) {
 }
 
 var actions = {};
-Object.keys(origActions).forEach(key => actions[key] = action(key));
+Object.keys(actionsMaker()).forEach(key => actions[key] = action(key));
 
 export {toplevelWrapper, actions};

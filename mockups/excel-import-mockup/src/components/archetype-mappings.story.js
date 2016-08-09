@@ -25,8 +25,7 @@ var baseData = function () {
           "archetypeName": null
         }
       }
-    },
-    collectionsAreMapped: false
+    }
   }
 }
 
@@ -46,9 +45,10 @@ storiesOf('archetype-mappings', module)
       {...data}
       {...actions} />
   })
-  .add('withWorkingOkButton', function () {
+  .add('withAllFilled', function () {
     var data = baseData();
-    data.collectionsAreMapped = true; //normally would only happen when all collections are filled
+    data.mappings.collections.mockpersons.archetypeName = "legislations";
+    data.mappings.collections.mockdocuments.archetypeName = "legislations";
 
     return <ArchetypeMappings
       {...data}

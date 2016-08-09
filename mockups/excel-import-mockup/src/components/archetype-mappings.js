@@ -5,8 +5,10 @@ class ArchetypeMappings extends React.Component {
 
 
 	render() {
+		const { archetype, importData, onMapCollectionArchetype, mappings, onConfirmCollectionArchetypeMappings } = this.props;
+		const collectionsAreMapped = Object.keys(mappings.collections).length > 0 &&
+			Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName).indexOf(null) < 0;
 
-		const { archetype, importData, onMapCollectionArchetype, mappings, collectionsAreMapped, onConfirmCollectionArchetypeMappings } = this.props;
 		return (
 			<div className="row centered-form center-block">
 				<div className="container col-md-12" style={{textAlign: "left"}}>
