@@ -15,9 +15,9 @@ class CollectionsOverview extends React.Component {
 								? <span title={vre.name + " has not yet been published"} className={classnames("list-group-item", {disabled: vre.state})} key={i}>
                   	<i>{vre.name}</i> <button title="" className="btn btn-default btn-xs pull-right">finish import</button>
                 	</span>
-                : <a href={vre.url} className="list-group-item" key={i}>
-                	{vre.name}
-                	</a>
+                : <span className="list-group-item" key={i}>
+                	{vre.name} <button title="" className="btn btn-default btn-xs pull-right">explore</button>{" "}<button title="" className="btn btn-default btn-xs pull-right">edit</button>
+                	</span>
               ))}
             </div>
           </div>
