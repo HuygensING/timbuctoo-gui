@@ -11,12 +11,9 @@
   },
   "scripts": {
     "start": "scripts/server.js",
-    "start:proxies": "node scripts/server2.js",
     "test": "mocha --compilers js:babel/register --recursive test",
     "test:watch": "nodemon -x \"mocha --compilers js:babel/register --recursive --watch test\" -w test -w build",
-    "watch": "scripts/watch.sh",
-    "watch:query": "scripts/watch_query.sh",
-    "parse": "node src/parsers/index.js"
+    "watch": "scripts/watch.sh"
   },
   "dependencies": {
     "classnames": "^2.2.3",
@@ -34,8 +31,6 @@
     "hire-login": "https://github.com/HuygensING/hire-login.git#react-0.14",
     "lodash.debounce": "^3.1.1",
     "react": "^0.14.7",
-    "react-dnd": "^2.1.2",
-    "react-dnd-touch-backend": "^0.2.4",
     "react-dom": "^0.14.7",
     "redux": "^3.2.1",
     "redux-thunk": "^1.0.3",

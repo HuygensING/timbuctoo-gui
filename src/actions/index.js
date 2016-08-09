@@ -1,19 +1,5 @@
 import store from "../store";
 import { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateLeft, paginateRight, sendQuickSearch } from "./entity";
-import {
-	deleteQuery,
-	selectQuery,
-	changeQuery,
-	setQueryPath,
-	addQueryFilter,
-	deleteQueryFilter,
-	moveQueryPosition,
-	submitQuery,
-	nameQuery,
-	saveQuery,
-	loadQuery
-} from "./queries";
-
 import { setVre } from "./vre";
 
 const setUser = (response) => {
@@ -39,17 +25,5 @@ export default {
 	onPaginateLeft: () => store.dispatch(paginateLeft()),
 	onPaginateRight: () => store.dispatch(paginateRight()),
 	onQuickSearchQueryChange: (value) => store.dispatch({type: "SET_QUICKSEARCH_QUERY", value: value}),
-	onQuickSearch: () => store.dispatch(sendQuickSearch()),
-
-	onSelectQuery: (domain, queryIndex, position = null) => store.dispatch(selectQuery(domain, queryIndex, position)),
-	onDeleteQuery: (queryIndex) => store.dispatch(deleteQuery(queryIndex)),
-	onSetQueryPath: (path) => store.dispatch(setQueryPath(path)),
-	onQueryChange: (fieldPath, value) => store.dispatch(changeQuery(fieldPath, value)),
-	onAddQueryFilter: (fieldPath, value) => store.dispatch(addQueryFilter(fieldPath, value)),
-	onDeleteQueryFilter: (queryIndex) => store.dispatch(deleteQueryFilter(queryIndex)),
-	onMoveQueryPosition: (queryIndex, movement) => store.dispatch(moveQueryPosition(queryIndex, movement)),
-	onSubmitQuery: () => store.dispatch(submitQuery()),
-	onNameQuery: (value) => store.dispatch(nameQuery(value)),
-	onSaveQuery: () => store.dispatch(saveQuery()),
-	onLoadQuery: (name) => store.dispatch(loadQuery(name))
+	onQuickSearch: () => store.dispatch(sendQuickSearch())
 };
