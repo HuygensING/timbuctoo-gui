@@ -15,6 +15,20 @@ if (process.env.NODE_ENV === "development") {
 export default function actionsMaker(navigateTo, dispatch) {
 	//bind to variable so an action can trigger other actions
 	let actions = {
+		onToken: function (token) {
+			xhr(process.env.server + "/v2.1/system/users/me/vres", {
+				headers: {
+					"Authorization": token
+				}
+			}, (err, resp, body) => {
+				const mine = JSON.parse(body).mine || null;
+				const vres = JSON.parse(body).public || null;
+				dispatch({type: "LOGIN", data: token, myVres: mine, vres: vres});
+				if (mine) {
+					navigateTo("collectionsOverview");
+				}
+			})
+		},
 		onLoadMoreClick: function (url, collection) {
 			dispatch((dispatch, getState) => {
 				var state = getState();

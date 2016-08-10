@@ -5,6 +5,9 @@ import xhr from "xhr";
 import xhrmock from "xhr-mock";
 import setupMocks from "./servermocks";
 import router from "./router";
+import actionsMaker from "./actions";
+import { navigateTo } from "./router";
+
 
 if (process.env.USE_MOCK === "true") {
 	console.log("Using mock server!")
@@ -16,6 +19,7 @@ if (process.env.USE_MOCK === "true") {
 	xhr.XDomainRequest = mock;
 	setupMocks(xhrmock, orig);
 }
+let actions = actionsMaker(navigateTo, store.dispatch.bind(store));
 
 function checkTokenInUrl(state) {
 	let path = window.location.search.substr(1);
@@ -24,7 +28,9 @@ function checkTokenInUrl(state) {
 	for(let i in params) {
 		let [key, value] = params[i].split('=');
 		if(key === 'hsid' && !state.userdata.userId) {
-			store.dispatch({type: "LOGIN", data: value});
+			actions.onToken(value);
+
+
 			break;
 		}
 	}

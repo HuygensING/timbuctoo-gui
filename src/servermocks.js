@@ -44,6 +44,57 @@ export default function setupMocks(xhrmock, orig) {
           ]
         }`)
     })
+    .get("http://test.repository.huygens.knaw.nl/v2.1/system/users/me/vres", function(req, resp) {
+      console.log("fetch-my-vres");
+      return resp
+        .status(200)
+        .body(`{
+          "mine": {
+            "migrant_steekproef_masterdb (6).xlsx": {
+              "name": "migrant_steekproef_masterdb (6).xlsx",
+              "published": false,
+              "rmlUri": "http:\/\/localhost:8080\/v2.1\/bulk-upload\/migrant_steekproef_masterdb%20(6).xlsx\/rml"
+            },
+            "testerdetest": {
+              "name": "testerdetest",
+              "published": true,
+              "rmlUri": "http:\/\/localhost:8080\/v2.1\/bulk-upload\/testerdetest\/rml"
+            }
+          },
+          "public": {
+            "WomenWriters": {
+              "name": "WomenWriters"
+            },
+            "CharterPortaal": {
+              "name": "CharterPortaal"
+            },
+            "EuropeseMigratie": {
+              "name": "EuropeseMigratie"
+            },
+            "ckcc": {
+              "name": "ckcc"
+            },
+            "DutchCaribbean": {
+              "name": "DutchCaribbean"
+            },
+            "cwrs": {
+              "name": "cwrs"
+            },
+            "cwno": {
+              "name": "cwno"
+            },
+            "Admin": {
+              "name": "Admin"
+            },
+            "cnw": {
+              "name": "cnw"
+            },
+            "Base": {
+              "name": "Base"
+            }
+          }
+        }`)
+    })
     .post("http://test.repository.huygens.knaw.nl/v2.1/bulk-upload", function (req, resp) {
       console.log("bulk-upload")
       return resp

@@ -1,6 +1,6 @@
 import React from "react";
 
-import {UploadSplashScreen, ArchetypeMappings, DatasheetMappings} from "./components";
+import {UploadSplashScreen, ArchetypeMappings, DatasheetMappings, CollectionsOverview} from "./components";
 import { Router, Route, hashHistory } from 'react-router'
 import store from "./store";
 import actions from "./actions";
@@ -12,10 +12,13 @@ var urls = {
   },
   mapArchetypes() {
     return "/maparchetypes";
+  },
+  collectionsOverview() {
+    return "/collections-overview";
   }
 };
 
-function navigateTo(key, args) {
+export function navigateTo(key, args) {
   hashHistory.push(urls[key].apply(null, args));
 }
 
@@ -30,6 +33,7 @@ var router = (
       <Route path="/" component={makeContainerComponent(UploadSplashScreen)}/>
   		<Route path={urls.mapData()} component={makeContainerComponent(DatasheetMappings)}/>
   		<Route path={urls.mapArchetypes()} component={makeContainerComponent(ArchetypeMappings)}/>
+      <Route path={urls.collectionsOverview()} component={makeContainerComponent(CollectionsOverview)}/>
     </Router>
   </Provider>
 );
