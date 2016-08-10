@@ -6,7 +6,7 @@ import CollectionForm from "./collection-form";
 class DatasheetMappings extends React.Component {
 	render() {
 		return (
-			<div className="row" style={{textAlign: "left"}}>
+			<div className="row datasheet-mappings" style={{textAlign: "left"}}>
 				<div className="container col-md-12">
 					<nav className="col-sm-2">
 						<CollectionIndex {...this.props} />

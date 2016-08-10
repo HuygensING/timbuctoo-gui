@@ -10,7 +10,7 @@ class ArchetypeMappings extends React.Component {
 			Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName).indexOf(null) < 0;
 
 		return (
-			<div className="row centered-form center-block">
+			<div className="row centered-form center-block archetype-mappings">
 				<div className="container col-md-12" style={{textAlign: "left"}}>
 					<main>
 						<div className="panel panel-default col-md-6 col-md-offset-3">
