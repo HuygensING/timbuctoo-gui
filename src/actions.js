@@ -135,7 +135,18 @@ export default function actionsMaker(navigateTo, dispatch) {
 								if (err) {
 									dispatch({type: "PUBLISH_HAD_ERROR"})
 								} else {
-									dispatch({type: "PUBLISH_SUCCEEDED"})
+									xhr(process.env.server + "/v2.1/system/users/me/vres", {
+										headers: {
+											"Authorization": state.userdata.userId
+										}
+									}, (err, resp, body) => {
+										const mine = JSON.parse(body).mine || null;
+										const vres = JSON.parse(body).public || null;
+										dispatch({type: "LOGIN", data: state.userdata.userId, myVres: mine, vres: vres});
+										if (mine) {
+											navigateTo("collectionsOverview");
+										}
+									});
 								}
 								dispatch({type: "PUBLISH_FINISHED"})
 							});
