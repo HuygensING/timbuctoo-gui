@@ -77,9 +77,12 @@ export default function actionsMaker(navigateTo, dispatch) {
 		},
 		onContinueMapping: function (vreId) {
 			// FIXME this completely reinits the mapping steps
-			xhr.get(`${process.env.server}/v2.1/bulk-upload/${vreId}`, function (err, resp, body) {
-				dispatch({type: "FINISH_UPLOAD", data: JSON.parse(body)});
-				navigateTo("mapArchetypes");
+			dispatch(function(dispatch, getState) { 
+				var state = getState();
+				xhr.get(`${process.env.server}/v2.1/bulk-upload/${vreId}`, {headers: {"Authorization": state.userdata.userId}}, function (err, resp, body) {
+					dispatch({type: "FINISH_UPLOAD", data: JSON.parse(body)});
+					navigateTo("mapArchetypes");
+				});
 			});
 		},
 		onSaveMappings: function () {
@@ -105,24 +108,44 @@ export default function actionsMaker(navigateTo, dispatch) {
 		},
 
 		onPublishData: function (){
-			dispatch({type: "PUBLISH_STARTED"})
+			dispatch({type: "SAVE_STARTED"})
 			dispatch(function (dispatch, getState) {
 				var state = getState();
 				var payload = {
+					json: mappingToJsonLdRml(state.mappings, state.importData.vre),
 					headers: {
 						"Authorization": state.userdata.userId
 					}
 				};
 
-				xhr.post(state.importData.executeMappingUrl, payload, function (err, resp) {
+				xhr.post(state.importData.saveMappingUrl, payload, function (err, resp) {
 					if (err) {
-						dispatch({type: "PUBLISH_HAD_ERROR"})
+						dispatch({type: "SAVE_HAD_ERROR"})
 					} else {
-						dispatch({type: "PUBLISH_SUCCEEDED"})
+						dispatch({type: "PUBLISH_STARTED"})
+						dispatch(function (dispatch, getState) {
+							var state1 = getState();
+							var payload1 = {
+								headers: {
+									"Authorization": state.userdata.userId
+								}
+							};
+
+							xhr.post(state1.importData.executeMappingUrl, payload1, function (err, resp) {
+								if (err) {
+									dispatch({type: "PUBLISH_HAD_ERROR"})
+								} else {
+									dispatch({type: "PUBLISH_SUCCEEDED"})
+								}
+								dispatch({type: "PUBLISH_FINISHED"})
+							});
+						});
 					}
-					dispatch({type: "PUBLISH_FINISHED"})
+					dispatch({type: "SAVE_FINISHED"})
 				});
 			});
+
+
 		},
 
 		onSelectCollection: (collection) => {

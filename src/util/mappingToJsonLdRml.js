@@ -1,4 +1,5 @@
 export default function mappingToJsonLdRml(mapping, vre) {
+  console.log(mapping);
   return {
   	"@context": {
   		"@vocab": "http://www.w3.org/ns/r2rml#",
@@ -72,6 +73,13 @@ function mapSheet(key, sheet, vre) {
 			"template": `http://timbuctoo.com/${vre}/${key}/{tim_id}`
 		},
     "predicateObjectMap": sheet.mappings.map(makePredicateObjectMap)
+    // fixes TIM-1033, blocked by TIM-1052
+//    .concat({
+//      "objectMap": {
+//        "constant": `http://timbuctoo.com/${sheet.archetypeName.replace(/s$/, "")}`
+//      },
+//      "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#subClassOf"
+//    })
   };
 }
 
