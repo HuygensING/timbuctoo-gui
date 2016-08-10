@@ -17,6 +17,9 @@ var baseData = function () {
         "EM": {name: "Migrants", url:"http://repository.huygens.knaw.nl/v2.1/migrants"},
         "ckcc": {name: "CKCC", url:"http://repository.huygens.knaw.nl/v2.1/ckcc"},
       }
+    },
+    importData: {
+      isUploading: false
     }
   }
 }
