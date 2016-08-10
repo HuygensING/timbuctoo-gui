@@ -3,7 +3,7 @@ import classnames from "classnames";
 
 class CollectionsOverview extends React.Component {
 	render() {
-    const { onUploadFileSelect, userdata: { vres, myVres, userId }, importData: {isUploading}} = this.props;
+    const { onContinueMapping, onUploadFileSelect, userdata: { vres, myVres, userId }, importData: {isUploading}} = this.props;
 
     if (myVres) {
   		return (
@@ -27,13 +27,16 @@ class CollectionsOverview extends React.Component {
 
                 </div></div>
               <div className="list-group">
-                {Object.keys(myVres).map((vreId) => ({name: myVres[vreId].name})).map((vre, i) => (
-  								vre.state != "published"
+                {Object.keys(myVres).map((vreId) => ({name: myVres[vreId].name, published: myVres[vreId].published})).map((vre, i) => (
+  								vre.published
   								? <span title={vre.name + " has not yet been published"} className={classnames("list-group-item", {disabled: vre.state})} key={i}>
-                    	<i>{vre.name}</i> <button title="" className="btn btn-default btn-xs pull-right">finish import</button>
+                    	<i>{vre.name}</i> <button onClick={() => onContinueMapping(vre.name)} title="" className="btn btn-default btn-xs pull-right">finish import</button>
                   	</span>
                   : <span className="list-group-item" key={i}>
-                  	{vre.name} <button title="" className="btn btn-default btn-xs pull-right">explore</button>{" "}<button title="" className="btn btn-default btn-xs pull-right">edit</button>
+                  	 {vre.name}
+                      <a className="btn btn-default btn-xs pull-right" href={`/static/query-gui/?vreId=${vre.name}`}>explore</a>
+                      {" "}
+                      <a className="btn btn-default btn-xs pull-right" href={`/static/edit-gui/?vreId=${vre.name}`}>edit</a>
                   	</span>
                 ))}
               </div>

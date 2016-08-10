@@ -75,7 +75,13 @@ export default function actionsMaker(navigateTo, dispatch) {
 				});
 			});
 		},
-
+		onContinueMapping: function (vreId) {
+			// FIXME this completely reinits the mapping steps
+			xhr.get(`${process.env.server}/v2.1/bulk-upload/${vreId}`, function (err, resp, body) {
+				dispatch({type: "FINISH_UPLOAD", data: JSON.parse(body)});
+				navigateTo("mapArchetypes");
+			});
+		},
 		onSaveMappings: function () {
 			dispatch({type: "SAVE_STARTED"})
 			dispatch(function (dispatch, getState) {
