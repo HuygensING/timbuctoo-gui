@@ -235,7 +235,7 @@ export default function setupMocks(xhrmock, orig) {
         }));
     })
     .get("<<url for document data>>", function (req, resp) {
-      console.log("get person items data");
+      console.log("get document items data");
       return resp
         .status(200)
         .body(JSON.stringify({

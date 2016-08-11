@@ -5,14 +5,15 @@ class DataRow extends React.Component {
 
 	render() {
 		const { row, confirmedCols, ignoredColumns, variables } = this.props;
-
 		return (
 			<tr>
 				{row.map((cell, i) => (
 					<td className={cx({
-						ignored: confirmedCols.indexOf(i) < 0 && ignoredColumns.indexOf(variables[i]) > -1
+						ignored: confirmedCols.indexOf(i) < 0 && ignoredColumns.indexOf(variables[i]) > -1,
+						danger: cell.error ? true : false
 					})} key={i}>
-						{cell}
+						{cell.value}
+						{cell.error ? <span className="pull-right glyphicon glyphicon-exclamation-sign" style={{cursor: "pointer"}} title={cell.error}></span> : null}
 					</td>
 				))}
 			</tr>

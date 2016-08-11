@@ -9,38 +9,42 @@ class ArchetypeMappings extends React.Component {
 		const collectionsAreMapped = Object.keys(mappings.collections).length > 0 &&
 			Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName).indexOf(null) < 0;
 
-		return (
-			<div className="row centered-form center-block archetype-mappings">
-				<div className="container col-md-12" style={{textAlign: "left"}}>
-					<main>
-						<div className="panel panel-default col-md-6 col-md-offset-3">
-							<div className="panel-body">
-								We found {importData.sheets.length} collections in the file.<br />
-								Connect the tabs to the timbuctoo archetypes
-							</div>
-							<ul className="list-group">
-								{importData.sheets.map((sheet, i) => (
-									<li className="list-group-item" key={i}>
-										<label>{i + 1} {sheet.collection}</label>
-										<SelectField
-											onChange={(value) => onMapCollectionArchetype(sheet.collection, value)}
-											onClear={() => onMapCollectionArchetype(sheet.collection, null) }
-											options={Object.keys(archetype).filter((domain) => domain !== "relations").sort()}
-											placeholder={`Archetype for ${sheet.collection}`}
-											value={mappings.collections[sheet.collection].archetypeName} />
+		if (importData.sheets) {
+			return (
+				<div className="row centered-form center-block archetype-mappings">
+					<div className="container col-md-12" style={{textAlign: "left"}}>
+						<main>
+							<div className="panel panel-default col-md-6 col-md-offset-3">
+								<div className="panel-body">
+									We found {importData.sheets.length} collections in the file.<br />
+									Connect the tabs to the timbuctoo archetypes
+								</div>
+								<ul className="list-group">
+									{importData.sheets.map((sheet, i) => (
+										<li className="list-group-item" key={i}>
+											<label>{i + 1} {sheet.collection}</label>
+											<SelectField
+												onChange={(value) => onMapCollectionArchetype(sheet.collection, value)}
+												onClear={() => onMapCollectionArchetype(sheet.collection, null) }
+												options={Object.keys(archetype).filter((domain) => domain !== "relations").sort()}
+												placeholder={`Archetype for ${sheet.collection}`}
+												value={mappings.collections[sheet.collection].archetypeName} />
+										</li>
+									))}
+									<li className="list-group-item">
+										<button className="btn btn-lg btn-success" disabled={!collectionsAreMapped} onClick={onConfirmCollectionArchetypeMappings}>
+											Ok
+										</button>
 									</li>
-								))}
-								<li className="list-group-item">
-									<button className="btn btn-lg btn-success" disabled={!collectionsAreMapped} onClick={onConfirmCollectionArchetypeMappings}>
-										Ok
-									</button>
-								</li>
-							</ul>
-						</div>
-					</main>
+								</ul>
+							</div>
+						</main>
+					</div>
 				</div>
-			</div>
-		);
+			);
+		} else {
+			return (<div></div>);
+		}
 	}
 }
 

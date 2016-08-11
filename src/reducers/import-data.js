@@ -4,7 +4,8 @@ import merge from "merge-options";
 const initialState = getItem("importData") || {
 	isUploading: false,
 	sheets: null,
-	activeCollection: null
+	activeCollection: null,
+	publishErrors: false
 };
 
 function findIndex(arr, f) {
@@ -17,13 +18,17 @@ function findIndex(arr, f) {
 	return -1;
 }
 
-function sheetRowFromDictToArray(rowdict, arrayOfVariableNames) {
-	return arrayOfVariableNames.map(name => rowdict[name]);
+function sheetRowFromDictToArray(rowdict, arrayOfVariableNames, mappingErrors) {
+	return arrayOfVariableNames.map(name => ({
+		value: rowdict[name],
+		error: mappingErrors[name] || null
+	}));
 }
 
 function addRows(curRows, newRows, arrayOfVariableNames) {
+	console.log(newRows.map((row) => row._mappingErrors));
 	return curRows.concat(
-		newRows.map(item => sheetRowFromDictToArray(item, arrayOfVariableNames))
+		newRows.map(item => sheetRowFromDictToArray(item, arrayOfVariableNames, item._mappingErrors || {}))
 	);
 }
 
@@ -38,7 +43,8 @@ export default function(state=initialState, action) {
 					collection: sheet.name,
 					variables: sheet.variables,
 					rows: [],
-					nextUrl: sheet.data
+					nextUrl: sheet.data,
+					nextUrlWithErrors: sheet.dataWithErrors
 				})),
 				activeCollection: action.data.collections[0].name,
 				vre: action.data.vre,
@@ -77,6 +83,17 @@ export default function(state=initialState, action) {
 			return result;
 		case "SET_ACTIVE_COLLECTION":
 			return {...state, activeCollection: action.collection};
+		case "PUBLISH_HAD_ERROR":
+			// clear the sheets to force reload
+			return {
+				...state,
+				publishErrors: true,
+				sheets: state.sheets.map((sheet) => ({
+					...sheet,
+					rows: [],
+					nextUrl: sheet.nextUrlWithErrors
+				}))
+			};
 	}
 
 	return state;

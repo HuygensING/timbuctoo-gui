@@ -23,13 +23,24 @@ class CollectionForm extends React.Component {
 		const customPropertyForms = mappings.collections[activeCollection].customProperties
 			.map((cf, i) => <PropertyForm {...this.props} collectionData={collectionData} mappingData={mappingData} custom={true} key={i} name={cf.name} type={cf.type} />);
 
+		const publishMessage = importData.publishErrors ?
+			<li className="list-group-item">
+				<span className="glyphicon glyphicon-exclamation-sign"></span>
+				{" "}
+				Publish failed, please fix the mappings or re-upload the data
+			</li> :
+			null;
+
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					Collection settings: {activeCollection}
+					Collection settings: <strong>{activeCollection}</strong>
+					{" "}
+					from archetype: <strong>{archetypeName}</strong>
 				</div>
 
 				<ul className="list-group">
+					{publishMessage}
 					{propertyForms}
 					{customPropertyForms}
 					<AddProperty {...this.props} />

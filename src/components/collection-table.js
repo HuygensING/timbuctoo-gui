@@ -11,7 +11,6 @@ class CollectionTable extends React.Component {
 		const collectionData = sheets.find((sheet) => sheet.collection === activeCollection);
 
 		const { rows, collection, variables } = collectionData;
-
 		const confirmedCols = variables
 			.map((value, i) => ({value: value, index: i}))
 			.filter((colSpec) => mappings.collections[activeCollection].mappings

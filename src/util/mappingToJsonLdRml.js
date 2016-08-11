@@ -1,5 +1,4 @@
 export default function mappingToJsonLdRml(mapping, vre) {
-  console.log(mapping);
   return {
   	"@context": {
   		"@vocab": "http://www.w3.org/ns/r2rml#",

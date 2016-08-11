@@ -135,18 +135,23 @@ export default function actionsMaker(navigateTo, dispatch) {
 								if (err) {
 									dispatch({type: "PUBLISH_HAD_ERROR"})
 								} else {
-									xhr(process.env.server + "/v2.1/system/users/me/vres", {
-										headers: {
-											"Authorization": state.userdata.userId
-										}
-									}, (err, resp, body) => {
-										const mine = JSON.parse(body).mine || null;
-										const vres = JSON.parse(body).public || null;
-										dispatch({type: "LOGIN", data: state.userdata.userId, myVres: mine, vres: vres});
-										if (mine) {
-											navigateTo("collectionsOverview");
-										}
-									});
+									if (JSON.parse(resp.body).success) {
+										xhr(process.env.server + "/v2.1/system/users/me/vres", {
+											headers: {
+												"Authorization": state.userdata.userId
+											}
+										}, (err, resp, body) => {
+											const mine = JSON.parse(body).mine || null;
+											const vres = JSON.parse(body).public || null;
+											dispatch({type: "LOGIN", data: state.userdata.userId, myVres: mine, vres: vres});
+											if (mine) {
+												navigateTo("collectionsOverview");
+											}
+										});
+									} else {
+										dispatch({type: "PUBLISH_HAD_ERROR"});
+										actions.onSelectCollection(state1.importData.activeCollection);
+									}
 								}
 								dispatch({type: "PUBLISH_FINISHED"})
 							});
