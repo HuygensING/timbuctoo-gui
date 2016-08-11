@@ -1,5 +1,7 @@
 import React from "react";
-import classnames from 'classnames';
+import UploadButton from "./upload-button";
+import classnames from "classnames";
+
 class UploadSplashScreen extends React.Component {
 
 	render() {
@@ -10,17 +12,12 @@ class UploadSplashScreen extends React.Component {
 			uploadButton = (
 				<div>
 					<div className="login-sub-component lead">
-						<form>
-						<label className={classnames("btn", "btn-lg", "btn-default", "underMargin", {disabled: isUploading})}>
-							<span className="glyphicon glyphicon-cloud-upload"></span>
-							{isUploading ? "Uploading..." : "Browse"}
-							<input
-								disabled={isUploading}
-								type="file"
-								style={{display: "none"}}
-								onChange={e => onUploadFileSelect(e.target.files)}/>
-						</label>
-						</form>
+						<UploadButton
+							classNames={["btn", "btn-lg", "btn-default", "underMargin"]}
+							glyphicon="glyphicon glyphicon-cloud-upload"
+							isUploading={isUploading}
+							label="Browse"
+							onUploadFileSelect={onUploadFileSelect} />
 						<small>
 						Don't have a dataset handy? Here’s an <a href="/static/example.xlsx"><em>example excel sheet</em></a>
 						</small>

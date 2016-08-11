@@ -1,13 +1,14 @@
 import React from "react";
 import AddProperty from "./property-form/add-property";
 import PropertyForm from "./property-form";
+import UploadButton from "./upload-button";
 
 class CollectionForm extends React.Component {
 
 	render() {
-		const { importData, archetype, mappings } = this.props;
+		const { importData, archetype, mappings, onUploadFileSelect } = this.props;
 
-		const { activeCollection, sheets } = importData;
+		const { activeCollection, sheets, isUploading } = importData;
 
 
 		const collectionData = sheets.find((sheet) => sheet.collection === activeCollection);
@@ -28,6 +29,13 @@ class CollectionForm extends React.Component {
 				<span className="glyphicon glyphicon-exclamation-sign"></span>
 				{" "}
 				Publish failed, please fix the mappings or re-upload the data
+				{" "}
+				<UploadButton
+					classNames={["btn", "btn-xs", "btn-success", "i-am-not-a-label"]}
+					glyphicon=""
+					isUploading={isUploading}
+					label="Re-upload"
+					onUploadFileSelect={onUploadFileSelect} />
 			</li> :
 			null;
 

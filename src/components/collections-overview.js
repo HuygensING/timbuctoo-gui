@@ -1,5 +1,6 @@
 import React from "react";
 import classnames from "classnames";
+import UploadButton from "./upload-button";
 
 class CollectionsOverview extends React.Component {
 	render() {
@@ -12,17 +13,12 @@ class CollectionsOverview extends React.Component {
             <div className="panel panel-default">
               <div className="panel-heading clearfix"><h4 className="panel-title pull-left">Your data sets</h4>
               <div className="btn-group pull-right">
-                <form>
-                  <label className={classnames("btn", "btn-xs", "btn-success", {disabled: isUploading})}>
-                    <span className="glyphicon glyphicon-plus"></span>
-                    {isUploading ? "Uploading..." : "New"}
-                    <input
-                      disabled={isUploading}
-                      type="file"
-                      style={{display: "none"}}
-                      onChange={e => onUploadFileSelect(e.target.files)}/>
-                  </label>
-                </form>
+                <UploadButton
+                  classNames={["btn", "btn-xs", "btn-success"]}
+                  glyphicon="glyphicon glyphicon-plus"
+                  isUploading={isUploading}
+                  label="New"
+                  onUploadFileSelect={onUploadFileSelect} />
                 </div>
               </div>
               <div className="list-group">

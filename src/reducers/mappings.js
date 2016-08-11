@@ -143,7 +143,9 @@ const removeCustomProperty = (state, action) => {
 export default function(state=initialState, action) {
 	switch (action.type) {
 		case "FINISH_UPLOAD":
-			return {...state, collections: action.data.collections.reduce(scaffoldCollectionMappings, {})};
+			return Object.keys(state.collections).length > 0 ?
+				state :
+				{...state, collections: action.data.collections.reduce(scaffoldCollectionMappings, {})};
 
 		case "MAP_COLLECTION_ARCHETYPE":
 			return mapCollectionArchetype(state, action);

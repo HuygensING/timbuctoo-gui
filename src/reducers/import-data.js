@@ -39,6 +39,7 @@ export default function(state=initialState, action) {
 		case "FINISH_UPLOAD":
 			return {...state,
 				isUploading: false,
+				publishErrors: false,
 				sheets: action.data.collections.map(sheet => ({
 					collection: sheet.name,
 					variables: sheet.variables,
