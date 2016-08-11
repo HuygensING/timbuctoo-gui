@@ -89,7 +89,7 @@ export default function actionsMaker(navigateTo, dispatch) {
 				});
 			});
 		},
-		onSaveMappings: function () {
+/*		onSaveMappings: function () {
 			dispatch({type: "SAVE_STARTED"})
 			dispatch(function (dispatch, getState) {
 				var state = getState();
@@ -109,7 +109,7 @@ export default function actionsMaker(navigateTo, dispatch) {
 					dispatch({type: "SAVE_FINISHED"})
 				});
 			});
-		},
+		},*/
 
 		onPublishData: function (){
 			dispatch({type: "SAVE_STARTED"})

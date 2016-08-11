@@ -50,7 +50,7 @@ class CollectionIndex extends React.Component {
 						</a>
 					)) }
 					<li className="list-group-item">
-						<button className="btn btn-success" onClick={onSaveMappings}>Save</button>
+						{/*<button className="btn btn-success" onClick={onSaveMappings}>Save</button>*/}
 						&nbsp;
 						<button className="btn btn-success" onClick={onPublishData} disabled={!this.allMappingsAreIncomplete()}>Publish</button>
 					</li>
