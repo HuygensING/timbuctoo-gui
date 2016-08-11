@@ -10,12 +10,12 @@ const newVariableDesc = (property, variableSpec) => ({
 	valueMappings: {}
 });
 
-function scaffoldCollectionMappings(init, sheet){
+function scaffoldCollectionMappings(init, sheet) {
 	return Object.assign(init, {
 		[sheet.name]: {
 			archetypeName: null,
 			mappings: [],
-			ignoredColumns: [],
+			ignoredColumns: sheet.variables,
 			customProperties: []
 		}
 	});
