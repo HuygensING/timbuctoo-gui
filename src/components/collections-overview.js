@@ -23,9 +23,8 @@ class CollectionsOverview extends React.Component {
                       onChange={e => onUploadFileSelect(e.target.files)}/>
                   </label>
                 </form>
-
-
-                </div></div>
+                </div>
+              </div>
               <div className="list-group">
                 {Object.keys(myVres).map((vreId) => ({name: myVres[vreId].name, published: myVres[vreId].published})).map((vre, i) => (
   								!vre.published

@@ -94,6 +94,17 @@ export default function(state=initialState, action) {
 					nextUrl: sheet.nextUrlWithErrors
 				}))
 			};
+		case "PUBLISH_SUCCEEDED":
+			// clear the sheets to force reload
+			return {
+				...state,
+				publishErrors: false,
+				sheets: state.sheets.map((sheet) => ({
+					...sheet,
+					rows: [],
+					nextUrl: sheet.nextUrlWithErrors
+				}))
+			};
 	}
 
 	return state;

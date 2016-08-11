@@ -136,18 +136,8 @@ export default function actionsMaker(navigateTo, dispatch) {
 									dispatch({type: "PUBLISH_HAD_ERROR"})
 								} else {
 									if (JSON.parse(resp.body).success) {
-										xhr(process.env.server + "/v2.1/system/users/me/vres", {
-											headers: {
-												"Authorization": state.userdata.userId
-											}
-										}, (err, resp, body) => {
-											const mine = JSON.parse(body).mine || null;
-											const vres = JSON.parse(body).public || null;
-											dispatch({type: "LOGIN", data: state.userdata.userId, myVres: mine, vres: vres});
-											if (mine) {
-												navigateTo("collectionsOverview");
-											}
-										});
+										dispatch({type: "PUBLISH_SUCCEEDED"});
+										actions.onToken(state.userdata.userId);
 									} else {
 										dispatch({type: "PUBLISH_HAD_ERROR"});
 										actions.onSelectCollection(state1.importData.activeCollection);
