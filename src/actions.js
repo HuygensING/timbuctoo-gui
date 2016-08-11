@@ -52,7 +52,7 @@ export default function actionsMaker(navigateTo, dispatch) {
 			})
 
 		},
-		onUploadFileSelect: function (files) {
+		onUploadFileSelect: function (files, isReupload = false) {
 			let file = files[0];
 			let formData = new FormData();
 			formData.append("file", file);
@@ -70,7 +70,11 @@ export default function actionsMaker(navigateTo, dispatch) {
 					let location = resp.headers.location;
 					xhr.get(location, {headers: {"Authorization": state.userdata.userId}}, function (err, resp, body) {
 						dispatch({type: "FINISH_UPLOAD", data: JSON.parse(body)});
-						navigateTo("mapArchetypes");
+						if (isReupload) {
+							actions.onSelectCollection(state.importData.activeCollection);
+						} else {
+							navigateTo("mapArchetypes");
+						}
 					});
 				});
 			});

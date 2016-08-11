@@ -35,7 +35,7 @@ class CollectionForm extends React.Component {
 					glyphicon=""
 					isUploading={isUploading}
 					label="Re-upload"
-					onUploadFileSelect={onUploadFileSelect} />
+					onUploadFileSelect={(files) => onUploadFileSelect(files, true)} />
 			</li> :
 			null;
 
