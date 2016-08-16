@@ -1,5 +1,4 @@
 import { getItem } from "../util/persist";
-import merge from "merge-options";
 
 const initialState = getItem("importData") || {
 	isUploading: false,
@@ -21,14 +20,13 @@ function findIndex(arr, f) {
 function sheetRowFromDictToArray(rowdict, arrayOfVariableNames, mappingErrors) {
 	return arrayOfVariableNames.map(name => ({
 		value: rowdict[name],
-		error: mappingErrors[name] || null
+		error: mappingErrors[name] || undefined
 	}));
 }
 
 function addRows(curRows, newRows, arrayOfVariableNames) {
-	console.log(newRows.map((row) => row._mappingErrors));
 	return curRows.concat(
-		newRows.map(item => sheetRowFromDictToArray(item, arrayOfVariableNames, item._mappingErrors || {}))
+		newRows.map(item => sheetRowFromDictToArray(item.values || {}, arrayOfVariableNames, item.errors || {}))
 	);
 }
 
@@ -53,8 +51,8 @@ export default function(state=initialState, action) {
 				executeMappingUrl: action.data.executeMapping
 			};
 		case "COLLECTION_ITEMS_LOADING_SUCCEEDED":
-			let sheetIdx = findIndex(state.sheets, sheet => sheet.collection === action.collection)
-			var result = {
+			let sheetIdx = findIndex(state.sheets, sheet => sheet.collection === action.collection);
+			return {
 				...state,
 				sheets: [
 					...state.sheets.slice(0, sheetIdx),
@@ -67,9 +65,8 @@ export default function(state=initialState, action) {
 				]
 			};
 
-			return result;
 		case "COLLECTION_ITEMS_LOADING_FINISHED":
-			var result = {...state};
+			const result = {...state};
 			result.sheets = result.sheets.slice();
 			result.sheets
 				.forEach((sheet, i) => {
@@ -77,7 +74,7 @@ export default function(state=initialState, action) {
 						result.sheets[i] = {
 							...sheet,
 							isLoading: false
-						}
+						};
 					}
 				});
 

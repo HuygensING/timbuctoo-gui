@@ -1,8 +1,8 @@
-import React from 'react';
-import { storiesOf } from '@kadira/storybook';
-import {toplevelWrapper, actions } from "./storytools"
+import React from "react";
+import { storiesOf } from "@kadira/storybook";
+import {toplevelWrapper, actions } from "./storytools";
 
-import DatasheetMappings from './datasheet-mappings';
+import DatasheetMappings from "./datasheet-mappings";
 
 var baseData = function () {
   return {
@@ -13,7 +13,8 @@ var baseData = function () {
           "collection": "mockpersons",
           "variables": ["a", "b"],
           rows: [
-            ["a", "b"]
+            [{value: "valueA", error: undefined}, {value: "valueB", error: "some Error"}],
+            [{value: "valueA", error: undefined}, {value: "valueB", error: undefined}]
           ],
           nextUrl: "some url"
         }
@@ -33,15 +34,15 @@ var baseData = function () {
         }
       }
     },
-  }
-}
+  };
+};
 
-storiesOf('datasheet-mappings', module)
+storiesOf("datasheet-mappings", module)
   .addDecorator(toplevelWrapper)
-  .add('', function () {
+  .add("", function () {
     var data = baseData();
-    return <DatasheetMappings
+    return (<DatasheetMappings
       {...data}
       {...actions}
-      />
+    />);
   });
