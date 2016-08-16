@@ -15,7 +15,7 @@ function scaffoldCollectionMappings(init, sheet) {
 		[sheet.name]: {
 			archetypeName: null,
 			mappings: [],
-			ignoredColumns: sheet.variables,
+			ignoredColumns: [],
 			customProperties: []
 		}
 	});
