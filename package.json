@@ -14,6 +14,7 @@
     "test": "mocha --compilers js:babel/register --recursive test",
     "test:watch": "nodemon -x \"mocha --compilers js:babel/register --recursive --watch test\" -w test -w build",
     "build": "scripts/build.sh",
+    "timbuild": "server='' USE_MOCK=false scripts/build.sh",
     "watch": "scripts/build.sh --watch",
     "storybook": "start-storybook -p 9001 -s ./src/static"
   },
