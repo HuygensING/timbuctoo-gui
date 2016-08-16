@@ -80,10 +80,9 @@ export default function actionsMaker(navigateTo, dispatch) {
 			});
 		},
 		onContinueMapping: function (vreId) {
-			// FIXME this completely reinits the mapping steps
-			dispatch(function(dispatch, getState) { 
+			dispatch(function(dispatch, getState) {
 				var state = getState();
-				xhr.get(`${process.env.server}/v2.1/bulk-upload/${vreId}`, {headers: {"Authorization": state.userdata.userId}}, function (err, resp, body) {
+				xhr.get(state.userdata.myVres[vreId].rmlUri, {headers: {"Authorization": state.userdata.userId}}, function (err, resp, body) {
 					dispatch({type: "FINISH_UPLOAD", data: JSON.parse(body)});
 					navigateTo("mapArchetypes");
 				});
