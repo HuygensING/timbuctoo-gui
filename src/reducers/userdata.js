@@ -9,9 +9,9 @@ export default function(state=initialState, action) {
 		case "LOGIN":
 			return {
 				userId: action.data,
-				myVres: action.myVres,
-				vres: action.vres
-			}
+				myVres: action.vreData ? action.vreData.mine : {},
+				vres: action.vreData ? action.vreData.public : {}
+			};
 	}
 
 	return state;
