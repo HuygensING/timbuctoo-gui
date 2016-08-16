@@ -42,7 +42,7 @@ export default function setupMocks(xhrmock, orig) {
               "type": "text"
             }
           ]
-        }`)
+        }`);
     })
     .get("http://test.repository.huygens.knaw.nl/v2.1/system/users/me/vres", function(req, resp) {
       console.log("fetch-my-vres");
@@ -52,13 +52,12 @@ export default function setupMocks(xhrmock, orig) {
           "mine": {
             "migrant_steekproef_masterdb (6).xlsx": {
               "name": "migrant_steekproef_masterdb (6).xlsx",
-              "published": true,
-              "rmlUri": "http:\/\/localhost:8080\/v2.1\/bulk-upload\/migrant_steekproef_masterdb%20(6).xlsx\/rml"
+              "published": true
             },
             "testerdetest": {
               "name": "testerdetest",
               "published": false,
-              "rmlUri": "http:\/\/localhost:8080\/v2.1\/bulk-upload\/testerdetest\/rml"
+              "rmlUri": "<<The get raw data url that the server provides>>"
             }
           },
           "public": {
@@ -93,10 +92,10 @@ export default function setupMocks(xhrmock, orig) {
               "name": "Base"
             }
           }
-        }`)
+        }`);
     })
     .post("http://test.repository.huygens.knaw.nl/v2.1/bulk-upload", function (req, resp) {
-      console.log("bulk-upload")
+      console.log("bulk-upload");
       return resp
         .status(200)
         .header("Location", "<<The get raw data url that the server provides>>");
@@ -116,29 +115,6 @@ export default function setupMocks(xhrmock, orig) {
     })
     .get("<<The get raw data url that the server provides>>", function (req, resp) {
       console.log("get raw data");
-      return resp
-        .status(200)
-        .body(JSON.stringify({
-          vre: "thevrename",
-          saveMapping: "<<The save mapping url that the server provides>>",
-          executeMapping: "<<The execute mapping url that the server provides>>",
-          collections: [
-        		{
-        			name: "mockpersons",
-        			variables: ["ID", "Voornaam", "tussenvoegsel", "Achternaam", "GeschrevenDocument", "Genoemd in", "Is getrouwd met"],
-              data: "<<url for person data>>",
-              dataWithErrors: "<<url for person data with errors>>"
-        		},
-        		{
-        			name: "mockdocuments",
-        			variables: ["titel", "datum", "referentie", "url"],
-              data: "<<url for document data>>",
-              dataWithErrors: "<<url for document data with errors>>"
-        		}
-        	]
-        }));
-    })
-    .get("http://test.repository.huygens.knaw.nl/v2.1/bulk-upload/testerdetest", function (req, resp) {
       return resp
         .status(200)
         .body(JSON.stringify({
@@ -167,25 +143,32 @@ export default function setupMocks(xhrmock, orig) {
         .status(200)
         .body(JSON.stringify({
           "_next": "<<more data>>",
-        	"items": [{
-        		"tim_id": "1",
-            "ID": "1",
-            "Voornaam": "Voornaam",
-            "tussenvoegsel": "tussenvoegsel",
-            "Achternaam": "Achternaam",
-            "GeschrevenDocument": "GeschrevenDocument",
-            "Genoemd in": "Genoemd in",
-            "Is getrouwd met": "Is getrouwd met",
-        	}, {
-            "tim_id": "2",
-            "ID": "2",
-            "Voornaam": "Voornaam",
-            "tussenvoegsel": "tussenvoegsel",
-            "Achternaam": "Achternaam",
-            "GeschrevenDocument": "GeschrevenDocument",
-            "Genoemd in": "Genoemd in",
-            "Is getrouwd met": "Is getrouwd met",
-        	}]
+            "items": [
+              {
+                values: {
+                  "ID": "1",
+                  "Voornaam": "Voornaam",
+                  "tussenvoegsel": "tussenvoegsel",
+                  "Achternaam": "Achternaam",
+                  "GeschrevenDocument": "GeschrevenDocument",
+                  "Genoemd in": "Genoemd in",
+                  "Is getrouwd met": "Is getrouwd met",
+                },
+                errors: {}
+              },
+              {
+                values: {
+                  "ID": "2",
+                  "Voornaam": "Voornaam",
+                  "tussenvoegsel": "tussenvoegsel",
+                  "Achternaam": "Achternaam",
+                  "GeschrevenDocument": "GeschrevenDocument",
+                  "Genoemd in": "Genoemd in",
+                  "Is getrouwd met": "Is getrouwd met",
+                },
+                errors: {}
+              }
+            ]
         }));
     })
     .get("<<url for person data with errors>>", function (req, resp) {
@@ -195,15 +178,16 @@ export default function setupMocks(xhrmock, orig) {
         .body(JSON.stringify({
           "_next": "<<more data>>",
           "items": [{
-            "tim_id": "1",
-            "ID": "1",
-            "Voornaam": "Voornaam",
-            "tussenvoegsel": "tussenvoegsel",
-            "Achternaam": "Achternaam",
-            "GeschrevenDocument": "GeschrevenDocument",
-            "Genoemd in": "Genoemd in",
-            "Is getrouwd met": "Is getrouwd met",
-            "_mappingErrors": {
+            values: {
+              "ID": "1",
+              "Voornaam": "Voornaam",
+              "tussenvoegsel": "tussenvoegsel",
+              "Achternaam": "Achternaam",
+              "GeschrevenDocument": "GeschrevenDocument",
+              "Genoemd in": "Genoemd in",
+              "Is getrouwd met": "Is getrouwd met",
+            },
+            errors: {
               "Voornaam": "will not do",
               "Achternaam": "also failed"
             }
@@ -215,23 +199,32 @@ export default function setupMocks(xhrmock, orig) {
       return resp
         .status(200)
         .body(JSON.stringify({
-        	"items": [{
-            "ID": "3",
-            "Voornaam": "Voornaam",
-            "tussenvoegsel": "tussenvoegsel",
-            "Achternaam": "Achternaam",
-            "GeschrevenDocument": "GeschrevenDocument",
-            "Genoemd in": "Genoemd in",
-            "Is getrouwd met": "Is getrouwd met",
-        	}, {
-            "ID": "4",
-            "Voornaam": "Voornaam",
-            "tussenvoegsel": "tussenvoegsel",
-            "Achternaam": "Achternaam",
-            "GeschrevenDocument": "GeschrevenDocument",
-            "Genoemd in": "Genoemd in",
-            "Is getrouwd met": "Is getrouwd met",
-        	}]
+          "items": [
+            {
+              values: {
+                "ID": "3",
+                "Voornaam": "Voornaam",
+                "tussenvoegsel": "tussenvoegsel",
+                "Achternaam": "Achternaam",
+                "GeschrevenDocument": "GeschrevenDocument",
+                "Genoemd in": "Genoemd in",
+                "Is getrouwd met": "Is getrouwd met",
+              },
+              errors: {}
+            },
+            {
+              values: {
+                "ID": "4",
+                "Voornaam": "Voornaam",
+                "tussenvoegsel": "tussenvoegsel",
+                "Achternaam": "Achternaam",
+                "GeschrevenDocument": "GeschrevenDocument",
+                "Genoemd in": "Genoemd in",
+                "Is getrouwd met": "Is getrouwd met",
+              },
+              errors: {}
+            }
+          ]
         }));
     })
     .get("<<url for document data>>", function (req, resp) {
@@ -239,21 +232,30 @@ export default function setupMocks(xhrmock, orig) {
       return resp
         .status(200)
         .body(JSON.stringify({
-        	"name": "someCollection",
-        	"variables": ["tim_id", "var1", "var2"],
-        	"items": [{
-        		"tim_id": "1",
-            "titel": "titel",
-            "datum": "datum",
-            "referentie": "referentie",
-            "url": "url",
-        	}, {
-            "tim_id": "2",
-            "titel": "titel",
-            "datum": "datum",
-            "referentie": "referentie",
-            "url": "url",
-        	}]
+            "name": "someCollection",
+            "variables": ["tim_id", "var1", "var2"],
+            "items": [
+              {
+                values: {
+                  "tim_id": "1",
+                  "titel": "titel",
+                  "datum": "datum",
+                  "referentie": "referentie",
+                  "url": "url",
+                },
+                errors: {}
+              },
+              {
+                values: {
+                  "tim_id": "2",
+                  "titel": "titel",
+                  "datum": "datum",
+                  "referentie": "referentie",
+                  "url": "url",
+                },
+                errors: {}
+              }
+            ]
         }));
     })
     .get("<<url for document data with errors>>", function (req, resp) {
@@ -268,5 +270,5 @@ export default function setupMocks(xhrmock, orig) {
     })
     .mock(function (req, resp) {
       console.error("unmocked request", req.url(), req, resp);
-    })
+    });
 }
