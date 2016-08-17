@@ -110,46 +110,32 @@ export default function actionsMaker(navigateTo, dispatch) {
 		},*/
 
 		onPublishData: function (){
-			dispatch({type: "SAVE_STARTED"})
+			dispatch({type: "SAVE_STARTED"});
+			dispatch({type: "SAVE_FINISHED"});
+			dispatch({type: "PUBLISH_STARTED"});
 			dispatch(function (dispatch, getState) {
 				var state = getState();
 				var payload = {
-					json: mappingToJsonLdRml(state.mappings, state.importData.vre),
+					body: JSON.stringify(mappingToJsonLdRml(state.mappings, state.importData.vre)),
 					headers: {
-						"Authorization": state.userdata.userId
+						"Authorization": state.userdata.userId,
+            "Content-type": "application/ld+json"
 					}
 				};
 
-				xhr.post(state.importData.saveMappingUrl, payload, function (err, resp) {
+				xhr.post(state.importData.executeMappingUrl, payload, function (err, resp) {
 					if (err) {
-						dispatch({type: "SAVE_HAD_ERROR"})
+						dispatch({type: "PUBLISH_HAD_ERROR"})
 					} else {
-						dispatch({type: "PUBLISH_STARTED"})
-						dispatch(function (dispatch, getState) {
-							var state1 = getState();
-							var payload1 = {
-								headers: {
-									"Authorization": state.userdata.userId
-								}
-							};
-
-							xhr.post(state1.importData.executeMappingUrl, payload1, function (err, resp) {
-								if (err) {
-									dispatch({type: "PUBLISH_HAD_ERROR"})
-								} else {
-									if (JSON.parse(resp.body).success) {
-										dispatch({type: "PUBLISH_SUCCEEDED"});
-										actions.onToken(state.userdata.userId);
-									} else {
-										dispatch({type: "PUBLISH_HAD_ERROR"});
-										actions.onSelectCollection(state1.importData.activeCollection);
-									}
-								}
-								dispatch({type: "PUBLISH_FINISHED"})
-							});
-						});
+						if (JSON.parse(resp.body).success) {
+							dispatch({type: "PUBLISH_SUCCEEDED"});
+							actions.onToken(state.userdata.userId);
+						} else {
+							dispatch({type: "PUBLISH_HAD_ERROR"});
+							actions.onSelectCollection(state.importData.activeCollection);
+						}
 					}
-					dispatch({type: "SAVE_FINISHED"})
+					dispatch({type: "PUBLISH_FINISHED"});
 				});
 			});
 
