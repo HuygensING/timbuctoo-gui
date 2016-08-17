@@ -3,64 +3,33 @@ export default function mappingToJsonLdRml(mapping, vre) {
   	"@context": {
   		"@vocab": "http://www.w3.org/ns/r2rml#",
   		"rml": "http://semweb.mmlab.be/ns/rml#",
-  		"tim": "http://timbuctoo.com/mapping",
+  		"tim": "http://timbuctoo.com/mapping#",
+      "http://www.w3.org/2000/01/rdf-schema#subClassOf": {
+        "@type": "@id"
+      },
   		"predicate": {
   			"@type": "@id"
-  		}
+  		},
+      "parentTriplesMap": {
+        "@type": "@id"
+      },
+      "class": {
+        "@type": "@id"
+      }
   	},
   	"@graph": Object.keys(mapping.collections).map(key => mapSheet(key, mapping.collections[key], vre))
   };
 }
-var s = {
-  "archetypeName": "persons",
-  "mappings": [
-    {
-      "property": "name",
-      "variable": [
-        {
-          "variableName": "Voornaam"
-        }
-      ],
-      "defaultValue": [],
-      "confirmed": true,
-      "valueMappings": {}
-    },
-    {
-      "property": "Foo",
-      "variable": [
-        {
-          "variableName": "Achternaam"
-        }
-      ],
-      "defaultValue": [],
-      "confirmed": true,
-      "valueMappings": {}
-    },
-    {
-      "property": "isRelatedTo",
-      "variable": [
-        {
-          "variableName": "Voornaam",
-          "targetCollection": "mockpersons",
-          "targetVariableName": "Voornaam"
-        }
-      ],
-      "defaultValue": [],
-      "confirmed": true,
-      "valueMappings": {}
-    }
-  ]
-}
 
-function makeMapName(localName) {
-  return `tim:s/${localName}map`;
+function makeMapName(vre, localName) {
+  return `http://timbuctoo.com/mapping/${vre}/${localName}`;
 }
 
 function mapSheet(key, sheet, vre) {
-  // console.log(JSON.stringify(sheet, undefined, 2));
   //FIXME: move logicalSource and subjectMap under the control of the server
   return {
-    "@id": makeMapName(key),
+    "@id": makeMapName(vre, key),
+    "http://www.w3.org/2000/01/rdf-schema#subClassOf": `http://timbuctoo.com/${sheet.archetypeName.replace(/s$/, "")}`,
     "rml:logicalSource": {
 			"rml:source": {
 				"tim:rawCollection": key,
@@ -68,33 +37,24 @@ function mapSheet(key, sheet, vre) {
 			}
 		},
     "subjectMap": {
-			"class": `http://timbuctoo.com/${vre}/${key}`,
-			"template": `http://timbuctoo.com/${vre}/${key}/{tim_id}`
+			"class": makeMapName(vre, key),
+			"template": `${makeMapName(vre, key)}/{tim_id}`
 		},
-    "predicateObjectMap": sheet.mappings.map(makePredicateObjectMap)
-    // fixes TIM-1033, blocked by TIM-1052
-//    .concat({
-//      "objectMap": {
-//        "constant": `http://timbuctoo.com/${sheet.archetypeName.replace(/s$/, "")}`
-//      },
-//      "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#subClassOf"
-//    })
+    "predicateObjectMap": sheet.mappings.map(makePredicateObjectMap.bind(null, vre))
   };
 }
 
-function makePredicateObjectMap(mapping) {
+function makePredicateObjectMap(vre, mapping) {
   let property = mapping.property;
   let variable = mapping.variable[0];
   if (variable.targetCollection) {
     return {
       "objectMap": {
-        "reference": {
-          "joinCondition": {
-            "child": variable.variableName,
-            "parent": variable.targetVariableName
-          },
-          "parentTriplesMap": makeMapName(variable.targetCollection)
-        }
+        "joinCondition": {
+          "child": variable.variableName,
+          "parent": variable.targetVariableName
+        },
+        "parentTriplesMap": makeMapName(vre, variable.targetCollection)
       },
       "predicate": `http://timbuctoo.com/${property}`
     }
