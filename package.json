@@ -13,7 +13,9 @@
     "start": "scripts/server.js",
     "test": "mocha --compilers js:babel/register --recursive test",
     "test:watch": "nodemon -x \"mocha --compilers js:babel/register --recursive --watch test\" -w test -w build",
-    "watch": "scripts/watch.sh"
+    "build": "scripts/build.sh",
+    "timbuild": "server='' scripts/build.sh",
+    "watch": "scripts/build.sh --watch"
   },
   "dependencies": {
     "classnames": "^2.2.3",
