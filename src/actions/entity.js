@@ -28,15 +28,17 @@ const nameForType = (fieldDef) =>
 
 
 // Create a new empty entity based on the fieldDefinitions
-const makeSkeleton = (fieldDefs, domain) =>
-	fieldDefs
-		.map((fieldDef) => [nameForType(fieldDef), initialDataForType(fieldDef)])
-		.concat([["@type", domain.replace(/s$/, "")]])
-		.reduce((obj, cur) => {
-			obj[cur[0]] = cur[1];
-			return obj;
-		}, {});
-
+const makeSkeleton = function (vre, domain) {
+	if (vre && vre.collections && vre.collections[domain] && vre.collections[domain].properties) {
+		return vre.collections[domain].properties
+			.map((fieldDef) => [nameForType(fieldDef), initialDataForType(fieldDef)])
+			.concat([["@type", domain.replace(/s$/, "")]])
+			.reduce((obj, cur) => {
+				obj[cur[0]] = cur[1];
+				return obj;
+			}, {});
+	}
+};
 
 const fetchEntityList = (domain) => (dispatch, getState) => {
 	dispatch({type: "SET_PAGINATION_START", start: 0});
@@ -90,7 +92,7 @@ const makeNewEntity = (domain, errorMessage = null) =>
 	(dispatch, getState) => dispatch({
 		type: "RECEIVE_ENTITY",
 		domain: domain,
-		data: makeSkeleton(getState().vre.collections[domain], domain),
+		data: makeSkeleton(getState().vre, domain) || {},
 		errorMessage: errorMessage
 	});
 
@@ -119,7 +121,7 @@ const saveEntity = () => (dispatch, getState) => {
 		// 1) Update the entity with saveData
 		crud.updateEntity(getState().entity.domain, saveData, getState().user.token, getState().vre.vreId, (err, resp) =>
 			// 2) Save relations using server response for current relations to diff against relationData
-			dispatch((redispatch) => saveRelations[config.apiVersion](JSON.parse(resp.body), relationData, getState().vre.collections[getState().entity.domain], getState().user.token, getState().vre.vreId, () =>
+			dispatch((redispatch) => saveRelations[config.apiVersion](JSON.parse(resp.body), relationData, getState().vre.collections[getState().entity.domain].properties, getState().user.token, getState().vre.vreId, () =>
 				// 3) Refetch entity for render
 				redispatch(selectEntity(getState().entity.domain, getState().entity.data._id, null, `Succesfully saved ${getState().entity.domain} with ID ${getState().entity.data._id}`, () => dispatch(fetchEntityList(getState().entity.domain)))))), () =>
 					// 2a) Handle error by refetching and passing along an error message
@@ -131,7 +133,7 @@ const saveEntity = () => (dispatch, getState) => {
 			// 2) Fetch entity via location header
 			dispatch((redispatch) => crud.fetchEntity(resp.headers.location, (data) =>
 				// 3) Save relations using server response for current relations to diff against relationData
-				saveRelations[config.apiVersion](data, relationData, getState().vre.collections[getState().entity.domain], getState().user.token, getState().vre.vreId, () =>
+				saveRelations[config.apiVersion](data, relationData, getState().vre.collections[getState().entity.domain].properties, getState().user.token, getState().vre.vreId, () =>
 					// 4) Refetch entity for render
 					redispatch(selectEntity(getState().entity.domain, data._id, null, `Succesfully saved ${getState().entity.domain}`, () => dispatch(fetchEntityList(getState().entity.domain))))))), () =>
 						// 2a) Handle error by refetching and passing along an error message

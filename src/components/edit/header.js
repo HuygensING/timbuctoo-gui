@@ -1,10 +1,6 @@
-import cx from "classnames";
-
 import React from "react";
 import Login from "./login";
-
-
-const dropDownIsActive = (currentVre, vre) => currentVre === vre.vreId || null;
+import classnames from "classnames";
 
 
 class Header extends React.Component {
@@ -15,9 +11,7 @@ class Header extends React.Component {
 		this.state = {
 			openMenuVreId: "none"
 		};
-
-		this.documentClickListener = this.handleDocumentClick.bind(this);
-	}
+  }
 
 	componentDidMount() {
 		document.addEventListener("click", this.documentClickListener, false);
@@ -27,22 +21,7 @@ class Header extends React.Component {
 		document.removeEventListener("click", this.documentClickListener, false);
 	}
 
-	handleDocumentClick(ev) {
-		const { openMenuVreId } = this.state;
-		if (this.state.openMenuVreId !== "none" && !document.querySelector(`.dropdown.${openMenuVreId}`).contains(ev.target)) {
-			this.setState({
-				openMenuVreId: "none"
-			});
-		}
-	}
-
-	onVreMenuClick(currentVre) {
-		this.setState({openMenuVreId: currentVre});
-		this.props.onSelectVre(currentVre);
-	}
-
 	onDomainSelect(domain) {
-		this.setState({openMenuVreId: "none"});
 		this.props.onNew(domain);
 		this.props.onSelectDomain(domain);
 	}
@@ -50,36 +29,16 @@ class Header extends React.Component {
 	render() {
 		const { vre } = this.props;
 		const domains = Object.keys(vre.collections || {});
-		const { openMenuVreId } = this.state;
-
+		console.log(this.props);
 		return (
 			<nav className="navbar navbar-default">
-				<div className="container-fluid">
-					<div className="col-sm-10">
-						<ul className="nav navbar-nav navbar-left">
-							{vre.list.map((currentVre) => (
-								<li className={cx("dropdown", currentVre, {
-									active: dropDownIsActive(currentVre, vre),
-									open: currentVre === openMenuVreId
-								})} key={currentVre}>
-
-									<a className="dropdown-toggle" onClick={this.onVreMenuClick.bind(this, currentVre)}>
-										{currentVre}
-										<span className="caret"></span>
-									</a>
-									<ul className="dropdown-menu">
-										{domains.map((domain, i) => (<li key={i}>
-											<a onClick={() => this.onDomainSelect(domain)}>{domain}</a>
-										</li>))}
-									</ul>
-								</li>
-							))}
-						</ul>
-					</div>
-					<div className="col-sm-2">
-						<Login {...this.props} />
-					</div>
-				</div>
+        <ul className="nav navbar-nav navbar-left">
+          {domains
+            .filter(d => !(vre.collections[d].unknown || vre.collections[d].relationCollection))
+            .map((domain) =>
+            <li className={classnames({active: vre.domain === domain})} key={domain}><a onClick={() => this.onDomainSelect(domain)}>{vre.collections[domain].collectionLabel}</a></li>
+          )}
+        </ul>
 			</nav>
 		);
 	}

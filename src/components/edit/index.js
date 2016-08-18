@@ -8,8 +8,6 @@ import EntityList from "./entity-list";
 class App extends React.Component {
 
 	render() {
-		console.log(this.props.vre, this.props.entity);
-
 		let businessPart = this.props.vre.vreId && this.props.entity.domain ? (
 			<div className="container-fluid">
 				<Form {...this.props} />

@@ -1,5 +1,6 @@
 import server from "./server";
 import config from "../config";
+import actions from "./index";
 
 const listVres = () => (dispatch) =>
 	server.performXhr({
@@ -18,12 +19,17 @@ const setVre = (vreId) => (dispatch) =>
 		headers: {
 			"Accept": "application/json"
 		},
-		url: `${config.apiUrl.v4}/metadata/${vreId}`
+		url: `${config.apiUrl.v4}/metadata/${vreId}?withCollectionInfo=true`
 	}, (err, resp) => {
 		if (resp.statusCode === 200) {
-			dispatch({type: "SET_VRE", vreId: vreId, collections: JSON.parse(resp.body)});
+			var body = JSON.parse(resp.body);
+			dispatch({type: "SET_VRE", vreId: vreId, collections: body});
+
+      let defaultDomain = Object.keys(body)[0];
+      actions.onNew(defaultDomain);
+      actions.onSelectDomain(defaultDomain);
 		}
-	}, () => dispatch({type: "SET_VRE", vreId: vreId, collections: []}), `Fetch VRE description for ${vreId}`);
+	}, () => dispatch({type: "SET_VRE", vreId: vreId, collections: {}}), `Fetch VRE description for ${vreId}`);
 
 
 export {listVres, setVre};

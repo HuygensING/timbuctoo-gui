@@ -1,7 +1,8 @@
 let initialState = {
 	vreId: null,
 	list: [],
-	collections: null
+	collections: {},
+	domain: null
 };
 
 export default function(state=initialState, action) {
@@ -19,6 +20,11 @@ export default function(state=initialState, action) {
 				...state,
 				list: action.list,
 				collections: null
+			};
+		case "SET_DOMAIN":
+			return {
+				...state,
+				domain: action.domain
 			};
 
 		default:

@@ -26,7 +26,7 @@ class Form extends React.Component {
 			: null;
 
 
-		const formFields = vre.collections[entity.domain].map((fieldDef, i) => <li className="list-group-item" key={i}>{mapField(fieldDef, this.props)}</li> );
+		const formFields = vre.collections[entity.domain].properties.map((fieldDef, i) => <li className="list-group-item" key={i}>{mapField(fieldDef, this.props)}</li> );
 
 		return (
 			<div className="col-sm-6">
