@@ -1,16 +1,6 @@
+/*eslint no-shadow: [2, { "allow": ["dispatch"] }]*/
 import xhr from "xhr";
-import mappingToJsonLdRml from "./util/mappingToJsonLdRml"
-var toJson;
-
-if (process.env.NODE_ENV === "development") {
-	toJson = function toJson(data) {
-		return JSON.stringify(data, undefined, 2);
-	}
-} else {
-	toJson = function toJson(data) {
-		return JSON.stringify(data);
-	}
-}
+import mappingToJsonLdRml from "./util/mappingToJsonLdRml";
 
 export default function actionsMaker(navigateTo, dispatch) {
 	//bind to variable so an action can trigger other actions
@@ -55,7 +45,6 @@ export default function actionsMaker(navigateTo, dispatch) {
 			let file = files[0];
 			let formData = new FormData();
 			formData.append("file", file);
-			formData.append("vre", file.name);
 			dispatch({type: "START_UPLOAD"})
 			dispatch(function (dispatch, getState) {
 				var state = getState();
@@ -138,8 +127,6 @@ export default function actionsMaker(navigateTo, dispatch) {
 					dispatch({type: "PUBLISH_FINISHED"});
 				});
 			});
-
-
 		},
 
 		onSelectCollection: (collection) => {
