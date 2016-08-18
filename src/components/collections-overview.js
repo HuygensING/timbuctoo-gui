@@ -31,7 +31,7 @@ class CollectionsOverview extends React.Component {
                   	 {vre.name}
                       <a className="btn btn-default btn-xs pull-right" href={`${process.env.server}/static/query-gui/?vreId=${vre.name}`}>explore</a>
                       {" "}
-                      <a className="btn btn-default btn-xs pull-right" href={`${process.env.server}/static/edit-gui/?vreId=${vre.name}`}>edit</a>
+                      <a className="btn btn-default btn-xs pull-right" href={`${process.env.server}/static/edit-gui/?hsid=${userId}&vreId=${vre.name}`}>edit</a>
                   	</span>
                 ))}
               </div>
