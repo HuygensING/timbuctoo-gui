@@ -1,22 +1,50 @@
 import React from "react";
 import { getSearchClients } from "../actions/solr";
 import SolrFacetedSearch from  "solr-faceted-search-react";
+import cx from "classnames";
 
 class App extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			activeClient: null
+		}
+	}
+
+	setActiveClient(name) {
+		this.setState({activeClient: name});
+	}
+
 	render() {
 		const { solr, onCreateIndexes } = this.props;
+		const { activeClient } = this.state;
 
-		console.log(getSearchClients());
+		const searchClients = getSearchClients();
+
+		const visibleClient = !activeClient && searchClients.length > 0 ? searchClients[0].name : activeClient;
+
 		return solr.indexPresent ? (
 			<div>
-				{getSearchClients().map((searchClient) => (
-					<SolrFacetedSearch
-						{...solr.searchStates[searchClient.name]}
-						{...searchClient.client.getHandlers()}
-						key={searchClient.name}
-						onSelectDoc={(...args) => console.log(args)}
-						truncateFacetListsAt={20}
-					/>
+				<header>
+					<nav className="navbar navbar-default">
+						<ul className="nav navbar-nav">
+							{searchClients.map((searchClient) => (
+								<li className={cx({active: searchClient.name === visibleClient})} key={searchClient.name}>
+									<a onClick={() => this.setActiveClient(searchClient.name)}>{searchClient.label}</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+				</header>
+				{searchClients.map((searchClient) => (
+					<div key={searchClient.name} style={{display: searchClient.name == visibleClient ? "block" : "none"}}>
+						<SolrFacetedSearch
+							{...solr.searchStates[searchClient.name]}
+							{...searchClient.client.getHandlers()}
+							onSelectDoc={(...args) => console.log(args)}
+							truncateFacetListsAt={20}
+						/>
+					</div>
 				))}
 			</div>
 		) : (
