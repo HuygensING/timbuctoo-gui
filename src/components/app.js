@@ -27,6 +27,10 @@ class App extends React.Component {
 			<div>
 				<header>
 					<nav className="navbar navbar-default">
+						<div className="navbar-header">
+							<img style={{height: "44px", margin: "3px"}}
+								src="https://www.huygens.knaw.nl/wp-content/bestanden/2011/03/LOGO-huygens-ing.gif" />
+						</div>
 						<ul className="nav navbar-nav">
 							{searchClients.map((searchClient) => (
 								<li className={cx({active: searchClient.name === visibleClient})} key={searchClient.name}>

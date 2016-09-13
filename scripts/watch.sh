@@ -17,5 +17,4 @@ node_modules/.bin/watchify src/index.js \
 	--external react-redux \
 	--standalone TimbuctooSearch \
 	--transform [ babelify ] \
-	--transform [ envify --SERVER="${SERVER}" ]
 	--verbose
