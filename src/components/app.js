@@ -1,7 +1,23 @@
 import React from "react";
 import { getSearchClients } from "../actions/solr";
 import SolrFacetedSearch from  "solr-faceted-search-react";
+import { defaultComponentPack } from  "solr-faceted-search-react";
+
 import cx from "classnames";
+
+const customComponents = (collectionName) => ({
+	...defaultComponentPack,
+	results: {
+		...defaultComponentPack.results,
+		result: (props) => { console.log(props); return (
+			<li className="list-group-item">
+				<a target="_blank" href={`${globals.env.SERVER}/v2.1/domain/${collectionName}/${props.doc.id}`}>
+					{props.doc.displayName_s}
+				</a>
+			</li>
+		)}
+	}
+});
 
 class App extends React.Component {
 	constructor(props) {
@@ -46,6 +62,7 @@ class App extends React.Component {
 							{...solr.searchStates[searchClient.name]}
 							{...searchClient.client.getHandlers()}
 							onSelectDoc={(...args) => console.log(args)}
+							customComponents={customComponents(searchClient.name)}
 							truncateFacetListsAt={20}
 						/>
 					</div>

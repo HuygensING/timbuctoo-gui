@@ -48,14 +48,17 @@ const configureSearchClients = () => (dispatch, getState) => {
 		.map((collection) => ({
 			client: new SolrClient({
 				url: `/solr/${collection.collectionName}/select`,
-				searchFields: archetypes
-					.find((archetype) => archetype.archetypeName === collection.archetypeName).properties
-					.map((prop) => ({
-						label: prop.name,
-						field: `${prop.name}_${getPropSuffix(prop.type)}`,
-						type: getFacetType(prop.type),
-						collapse: true
-					})),
+				searchFields:
+					[{label: "Search", field: "displayName_t", type: "text"}].concat(
+						archetypes
+						.find((archetype) => archetype.archetypeName === collection.archetypeName).properties
+						.map((prop) => ({
+							label: prop.name,
+							field: `${prop.name}_${getPropSuffix(prop.type)}`,
+							type: getFacetType(prop.type),
+							collapse: true
+						}))
+					),
 				sortFields:archetypes
 					.find((archetype) => archetype.archetypeName === collection.archetypeName).properties
 					.map((prop) => ({
