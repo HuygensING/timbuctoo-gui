@@ -47,7 +47,6 @@ class App extends React.Component {
                 vres={this.props.userdata.myVres}
               />
             : <FirstUpload
-                __MockOnLogin={this.props.onLogin}
                 onUploadFileSelect={this.props.onUploadFileSelect}
                 isUploading={this.props.importData.isUploading}
                 userId={this.props.userdata.userId}
