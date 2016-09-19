@@ -1,72 +1,69 @@
 import React from "react";
+import ColumnSelect from "./column-select";
 import SelectField from "../fields/select-field";
 
 
 class Form extends React.Component {
 
 
-	render() {
-		const ownSheet = this.props.collectionData;
-		const allSheets = this.props.importData.sheets;
-		const allSheetMappings = this.props.mappings.collections;
-		const mapping = this.props.mappingData.mappings.find(prop => prop.property === this.props.name);
-		//at one point the mapping does not yet exists, but a custom property reference containing the name does exist
-		const customProperty = this.props.mappingData.customProperties.find(prop => prop.name === this.props.name);
-		const ownArchetype = this.props.archetype[this.props.mappingData.archetypeName];
-		const onSetFieldMapping = this.props.onSetFieldMapping.bind(null, ownSheet.collection, this.props.name);
-		const onClearFieldMapping = this.props.onClearFieldMapping.bind(null, ownSheet.collection, this.props.name);
+  render() {
+    const { onColumnSelect, onClearColumn, propertyMapping, availableCollectionColumnsPerArchetype, archetypeFields } = this.props;
 
-		const relationInfo = mapping && mapping.variable && mapping.variable.length > 0
-			? mapping.variable[0]
-			: {};
+    const relationInfo = propertyMapping && propertyMapping.variable[0]
+      ? propertyMapping.variable[0]
+      : {};
 
-		const propertyMetadata = ownArchetype.find(metadata => metadata.name === (mapping ? mapping.property : customProperty.name));
+    const targetArchetypeCollection = archetypeFields.find((af) => af.name === this.props.name).relation.targetCollection;
+    const targetCollectionColumns = availableCollectionColumnsPerArchetype[targetArchetypeCollection];
+    const targetCollections = targetCollectionColumns.map((t) => t.collectionName);
 
-		const availableSheets = propertyMetadata
-			? Object.keys(allSheetMappings)
-				.filter(key => allSheetMappings[key].archetypeName === propertyMetadata.relation.targetCollection)
-			: [];
+    const sourceColumnProps = {
+      ...this.props,
+      placeholder: "Select a source column...",
+      onColumnSelect: (value) => onColumnSelect([{...relationInfo, variableName: value[0].variableName}])
+    };
 
-		const linkedSheet = relationInfo.targetCollection
-			? allSheets
-				.find(sheet => sheet.collection === relationInfo.targetCollection)
-			: null;
+    console.log(targetCollectionColumns);
 
-		return (
-			<span>
-				<SelectField
-					onChange={(value) => onSetFieldMapping([{...relationInfo, variableName: value}])}
-					onClear={() => onClearFieldMapping(0)}
-					options={ownSheet.variables} placeholder="Select source column..."
-					value={relationInfo.variableName || null} />
-				&nbsp;
-				<SelectField
-					onChange={(value) => onSetFieldMapping([{...relationInfo, targetCollection: value}])}
-					onClear={() => onClearFieldMapping(0)}
-					options={availableSheets} placeholder="Select a target collection..."
-					value={relationInfo.targetCollection || null} />
-				&nbsp;
-				{linkedSheet
-					? <SelectField
-							onChange={(value) => onSetFieldMapping([{...relationInfo, targetVariableName: value}])}
-							onClear={() => onClearFieldMapping(0)}
-							options={linkedSheet.variables} placeholder="Select a target column..."
-							value={relationInfo.targetVariableName || null} />
-					: null
-				}
+    const targetColumnProps = relationInfo.targetCollection ? {
+      ...this.props,
+      placeholder: "Select a target column...",
+      propertyMapping: {variable: [{variableName: relationInfo.targetVariableName }]},
+      columns: targetCollectionColumns.find((t) => t.collectionName === relationInfo.targetCollection).columns
+        .map((col) => ({name: col})),
+      onColumnSelect: (value) => onColumnSelect([{...relationInfo, targetVariableName: value[0].variableName}])
+    } : null;
 
-			</span>
-		);
-	}
+
+
+
+    return (
+      <div>
+        <ColumnSelect {...sourceColumnProps} />
+        <SelectField value={relationInfo.targetCollection || null}
+                     onChange={(value) => onColumnSelect([{...relationInfo, targetCollection: value}])}
+                     onClear={() => onClearColumn(0)}>
+
+          <span type="placeholder" className="from-excel"><img src="images/icon-excel.svg" alt=""/> Select a target sheet...</span>
+          {targetCollections.map((collection) => (
+            <span key={collection} value={collection} className="from-excel"><img src="images/icon-excel.svg" alt=""/> {collection}</span>
+          ))}
+        </SelectField>
+        {targetColumnProps
+          ? <ColumnSelect {...targetColumnProps} />
+          : null
+        }
+      </div>
+    )
+  }
 }
 
 Form.propTypes = {
-	collectionData: React.PropTypes.object,
-	importData: React.PropTypes.object,
-	mappings: React.PropTypes.object,
-	name: React.PropTypes.string,
-	onClearFieldMapping: React.PropTypes.func,
-	onSetFieldMapping: React.PropTypes.func
+  collectionData: React.PropTypes.object,
+  mappings: React.PropTypes.object,
+  name: React.PropTypes.string,
+  onClearFieldMapping: React.PropTypes.func,
+  onSetFieldMapping: React.PropTypes.func
 };
 
 export default Form;

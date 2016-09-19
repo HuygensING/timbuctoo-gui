@@ -1,67 +1,67 @@
 import React from "react";
+import PropertyForm from "./property-form/property-form";
 import AddProperty from "./property-form/add-property";
-import PropertyForm from "./property-form";
-import UploadButton from "./upload-button";
 
 class CollectionForm extends React.Component {
 
-	render() {
-		const { importData, archetype, mappings, onUploadFileSelect } = this.props;
+  render() {
+    const {
+      columns,
+      archetypeFields,
+      propertyMappings,
+      customPropertyMappings,
+      collectionName,
+      availableArchetypes,
+      availableCollectionColumnsPerArchetype
+    } = this.props;
 
-		const { activeCollection, sheets, isUploading } = importData;
+    const {
+      onRemoveCustomProperty,
+      onSetFieldMapping,
+      onConfirmFieldMappings,
+      onClearFieldMapping,
+      onUnconfirmFieldMappings,
+      onAddCustomProperty
+    } = this.props;
 
+    const archeTypePropFields = archetypeFields.filter((af) => af.type !== "relation");
 
-		const collectionData = sheets.find((sheet) => sheet.collection === activeCollection);
-		const mappingData = mappings.collections[activeCollection];
+    const propertyForms = archeTypePropFields
+      .map((af, i) => (
+        <PropertyForm columns={columns} custom={false} key={i} name={af.name} type={af.type}
+                      propertyMapping={propertyMappings.find((m) => m.property === af.name)}
+                      onSetFieldMapping={(field, value) => onSetFieldMapping(collectionName, field, value)}
+                      onConfirmFieldMappings={(field) => onConfirmFieldMappings(collectionName, field)}
+                      onUnconfirmFieldMappings={(field) => onUnconfirmFieldMappings(collectionName, field)}
+                      onClearFieldMapping={(field, valueIdx) => onClearFieldMapping(collectionName, field, valueIdx) }
+        />
+      ));
 
-		const { archetypeName } = mappings.collections[activeCollection];
-		const archetypeFields = archetypeName ? archetype[archetypeName] : [];
-		const archeTypePropFields = archetypeFields.filter((af) => af.type !== "relation");
+    const customPropertyForms = customPropertyMappings
+      .map((customProp, i) => (
+        <PropertyForm columns={columns} custom={true} key={i} name={customProp.name} type={customProp.type}
+                      archetypeFields={archetypeFields}
+                      availableCollectionColumnsPerArchetype={availableCollectionColumnsPerArchetype}
+                      propertyMapping={propertyMappings.find((m) => m.property === customProp.name)}
+                      onRemoveCustomProperty={(field) => onRemoveCustomProperty(collectionName, field)}
+                      onSetFieldMapping={(field, value) => onSetFieldMapping(collectionName, field, value)}
+                      onClearFieldMapping={(field, valueIdx) => onClearFieldMapping(collectionName, field, valueIdx) }
+                      onConfirmFieldMappings={(field) => onConfirmFieldMappings(collectionName, field)}
+                      onUnconfirmFieldMappings={(field) => onUnconfirmFieldMappings(collectionName, field)}
+        />
+      ));
 
-		const propertyForms = archeTypePropFields
-			.map((af, i) => <PropertyForm {...this.props} collectionData={collectionData} mappingData={mappingData} custom={false} key={i} name={af.name} type={af.type} />);
-
-		const customPropertyForms = mappings.collections[activeCollection].customProperties
-			.map((cf, i) => <PropertyForm {...this.props} collectionData={collectionData} mappingData={mappingData} custom={true} key={i} name={cf.name} type={cf.type} />);
-
-		const publishMessage = importData.publishErrors ?
-			<li className="list-group-item">
-				<span className="glyphicon glyphicon-exclamation-sign"></span>
-				{" "}
-				Publish failed, please fix the mappings or re-upload the data
-				{" "}
-				<UploadButton
-					classNames={["btn", "btn-xs", "btn-success", "i-am-not-a-label"]}
-					glyphicon=""
-					isUploading={isUploading}
-					label="Re-upload"
-					onUploadFileSelect={(files) => onUploadFileSelect(files, true)} />
-			</li> :
-			null;
-
-		return (
-			<div className="panel panel-default">
-				<div className="panel-heading">
-					Collection settings: <strong>{activeCollection}</strong>
-					{" "}
-					from archetype: <strong>{archetypeName}</strong>
-				</div>
-
-				<ul className="list-group">
-					{publishMessage}
-					{propertyForms}
-					{customPropertyForms}
-					<AddProperty {...this.props} />
-				</ul>
-			</div>
-		);
-	}
+    return (
+      <div className="container basic-margin">
+        {propertyForms}
+        {customPropertyForms}
+        <AddProperty
+          archetypeFields={archetypeFields}
+          availableArchetypes={availableArchetypes}
+          onAddCustomProperty={(name, type) => onAddCustomProperty(collectionName, name, type)} />
+      </div>
+    );
+  }
 }
-
-CollectionForm.propTypes = {
-	archetype: React.PropTypes.object,
-	importData: React.PropTypes.object,
-	mappings: React.PropTypes.object
-};
 
 export default CollectionForm;
