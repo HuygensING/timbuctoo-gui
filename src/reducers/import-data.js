@@ -4,7 +4,8 @@ const initialState = getItem("importData") || {
 	isUploading: false,
 	sheets: null,
 	activeCollection: null,
-	publishErrors: false
+	publishErrors: false,
+	uploadedFileName: undefined
 };
 
 function findIndex(arr, f) {
@@ -38,6 +39,7 @@ export default function(state=initialState, action) {
 			return {...state,
 				isUploading: false,
 				publishErrors: false,
+				uploadedFileName: action.uploadedFileName,
 				sheets: action.data.collections.map(sheet => ({
 					collection: sheet.name,
 					variables: sheet.variables,

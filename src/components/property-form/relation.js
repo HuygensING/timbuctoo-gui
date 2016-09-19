@@ -23,8 +23,6 @@ class Form extends React.Component {
       onColumnSelect: (value) => onColumnSelect([{...relationInfo, variableName: value[0].variableName}])
     };
 
-    console.log(targetCollectionColumns);
-
     const targetColumnProps = relationInfo.targetCollection ? {
       ...this.props,
       placeholder: "Select a target column...",

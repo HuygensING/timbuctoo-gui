@@ -57,7 +57,7 @@ export default function actionsMaker(navigateTo, dispatch) {
 				xhr.post(process.env.server + "/v2.1/bulk-upload", payload, function (err, resp) {
 					let location = resp.headers.location;
 					xhr.get(location, {headers: {"Authorization": state.userdata.userId}}, function (err, resp, body) {
-						dispatch({type: "FINISH_UPLOAD", data: JSON.parse(body)});
+						dispatch({type: "FINISH_UPLOAD", data: JSON.parse(body), uploadedFileName: file.name});
 						if (isReupload) {
 							actions.onSelectCollection(state.importData.activeCollection);
 						} else {
