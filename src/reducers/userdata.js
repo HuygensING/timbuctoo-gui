@@ -1,6 +1,6 @@
 const initialState = {
   userId: undefined,
-  myVres: {},
+  myVres: undefined,
   vres: {}
 };
 

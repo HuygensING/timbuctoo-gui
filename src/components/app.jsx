@@ -11,7 +11,7 @@ import CollectionOverview from "./collection-overview";
 class App extends React.Component {
 
   render() {
-    const hasVres = Object.keys(this.props.userdata.myVres).length > 0;
+    const hasVres = this.props.userdata.myVres && Object.keys(this.props.userdata.myVres).length > 0;
     const { location: { pathname }, importData: { sheets, uploadedFileName }, onUploadFileSelect, onCloseMessage } = this.props;
 
     const fileIsUploadedMessage = this.props.showFileIsUploadedMessage ? (
