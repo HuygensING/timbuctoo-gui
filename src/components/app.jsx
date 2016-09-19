@@ -14,7 +14,7 @@ class App extends React.Component {
     const hasVres = this.props.userdata.myVres && Object.keys(this.props.userdata.myVres).length > 0;
     const { location: { pathname }, importData: { sheets, uploadedFileName }, onUploadFileSelect, onCloseMessage } = this.props;
 
-    const fileIsUploadedMessage = this.props.showFileIsUploadedMessage ? (
+    const fileIsUploadedMessage = this.props.messages.showFileIsUploadedMessage ? (
       <Message alertLevel="info" dismissible={true} onCloseMessage={() => onCloseMessage("showFileIsUploadedMessage")}>
         <em>{uploadedFileName}</em> is uploaded.
       </Message>
@@ -29,7 +29,7 @@ class App extends React.Component {
       </Message>
     ) : null;
 
-    const collectionsAreConnectedMessage = this.props.showCollectionsAreConnectedMessage ?
+    const collectionsAreConnectedMessage = sheets && this.props.messages.showCollectionsAreConnectedMessage ?
       <Message alertLevel="info" dismissible={true} onCloseMessage={() => onCloseMessage("showCollectionsAreConnectedMessage")}>
         {sheets.map((sheet) => <em key={sheet.collection}>{sheet.collection}</em>)
           .reduce((accu, elem) => accu === null ? [elem] : [...accu, ' and ', elem], null)

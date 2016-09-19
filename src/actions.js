@@ -195,6 +195,9 @@ export default function actionsMaker(navigateTo, dispatch) {
 
 		onRemoveCustomProperty: (collection, propertyName) =>
 			dispatch({type: "REMOVE_CUSTOM_PROPERTY", collection: collection, propertyField: propertyName}),
+
+		onCloseMessage: (messageId) =>
+			dispatch({type: "TOGGLE_MESSAGE", messageId: messageId})
 	};
 	return actions;
 }
