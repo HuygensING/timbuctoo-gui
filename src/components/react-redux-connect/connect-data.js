@@ -64,6 +64,7 @@ function transformProps(props) {
     propertyMappings: mappings.collections[activeCollection].mappings,
     customPropertyMappings: mappings.collections[activeCollection].customProperties,
     availableArchetypes: availableArchetypes,
+    publishing: mappings.publishing,
     availableCollectionColumnsPerArchetype: availableArchetypes.map((archetypeName) => ({
       key: archetypeName,
       values: Object.keys(mappings.collections)

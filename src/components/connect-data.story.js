@@ -249,4 +249,7 @@ storiesOf('Connect data', module)
   ))
   .add('all mappings are complete', () => (
     <ConnectData {...transformProps(allMappingsComplete)} {...actions} />
+  ))
+  .add('publishing', () => (
+    <ConnectData {...transformProps({...allMappingsComplete, mappings: {...allMappingsComplete.mappings, publishing: true}})} {...actions} />
   ));

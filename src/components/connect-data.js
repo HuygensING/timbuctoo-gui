@@ -17,7 +17,8 @@ class ConnectData extends React.Component {
       propertyMappings,
       customPropertyMappings,
       availableCollectionColumnsPerArchetype,
-      nextUrl
+      nextUrl,
+      publishing
     } = this.props;
 
     const {
@@ -54,8 +55,8 @@ class ConnectData extends React.Component {
                         onAddCustomProperty={onAddCustomProperty} />
 
         <div className="container big-margin">
-          <button onClick={onPublishData} className="btn btn-warning btn-lg pull-right" type="button" disabled={!allMappingsAreComplete}>
-            Publish dataset
+          <button onClick={onPublishData} className="btn btn-warning btn-lg pull-right" type="button" disabled={!allMappingsAreComplete || publishing}>
+            {publishing ? "Publishing" :  "Publish dataset"}
           </button>
         </div>
 
