@@ -29,7 +29,7 @@ function mappingsAreComplete(props, sheet) {
 // Moves to react-redux connect
 function transformProps(props) {
 
-  const { importData: { sheets, activeCollection, uploadedFileName }, mappings, archetype } = props;
+  const { importData: { sheets, activeCollection, uploadedFileName, publishErrors }, mappings, archetype } = props;
   const collectionData = sheets.find((sheet) => sheet.collection === activeCollection);
   const { rows, variables } = collectionData;
 
@@ -39,7 +39,6 @@ function transformProps(props) {
   const availableArchetypes = Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName);
 
   return {
-    ...props,
     sheets: sheets,
     activeCollection: activeCollection,
     uploadedFileName: uploadedFileName,
@@ -76,7 +75,9 @@ function transformProps(props) {
     })).reduce((archetypeToCollectionColumnMapping, currentArchetypeAndCols) => {
       archetypeToCollectionColumnMapping[currentArchetypeAndCols.key] = currentArchetypeAndCols.values;
       return archetypeToCollectionColumnMapping;
-    }, {})
+    }, {}),
+    publishErrors: publishErrors,
+    showCollectionsAreConnectedMessage:  props.messages.showCollectionsAreConnectedMessage
   };
 }
 

@@ -1,14 +1,21 @@
 import React from "react";
-import stateToMapDataProps from "./components/react-redux-connect/connect-data";
-
-// import {UploadSplashScreen, ArchetypeMappings, DatasheetMappings, CollectionsOverview} from "./components";
-
-import App from "./components/app.jsx";
-
-import { Router, Route, hashHistory } from 'react-router'
+import { Router, Route, hashHistory, IndexRoute } from 'react-router'
+import { Provider, connect } from "react-redux"
 import store from "./store";
 import actions from "./actions";
-import { Provider, connect } from "react-redux"
+
+import stateToMapDataProps from "./components/react-redux-connect/connect-data";
+import stateToPageProps from "./components/react-redux-connect/page";
+import stateToFirstUploadProps from "./components/react-redux-connect/first-upload";
+import stateToCollectionOverview from "./components/react-redux-connect/collection-overview";
+import stateToMapArchetypes from "./components/react-redux-connect/connect-to-archetype";
+
+import FirstUpload from "./components/firstUpload.jsx";
+import Page from "./components/page.jsx";
+import CollectionOverview from "./components/collection-overview";
+import ConnectToArchetype from "./components/connect-to-archetype";
+import ConnectData from "./components/connect-data";
+
 
 var urls = {
   mapData() {
@@ -26,23 +33,20 @@ export function navigateTo(key, args) {
   hashHistory.push(urls[key].apply(null, args));
 }
 
-//The current code isn't written with this in mind. I've only added the connect
-//function later. Feel free to use your own mapStateToProps for your own
-//component
-const makeContainerComponent = connect(state => state, dispatch => actions(navigateTo, dispatch));
+const connectComponent = (stateToProps) => connect(stateToProps, dispatch => actions(navigateTo, dispatch));
 
-const makeMapDataContainer = connect(stateToMapDataProps, dispatch => actions(navigateTo, dispatch));
-
-var router = (
+const router = (
   <Provider store={store}>
     <Router history={hashHistory}>
-      <Route path="/" component={makeContainerComponent(App)}/>
-      <Route path={urls.collectionsOverview()} component={makeContainerComponent(App)}/>
-      <Route path={urls.mapArchetypes()} component={makeContainerComponent(App)}/>
-      <Route path={urls.mapData()} component={makeMapDataContainer(App)}/>
-
+      <Route path="/" component={connectComponent(stateToPageProps)(Page)}>
+        <IndexRoute component={connectComponent(stateToFirstUploadProps)(FirstUpload)}/>
+        <Route path={urls.collectionsOverview()} components={connectComponent(stateToCollectionOverview)(CollectionOverview)} />
+        <Route path={urls.mapArchetypes()} components={connectComponent(stateToMapArchetypes)(ConnectToArchetype)} />
+        <Route path={urls.mapData()} components={connectComponent(stateToMapDataProps)(ConnectData)} />
+      </Route>
     </Router>
   </Provider>
 );
 
 export default router;
+export { urls };

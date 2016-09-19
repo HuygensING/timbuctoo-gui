@@ -2,6 +2,8 @@ import React from "react";
 import CollectionTable from "./collection-table";
 import CollectionForm from "./collection-form";
 import CollectionIndex from "./collection-index";
+import Message from "./message";
+import UploadButton from "./upload-button";
 
 class ConnectData extends React.Component {
 
@@ -18,7 +20,10 @@ class ConnectData extends React.Component {
       customPropertyMappings,
       availableCollectionColumnsPerArchetype,
       nextUrl,
-      publishing
+      publishing,
+      publishErrors,
+      showCollectionsAreConnectedMessage,
+      sheets
     } = this.props;
 
     const {
@@ -31,13 +36,39 @@ class ConnectData extends React.Component {
       onAddCustomProperty,
       onClearFieldMapping,
       onLoadMoreClick,
-      onPublishData
+      onPublishData,
+      onUploadFileSelect,
+      onCloseMessage
     } = this.props;
 
     const allMappingsAreComplete = collectionTabs.filter((tab) => tab.complete).length === collectionTabs.length;
+    console.log("HELLO?", publishErrors);
+
+    const publishFailedMessage = publishErrors ? (
+      <Message alertLevel="danger" dismissible={false}>
+        <UploadButton classNames={["btn", "btn-danger", "pull-right", "btn-xs"]} label="Re-upload"
+                      onUploadFileSelect={onUploadFileSelect} />
+        <span className="glyphicon glyphicon-exclamation-sign" />{" "}
+        Publish failed. Please fix the mappings or re-upload the data.
+      </Message>
+    ) : null;
+
+    const collectionsAreConnectedMessage = sheets && showCollectionsAreConnectedMessage ?
+      <Message alertLevel="info" dismissible={true} onCloseMessage={() => onCloseMessage("showCollectionsAreConnectedMessage")}>
+        {sheets.map((sheet) => <em key={sheet.collection}>{sheet.collection}</em>)
+          .reduce((accu, elem) => accu === null ? [elem] : [...accu, ' and ', elem], null)
+        } from <em>{uploadedFileName}</em> are connected to the Timbuctoo Archetypes.
+      </Message> : null;
 
     return (
       <div>
+        <div className="container basic-margin">
+          <h2 className="small-margin">Upload and connect your dataset</h2>
+          {collectionsAreConnectedMessage}
+          {publishFailedMessage}
+          <p>Connect the excel columns to the properties of the Archetypes</p>
+        </div>
+
         <CollectionIndex collectionTabs={collectionTabs} onSelectCollection={onSelectCollection} />
 
         <CollectionForm columns={headers}

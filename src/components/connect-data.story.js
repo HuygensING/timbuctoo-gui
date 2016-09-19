@@ -4,6 +4,9 @@ import ConnectData from "./connect-data";
 import transformProps from "./react-redux-connect/connect-data";
 
 const initialData = {
+  messages: {
+    showCollectionsAreConnectedMessage: true
+  },
   importData: {
     activeCollection: 'migranten',
     sheets: [
