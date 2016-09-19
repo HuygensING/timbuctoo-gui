@@ -42,7 +42,6 @@ class ConnectData extends React.Component {
     } = this.props;
 
     const allMappingsAreComplete = collectionTabs.filter((tab) => tab.complete).length === collectionTabs.length;
-    console.log("HELLO?", publishErrors);
 
     const publishFailedMessage = publishErrors ? (
       <Message alertLevel="danger" dismissible={false}>
