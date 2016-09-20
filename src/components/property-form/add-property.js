@@ -25,7 +25,7 @@ class AddProperty extends React.Component {
     return (
       <div className="row small-margin">
         <div className="col-sm-2">
-          {newType === "relation"
+          {newType === "relation" || newType === "relation-to-existing"
             ? (
               <SelectField
                 value={newName}
@@ -43,8 +43,8 @@ class AddProperty extends React.Component {
             )
           }
         </div>
-        <div className="col-sm-2" >
-          <span className="pull-right">
+        <div className="col-sm-8" >
+          <span>
             <SelectField
               value={newType}
               onChange={(value) => this.setState({newType: value, newName: value === "relation" ? null : newName})}
@@ -52,11 +52,11 @@ class AddProperty extends React.Component {
               <span type="placeholder">Choose a type...</span>
               <span value="text">Text</span>
               <span value="relation">Relation</span>
+              <span value="relation-to-existing">Relation to existing Timbuctoo collection</span>
             </SelectField>
           </span>
         </div>
-        <div className="col-sm-6">
-        </div>
+
         <div className="col-sm-2">
 
           <button className="pull-right btn btn-default" disabled={!(newName && newType)}

@@ -63,33 +63,6 @@ export default function setupMocks(xhrmock, orig) {
           "public": {
             "WomenWriters": {
               "name": "WomenWriters"
-            },
-            "CharterPortaal": {
-              "name": "CharterPortaal"
-            },
-            "EuropeseMigratie": {
-              "name": "EuropeseMigratie"
-            },
-            "ckcc": {
-              "name": "ckcc"
-            },
-            "DutchCaribbean": {
-              "name": "DutchCaribbean"
-            },
-            "cwrs": {
-              "name": "cwrs"
-            },
-            "cwno": {
-              "name": "cwno"
-            },
-            "Admin": {
-              "name": "Admin"
-            },
-            "cnw": {
-              "name": "cnw"
-            },
-            "Base": {
-              "name": "Base"
             }
           }
         }`);
