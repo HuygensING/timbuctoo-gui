@@ -1,13 +1,10 @@
 import React from 'react';
 import DatasetCards from "./dataset-cards";
 import Footer from "./footer";
-import { urls } from "../router";
 
 const FOOTER_HEIGHT = 81;
 
 function Page(props) {
-  const { location: { pathname }} = props;
-
   return (
     <div className="page">
       <div className="basic-margin hi-Green container-fluid">
@@ -24,7 +21,7 @@ function Page(props) {
       </div>
       <div  style={{marginBottom: `${FOOTER_HEIGHT}px`}}>
         {props.children}
-        {props.vres && (pathname === urls.collectionsOverview() || pathname === "/") ? (
+        {props.vres && props.showDatasets ? (
           <div className="container">
             <DatasetCards caption="Explore all datasets" vres={props.vres} />
           </div>) : null}
