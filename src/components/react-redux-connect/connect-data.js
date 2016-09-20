@@ -26,10 +26,26 @@ function mappingsAreComplete(props, sheet) {
   return confirmedColCount + mappings.collections[sheet.collection].ignoredColumns.length === sheet.variables.length;
 }
 
+function getTargetableVres(mine, vres) {
+  const myVres = Object.keys(mine || {})
+    .map((key) => mine[key])
+    .filter((vre) => vre.published)
+    .map((vre) => vre.name);
+  const publicVres = Object.keys(vres || {})
+    .map((key) => vres[key].name);
+
+  return myVres.concat(publicVres);
+}
+
 // Moves to react-redux connect
 function transformProps(props) {
 
-  const { importData: { sheets, activeCollection, uploadedFileName, publishErrors }, mappings, archetype } = props;
+  const {
+    importData: { sheets, activeCollection, uploadedFileName, publishErrors },
+    userdata: { myVres, vres },
+    mappings,
+    archetype
+  } = props;
   const collectionData = sheets.find((sheet) => sheet.collection === activeCollection);
   const { rows, variables } = collectionData;
 
@@ -77,7 +93,8 @@ function transformProps(props) {
       return archetypeToCollectionColumnMapping;
     }, {}),
     publishErrors: publishErrors,
-    showCollectionsAreConnectedMessage:  props.messages.showCollectionsAreConnectedMessage
+    showCollectionsAreConnectedMessage:  props.messages.showCollectionsAreConnectedMessage,
+    targetableVres: getTargetableVres(myVres, vres)
   };
 }
 

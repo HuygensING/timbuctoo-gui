@@ -2,12 +2,13 @@ import React from "react";
 
 import Text from "./text";
 import Relation from "./relation";
-
+import RelationToExisting from "./relation-to-existing";
 
 const typeMap = {
   text: (props) => <Text {...props} />,
   datable: (props) => <Text {...props} />,
-  relation: (props) => <Relation {...props} />
+  relation: (props) => <Relation {...props} />,
+  "relation-to-existing": (props) => <RelationToExisting {...props} />
 };
 
 class PropertyForm extends React.Component {
@@ -17,6 +18,8 @@ class PropertyForm extends React.Component {
     if (!variable || variable.length === 0) { return false; }
     if (type === "relation") {
       return variable[0].variableName && variable[0].targetCollection && variable[0].targetVariableName;
+    } else if (type === "relation-to-existing") {
+      return variable[0].variableName && variable[0].targetExistingTimbuctooVre;
     }
     return variable.filter((m) => m.variableName).length === variable.length;
   }

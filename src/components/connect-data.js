@@ -23,7 +23,8 @@ class ConnectData extends React.Component {
       publishing,
       publishErrors,
       showCollectionsAreConnectedMessage,
-      sheets
+      sheets,
+      targetableVres
 
     } = this.props;
 
@@ -83,7 +84,8 @@ class ConnectData extends React.Component {
                         onRemoveCustomProperty={onRemoveCustomProperty}
                         onConfirmFieldMappings={onConfirmFieldMappings}
                         onUnconfirmFieldMappings={onUnconfirmFieldMappings}
-                        onAddCustomProperty={onAddCustomProperty} />
+                        onAddCustomProperty={onAddCustomProperty}
+                        targetableVres={targetableVres} />
 
         <div className="container big-margin">
           <button onClick={onPublishData} className="btn btn-warning btn-lg pull-right" type="button" disabled={!allMappingsAreComplete || publishing}>

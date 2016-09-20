@@ -58,14 +58,14 @@ function makePredicateObjectMap(vre, mapping) {
       },
       "predicate": `http://timbuctoo.com/${property}`
     }
-  } else if (variable.targetExistingTimbuctooCollection) {
+  } else if (variable.targetExistingTimbuctooVre) {
     return {
       "objectMap": {
         "column": variable.variableName,
         "termType": "http://www.w3.org/ns/r2rml#IRI"
       },
       "predicate": `http://timbuctoo.com/${property}`,
-      "http://timbuctoo.com/mapping/existingTimbuctooCollection": variable.targetExistingTimbuctooCollection
+      "http://timbuctoo.com/mapping/existingTimbuctooVre": variable.targetExistingTimbuctooVre
     }
   } else {
     return {

@@ -12,7 +12,8 @@ class CollectionForm extends React.Component {
       customPropertyMappings,
       collectionName,
       availableArchetypes,
-      availableCollectionColumnsPerArchetype
+      availableCollectionColumnsPerArchetype,
+      targetableVres
     } = this.props;
 
     const {
@@ -48,6 +49,7 @@ class CollectionForm extends React.Component {
                       onClearFieldMapping={(field, valueIdx) => onClearFieldMapping(collectionName, field, valueIdx) }
                       onConfirmFieldMappings={(field) => onConfirmFieldMappings(collectionName, field)}
                       onUnconfirmFieldMappings={(field) => onUnconfirmFieldMappings(collectionName, field)}
+                      targetableVres={targetableVres}
         />
       ));
 

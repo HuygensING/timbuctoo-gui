@@ -104,8 +104,10 @@ export default function actionsMaker(navigateTo, dispatch) {
       dispatch({type: "PUBLISH_STARTED"});
       dispatch(function (dispatch, getState) {
         var state = getState();
+        var jsonLd = mappingToJsonLdRml(state.mappings, state.importData.vre);
+        console.log(jsonLd);
         var payload = {
-          body: JSON.stringify(mappingToJsonLdRml(state.mappings, state.importData.vre)),
+          body: JSON.stringify(jsonLd),
           headers: {
             "Authorization": state.userdata.userId,
             "Content-type": "application/ld+json"
