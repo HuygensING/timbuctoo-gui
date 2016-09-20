@@ -10,6 +10,9 @@ export default function mappingToJsonLdRml(mapping, vre) {
   		"predicate": {
   			"@type": "@id"
   		},
+      "termType": {
+        "@type": "@id"
+      },
       "parentTriplesMap": {
         "@type": "@id"
       },
