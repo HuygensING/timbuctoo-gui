@@ -24,6 +24,7 @@ class ConnectData extends React.Component {
       publishErrors,
       showCollectionsAreConnectedMessage,
       sheets
+
     } = this.props;
 
     const {
