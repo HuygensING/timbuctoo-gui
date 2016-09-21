@@ -64,6 +64,7 @@ class App extends React.Component {
 							onSelectDoc={(...args) => console.log(args)}
 							customComponents={customComponents(searchClient.name)}
 							truncateFacetListsAt={20}
+							showCsvExport={true}
 						/>
 					</div>
 				))}
