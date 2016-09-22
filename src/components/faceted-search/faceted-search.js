@@ -9,7 +9,7 @@ import SortMenu from "./sort-menu";
 class FacetedSearch extends React.Component {
   render() {
     const { collections, truncateFacetListsAt } = this.props;
-    const { onCollectionSelect, onSearchFieldChange, onNewSearch,
+    const { onCollectionSelect, onSearchFieldChange, onNewSearch, onCsvExport,
       onPageChange, onSortFieldChange, onSetCollapse, onFacetSortChange } = this.props;
     const activeCollection = collections.find((collection) => collection.selected);
 
@@ -19,7 +19,7 @@ class FacetedSearch extends React.Component {
           <div className="row">
             <div className="col-sm-4 col-md-3">
               <div className="basic-margin">
-                <SelectField btnClass="btn-default" onChange={onCollectionSelect} noClear={true} value={activeCollection.name}>
+                  <SelectField btnClass="btn-default" onChange={onCollectionSelect} noClear={true} value={activeCollection.name}>
                   {collections.map((collection) => (
                     <span key={collection.name} value={collection.name}>
                       {collection.label}
@@ -37,6 +37,7 @@ class FacetedSearch extends React.Component {
             <div className=".hidden-sm col-md-1" />
 
             <div className="col-sm-8 col-md-8">
+              <button className="btn btn-default pull-right" style={{position: "relative", zIndex: "100"}} onClick={onCsvExport}>Download excel</button>
               <SortMenu onChange={onSortFieldChange} sortFields={activeCollection.query.sortFields} />
               <div className="basic-margin">
                 <strong>Found {activeCollection.results.numFound} {activeCollection.results.numFound === 1
