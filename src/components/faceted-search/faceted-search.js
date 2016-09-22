@@ -37,8 +37,8 @@ class FacetedSearch extends React.Component {
             <div className=".hidden-sm col-md-1" />
 
             <div className="col-sm-8 col-md-8">
-              <button className="btn btn-default pull-right" style={{position: "relative", zIndex: "100"}} onClick={onCsvExport}>Download excel</button>
               <SortMenu onChange={onSortFieldChange} sortFields={activeCollection.query.sortFields} />
+              <button className="btn btn-default pull-right" style={{position: "relative", zIndex: "100"}} onClick={onCsvExport}>Download excel</button>
               <div className="basic-margin">
                 <strong>Found {activeCollection.results.numFound} {activeCollection.results.numFound === 1
                   ? activeCollection.label.replace(/s$/, "")
