@@ -1,23 +1,8 @@
 import React from "react";
 import { getSearchClients } from "../actions/solr";
-import SolrFacetedSearch from  "solr-faceted-search-react";
-import { defaultComponentPack } from  "solr-faceted-search-react";
+import FacetedSearch from "./faceted-search/faceted-search";
+import Page from "./page.jsx";
 
-import cx from "classnames";
-
-const customComponents = (collectionName) => ({
-	...defaultComponentPack,
-	results: {
-		...defaultComponentPack.results,
-		result: (props) => { console.log(props); return (
-			<li className="list-group-item">
-				<a target="_blank" href={`${globals.env.SERVER}/v2.1/domain/${collectionName}/${props.doc.id}`}>
-					{props.doc.displayName_s}
-				</a>
-			</li>
-		)}
-	}
-});
 
 class App extends React.Component {
 	constructor(props) {
@@ -37,51 +22,47 @@ class App extends React.Component {
 
 		const searchClients = getSearchClients();
 
-		const visibleClient = !activeClient && searchClients.length > 0 ? searchClients[0].name : activeClient;
+		const visibleClient = !activeClient && searchClients.length > 0
+			? searchClients[0]
+			: searchClients.find((client) => client.name === activeClient);
+
+		const visibleClientName = visibleClient ? visibleClient.name : null;
+
+
+		const facetedSearchProps = visibleClient ? {
+			collections: searchClients.map((searchClient) => ({
+				label: searchClient.label,
+				name: searchClient.name,
+				selected: searchClient.name === visibleClientName,
+				query: solr.searchStates[searchClient.name] ? solr.searchStates[searchClient.name].query : {},
+				results: solr.searchStates[searchClient.name] ?  solr.searchStates[searchClient.name].results : {
+					docs: [],
+					numFound: 0,
+					facets: {}
+				},
+			})),
+			onCollectionSelect: (collectionName) => this.setActiveClient(collectionName),
+			...visibleClient.client.getHandlers(),
+			truncateFacetListsAt: 5
+		} : null;
 
 		return solr.indexPresent ? (
-			<div>
-				<header>
-					<nav className="navbar navbar-default">
-						<div className="navbar-header">
-							<img style={{height: "44px", margin: "3px"}}
-								src="https://www.huygens.knaw.nl/wp-content/bestanden/2011/03/LOGO-huygens-ing.gif" />
-						</div>
-						<ul className="nav navbar-nav">
-							{searchClients.map((searchClient) => (
-								<li className={cx({active: searchClient.name === visibleClient})} key={searchClient.name}>
-									<a onClick={() => this.setActiveClient(searchClient.name)}>{searchClient.label}</a>
-								</li>
-							))}
-						</ul>
-					</nav>
-				</header>
-				{searchClients.map((searchClient) => (
-					<div key={searchClient.name} style={{display: searchClient.name == visibleClient ? "block" : "none"}}>
-						<SolrFacetedSearch
-							{...solr.searchStates[searchClient.name]}
-							{...searchClient.client.getHandlers()}
-							onSelectDoc={(...args) => console.log(args)}
-							customComponents={customComponents(searchClient.name)}
-							truncateFacetListsAt={20}
-							showCsvExport={true}
-						/>
-					</div>
-				))}
-			</div>
+			<FacetedSearch {...facetedSearchProps} />
 		) : (
-			<div className="row">
-				<div className="col-md-3">
-					Your dataset does not appear to have indexes yet.
+			<Page>
+				<div className="container">
+					<div className="col-md-6">
+						Your dataset does not appear to have indexes yet.
+					</div>
+					<div className="col-md-6">
+						<button className="btn btn-success"
+								onClick={onCreateIndexes}
+								disabled={solr.indexesPending}>
+							{solr.indexesPending ? "Creating search index, please wait" : "Create search index"}
+						</button>
+					</div>
 				</div>
-				<div className="col-md-3">
-					<button className="btn btn-success"
-							onClick={onCreateIndexes}
-							disabled={solr.indexesPending}>
-						{solr.indexesPending ? "Creating search index, please wait" : "Create search index"}
-					</button>
-				</div>
-			</div>
+			</Page>
 		)
 	}
 }
