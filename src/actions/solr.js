@@ -52,15 +52,17 @@ const configureSearchClients = () => (dispatch, getState) => {
 					[{label: "Search", field: "displayName_t", type: "text"}].concat(
 						archetypes
 						.find((archetype) => archetype.archetypeName === collection.archetypeName).properties
+						.filter((prop) => collection.properties.map((prop1) => prop1.name).indexOf(prop.name) > 0)
 						.map((prop) => ({
 							label: prop.name,
 							field: `${prop.name}_${getPropSuffix(prop.type)}`,
 							type: getFacetType(prop.type),
-							collapse: true
+							collapse: false
 						}))
 					),
 				sortFields:archetypes
 					.find((archetype) => archetype.archetypeName === collection.archetypeName).properties
+					.filter((prop) => collection.properties.map((prop1) => prop1.name).indexOf(prop.name) > 0)
 					.map((prop) => ({
 						label: prop.name,
 						field: `${prop.name}_${getPropSuffix(prop.type)}`
