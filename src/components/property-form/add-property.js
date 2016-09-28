@@ -19,7 +19,7 @@ class AddProperty extends React.Component {
 
     const relationTypeOptions = archetypeFields
       .filter((prop) => prop.type === "relation")
-      .filter((prop) => availableArchetypes.indexOf(prop.relation.targetCollection) > -1)
+      .filter((prop) => newType === "relation-to-existing" || availableArchetypes.indexOf(prop.relation.targetCollection) > -1)
       .map((prop) => <span key={prop.name} value={prop.name}>{prop.name}</span>);
 
     return (

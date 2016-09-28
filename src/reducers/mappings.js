@@ -143,6 +143,8 @@ const removeCustomProperty = (state, action) => {
 
 export default function(state=initialState, action) {
   switch (action.type) {
+        case "START_UPLOAD":
+      return initialState;
     case "FINISH_UPLOAD":
       return Object.keys(state.collections).length > 0 ?
         state :

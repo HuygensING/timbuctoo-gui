@@ -34,7 +34,7 @@ function addRows(curRows, newRows, arrayOfVariableNames) {
 export default function(state=initialState, action) {
 	switch (action.type) {
 		case "START_UPLOAD":
-			return {...state, isUploading: true};
+			return {...initialState, isUploading: true};
 		case "FINISH_UPLOAD":
 			return {...state,
 				isUploading: false,
