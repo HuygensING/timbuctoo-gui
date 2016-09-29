@@ -116,7 +116,7 @@ class Detail extends React.Component {
         </div>
         <div type="footer-body">
           <div className="col-sm-4 text-right">
-            <button type="button" className="btn btn-default">
+            <button type="button" disabled={true} className="btn btn-default">
               <span className="glyphicon glyphicon-chevron-left" />
             </button>
           </div>
@@ -124,7 +124,7 @@ class Detail extends React.Component {
             <Link to={urls.root(vreId)} className="btn btn-default">Back to results</Link>
           </div>
           <div className="col-sm-4 text-left">
-            <button type="button" className="btn btn-default">
+            <button type="button"  disabled={true} className="btn btn-default">
               <span className="glyphicon glyphicon-chevron-right" />
             </button>
           </div>
