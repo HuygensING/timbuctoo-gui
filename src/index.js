@@ -3,12 +3,15 @@ import ReactDOM from "react-dom";
 import store from "./store";
 import actions from "./actions";
 import {setVre} from "./actions/vre";
-import App from "./components/edit";
+import App from "./components/edit-gui/edit-gui";
+import getAutocompleteValues from "./actions/autocomplete";
 
 document.addEventListener("DOMContentLoaded", () => {
 
 	store.subscribe(() =>
-		ReactDOM.render(<App {...store.getState()} {...actions} />, document.getElementById("app"))
+		ReactDOM.render(
+			<App {...store.getState()} {...actions} getAutocompleteValues={getAutocompleteValues}  />,
+		 	document.getElementById("app"))
 	);
 
 

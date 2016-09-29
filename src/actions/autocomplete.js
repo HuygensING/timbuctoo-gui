@@ -1,9 +1,8 @@
 import server from "./server";
 import config from "../config";
 
-export default function(path, query, vreId, done) {
+export default function(path, query, done) {
 	let options = {
-		headers: {"Accept": "application/json", "VRE_ID": vreId},
 		url: `${config.apiUrl[config.apiVersion]}/${path.replace(/^\/v[^/]+\//, "")}?query=${query}*`
 	};
 

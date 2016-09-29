@@ -67,7 +67,7 @@ const sendQuickSearch = () => (dispatch, getState) => {
 				"@displayName": d.value
 			}
 		))});
-		autocomplete(`domain/${entity.domain}/autocomplete`, quickSearch.query, vre.vreId, callback);
+		autocomplete(`domain/${entity.domain}/autocomplete`, quickSearch.query, callback);
 	} else {
 		dispatch(fetchEntityList(entity.domain));
 	}
