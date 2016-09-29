@@ -40,7 +40,7 @@ class EntityForm extends React.Component {
           ? (<div className="basic-margin">
               <h4>Delete</h4>
               <buton className="btn btn-danger" onClick={onDelete}>
-                Delete {entity.domain.replace(/s$/, "")}
+                Delete {entityLabel}
               </buton>
             </div>
           ) : null}
