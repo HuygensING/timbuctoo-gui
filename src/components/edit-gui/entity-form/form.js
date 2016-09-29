@@ -28,9 +28,14 @@ class EntityForm extends React.Component {
             New {entityLabel}
           </button>
         </div>
-        {properties.map((fieldDef) =>
+        {properties
+          .filter((fieldDef) => !fieldMap.hasOwnProperty(fieldDef.type))
+          .map((fieldDef, i) => (<div key={i} style={{"color": "red"}}><strong>Field type not supported {fieldDef.type}</strong></div>))}
+        {properties
+          .filter((fieldDef) => fieldMap.hasOwnProperty(fieldDef.type))
+          .map((fieldDef, i) =>
           fieldMap[fieldDef.type](fieldDef, {
-						key: fieldDef.name,
+						key: `${i}-${fieldDef.name}`,
 						entity: entity,
 						onChange: onChange,
 						getAutocompleteValues: getAutocompleteValues

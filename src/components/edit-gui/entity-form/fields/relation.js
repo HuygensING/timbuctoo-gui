@@ -44,8 +44,8 @@ class RelationField extends React.Component {
   render() {
     const { name, entity, onChange } = this.props;
     const values = entity.data["@relations"][this.props.name] || [];
-    const itemElements = values.filter((val) => val.accepted).map((value) => (
-      <div key={value.id} className="item-element">
+    const itemElements = values.filter((val) => val.accepted).map((value, i) => (
+      <div key={`${i}-${value.id}`} className="item-element">
         <strong>{value.displayName}</strong>
         <button className="btn btn-blank btn-xs pull-right"
           onClick={() => this.onRemove(value)}>
