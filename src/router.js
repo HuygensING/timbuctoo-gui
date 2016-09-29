@@ -20,12 +20,20 @@ export function navigateTo(key, args) {
 
 const makeContainerComponent = connect((state) => state, (dispatch) => actions(navigateTo, dispatch));
 
-const makeDetailComponent = connect((state, route) => ({
+const makeDetailComponent = connect((state, route) => {
+	const { solr, metadata: { collections } } = state;
+
+	const resultIds = solr.searchStates[route.params.collectionName].results.docs.map((doc) => doc.id);
+	
+	return {
 		collectionMetadata: state.metadata.collections[route.params.collectionName],
 		entity: state.entity && state.entity.data ? state.entity.data : {},
 		params: route.params,
-		vreId: state.metadata.vreId
-	}), (dispatch) => actions(navigateTo, dispatch))
+		vreId: state.metadata.vreId,
+		nextId: resultIds[resultIds.indexOf(route.params.id) + 1],
+		prevId: resultIds[resultIds.indexOf(route.params.id) - 1],
+	};
+}, (dispatch) => actions(navigateTo, dispatch))
 const router = (
 	<Provider store={store}>
 		<Router history={browserHistory}>

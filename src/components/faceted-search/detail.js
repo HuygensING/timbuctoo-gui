@@ -3,6 +3,7 @@ import Page from "../page.jsx";
 import camel2label from "./camel2label";
 import { Link } from "react-router";
 import { urls } from "../../router";
+import cx from "classnames";
 
 const ts2date = (ts) => {
   const date = new Date(ts);
@@ -31,7 +32,7 @@ class Detail extends React.Component {
 }
 
   render() {
-    const { entity, collectionMetadata, vreId } = this.props;
+    const { entity, collectionMetadata, vreId, nextId, prevId} = this.props;
 
     if (!entity._id) { return <Page />; }
 
@@ -116,17 +117,17 @@ class Detail extends React.Component {
         </div>
         <div type="footer-body">
           <div className="col-sm-4 text-right">
-            <button type="button" disabled={true} className="btn btn-default">
+            <Link to={urls.entity(collectionMetadata.collectionName, prevId, vreId)} className={cx("btn", "btn-default", {"disabled": !prevId})}>
               <span className="glyphicon glyphicon-chevron-left" />
-            </button>
+            </Link>
           </div>
           <div className="col-sm-4 text-center">
             <Link to={urls.root(vreId)} className="btn btn-default">Back to results</Link>
           </div>
           <div className="col-sm-4 text-left">
-            <button type="button"  disabled={true} className="btn btn-default">
+            <Link to={urls.entity(collectionMetadata.collectionName, nextId, vreId)} className={cx("btn", "btn-default", {"disabled": !nextId})}>
               <span className="glyphicon glyphicon-chevron-right" />
-            </button>
+            </Link>
           </div>
         </div>
       </Page>
