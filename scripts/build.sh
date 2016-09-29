@@ -12,8 +12,11 @@ fi
 
 mkdir -p "build/${NODE_ENV}/js"
 mkdir -p "build/${NODE_ENV}/css"
+mkdir -p "build/${NODE_ENV}/fonts"
 
 cp -R src/index.html "build/${NODE_ENV}/index.html"
+cp src/static/css/* "build/${NODE_ENV}/css"
+cp src/static/fonts/* "build/${NODE_ENV}/fonts"
 
 node_modules/.bin/browserify \
 	--transform [ envify --NODE_ENV="${NODE_ENV}" ] \
@@ -21,13 +24,6 @@ node_modules/.bin/browserify \
 	--require immutable \
 	--require react \
 	--require react-dom > "build/${NODE_ENV}/js/react-libs.js"
-
-./node_modules/.bin/stylus \
-	--use nib \
-	--compress \
-	--out "build/${NODE_ENV}/css/index.css" \
-	$styluswatch \
-	src/stylus/index.styl &
 
 node_modules/.bin/$cmd src/index.js \
 	--transform [ envify --NODE_ENV="${NODE_ENV}" --USE_MOCK="${USE_MOCK}" --server="$server" ] \
