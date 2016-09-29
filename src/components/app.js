@@ -17,7 +17,7 @@ class App extends React.Component {
 	}
 
 	render() {
-		const { solr, onCreateIndexes } = this.props;
+		const { solr, onCreateIndexes, metadata: { vreId } } = this.props;
 		const { activeClient } = this.state;
 
 		const searchClients = getSearchClients();
@@ -43,7 +43,8 @@ class App extends React.Component {
 			})),
 			onCollectionSelect: (collectionName) => this.setActiveClient(collectionName),
 			...visibleClient.client.getHandlers(),
-			truncateFacetListsAt: 5
+			truncateFacetListsAt: 5,
+			vreId: vreId
 		} : null;
 
 		return solr.indexPresent ? (

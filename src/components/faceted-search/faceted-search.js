@@ -5,10 +5,12 @@ import Page from "../page.jsx";
 import CurrentQuery from "./current-query";
 import Pagination from "./results/pagination";
 import SortMenu from "./sort-menu";
+import { urls } from "../../router";
+import { Link } from "react-router";
 
 class FacetedSearch extends React.Component {
   render() {
-    const { collections, truncateFacetListsAt } = this.props;
+    const { collections, truncateFacetListsAt, vreId} = this.props;
     const { onCollectionSelect, onSearchFieldChange, onNewSearch, onCsvExport,
       onPageChange, onSortFieldChange, onSetCollapse, onFacetSortChange } = this.props;
     const activeCollection = collections.find((collection) => collection.selected);
@@ -50,11 +52,11 @@ class FacetedSearch extends React.Component {
                 <ol start={activeCollection.query.start + 1} style={{counterReset: `step-counter ${activeCollection.query.start}`}}>
                   {activeCollection.results.docs.map((doc, i) => (
                     <li key={i + activeCollection.query.start}>
-                        <a target="_blank" href={`${globals.env.SERVER}/v2.1/domain/${activeCollection.name}/${doc.id}`}>
+                        <Link to={urls.entity(activeCollection.name, doc.id, vreId)}>
                           {doc.displayName_s}
                           {doc.birthDate_i ? (<span className="hi-light-grey pull-right">{doc.birthDate_i} - {doc.deathDate_i}</span>) : null}
                           {doc.country_s ? (<span className="hi-light-grey pull-right">{doc.country_s}</span>) : null}
-                        </a>
+                        </Link>
                     </li>
                   ))}
                 </ol>
