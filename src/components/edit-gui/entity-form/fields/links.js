@@ -21,7 +21,8 @@ class Field extends React.Component {
 
 	onRemove(value) {
 		const { name, entity, onChange } = this.props;
-		onChange([name], entity.data[name].filter((val) => val !== value));
+		onChange([name], entity.data[name]
+			.filter((val) => val.url !== value.url));
 	}
 
 	render() {
@@ -29,8 +30,12 @@ class Field extends React.Component {
 		const label = camel2label(name);
 		const values = (entity.data[name] || []);
 		const itemElements = values.map((value) => (
-			<div key={value} className="item-element">
-				<strong>{value}</strong>
+			<div key={value.url} className="item-element">
+				<strong>
+					<a href={value.url} target="_blank">
+						{value.label}
+					</a>
+				</strong>
 				<button className="btn btn-blank btn-xs pull-right"
 					onClick={() => this.onRemove(value)}>
 					<span className="glyphicon glyphicon-remove" />
@@ -42,10 +47,9 @@ class Field extends React.Component {
 			<div className="basic-margin">
 				<h4>{label}</h4>
 				{itemElements}
-				<input type="text" className="form-control" value={this.state.newValue}
+{/*				<input type="text" className="form-control" value={this.state.newValue}
 					onChange={(ev) => this.setState({newValue: ev.target.value})}
-					onKeyPress={(ev) => ev.key === "Enter" ? this.onAdd(ev.target.value) : false}
-					placeholder="Add a value..." />
+					onKeyPress={(ev) => ev.key === "Enter" ? this.onAdd(ev.target.value) : false} />*/}
 			</div>
 		);
 	}
