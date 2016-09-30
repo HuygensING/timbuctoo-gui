@@ -19,7 +19,7 @@ class RelationField extends React.Component {
       currentValues.filter((curVal) => curVal.id !== value.id)
     );
 
-	}
+  }
 
   onAdd(suggestion) {
     const currentValues = this.props.entity.data["@relations"][this.props.name] || [];
