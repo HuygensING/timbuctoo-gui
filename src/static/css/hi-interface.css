@@ -166,8 +166,12 @@
 	padding: 10px 0px;
 }
 
+.nav-tabs li {
+	cursor: pointer;
+}
 .nav-tabs .active {
 	font-weight:500;
+	cursor: default;
 	}
 
 .names-form {
@@ -193,7 +197,13 @@
 	border-radius:6px;
 	color:#269075;
 	}
-
+a.item-element {
+	cursor: pointer
+}
+.item-element > strong {
+	max-width: calc(100% - 30px);
+	display: inline-block;
+}
 .from-excel {
 	color:#486B61;
 }
