@@ -23,6 +23,9 @@ class RelationField extends React.Component {
 
   onAdd(suggestion) {
     const currentValues = this.props.entity.data["@relations"][this.props.name] || [];
+    if (currentValues.map((val) => val.id).indexOf(suggestion.key) > -1) {
+      return;
+    }
     this.props.onChange(
       ["@relations", this.props.name],
       currentValues.concat({
