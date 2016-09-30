@@ -1,4 +1,33 @@
-export default function mappingToJsonLdRml(mapping, vre) {
+export default function mappingToJsonLdRml(mapping, vre, archetypes) {
+  const relationsToExisting = Object.keys(mapping.collections)
+    .map((key) => mapping.collections[key].mappings)
+    .reduce((a, b) => a.concat(b))
+    .filter((columnMapping) => typeof columnMapping.variable[0].targetExistingTimbuctooVre !== "undefined")
+    .map((columnMapping) => columnMapping.property);
+
+  const mappedArchetypes = Object.keys(mapping.collections)
+    .map((key) => mapping.collections[key].archetypeName);
+  
+  const desiredArchetypes = Object.keys(archetypes)
+    .map((key) => archetypes[key])
+    .map((properties) => properties.filter((prop) => prop.type === "relation"))
+    .reduce((a,b) => a.concat(b))
+    .filter((relationType) => relationsToExisting.indexOf(relationType.name) > -1)
+    .map((relationType) => relationType.relation.targetCollection);
+
+  console.log("There are these relationTypes mapped to existing datasets", relationsToExisting);
+  console.log("They need these archetypes to work", desiredArchetypes);
+  console.log("And we actually mapped these archetypes", mappedArchetypes);
+
+  const missingArchetypes = desiredArchetypes
+    .filter((da) => mappedArchetypes.indexOf(da) < 0);
+
+  console.log("So we need to somehow spoof these missing archetypes", missingArchetypes);
+
+  console.log("It needs to look like this",
+   Object.keys(mapping.collections).map(key => mapping.collections[key])[0]);
+
+
   return {
   	"@context": {
   		"@vocab": "http://www.w3.org/ns/r2rml#",
@@ -20,7 +49,11 @@ export default function mappingToJsonLdRml(mapping, vre) {
         "@type": "@id"
       }
   	},
-  	"@graph": Object.keys(mapping.collections).map(key => mapSheet(key, mapping.collections[key], vre))
+  	"@graph": Object.keys(mapping.collections)
+      .map(key => mapSheet(key, mapping.collections[key], vre))
+      .concat(missingArchetypes.map((archetypeName) => (
+        {archetypeName: archetypeName, customProperties: [], mappings: [], ignoredColumns: []}
+      )).map((mapping) => mapSheet(mapping.archetypeName, mapping, vre)))
   };
 }
 

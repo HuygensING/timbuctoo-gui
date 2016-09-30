@@ -104,7 +104,7 @@ export default function actionsMaker(navigateTo, dispatch) {
       dispatch({type: "PUBLISH_STARTED"});
       dispatch(function (dispatch, getState) {
         var state = getState();
-        var jsonLd = mappingToJsonLdRml(state.mappings, state.importData.vre);
+        var jsonLd = mappingToJsonLdRml(state.mappings, state.importData.vre, state.archetype);
         console.log(jsonLd);
         var payload = {
           body: JSON.stringify(jsonLd),
