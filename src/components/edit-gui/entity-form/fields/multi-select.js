@@ -21,13 +21,13 @@ class Field extends React.Component {
 		const label = camel2label(name);
 		const values = (entity.data[name] || []);
 		const itemElements = values.map((value) => (
-		  <div key={value} className="item-element">
-			<strong>{value}</strong>
-			<button className="btn btn-blank btn-xs pull-right"
-			  onClick={() => this.onRemove(value)}>
-			  <span className="glyphicon glyphicon-remove" />
-			</button>
-		  </div>
+			<div key={value} className="item-element">
+				<strong>{value}</strong>
+				<button className="btn btn-blank btn-xs pull-right"
+					onClick={() => this.onRemove(value)}>
+					<span className="glyphicon glyphicon-remove" />
+				</button>
+			</div>
 		));
 
 		return (
@@ -51,7 +51,7 @@ Field.propTypes = {
 	entity: React.PropTypes.object,
 	name: React.PropTypes.string,
 	onChange: React.PropTypes.func,
-  options: React.PropTypes.array
+	options: React.PropTypes.array
 };
 
 export default Field;
