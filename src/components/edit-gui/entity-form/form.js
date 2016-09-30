@@ -4,6 +4,7 @@ import StringField from "./fields/string-field";
 import SelectField from "./fields/select";
 import MultiSelectField from "./fields/multi-select";
 import RelationField from "./fields/relation";
+import StringListField from "./fields/list-of-strings";
 
 const fieldMap = {
 	"string": (fieldDef, props) => (<StringField {...props} name={fieldDef.name} />),
@@ -12,6 +13,7 @@ const fieldMap = {
 	"multiselect": (fieldDef, props) => (<MultiSelectField {...props} name={fieldDef.name} options={fieldDef.options} />),
 	"select": (fieldDef, props) => (<SelectField {...props} name={fieldDef.name} options={fieldDef.options} />),
 	"relation": (fieldDef, props) => (<RelationField {...props} name={fieldDef.name} path={fieldDef.quicksearch} />),
+  "list-of-strings": (fieldDef, props) => (<StringListField {...props} name={fieldDef.name} />)
 };
 
 class EntityForm extends React.Component {
