@@ -5,6 +5,7 @@ export default (appState, ownProps) => {
   return {
     username: appState.userdata.userId,
     vres: appState.userdata.vres,
-    showDatasets: pathname === "/" || pathname === urls.collectionsOverview()
+    showDatasets: pathname === "/" || pathname === urls.collectionsOverview(),
+    searchGuiUrl: appState.userdata.searchGuiUrl
   };
 }

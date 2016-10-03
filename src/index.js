@@ -36,6 +36,13 @@ function checkTokenInUrl(state) {
 	}
 }
 
+xhr.get(process.env.server + "/v2.1/javascript-globals", (err, res) => {
+	var globals = eval("(function () { " + res.body + "; return globals;}())")
+	// var globals = JSON.parse(res);
+	store.dispatch({type: "SET_SEARCH_URL", data: globals.env.TIMBUCTOO_SEARCH_URL});
+
+});
+
 document.addEventListener("DOMContentLoaded", () => {
 	let state = store.getState();
 	checkTokenInUrl(state);

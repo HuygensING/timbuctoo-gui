@@ -2,7 +2,7 @@ import React from 'react';
 import DataSetCard from './datasetCard.jsx';
 
 export default function(props) {
-  const { vres, caption, userId } = props;
+  const { vres, caption, userId, searchGuiUrl } = props;
 
   return (
     <div className="container">
@@ -11,7 +11,7 @@ export default function(props) {
         <h3>{caption}</h3>
       </div>
       <div className="big-margin">
-        { Object.keys(vres).map((vre) => <DataSetCard key={vre} userId={userId} vreId={vres[vre].name} caption={vres[vre].name.replace(/^[a-z0-9]+_/, "")} />) }
+        { Object.keys(vres).map((vre) => <DataSetCard key={vre} searchGuiUrl={searchGuiUrl} userId={userId} vreId={vres[vre].name} caption={vres[vre].name.replace(/^[a-z0-9]+_/, "")} />) }
      </div>
     </div>
   )

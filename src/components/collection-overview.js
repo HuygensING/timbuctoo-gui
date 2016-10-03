@@ -3,7 +3,7 @@ import UploadButton from "./upload-button";
 import DatasetCards from "./dataset-cards"
 
 function CollectionOverview(props) {
-  const { onUploadFileSelect, userId, isUploading, vres } = props;
+  const { onUploadFileSelect, userId, isUploading, vres, searchGuiUrl } = props;
 
   const uploadButton = (
     <UploadButton
@@ -17,7 +17,7 @@ function CollectionOverview(props) {
   return (
     <div>
       <div className="container">
-        <DatasetCards userId={userId} caption="My datasets" vres={vres}>
+        <DatasetCards userId={userId} caption="My datasets" vres={vres} searchGuiUrl={searchGuiUrl}>
           {uploadButton}
         </DatasetCards>
       </div>

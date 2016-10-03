@@ -23,7 +23,7 @@ function Page(props) {
         {props.children}
         {props.vres && props.showDatasets ? (
           <div className="container">
-            <DatasetCards caption="Explore all datasets" vres={props.vres} />
+            <DatasetCards caption="Explore all datasets" vres={props.vres} searchGuiUrl={props.searchGuiUrl} />
           </div>) : null}
       </div>
       <Footer />

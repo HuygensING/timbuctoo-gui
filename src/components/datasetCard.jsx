@@ -1,13 +1,11 @@
 import React from 'react';
 
-const TIMBUCTOO_SEARCH_URL = globals && globals.env ?
-  globals.env.TIMBUCTOO_SEARCH_URL : "/";
-
 function DataSetCard(props) {
+  var searchUrl = props.searchGuiUrl;
   return (
     <div className="card-dataset">
       <a className="card-dataset btn btn-default explore"
-         href={`${TIMBUCTOO_SEARCH_URL}?vreId=${props.vreId}`} target="_blank">
+         href={`${searchUrl}?vreId=${props.vreId}`} target="_blank">
         Explore<br />
         <strong>
             {props.caption}
