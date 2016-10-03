@@ -1,5 +1,6 @@
 import React from "react";
-import { Router, Route, hashHistory, IndexRoute } from 'react-router'
+import { Router, Route, IndexRoute, useRouterHistory } from 'react-router'
+import { createHashHistory } from 'history'
 import { Provider, connect } from "react-redux"
 import store from "./store";
 import actions from "./actions";
@@ -28,6 +29,8 @@ var urls = {
     return "/collections-overview";
   }
 };
+
+const hashHistory = useRouterHistory(createHashHistory)({ queryKey: false })
 
 export function navigateTo(key, args) {
   hashHistory.push(urls[key].apply(null, args));
