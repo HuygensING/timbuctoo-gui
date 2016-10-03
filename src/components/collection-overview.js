@@ -3,13 +3,13 @@ import UploadButton from "./upload-button";
 import DatasetCards from "./dataset-cards"
 
 function CollectionOverview(props) {
-  const { onUploadFileSelect, userId, isUploading, vres, searchGuiUrl } = props;
+  const { onUploadFileSelect, userId, uploadStatus, vres, searchGuiUrl } = props;
 
   const uploadButton = (
     <UploadButton
       classNames={["btn", "btn-lg", "btn-primary", "pull-right"]}
       glyphicon="glyphicon glyphicon-cloud-upload"
-      isUploading={isUploading}
+      uploadStatus={uploadStatus}
       label="Upload new dataset"
       onUploadFileSelect={onUploadFileSelect} />
   );
