@@ -48,14 +48,20 @@ export default function actionsMaker(navigateTo, dispatch) {
       dispatch({type: "START_UPLOAD"})
       dispatch(function (dispatch, getState) {
         var state = getState();
-        var payload = {
-          body: formData,
-          headers: {
-            "Authorization": state.userdata.userId
+        var req = new XMLHttpRequest();
+        req.open('POST', process.env.server + "/v2.1/bulk-upload", true);
+        req.setRequestHeader("Authorization", state.userdata.userId);
+        var pos = 0;
+        req.onreadystatechange = function handleData() {
+          if (req.readyState != null && (req.readyState < 3 || req.status != 200)) {
+              return
           }
+          var newPart = req.responseText.substr(pos);
+          pos = req.responseText.length;
+          newPart.split("\n").forEach(line => dispatch({type: "UPLOAD_STATUS_UPDATE", data: line}));
         };
-        xhr.post(process.env.server + "/v2.1/bulk-upload", payload, function (err, resp) {
-          let location = resp.headers.location;
+        req.onload = function (err, resp) {
+          let location = req.getResponseHeader("location");
           xhr.get(location, {headers: {"Authorization": state.userdata.userId}}, function (err, resp, body) {
             dispatch({type: "FINISH_UPLOAD", data: JSON.parse(body), uploadedFileName: file.name});
             if (isReupload) {
@@ -64,7 +70,8 @@ export default function actionsMaker(navigateTo, dispatch) {
               navigateTo("mapArchetypes");
             }
           });
-        });
+        };
+        req.send(formData);
       });
     },
     onContinueMapping: function (vreId) {

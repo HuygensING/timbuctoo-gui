@@ -3,16 +3,16 @@ import UploadButton from "./upload-button";
 
 // (renames from UploadSplashScreen)
 function FirstUpload(props) {
-  const { onUploadFileSelect, userId, isUploading } = props;
+  const { onUploadFileSelect, userId, uploadStatus } = props;
 
   const sampleSheet = props.exampleSheetUrl ?
     <p>Don't have a dataset handy? Here’s an <a href={props.exampleSheetUrl}>example excel sheet</a>.</p> : null;
 
   const uploadButton = (
     <UploadButton
+      uploadStatus={uploadStatus}
       classNames={["btn", "btn-lg", "btn-primary"]}
       glyphicon="glyphicon glyphicon-cloud-upload"
-      isUploading={isUploading}
       label="Browse"
       onUploadFileSelect={onUploadFileSelect} />
   );

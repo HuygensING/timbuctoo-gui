@@ -7,11 +7,11 @@ storiesOf('first upload jumbotron', module)
     <FirstUpload __MockOnLogin={action('LOGGED IN VIA SAML')} />
   ))
   .add('without excel example', () => (
-    <FirstUpload onUploadFileSelect={action("onUpload")}  userId="user" isUploading={false} />
+    <FirstUpload onUploadFileSelect={action("onUpload")}  userId="user" />
   ))
   .add('with excel example', () => (
-    <FirstUpload onUploadFileSelect={action("onUpload")} exampleSheetUrl="/foo/bar.xls" userId="user" isUploading={false}/>
+    <FirstUpload onUploadFileSelect={action("onUpload")} exampleSheetUrl="/foo/bar.xls" userId="user"/>
   ))
   .add('uploading', () => (
-    <FirstUpload onUploadFileSelect={action("onUpload")} exampleSheetUrl="/foo/bar.xls" userId="user" isUploading={true}/>
+    <FirstUpload onUploadFileSelect={action("onUpload")} exampleSheetUrl="/foo/bar.xls" userId="user" uploadStatus="100 rows, 1 error"/>
   ));
