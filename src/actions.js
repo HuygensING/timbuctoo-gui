@@ -58,9 +58,11 @@ export default function actionsMaker(navigateTo, dispatch) {
           }
           var newPart = req.responseText.substr(pos);
           pos = req.responseText.length;
-          newPart.split("\n").forEach(line => dispatch({type: "UPLOAD_STATUS_UPDATE", data: line}));
+          newPart.split("\n").forEach(line => {
+            dispatch({type: "UPLOAD_STATUS_UPDATE", data: line});
+          });
         };
-        req.onload = function (err, resp) {
+        req.onload = function () {
           let location = req.getResponseHeader("location");
           xhr.get(location, {headers: {"Authorization": state.userdata.userId}}, function (err, resp, body) {
             dispatch({type: "FINISH_UPLOAD", data: JSON.parse(body), uploadedFileName: file.name});
@@ -109,32 +111,45 @@ export default function actionsMaker(navigateTo, dispatch) {
       dispatch({type: "SAVE_STARTED"});
       dispatch({type: "SAVE_FINISHED"});
       dispatch({type: "PUBLISH_STARTED"});
+
       dispatch(function (dispatch, getState) {
         var state = getState();
         var jsonLd = mappingToJsonLdRml(state.mappings, state.importData.vre, state.archetype);
         console.log(jsonLd);
-        var payload = {
-          body: JSON.stringify(jsonLd),
-          headers: {
-            "Authorization": state.userdata.userId,
-            "Content-type": "application/ld+json"
-          }
-        };
 
-        xhr.post(state.importData.executeMappingUrl, payload, function (err, resp) {
-          if (err) {
+        var req = new XMLHttpRequest();
+        req.open('POST', state.importData.executeMappingUrl, true);
+        req.setRequestHeader("Authorization", state.userdata.userId);
+        req.setRequestHeader("Content-type", "application/ld+json");
+        var pos = 0;
+        req.onreadystatechange = function handleData() {
+          if (req.readyState != null && (req.readyState < 3 || req.status != 200)) {
+              return
+          }
+          var newPart = req.responseText.substr(pos);
+          pos = req.responseText.length;
+          newPart.split("\n").forEach(line => {
+            dispatch({type: "PUBLISH_STATUS_UPDATE", data: line});
+          });
+        };
+        req.onload = function () {
+          if (req.status > 400) {
             dispatch({type: "PUBLISH_HAD_ERROR"})
           } else {
-            if (JSON.parse(resp.body).success) {
-              dispatch({type: "PUBLISH_SUCCEEDED"});
-              actions.onToken(state.userdata.userId);
-            } else {
-              dispatch({type: "PUBLISH_HAD_ERROR"});
-              actions.onSelectCollection(state.importData.activeCollection);
-            }
+            dispatch(function (dispatch, getState) {
+              var state = getState();
+              if (state.importData.publishErrorCount === 0) {
+                dispatch({type: "PUBLISH_SUCCEEDED"});
+                actions.onToken(state.userdata.userId);
+              } else {
+                dispatch({type: "PUBLISH_HAD_ERROR"});
+                actions.onSelectCollection(state.importData.activeCollection);
+              }
+            });
           }
           dispatch({type: "PUBLISH_FINISHED"});
-        });
+        };
+        req.send(JSON.stringify(jsonLd));
       });
     },
 

@@ -5,7 +5,11 @@ const initialState = getItem("importData") || {
 	sheets: null,
 	activeCollection: null,
 	publishErrors: false,
-	uploadedFileName: undefined
+	uploadedFileName: undefined,
+	publishEnabled: true,
+	publishStatus: undefined,
+	publishErrorCount: 0,
+	tripleCount: 0
 };
 
 function findIndex(arr, f) {
@@ -109,6 +113,16 @@ export default function(state=initialState, action) {
 			return result;
 		case "SET_ACTIVE_COLLECTION":
 			return {...state, activeCollection: action.collection};
+		case "PUBLISH_STATUS_UPDATE":
+			var publishErrorCount = state.publishErrorCount + (action.data === "F" ? 1 : 0);
+			var tripleCount = action.data === "F" ? state.tripleCount : action.data;
+			var publishStatus = "Publishing " + tripleCount + " triples" + (publishErrorCount > 0 ? " (" + publishErrorCount + " errors)" : "");
+			return {
+				...state,
+				publishErrorCount,
+				tripleCount,
+				publishStatus
+			};
 		case "PUBLISH_HAD_ERROR":
 			// clear the sheets to force reload
 			return {
@@ -124,12 +138,23 @@ export default function(state=initialState, action) {
 			// clear the sheets to force reload
 			return {
 				...state,
+				publishStatus: undefined,
+				publishEnabled: true,
 				publishErrors: false,
 				sheets: state.sheets.map((sheet) => ({
 					...sheet,
 					rows: [],
 					nextUrl: sheet.nextUrlWithErrors
 				}))
+			};
+		case "PUBLISH_FINISHED":
+			// clear the sheets to force reload
+			return {
+				...state,
+				publishStatus: undefined,
+				publishEnabled: true,
+				publishErrorCount: 0,
+				tripleCount: 0
 			};
 	}
 

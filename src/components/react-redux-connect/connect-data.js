@@ -54,16 +54,18 @@ function transformProps(props) {
 
   const availableArchetypes = Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName);
 
+  const tabs = sheets.map((sheet) => ({
+    collectionName: sheet.collection,
+    archetypeName: mappings.collections[sheet.collection].archetypeName,
+    active: activeCollection === sheet.collection,
+    complete: mappingsAreComplete(props, sheet)
+  }));
+
   return {
     sheets: sheets,
     activeCollection: activeCollection,
     uploadedFileName: uploadedFileName,
-    collectionTabs: sheets.map((sheet) => ({
-      collectionName: sheet.collection,
-      archetypeName: mappings.collections[sheet.collection].archetypeName,
-      active: activeCollection === sheet.collection,
-      complete: mappingsAreComplete(props, sheet)
-    })),
+    collectionTabs: tabs,
     rows: rows.map((row) => row.map((cell, i) => ({
       value: cell.value,
       error: cell.error || null,
@@ -94,7 +96,9 @@ function transformProps(props) {
     }, {}),
     publishErrors: publishErrors,
     showCollectionsAreConnectedMessage:  props.messages.showCollectionsAreConnectedMessage,
-    targetableVres: getTargetableVres(myVres, vres)
+    targetableVres: getTargetableVres(myVres, vres),
+    publishStatus: props.importData.publishStatus || "Publish dataset",
+    publishEnabled: !props.importData.publishing && tabs.every(tab => tab.complete)
   };
 }
 

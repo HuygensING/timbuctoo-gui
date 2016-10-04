@@ -40,15 +40,16 @@ class ConnectData extends React.Component {
       onLoadMoreClick,
       onPublishData,
       onUploadFileSelect,
-      onCloseMessage
+      onCloseMessage,
+      uploadStatus,
+      publishStatus,
+      publishEnabled
     } = this.props;
-
-    const allMappingsAreComplete = collectionTabs.filter((tab) => tab.complete).length === collectionTabs.length;
 
     const publishFailedMessage = publishErrors ? (
       <Message alertLevel="danger" dismissible={false}>
         <UploadButton classNames={["btn", "btn-danger", "pull-right", "btn-xs"]} label="Re-upload"
-                      onUploadFileSelect={onUploadFileSelect} />
+                      onUploadFileSelect={onUploadFileSelect} uploadStatus={uploadStatus} />
         <span className="glyphicon glyphicon-exclamation-sign" />{" "}
         Publish failed. Please fix the mappings or re-upload the data.
       </Message>
@@ -88,8 +89,8 @@ class ConnectData extends React.Component {
                         targetableVres={targetableVres} />
 
         <div className="container big-margin">
-          <button onClick={onPublishData} className="btn btn-warning btn-lg pull-right" type="button" disabled={!allMappingsAreComplete || publishing}>
-            {publishing ? "Publishing" :  "Publish dataset"}
+          <button onClick={onPublishData} className="btn btn-warning btn-lg pull-right" type="button" disabled={!publishEnabled}>
+            {publishStatus}
           </button>
         </div>
 
