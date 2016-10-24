@@ -15,9 +15,47 @@ const mappings = {
       mappings: [
         {
           property: "familyName",
-          variable: [{
-            variableName: "family_name"
-          }]
+          variable: [{ variableName: "family_name" }]
+        },
+        {
+          property: "givenName",
+          variable: [{ variableName: "given_name" }]
+        },
+        {
+          property: "preposition",
+          variable: [ { variableName: "preposition" }]
+        },
+        {
+          property: "intraposition",
+          variable: [ { variableName: "intraposition" }]
+        },
+        {
+          property: "postposition",
+          variable: [ { variableName: "postposition" }]
+        },
+        {
+          property: "gender",
+          variable: [ { variableName: "gender" }]
+        },
+        {
+          property: "birthDate",
+          variable: [ { variableName: "birth_date" }]
+        },
+        {
+          property: "deathDate",
+          variable: [ { variableName: "death_date" }]
+        },
+        {
+          property: "religion",
+          variable: [ { variableName: "religion" }]
+        },
+        {
+          property: "originDb",
+          variable: [ { variableName: "origin_db" }]
+        },
+        {
+          property: "important",
+          variable: [ { variableName: "important" }]
         }
       ]
     },
