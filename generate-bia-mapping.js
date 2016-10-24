@@ -8,6 +8,18 @@ const archetypes = {
   persons: []
 };
 
+/**
+ * Mappings based on 2016_10_06_BIA_Master_WERFILE_JAUCO.xlsx
+ * these core mappings include the sheets:
+ * - Persons    (archetype: persons)
+ * - Places     (archetype: locations)
+ * - Institutes (archetype: collectives)
+ *
+ * and maps these one to many relations:
+ * - Institute locatedAt Place
+ * - Person hasBirthPlace Place
+ * - Person hasDeathPlace Place
+ */
 const mappings = {
   collections: {
     Persons: {
@@ -42,8 +54,24 @@ const mappings = {
           variable: [ { variableName: "birth_date" }]
         },
         {
+          property: "hasBirthPlace",
+          variable: [{
+            variableName: "birth_place_persistent_id",
+            targetCollection: "Places",
+            targetVariableName: "persistent_id"
+          }]
+        },
+        {
           property: "deathDate",
           variable: [ { variableName: "death_date" }]
+        },
+        {
+          property: "hasDeathPlace",
+          variable: [{
+            variableName: "death_place_persistent_id",
+            targetCollection: "Places",
+            targetVariableName: "persistent_id"
+          }]
         },
         {
           property: "religion",
@@ -105,34 +133,36 @@ const mappings = {
   }
 };
 const vre = process.env.VRE_ID;
-const auth = process.env.AUTH_HEADER;
-const host = process.env.HOST;
-const port = process.env.PORT;
-
 
 const jsonLd = JSON.stringify(mappingToJsonLdRml(mappings, vre, archetypes));
 
+console.log("JSON LD:\n===========");
 console.log(JSON.stringify(JSON.parse(jsonLd), null, '  '));
+console.log("===========");
 
 
-const httpOpts = {
-  host: host,
-  port: port,
-  path: `/v2.1/bulk-upload/${vre}/rml/execute`,
-  method: "POST",
-  headers: {
-    'Authorization': auth,
-    'Content-type': "application/ld+json",
-    'Content-length': Buffer.byteLength(jsonLd)
-  }
-};
+if (process.env.HOST && process.env.AUTH_HEADER) {
+  const auth = process.env.AUTH_HEADER;
+  const host = process.env.HOST;
+  const port = process.env.PORT || "80";
+  const httpOpts = {
+    host: host,
+    port: port,
+    path: `/v2.1/bulk-upload/${vre}/rml/execute`,
+    method: "POST",
+    headers: {
+      'Authorization': auth,
+      'Content-type': "application/ld+json",
+      'Content-length': Buffer.byteLength(jsonLd)
+    }
+  };
 
-const req = http.request(httpOpts, (response) => {
-  let str = '';
-  response.on('data', (chunk) => str += chunk);
-  response.on('end', () => console.log(str));
-});
+  const req = http.request(httpOpts, (response) => {
+    let str = '';
+    response.on('data', (chunk) => str += chunk);
+    response.on('end', () => console.log(str));
+  });
 
-req.write(jsonLd);
-req.end();
-
+  req.write(jsonLd);
+  req.end();
+}
