@@ -30,7 +30,7 @@ const mappings = {
             variableName: "name"
           }]
         }, {
-          property: "hasLocation",
+          property: "locatedAt",
           variable: [{
             variableName: "place_persistant_id",
             targetCollection: "Places",
@@ -41,24 +41,45 @@ const mappings = {
     },
     Places: {
       archetypeName: "locations",
-      mappings: [{
-        property: "name",
-        variable: [{
-          variableName: "name"
-        }]
-      }]
+      mappings: [
+        {
+          property: "name",
+          variable: [{ variableName: "name" }]
+        },
+        {
+          property: "country",
+          variable: [{ variableName: "country" }]
+        },
+        {
+          property: "latitude",
+          variable: [{ variableName: "latitude" }]
+        },
+        {
+          property: "longitude",
+          variable: [{ variableName: "longitude" }]
+        },
+        {
+          property: "remarks",
+          variable: [{ variableName: "remarks" }]
+        },
+      ]
     }
   }
 };
 const vre = process.env.VRE_ID;
 const auth = process.env.AUTH_HEADER;
+const host = process.env.HOST;
+const port = process.env.PORT;
+
+
 const jsonLd = JSON.stringify(mappingToJsonLdRml(mappings, vre, archetypes));
 
 console.log(JSON.stringify(JSON.parse(jsonLd), null, '  '));
 
+
 const httpOpts = {
-  host: "localhost",
-  port: "8080",
+  host: host,
+  port: port,
   path: `/v2.1/bulk-upload/${vre}/rml/execute`,
   method: "POST",
   headers: {
