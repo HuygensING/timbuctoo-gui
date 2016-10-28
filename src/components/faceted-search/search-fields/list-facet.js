@@ -1,5 +1,6 @@
 import React from "react";
 import cx from "classnames";
+import camel2label from "../camel2label";
 
 class ListFacet extends React.Component {
 
@@ -32,6 +33,8 @@ class ListFacet extends React.Component {
     const facetCounts = facets.filter((facet, i) => i % 2 === 1);
     const facetValues = facets.filter((facet, i) => i % 2 === 0);
 
+    if (facetValues.length === 0) { return null; }
+
     const facetSortValue = facetSort ? facetSort :
       query.facetSort ? query.facetSort :
         (query.facetLimit && query.facetLimit > -1 ? "count" : "index");
@@ -49,14 +52,16 @@ class ListFacet extends React.Component {
       <div className="facet basic-facet">
          <span onClick={this.toggleExpand.bind(this)} style={{cursor: "pointer"}}
                className={cx("glyphicon", "pull-right", "facet-extra", "hi-light-grey", {"glyphicon-collapse-up" : !collapse, "glyphicon-collapse-down": collapse})} />
-         <h2 onClick={this.toggleExpand.bind(this)} style={{cursor: "pointer"}}>{label}</h2>
+         <h2 onClick={this.toggleExpand.bind(this)} style={{cursor: "pointer"}}>{camel2label(label)}</h2>
         { expanded ? (
           <div>
             <div className="facet-items-box">
               {facetValues.filter((facetValue, i) => truncateFacetListsAt < 0 || i < truncateFacetListsAt).map((facetValue, i) =>
                 this.state.filter.length === 0 || facetValue.toLowerCase().indexOf(this.state.filter.toLowerCase()) > -1 ? (
-                  <div className="facet-item downcase-then-capitalize" key={`${facetValue}_${facetCounts[i]}`} onClick={() => this.handleClick(facetValue)}>
-                    {facetValue}
+                  <div className="facet-item" key={`${facetValue}_${facetCounts[i]}`} onClick={() => this.handleClick(facetValue)}>
+                    <span className="downcase-then-capitalize" style={{display: "inline-block", maxWidth: "190px"}}>
+                      {facetValue}
+                    </span>
                     <span className="facet-item-amount">{facetCounts[i]}</span>
                     <svg className={cx("facet-check-box", {checked: value.indexOf(facetValue) > -1})} viewBox="0 0 15 15">
                       <circle cx="7.5" cy="7.5" r="7"/>

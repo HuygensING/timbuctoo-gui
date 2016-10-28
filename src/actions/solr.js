@@ -29,12 +29,12 @@ const checkIndex = (afterCheck) => (dispatch, getState) => {
 const getPropSuffix = (archetypeType) =>
 	archetypeType === "datable" ? "i" :
 		archetypeType === "text" ? "s" :
-			archetypeType === "relation" ? "ss" : "";
+			archetypeType === "relation" || archetypeType === "list-of-strings" ? "ss" : "";
 
 const getFacetType = (archetypeType) =>
 	archetypeType === "datable" ? "range-facet" :
 		archetypeType === "text" ? "list-facet" :
-			archetypeType === "relation" ? "list-facet" : "";
+			archetypeType === "relation"  || archetypeType === "list-of-strings" ? "list-facet" : "";
 
 const configureSearchClients = () => (dispatch, getState) => {
 	const { metadata: {collections, archetypeCollections} } = getState();

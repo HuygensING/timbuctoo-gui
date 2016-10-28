@@ -1,5 +1,6 @@
 import React from "react";
 import cx from "classnames";
+import camel2label from "../camel2label";
 
 import RangeSlider from "./range-slider";
 
@@ -81,7 +82,7 @@ class RangeFacet extends React.Component {
       <div className="facet basic-facet">
          <span onClick={this.toggleExpand.bind(this)} style={{cursor: "pointer"}}
                className={cx("glyphicon", "pull-right", "facet-extra", "hi-light-grey", {"glyphicon-collapse-up" : !collapse, "glyphicon-collapse-down": collapse})} />
-        <h2 onClick={this.toggleExpand.bind(this)} style={{cursor: "pointer"}}>{label}</h2>
+        <h2 onClick={this.toggleExpand.bind(this)} style={{cursor: "pointer"}}>{camel2label(label)}</h2>
 
 
         <div style={{display: collapse ? "none" : "block"}}>
