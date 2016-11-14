@@ -9,7 +9,7 @@ import actions from "./actions";
 const urls = {
 	root: (vreId) => vreId ? `/?vreId=${vreId}` : "/",
 	entity: (collectionName, id, vreId) => collectionName && id && vreId ?
-		`${collectionName}/${id}?vreId=${vreId}` : ":collectionName/:id"
+		`/${collectionName}/${id}?vreId=${vreId}` : "/:collectionName/:id"
 };
 
 export { urls };

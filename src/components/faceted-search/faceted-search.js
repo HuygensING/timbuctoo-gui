@@ -53,7 +53,7 @@ class FacetedSearch extends React.Component {
                   {activeCollection.results.docs.map((doc, i) => (
                     <li key={i + activeCollection.query.start}>
                         <Link to={urls.entity(activeCollection.name, doc.id, vreId)}>
-                          {doc.displayName_s}
+                          {doc.displayName_s && doc.displayName_s.length ? doc.displayName_s : "<No display name found>"}
                           {doc.birthDate_i ? (<span className="hi-light-grey pull-right">{doc.birthDate_i} - {doc.deathDate_i}</span>) : null}
                           {doc.country_s ? (<span className="hi-light-grey pull-right">{doc.country_s}</span>) : null}
                         </Link>

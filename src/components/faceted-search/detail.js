@@ -29,7 +29,24 @@ class Detail extends React.Component {
     if (this.props.params.id !== nextProps.params.id) {
       onFetchEntity(nextProps.params.collectionName, nextProps.params.id);
     }
-}
+  }
+
+  renderPropPart(value) {
+    if (typeof value === "string") {
+      return value;
+    } else if (value.components) {
+      return value.components.map((com) => com.value).join(" ");
+    }
+  }
+
+  renderProp(propertyValue) {
+    if (typeof propertyValue === "string" || typeof propertyValue === "number") {
+      return propertyValue;
+    } else if (Array.isArray(propertyValue)) {
+      return propertyValue.map((val) => this.renderPropPart(val)).join(", ")
+    }
+    return "[Object]";
+  }
 
   render() {
     const { entity, collectionMetadata, vreId, nextId, prevId} = this.props;
@@ -67,7 +84,7 @@ class Detail extends React.Component {
                   display: "inline-block", width: "150px", backgroundColor: "#aaa",
                   paddingTop: "40px", fontSize: "3em", color: "#666"
                 }}>
-                  {entity["@displayName"].charAt(0)}
+                  {entity["@displayName"] ? entity["@displayName"].charAt(0) : "?"}
               </span>
               <h1>{entity["@displayName"]}</h1>
             </div>
@@ -83,7 +100,7 @@ class Detail extends React.Component {
                   {camel2label(property.name)}
                 </div>
                 <div className="col-xs-6">
-                  {entity[property.name] || entity["@relations"][property.name]
+                  {this.renderProp(entity[property.name]) || entity["@relations"][property.name]
                     .filter((rel) => rel.displayName.length > 0)
                     .map((rel) => rel.displayName).join(", ")}
                 </div>
