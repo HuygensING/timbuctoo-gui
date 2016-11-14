@@ -100,9 +100,10 @@ class Detail extends React.Component {
                   {camel2label(property.name)}
                 </div>
                 <div className="col-xs-6">
-                  {this.renderProp(entity[property.name]) || entity["@relations"][property.name]
+                  {entity["@relations"][property.name] ? entity["@relations"][property.name]
                     .filter((rel) => rel.displayName.length > 0)
-                    .map((rel) => rel.displayName).join(", ")}
+                    .map((rel) => rel.displayName).join(", ")
+                  : this.renderProp(entity[property.name])}
                 </div>
               </div>
           ))}
