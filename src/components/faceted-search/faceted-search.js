@@ -7,7 +7,7 @@ import SortMenu from "./sort-menu";
 import {Link} from "react-router";
 import searchClient from "../../solr-client";
 
-
+const downCaseAndCapitalize = (str) => str.toLowerCase().replace(/^./, (match) => match.toUpperCase());
 
 const datasetsFromSearchFields = (datasets, searchFields) => {
   if (searchFields.length === 0) {
@@ -19,6 +19,19 @@ const datasetsFromSearchFields = (datasets, searchFields) => {
     return datasets;
   }
   return selectedDatasets;
+};
+
+const archtypeSubtitle = {
+  archive: (doc) => `${(doc.has_archive_keyword_ss || []).concat(doc.has_archive_place_ss || []).join(", ")}`,
+  archiver: (doc) => `${(doc.has_archiver_keyword_ss || []).concat(doc.has_archiver_place_ss || []).join(", ")}`,
+  collective: (doc) => `${downCaseAndCapitalize(doc.type_s || "")} ${(doc.hasLocation_ss || []).join(", ")}`,
+  concept: (doc) => ``,
+  document: (doc) => `${downCaseAndCapitalize(doc.documentType_s || "")} ${(doc.hasPublishLocation_ss || []).join(", ")} (${doc.date_s || "?"})`,
+  keyword: (doc) => ``,
+  language: (doc) => ``,
+  legislation: (doc) => `${(doc.has_legislation_keyword_ss || []).concat(doc.has_legislation_place_ss || []).join(", ")}`,
+  location: (doc) => ``,
+  person: (doc) => `${doc.birthDate_s || "?"} - ${doc.deathDate_s || "?"}`,
 };
 
 class FacetedSearch extends React.Component {
@@ -104,7 +117,9 @@ class FacetedSearch extends React.Component {
                             </span>
                           </span>
                           <span className="row pull-right clearfix">
-                            <span className="col-md-8 hi-light-grey small no-lr-padding">TODO: archetype specs</span>
+                            <span className="col-md-8 hi-light-grey small no-lr-padding">
+                              {archtypeSubtitle[doc.archetype_name_s](doc)}
+                            </span>
                             <span className="col-md-4 hi-light-grey text-right small" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
                               {doc.archetype_name_s}
                             </span>
