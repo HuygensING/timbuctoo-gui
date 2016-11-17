@@ -8,6 +8,8 @@ const components = {
   "range-facet": RangeFacet
 };
 
+const facetSum = (facets) => facets.filter((facets, idx) => idx % 2 > 0).reduce((a, b) => a + b, 0);
+
 class SearchFields extends React.Component {
 
   render() {
@@ -20,6 +22,10 @@ class SearchFields extends React.Component {
           const { type, field } = searchField;
           const SearchComponent = components[type];
           const facets = type === "list-facet" || type === "range-facet" ? results.facets[field] || [] : null;
+
+          if ((type === "list-facet" || type === "range-facet") && facetSum(facets) === 0) {
+            return null;
+          }
           return (<SearchComponent key={`${i}_${field}`} facets={facets} onChange={onSearchFieldChange}
                                    collapse={searchField.collapse}
                                    onFacetSortChange={onFacetSortChange} onSetCollapse={onSetCollapse}

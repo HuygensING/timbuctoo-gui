@@ -4,7 +4,7 @@ import store from "./store";
 
 const fields = [
   { label: "Search", field: "displayName_t", type: "text" },
-  { label: "Archetype", field: "archetype_name_s", type: "list-facet"},
+  { label: "Archetype", field: "archetype_name_s", type: "list-facet", facetSort: "index"},
   { label: "Person gender", field: "gender_s", type: "list-facet"},
   { label: "", field: "dataset_s", type: "list-facet"}
 ];

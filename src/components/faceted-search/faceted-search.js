@@ -1,5 +1,4 @@
 import React from "react";
-import SelectField from "../fields/select-field";
 import SearchFields from "./search-fields";
 import Page from "../page.js";
 import CurrentQuery from "./current-query";
@@ -9,29 +8,28 @@ import {Link} from "react-router";
 import searchClient from "../../solr-client";
 
 
-const activeDatasetsFromFacets = (facets) => (facets || []).reduce((accum, curr, idx) => {
-    if (idx % 2 === 0) {
-      accum.push({name: curr});
-    } else {
-      accum[accum.length - 1] = {
-        ...accum[accum.length - 1],
-        count: curr
-      }
-    }
-    return accum;
-  }, []).filter((facet) => facet.count > 0).map((facet) => facet.name);
 
+const datasetsFromSearchFields = (datasets, searchFields) => {
+  if (searchFields.length === 0) {
+    return datasets;
+  }
+
+  const selectedDatasets = searchFields.filter((sf) => sf.field === "dataset_s")[0].value;
+  if (!selectedDatasets || selectedDatasets.length === 0) {
+    return datasets;
+  }
+  return selectedDatasets;
+};
 
 class FacetedSearch extends React.Component {
 
   onShowAllDatasetsClick() {
     searchClient.getHandlers().onSearchFieldChange("dataset_s", []);
-
   }
 
   onDatasetClick(value) {
-    const { solrSearch: { results : { facets }} } = this.props;
-    const datasetFilter = activeDatasetsFromFacets(facets.dataset_s).filter((dataset) => dataset !== value);
+    const { solrSearch: { query : { searchFields }, datasets } } = this.props;
+    const datasetFilter = datasetsFromSearchFields(datasets, searchFields).filter((dataset) => dataset !== value);
 
     searchClient.getHandlers().onSearchFieldChange("dataset_s", datasetFilter);
   }
@@ -47,20 +45,19 @@ class FacetedSearch extends React.Component {
       onNewSearch
     } = searchClient.getHandlers();
 
-
-    const datasetsFromFacets = activeDatasetsFromFacets(solrSearch.results.facets.dataset_s);
+    const activeDatasets = datasetsFromSearchFields(solrSearch.datasets, solrSearch.query.searchFields);
 
     return (
       <Page>
         <div className="container big-margin">
           <div className="row basic-margin hi-underline facet">
-            <div className="col-sm-4 col-md-3">
+            <div className="col-sm-2 col-md-1">
               <h2>Dataset</h2>
             </div>
-            <div className="col-sm-8 col-md-9 text-right">
-              {datasetsFromFacets.map((dataset) => (
+            <div className="col-sm-10 col-md-11 text-right">
+              {activeDatasets.map((dataset) => (
                 <span key={dataset} style={{marginRight: "4px"}} className="btn btn-primary btn-sm" onClick={() => this.onDatasetClick(dataset)}>
-                  {dataset}
+                  {dataset.replace(/^[^_]+_+/, "")}
                   <span className="glyphicon glyphicon-remove-sign hi-half-transp" />
                 </span>
               )).concat((
@@ -96,9 +93,23 @@ class FacetedSearch extends React.Component {
               <div className="result-list big-margin">
                 <ol start={solrSearch.query.start + 1} style={{counterReset: `step-counter ${solrSearch.query.start}`}}>
                   {solrSearch.results.docs.map((doc, i) => (
-                    <li key={i + solrSearch.query.start}>
+                    <li key={i + solrSearch.query.start} className="clearfix">
                         <Link to={`?foo=bar`}>
-                          {doc.displayName_s && doc.displayName_s.length ? doc.displayName_s : "<No display name found>"}
+                          <span className="row pull-right clearfix">
+                            <span className="col-md-8 no-lr-padding" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                              {doc.displayName_s && doc.displayName_s.length ? doc.displayName_s : "<No display name found>"}
+                            </span>
+                            <span className="col-md-4 hi-light-grey text-right small" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                              {doc.dataset_s.replace(/^[^_]+_+/, "")}
+                            </span>
+                          </span>
+                          <span className="row pull-right clearfix">
+                            <span className="col-md-8 hi-light-grey small no-lr-padding">TODO: archetype specs</span>
+                            <span className="col-md-4 hi-light-grey text-right small" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                              {doc.archetype_name_s}
+                            </span>
+                          </span>
+
                         </Link>
                     </li>
                   ))}
