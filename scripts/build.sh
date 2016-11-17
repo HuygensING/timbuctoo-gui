@@ -1,6 +1,5 @@
 #!/bin/sh
 NODE_ENV="${NODE_ENV:-development}"
-SOLR_URL="${SOLR_URL:-http://localhost:8983/solr}"
 
 echo "NODE_ENV=$NODE_ENV"
 
@@ -28,5 +27,5 @@ node_modules/.bin/$cmd src/index.js \
 	--external react-dom \
 	--standalone TimSearch \
 	--transform [ babelify --presets [ es2015 react ] --plugins [ transform-es2015-destructuring transform-object-rest-spread transform-object-assign] ] \
-	--transform [ envify --NODE_ENV="${NODE_ENV}" --SOLR_URL="${SOLR_URL}" ] \
+	--transform [ envify --NODE_ENV="${NODE_ENV}" ] \
 	--verbose

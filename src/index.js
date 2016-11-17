@@ -1,12 +1,13 @@
 import ReactDOM from "react-dom";
 import {routes, storeSearch} from "./router";
 import store from "./store";
+import searchClient from "./solr-client";
 
 document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(routes, document.getElementById("app"));
   store.subscribe(() => {
     if (location.pathname === "/") {
-      // storeSearch();
+      storeSearch();
     }
   });
 
@@ -20,5 +21,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-//  searchClient.initialize();
+  searchClient.initialize();
 });

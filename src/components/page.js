@@ -1,6 +1,8 @@
 import React from 'react';
 import Footer from "./footer";
 
+const FOOTER_HEIGHT = 81;
+
 function Page(props) {
   const footers = React.Children.toArray(props.children).filter((child) => child.props.type === "footer-body");
 
@@ -9,7 +11,7 @@ function Page(props) {
       <div className="basic-margin hi-Green container-fluid">
         <nav className="navbar ">
           <div className="container">
-            <div className="navbar-header"> <a className="navbar-brand" href="#"><img src="images/logo-timbuctoo.svg" className="logo" alt="timbuctoo"/></a> </div>
+            <div className="navbar-header"> <a className="navbar-brand" href="#"><img src="/logo-timbuctoo.svg" className="logo" alt="timbuctoo"/></a> </div>
             <div id="navbar" className="navbar-collapse collapse">
               <ul className="nav navbar-nav navbar-right">
                 {props.username ? <li><a href={props.userlocation || '#'}><span className="glyphicon glyphicon-user"/> {props.username}</a></li> : null}
@@ -17,6 +19,9 @@ function Page(props) {
             </div>
           </div>
         </nav>
+      </div>
+      <div  style={{marginBottom: `${FOOTER_HEIGHT * footers.length}px`}}>
+        {React.Children.toArray(props.children).filter((child) => child.props.type !== "footer-body")}
       </div>
       <Footer>
         {footers}

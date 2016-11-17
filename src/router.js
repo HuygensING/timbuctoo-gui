@@ -1,8 +1,8 @@
 import React from "react";
-import Page from "./components/page";
+import Search from "./components/faceted-search/faceted-search";
 import actions from "./actions";
 import {Provider, connect} from "react-redux";
-import {Router, Route, hashHistory} from "react-router";
+import {Router, Route, browserHistory} from "react-router";
 import store from "./store";
 
 
@@ -14,18 +14,17 @@ const grabQuery = (search) => ({
 
 // Serialize search states as json + URI
 export function serializeSearch() {
-  const { creatorSearch, legislationSearch, archiveSearch } = store.getState();
+  const { solrSearch } = store.getState();
 
   return encodeURIComponent(JSON.stringify({
-    creatorSearch: grabQuery(creatorSearch),
-    legislationSearch: grabQuery(legislationSearch),
-    archiveSearch: grabQuery(archiveSearch)
+    solrSearch: grabQuery(solrSearch)
   }));
 }
 
 // Store search state in url
 export function storeSearch() {
   const serialized = `${location.pathname}?#q=${serializeSearch()}`;
+  console.log(serialized);
   if (location.pathname + "#" + location.hash !== serialized) {
     browserHistory.replace(`${location.pathname}#q=${serializeSearch()}`);
   }
@@ -38,7 +37,7 @@ const urls = {
 };
 
 export function navigateTo(key, args) {
-  hashHistory.push(urls[key].apply(null, args));
+  browserHistory.push(urls[key].apply(null, args));
 }
 
 // Connector functions
@@ -50,8 +49,8 @@ const connectAppComponent = connect(
 // Actual routes
 export const routes = (
   <Provider store={store}>
-    <Router history={hashHistory}>
-      <Route path={`${urls.root()}`} component={connectAppComponent(Page)}>
+    <Router history={browserHistory}>
+      <Route path={`${urls.root()}`} component={connectAppComponent(Search)}>
       </Route>
     </Router>
   </Provider>
