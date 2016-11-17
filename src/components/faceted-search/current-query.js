@@ -61,7 +61,7 @@ class CurrentQuery extends React.Component {
     return (
       <div>
         {searchFields
-              .filter((searchField) => searchField.value && searchField.value.length > 0)
+              .filter((searchField) => searchField.value && searchField.value.length > 0 && searchField.field !== "dataset_s")
               .map((searchField) => (
                 this.renderFieldValues(searchField)
               ))

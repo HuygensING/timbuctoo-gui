@@ -1,6 +1,6 @@
 #!/bin/sh
 NODE_ENV="${NODE_ENV:-development}"
-
+SERVER="${SERVER:-http://localhost:8080}"
 echo "NODE_ENV=$NODE_ENV"
 
 if [ "$1" = "--watch" ]; then
@@ -27,5 +27,5 @@ node_modules/.bin/$cmd src/index.js \
 	--external react-dom \
 	--standalone TimSearch \
 	--transform [ babelify --presets [ es2015 react ] --plugins [ transform-es2015-destructuring transform-object-rest-spread transform-object-assign] ] \
-	--transform [ envify --NODE_ENV="${NODE_ENV}" ] \
+	--transform [ envify --NODE_ENV="${NODE_ENV}" --server="${SERVER}" ] \
 	--verbose
