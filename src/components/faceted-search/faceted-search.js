@@ -3,11 +3,10 @@ import SearchFields from "./search-fields";
 import Page from "../page.js";
 import CurrentQuery from "./current-query";
 import Pagination from "./results/pagination";
-import SortMenu from "./sort-menu";
-import {Link} from "react-router";
+import GroupMenu from "./group-menu";
+import ResultList from "./results/list";
 import searchClient from "../../solr-client";
 
-const downCaseAndCapitalize = (str) => str.toLowerCase().replace(/^./, (match) => match.toUpperCase());
 
 const datasetsFromSearchFields = (datasets, searchFields) => {
   if (searchFields.length === 0) {
@@ -21,18 +20,6 @@ const datasetsFromSearchFields = (datasets, searchFields) => {
   return selectedDatasets;
 };
 
-const archtypeSubtitle = {
-  archive: (doc) => `${(doc.has_archive_keyword_ss || []).concat(doc.has_archive_place_ss || []).join(", ")}`,
-  archiver: (doc) => `${(doc.has_archiver_keyword_ss || []).concat(doc.has_archiver_place_ss || []).join(", ")}`,
-  collective: (doc) => `${downCaseAndCapitalize(doc.type_s || "")} ${(doc.hasLocation_ss || []).join(", ")}`,
-  concept: (doc) => ``,
-  document: (doc) => `${downCaseAndCapitalize(doc.documentType_s || "")} ${(doc.hasPublishLocation_ss || []).join(", ")} (${doc.date_s || "?"})`,
-  keyword: (doc) => ``,
-  language: (doc) => ``,
-  legislation: (doc) => `${(doc.has_legislation_keyword_ss || []).concat(doc.has_legislation_place_ss || []).join(", ")}`,
-  location: (doc) => ``,
-  person: (doc) => `${doc.birthDate_s || "?"} - ${doc.deathDate_s || "?"}`,
-};
 
 class FacetedSearch extends React.Component {
 
@@ -53,7 +40,7 @@ class FacetedSearch extends React.Component {
       onSetCollapse,
       onFacetSortChange,
       onSearchFieldChange,
-      onSortFieldChange,
+      onGroupChange,
       onPageChange,
       onNewSearch
     } = searchClient.getHandlers();
@@ -95,7 +82,8 @@ class FacetedSearch extends React.Component {
             <div className=".hidden-sm col-md-1" />
 
             <div className="col-sm-8 col-md-8">
-              <SortMenu onChange={onSortFieldChange} sortFields={solrSearch.query.sortFields} />
+              <GroupMenu onChange={onGroupChange} value={solrSearch.query.group ? solrSearch.query.group.field : null}
+                         fields={{"dataset_s": "Order by dataset", "uuid_s": "Order by item"}} />
               <div className="basic-margin">
                 <strong>Found {solrSearch.results.numFound} {solrSearch.results.numFound === 1
                   ? "result"
@@ -104,31 +92,7 @@ class FacetedSearch extends React.Component {
                 </strong>
               </div>
               <div className="result-list big-margin">
-                <ol start={solrSearch.query.start + 1} style={{counterReset: `step-counter ${solrSearch.query.start}`}}>
-                  {solrSearch.results.docs.map((doc, i) => (
-                    <li key={i + solrSearch.query.start} className="clearfix">
-                        <Link to={`?foo=bar`}>
-                          <span className="row pull-right clearfix">
-                            <span className="col-md-8 no-lr-padding" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
-                              {doc.displayName_s && doc.displayName_s.length ? doc.displayName_s : "<No display name found>"}
-                            </span>
-                            <span className="col-md-4 hi-light-grey text-right small" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
-                              {doc.dataset_s.replace(/^[^_]+_+/, "")}
-                            </span>
-                          </span>
-                          <span className="row pull-right clearfix">
-                            <span className="col-md-8 hi-light-grey small no-lr-padding">
-                              {archtypeSubtitle[doc.archetype_name_s](doc)}
-                            </span>
-                            <span className="col-md-4 hi-light-grey text-right small" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
-                              {doc.archetype_name_s}
-                            </span>
-                          </span>
-
-                        </Link>
-                    </li>
-                  ))}
-                </ol>
+                <ResultList solrSearch={solrSearch} />
               </div>
             </div>
           </div>
