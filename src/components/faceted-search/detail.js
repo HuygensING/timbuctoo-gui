@@ -91,6 +91,14 @@ class Detail extends React.Component {
           {birthDeathBlock}
         </div>
         <div className="container basic-margin">
+          <div className="row small-margin">
+            <div className="col-xs-6 text-right hi-light-grey">
+              Dataset
+            </div>
+            <div className="col-xs-6">
+              {dataset.replace(/^[^_]+_+/, "")}
+            </div>
+          </div>
           {Object.keys(entity).filter((prop) => ["^", "_", "@"].indexOf(prop.charAt(0)) < 0).map((property) => (
             <div key={property} className="row small-margin">
               <div className="col-xs-6 text-right hi-light-grey">
@@ -101,7 +109,7 @@ class Detail extends React.Component {
               </div>
             </div>
           ))}
-          
+
           {Object.keys(entity["@relations"] || {})
             .filter((property) => !property.match(/^inverse:/))
             .map((property) => (

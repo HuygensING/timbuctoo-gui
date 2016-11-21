@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 import { urls } from "../../../router";
+import { getBaseLocation } from "../../../locations";
 
 const downCaseAndCapitalize = (str) => str.toLowerCase().replace(/^./, (match) => match.toUpperCase());
 
@@ -25,6 +26,19 @@ const injectDatasets = (docs) => docs.reduce((accum, cur) => {
 
 class ResultList extends React.Component {
 
+  renderDatasetLink(dataset) {
+    const baseLocation = getBaseLocation(dataset);
+    if (baseLocation) {
+      return (
+        <a href={baseLocation} target="_blank">
+          Go to {dataset.replace(/^[^_]+_+/, "")} dataset
+        </a>
+      );
+    } else {
+      return (<span>From {dataset.replace(/^[^_]+_+/, "")} dataset</span>)
+    }
+  }
+
   render() {
     const { solrSearch: { results, query: { start, sortFields } } } = this.props;
 
@@ -37,7 +51,7 @@ class ResultList extends React.Component {
             <div key={index + start} className="result-list-dataset-info clearfix">
               <span className="row pull-right ">
                 <span className="col-md-12 small text-right no-lr-padding">
-                  <a href="#">Go to {doc.dataset_s.replace(/^[^_]+_+/, "")} dataset</a>
+                  {this.renderDatasetLink(doc.dataset_s)}
                 </span>
               </span>
             </div>
