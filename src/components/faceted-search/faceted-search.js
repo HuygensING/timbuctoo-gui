@@ -29,7 +29,10 @@ class FacetedSearch extends React.Component {
 
   onDatasetClick(value) {
     const { solrSearch: { query : { searchFields }, datasets } } = this.props;
-    const datasetFilter = datasetsFromSearchFields(datasets, searchFields).filter((dataset) => dataset !== value);
+    const selectedDatasets = datasetsFromSearchFields(datasets, searchFields);
+    const datasetFilter = selectedDatasets.indexOf(value) < 0
+      ? selectedDatasets.concat(value)
+      : selectedDatasets.filter((dataset) => dataset !== value);
 
     searchClient.getHandlers().onSearchFieldChange("dataset_s", datasetFilter);
   }
@@ -55,12 +58,16 @@ class FacetedSearch extends React.Component {
               <h2>Dataset</h2>
             </div>
             <div className="col-sm-10 col-md-11 text-right">
-              {activeDatasets.map((dataset) => (
-                <span key={dataset} style={{marginRight: "4px"}} className="btn btn-primary btn-sm" onClick={() => this.onDatasetClick(dataset)}>
-                  {dataset.replace(/^[^_]+_+/, "")}
-                  <span className="glyphicon glyphicon-remove-sign hi-half-transp" />
-                </span>
-              )).concat((
+              {solrSearch.datasets.map((dataset) =>
+                activeDatasets.indexOf(dataset) > -1 ?
+                  (<span key={dataset} className="btn toggleTag toggleTag--active" onClick={() => this.onDatasetClick(dataset)}>
+                    {dataset.replace(/^[^_]+_+/, "")}{" "}
+                    <span className="glyphicon glyphicon-remove-sign hi-half-transp" />
+                  </span>)
+                  : (<span key={dataset} className="btn toggleTag toggleTag--inactive" onClick={() => this.onDatasetClick(dataset)}>
+                    {dataset.replace(/^[^_]+_+/, "")}{" "}
+                  </span>)
+              ).concat((
                 <button key="__all_datasets__" className="btn btn-default btn-sm" onClick={() => this.onShowAllDatasetsClick()}>
                   Show all datasets
                 </button>

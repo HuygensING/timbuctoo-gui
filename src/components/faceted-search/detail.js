@@ -93,7 +93,7 @@ class Detail extends React.Component {
                 display: "inline-block", width: "150px", backgroundColor: "#aaa",
                 paddingTop: "40px", fontSize: "3em", color: "#666"
               }}>
-                  {entity["@displayName"] ? entity["@displayName"].charAt(0) : "?"}
+                  {entity["@displayName"] ? entity["@displayName"].trim().charAt(0) : "?"}
               </span>
               <h1>{entity["@displayName"]}</h1>
             </div>
