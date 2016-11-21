@@ -3,6 +3,8 @@ import Page from "../page";
 import camel2label from "./camel2label";
 import { Link } from "react-router";
 import { urls, serializeSearch } from "../../router";
+import { getEntityLocation } from "../../locations";
+
 import cx from "classnames";
 
 const ts2date = (ts) => {
@@ -46,6 +48,15 @@ class Detail extends React.Component {
       return propertyValue.map((val) => this.renderPropPart(val)).join(", ")
     }
     return "[Object]";
+  }
+
+  renderDatasetLink() {
+    const { entity, params: { dataset, collectionName } } = this.props;
+    const entityLocation = getEntityLocation(dataset, collectionName, entity._id);
+    console.log(entityLocation);
+    return entityLocation
+      ? <a href={entityLocation} target="_blank">Show in {dataset.replace(/^[^_]+_+/, "")} dataset</a>
+      : dataset.replace(/^[^_]+_+/, "");
   }
 
   render() {
@@ -96,7 +107,7 @@ class Detail extends React.Component {
               Dataset
             </div>
             <div className="col-xs-6">
-              {dataset.replace(/^[^_]+_+/, "")}
+              {this.renderDatasetLink()}
             </div>
           </div>
           {Object.keys(entity).filter((prop) => ["^", "_", "@"].indexOf(prop.charAt(0)) < 0).map((property) => (
