@@ -16,36 +16,53 @@ const archetypeSubtitle = {
   person: (doc) => `${doc.birthDate_s || "?"} - ${doc.deathDate_s || "?"}`,
 };
 
+const injectDatasets = (docs) => docs.reduce((accum, cur) => {
+  return accum.length === 0 || accum[accum.length - 1].dataset_s !== cur.dataset_s
+    ? accum.concat({isDatasetHeader: true, dataset_s: cur.dataset_s}).concat(cur)
+    : accum.concat({isDatasetHeader: false, ...cur});
+}, []);
 
 class ResultList extends React.Component {
 
   render() {
-    const { solrSearch } = this.props;
+    const { solrSearch: { results, query: { start, sortFields } } } = this.props;
+
+    const renderDocs = sortFields.length && sortFields.find((sf) => sf.field === "dataset_s").value ?
+      injectDatasets(results.docs) : results.docs;
 
     return (
-      <ol start={solrSearch.query.start + 1} style={{counterReset: `step-counter ${solrSearch.query.start}`}}>
-        {solrSearch.results.docs.map((doc, i) => (
-          <li key={i + solrSearch.query.start} className="clearfix">
-            <Link to={`?foo=bar`}>
-              <span className="row pull-right clearfix">
-                <span className="col-md-8 no-lr-padding" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
-                  {doc.displayName_s && doc.displayName_s.length ? doc.displayName_s : "<No display name found>"}
-                </span>
-                <span className="col-md-4 hi-light-grey text-right small" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
-                  {doc.dataset_s.replace(/^[^_]+_+/, "")}
+      <ol start={start + 1} style={{counterReset: `step-counter ${start}`}}>
+        {renderDocs.map((doc, index) => doc.isDatasetHeader ? (
+            <div key={index + start} className="result-list-dataset-info clearfix">
+              <span className="row pull-right ">
+                <span className="col-md-12 small text-right no-lr-padding">
+                  <a href="#">Go to {doc.dataset_s.replace(/^[^_]+_+/, "")} dataset</a>
                 </span>
               </span>
-              <span className="row pull-right clearfix">
-                <span className="col-md-8 hi-light-grey small no-lr-padding">
-                  {archetypeSubtitle[doc.archetype_name_s](doc)}
+            </div>
+          ) : (
+            <li key={index + start} className="clearfix">
+              <Link to={`?foo=bar`}>
+                <span className="row pull-right clearfix">
+                  <span className="col-md-8 no-lr-padding" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                    {doc.displayName_s && doc.displayName_s.length ? doc.displayName_s : "<No display name found>"}
+                  </span>
+                  <span className="col-md-4 hi-light-grey text-right small" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                    {doc.dataset_s.replace(/^[^_]+_+/, "")}
+                  </span>
                 </span>
-                <span className="col-md-4 hi-light-grey text-right small" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
-                  {doc.archetype_name_s}
+                <span className="row pull-right clearfix">
+                  <span className="col-md-8 hi-light-grey small no-lr-padding">
+                    {archetypeSubtitle[doc.archetype_name_s](doc)}
+                  </span>
+                  <span className="col-md-4 hi-light-grey text-right small" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                    {doc.archetype_name_s}
+                  </span>
                 </span>
-              </span>
-            </Link>
-          </li>
-        ))}
+              </Link>
+            </li>
+          )
+        )}
       </ol>
     );
   }

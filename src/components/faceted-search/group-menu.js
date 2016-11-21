@@ -1,35 +1,39 @@
 import React from "react";
+import cx from "classnames";
 import SelectField from "../fields/select-field";
 
-class GroupMenu extends React.Component {
+class SortMenu extends React.Component {
 
 
   render() {
-    const { fields, onChange, value } = this.props;
+    const { sortFields, onChange } = this.props;
+    if (sortFields.length === 0) { return null; }
+
+    const value = sortFields.find((sf) => sf.value);
 
     return (
       <div className="pull-right">
         <span className="pull-right">
-          <SelectField btnClass="btn-blank" onChange={(field) => onChange({field: field})} noClear={true}
-                       value={value}>
-            <span type="placeholder">Order</span>
-            {Object.keys(fields).map((field) => (
-              <span key={field} value={field}>{fields[field]}</span>
-            ))}
-          </SelectField>
-        </span>
+          <SelectField btnClass="btn-blank" onChange={(sortField) => onChange(sortField, "asc")}
+                     noClear={true} value={value ? value.field : null}>
+          <span type="placeholder">Order</span>
+          {sortFields.map((sortField) => (
+            <span key={sortField.field} value={sortField.field}>{sortField.label}</span>
+          ))}
+        </SelectField>
+          </span>
       </div>
     );
   }
 }
 
-GroupMenu.defaultProps = {
+SortMenu.defaultProps = {
   sortFields: []
 };
 
-GroupMenu.propTypes = {
+SortMenu.propTypes = {
   onChange: React.PropTypes.func,
   sortFields: React.PropTypes.array
 };
 
-export default GroupMenu;
+export default SortMenu;

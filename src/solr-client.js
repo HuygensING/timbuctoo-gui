@@ -28,7 +28,10 @@ const fields = [
   { label: "Place of death", field: "hasDeathPlace_ss", type: "list-facet", collapse: true },
 ];
 
-const sortFields = [];
+const sortFields = [
+  { label: "Order by dataset", field: "dataset_s", value: "asc"},
+  { label: "Order by item", field: "uuid_s"}
+];
 
 const searchClient = new SolrClient({
   url: "/repositorysolr/federated",
@@ -37,7 +40,6 @@ const searchClient = new SolrClient({
   rows: 50,
   pageStrategy: "paginate",
   facetSort: "count",
-  group: { field: "dataset_s" },
   onChange: (state) => {
     store.dispatch({type: "SET_SEARCH_STATE", state: state});
   }

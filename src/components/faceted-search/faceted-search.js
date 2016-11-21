@@ -40,7 +40,7 @@ class FacetedSearch extends React.Component {
       onSetCollapse,
       onFacetSortChange,
       onSearchFieldChange,
-      onGroupChange,
+      onSortFieldChange,
       onPageChange,
       onNewSearch
     } = searchClient.getHandlers();
@@ -82,8 +82,7 @@ class FacetedSearch extends React.Component {
             <div className=".hidden-sm col-md-1" />
 
             <div className="col-sm-8 col-md-8">
-              <GroupMenu onChange={onGroupChange} value={solrSearch.query.group ? solrSearch.query.group.field : null}
-                         fields={{"dataset_s": "Order by dataset", "uuid_s": "Order by item"}} />
+              <GroupMenu onChange={onSortFieldChange} sortFields={solrSearch.query.sortFields} />
               <div className="basic-margin">
                 <strong>Found {solrSearch.results.numFound} {solrSearch.results.numFound === 1
                   ? "result"
