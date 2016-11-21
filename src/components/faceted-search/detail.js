@@ -101,7 +101,10 @@ class Detail extends React.Component {
               </div>
             </div>
           ))}
-          {Object.keys(entity["@relations"] || {}).map((property) => (
+          
+          {Object.keys(entity["@relations"] || {})
+            .filter((property) => !property.match(/^inverse:/))
+            .map((property) => (
             <div key={property} className="row small-margin">
               <div className="col-xs-6 text-right hi-light-grey">
                 {camel2label(property)}
