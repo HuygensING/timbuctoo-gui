@@ -25,7 +25,6 @@ export function serializeSearch() {
 // Store search state in url
 export function storeSearch() {
   const serialized = `${location.pathname}?#q=${serializeSearch()}`;
-  console.log(serialized);
   if (location.pathname + "#" + location.hash !== serialized) {
     browserHistory.replace(`${location.pathname}#q=${serializeSearch()}`);
   }
@@ -50,8 +49,18 @@ const connectAppComponent = connect(
 );
 
 const connectDetailComponent = connect(
-  (state) => ({ entity: state.entity && state.entity.data ? state.entity.data : {} }),
-  (dispatch) => actions(navigateTo, dispatch)
+  (state, routed) => {
+    const pageIdx = state.pagination.idMap[`${routed.params.collectionName}/${routed.params.id}`];
+
+    return  {
+      entity: state.entity && state.entity.data ? state.entity.data : {},
+      nextPage: typeof pageIdx !== "undefined" && pageIdx < state.pagination.pages.length ?
+        state.pagination.pages[pageIdx + 1] : null,
+      prevPage: typeof pageIdx !== "undefined" && pageIdx > 0 ?
+        state.pagination.pages[pageIdx - 1] : null,
+    };
+  }, (dispatch) => actions(navigateTo, dispatch)
+
 );
 
 // Actual routes

@@ -1,9 +1,7 @@
 import { SolrClient } from "solr-faceted-search-react";
+import { setPagination } from "./actions";
 
 import store from "./store";
-
-
-
 
 const fields = [
   { label: "", field: "dataset_s", type: "list-facet"},
@@ -41,6 +39,7 @@ const searchClient = new SolrClient({
   pageStrategy: "paginate",
   facetSort: "count",
   onChange: (state) => {
+    store.dispatch(setPagination(state));
     store.dispatch({type: "SET_SEARCH_STATE", state: state});
   }
 });

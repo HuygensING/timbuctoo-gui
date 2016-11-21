@@ -53,14 +53,13 @@ class Detail extends React.Component {
   renderDatasetLink() {
     const { entity, params: { dataset, collectionName } } = this.props;
     const entityLocation = getEntityLocation(dataset, collectionName, entity._id);
-    console.log(entityLocation);
     return entityLocation
       ? <a href={entityLocation} target="_blank">Show in {dataset.replace(/^[^_]+_+/, "")} dataset</a>
       : dataset.replace(/^[^_]+_+/, "");
   }
 
   render() {
-    const { entity, params: { dataset } } = this.props;
+    const { entity, params: { dataset }, prevPage, nextPage } = this.props;
 
     if (!entity._id) { return <Page />; }
 
@@ -172,19 +171,17 @@ class Detail extends React.Component {
         </div>
         <div type="footer-body">
           <div className="col-sm-4 text-right">
-{/*
-            <Link to={urls.entity(collectionMetadata.collectionName, prevId, vreId)} className={cx("btn", "btn-default", {"disabled": !prevId})}>
+            <Link to={prevPage ? urls.entity(prevPage.dataset_s, prevPage.id) : "#"} className={cx("btn", "btn-default", {"disabled": !prevPage})}>
               <span className="glyphicon glyphicon-chevron-left" />
             </Link>
-*/}
           </div>
           <div className="col-sm-4 text-center">
             <Link to={`${urls.root()}#?q=${serializeSearch()}`} className="btn btn-default">Back to results</Link>
           </div>
           <div className="col-sm-4 text-left">
-{/*            <Link to={urls.entity(collectionMetadata.collectionName, nextId, vreId)} className={cx("btn", "btn-default", {"disabled": !nextId})}>
+            <Link to={nextPage ? urls.entity(nextPage.dataset_s, nextPage.id) : "#"} className={cx("btn", "btn-default", {"disabled": !nextPage})}>
               <span className="glyphicon glyphicon-chevron-right" />
-            </Link>*/}
+            </Link>
           </div>
         </div>
       </Page>
