@@ -1,8 +1,8 @@
 import React from "react";
-import Page from "../page.jsx";
+import Page from "../page";
 import camel2label from "./camel2label";
 import { Link } from "react-router";
-import { urls } from "../../router";
+import { urls, serializeSearch } from "../../router";
 import cx from "classnames";
 
 const ts2date = (ts) => {
@@ -49,11 +49,11 @@ class Detail extends React.Component {
   }
 
   render() {
-    const { entity, collectionMetadata, vreId, nextId, prevId} = this.props;
+    const { entity, params: { dataset } } = this.props;
 
     if (!entity._id) { return <Page />; }
 
-    const birthDeathBlock = collectionMetadata.archetypeName === "person" ? (
+    const birthDeathBlock = entity["birthDate"] || entity["deathDate"]  ? (
       <div className="row small-marigin text-center">
         <div className="col-xs-3 text-right" />
         <div className="col-xs-6">
@@ -63,7 +63,7 @@ class Detail extends React.Component {
               {entity["@relations"].hasBirthPlace ? entity["@relations"].hasBirthPlace[0].displayName : null }
             </div>
             <div className="col-xs-2 text-center">
-              <img id="born-died" src="/lived-center.svg" />
+              <img id="born-died" src="/images/lived-center.svg" />
             </div>
             <div className="col-xs-5 text-left">
               {entity["deathDate"]}<br />
@@ -74,16 +74,15 @@ class Detail extends React.Component {
       </div>
     ) : null;
 
-    
     return (
       <Page>
         <div className="container basic-margin">
           <div className="row">
             <div className="col-xs-12 text-center">
               <span className="img-portrait img-circle" style={{
-                  display: "inline-block", width: "150px", backgroundColor: "#aaa",
-                  paddingTop: "40px", fontSize: "3em", color: "#666"
-                }}>
+                display: "inline-block", width: "150px", backgroundColor: "#aaa",
+                paddingTop: "40px", fontSize: "3em", color: "#666"
+              }}>
                   {entity["@displayName"] ? entity["@displayName"].charAt(0) : "?"}
               </span>
               <h1>{entity["@displayName"]}</h1>
@@ -92,22 +91,38 @@ class Detail extends React.Component {
           {birthDeathBlock}
         </div>
         <div className="container basic-margin">
-          {collectionMetadata.properties
-            .filter((property) => entity[property.name] || entity["@relations"][property.name])
-            .map((property) => (
-              <div key={property.name} className="row small-margin">
-                <div className="col-xs-6 text-right hi-light-grey">
-                  {camel2label(property.name)}
-                </div>
-                <div className="col-xs-6">
-                  {entity["@relations"][property.name] ? entity["@relations"][property.name]
-                    .filter((rel) => rel.displayName.length > 0)
-                    .map((rel) => rel.displayName).join(", ")
-                  : this.renderProp(entity[property.name])}
-                </div>
+          {Object.keys(entity).filter((prop) => ["^", "_", "@"].indexOf(prop.charAt(0)) < 0).map((property) => (
+            <div key={property} className="row small-margin">
+              <div className="col-xs-6 text-right hi-light-grey">
+                {camel2label(property)}
               </div>
+              <div className="col-xs-6">
+                {this.renderProp(entity[property])}
+              </div>
+            </div>
+          ))}
+          {Object.keys(entity["@relations"] || {}).map((property) => (
+            <div key={property} className="row small-margin">
+              <div className="col-xs-6 text-right hi-light-grey">
+                {camel2label(property)}
+              </div>
+              <div className="col-xs-6">
+                <ul style={{padding: "0", margin: "0", listStyle: "none", maxHeight: "200px", overflowY: "auto"}}>
+                  {entity["@relations"][property]
+                    .map((rel) => (
+                      <li key={rel.path}>
+                        <Link  to={urls.entity(dataset, rel.path.replace(/^domain\//, ""))}>
+                          {rel.displayName || "<no display name found>"}
+                        </Link>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+            </div>
           ))}
         </div>
+
         <div className="hi-light-grey-bg">
           <div className="container big-margin">
             <div className="row small-margin">
@@ -135,17 +150,19 @@ class Detail extends React.Component {
         </div>
         <div type="footer-body">
           <div className="col-sm-4 text-right">
+{/*
             <Link to={urls.entity(collectionMetadata.collectionName, prevId, vreId)} className={cx("btn", "btn-default", {"disabled": !prevId})}>
               <span className="glyphicon glyphicon-chevron-left" />
             </Link>
+*/}
           </div>
           <div className="col-sm-4 text-center">
-            <Link to={urls.root(vreId)} className="btn btn-default">Back to results</Link>
+            <Link to={`${urls.root()}#?q=${serializeSearch()}`} className="btn btn-default">Back to results</Link>
           </div>
           <div className="col-sm-4 text-left">
-            <Link to={urls.entity(collectionMetadata.collectionName, nextId, vreId)} className={cx("btn", "btn-default", {"disabled": !nextId})}>
+{/*            <Link to={urls.entity(collectionMetadata.collectionName, nextId, vreId)} className={cx("btn", "btn-default", {"disabled": !nextId})}>
               <span className="glyphicon glyphicon-chevron-right" />
-            </Link>
+            </Link>*/}
           </div>
         </div>
       </Page>

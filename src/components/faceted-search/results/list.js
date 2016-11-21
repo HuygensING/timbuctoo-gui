@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
+import { urls } from "../../../router";
 
 const downCaseAndCapitalize = (str) => str.toLowerCase().replace(/^./, (match) => match.toUpperCase());
 
@@ -42,7 +43,7 @@ class ResultList extends React.Component {
             </div>
           ) : (
             <li key={index + start} className="clearfix">
-              <Link to={`?foo=bar`}>
+              <Link to={urls.entity(doc.dataset_s, doc.id)}>
                 <span className="row pull-right clearfix">
                   <span className="col-md-8 no-lr-padding" style={{display: "inline-block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
                     {doc.displayName_s && doc.displayName_s.length ? doc.displayName_s : "<No display name found>"}

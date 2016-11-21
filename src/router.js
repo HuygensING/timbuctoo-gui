@@ -1,5 +1,6 @@
 import React from "react";
 import Search from "./components/faceted-search/faceted-search";
+import Detail from "./components/faceted-search/detail";
 import actions from "./actions";
 import {Provider, connect} from "react-redux";
 import {Router, Route, browserHistory} from "react-router";
@@ -31,10 +32,12 @@ export function storeSearch() {
 }
 
 const urls = {
-  root() {
-    return "/";
-  }
+  root: () => "/",
+  entity: (dataset, path) => dataset && path ?
+    `/${dataset}/${path}` : "/:dataset/:collectionName/:id"
 };
+
+export { urls };
 
 export function navigateTo(key, args) {
   browserHistory.push(urls[key].apply(null, args));
@@ -46,11 +49,18 @@ const connectAppComponent = connect(
   (dispatch) => actions(navigateTo, dispatch)
 );
 
+const connectDetailComponent = connect(
+  (state) => ({ entity: state.entity && state.entity.data ? state.entity.data : {} }),
+  (dispatch) => actions(navigateTo, dispatch)
+);
+
 // Actual routes
 export const routes = (
   <Provider store={store}>
     <Router history={browserHistory}>
       <Route path={`${urls.root()}`} component={connectAppComponent(Search)}>
+      </Route>
+      <Route path={urls.entity()} component={connectDetailComponent(Detail)}>
       </Route>
     </Router>
   </Provider>
