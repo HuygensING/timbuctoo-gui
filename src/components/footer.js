@@ -3,13 +3,13 @@ import React from "react";
 function Footer(props) {
   const hiLogo = (
     <div className="col-sm-1 col-md-1">
-      <img className="hi-logo" src="/images/logo-huygens-ing.svg" />
+      <img className="hi-logo" src="/dataset-search/images/logo-huygens-ing.svg" />
     </div>
   );
 
   const clariahLogo = (
     <div className="col-sm-1 col-md-1">
-      <img className="logo" src="/images/logo-clariah.svg" />
+      <img className="logo" src="/dataset-search/images/logo-clariah.svg" />
     </div>
   );
 

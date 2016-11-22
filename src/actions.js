@@ -10,7 +10,7 @@ const setPagination = (state) => (redispatch, getState) => {
   const timeStamp = new Date().getTime();
   redispatch({type: "CLEAR_PAGINATION"});
   xhr({
-    url: "/repositorysolr/federated",
+    url: "/repositorysolr/aggregated",
     method: "POST",
     data: newQuery,
     headers: {

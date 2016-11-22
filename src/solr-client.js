@@ -32,7 +32,7 @@ const sortFields = [
 ];
 
 const searchClient = new SolrClient({
-  url: "/repositorysolr/federated",
+  url: "/repositorysolr/aggregated",
   searchFields: fields,
   sortFields: sortFields,
   rows: 50,

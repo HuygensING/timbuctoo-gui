@@ -11,7 +11,7 @@ function Page(props) {
       <div className="basic-margin hi-Green container-fluid">
         <nav className="navbar ">
           <div className="container">
-            <div className="navbar-header"> <a className="navbar-brand" href="#"><img src="/images/logo-timbuctoo.svg" className="logo" alt="timbuctoo"/></a> </div>
+            <div className="navbar-header"> <a className="navbar-brand" href="#"><img src="/dataset-search/images/logo-timbuctoo.svg" className="logo" alt="timbuctoo"/></a> </div>
             <div id="navbar" className="navbar-collapse collapse">
               <ul className="nav navbar-nav navbar-right">
                 {props.username ? <li><a href={props.userlocation || '#'}><span className="glyphicon glyphicon-user"/> {props.username}</a></li> : null}

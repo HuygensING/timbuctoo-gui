@@ -12,8 +12,8 @@ const initialState = {
 };
 
 const receiveDatasets = (datasets) => datasets
-  .filter((d) => d.name !== "Admin" && d.name !== "Base")
-  .map((d) => d.name);
+  .map((d) => typeof d === "object" ? d.name : d)
+  .filter((d) => d !== "Admin" && d !== "Base");
 
 export default function(state=initialState, action) {
   switch (action.type) {

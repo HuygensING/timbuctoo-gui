@@ -21,9 +21,9 @@ function onFilesChanged(event, file) {
 
 browserSync.watch(watchFiles, debounce(onFilesChanged, 300));
 
-var localSolr = process.env.SOLR || "http://localhost:8983/solr/federated";
-var solrOpts = url.parse(localSolr + "/select");
-solrOpts.route = "/repositorysolr/federated";
+var localSolr = process.env.SOLR || "http://resources.huygens.knaw.nl/repositorysolr/aggregated";
+var solrOpts = url.parse(localSolr);
+solrOpts.route = "/repositorysolr/aggregated";
 
 
 browserSync.init({
@@ -33,12 +33,12 @@ browserSync.init({
 		middleware: [
 			proxy(solrOpts),
 			modRewrite([
-				"^/css/(.*)$ /build/development/css/$1 [L]",
-				"^/src/stylus/(.*)$ /src/stylus/$1 [L]",
-				"^/js/(.*)$ /build/development/js/$1 [L]",
-				"^/images/(.*)$ /build/development/images/$1 [L]",
-				"^/fonts/(.*)$ /build/development/fonts/$1 [L]",
-				"^/?.*$ /build/development/index.html [L]",
+				"^/dataset-search/css/(.*)$ /build/development/css/$1 [L]",
+				"^/dataset-search/src/stylus/(.*)$ /src/stylus/$1 [L]",
+				"^/dataset-search/js/(.*)$ /build/development/js/$1 [L]",
+				"^/dataset-search/images/(.*)$ /build/development/images/$1 [L]",
+				"^/dataset-search/fonts/(.*)$ /build/development/fonts/$1 [L]",
+				"^/dataset-search/?.*$ /build/development/index.html [L]",
 			])
 		]
 	}
