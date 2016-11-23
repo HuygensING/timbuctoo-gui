@@ -9,7 +9,8 @@ export default function(state=initialState, action) {
     case "LOGIN":
       return {
         ...state,
-        userId: action.data
+        userId: action.data,
+        myVres: action.vreData ? action.vreData.mine : null,
       };
   }
 
