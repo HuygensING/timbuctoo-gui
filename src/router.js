@@ -30,11 +30,29 @@ const defaultConnect = connect((state) => state, dispatch => actions(navigateTo,
 
 const connectComponent = (stateToProps) => connect(stateToProps, dispatch => actions(navigateTo, dispatch));
 
+function checkToken() {
+  let path = window.location.search.substr(1);
+  let params = path.split('&');
+
+  for(let i in params) {
+    let [key, value] = params[i].split('=');
+    if(key === 'hsid' && !store.getState().userdata.userId) {
+      store.dispatch({type: "LOGIN", data: value});
+      return true;
+    }
+  }
+  return false;
+}
+
+const indexRoute = checkToken()
+  ? <IndexRoute component={() => (<span> TODO </span>)}/>
+  : <IndexRoute component={defaultConnect(FirstUpload)}/>;
+
 const router = (
   <Provider store={store}>
     <Router history={hashHistory}>
       <Route path="/" component={connectComponent(pageConnector)(Page)}>
-        <IndexRoute component={defaultConnect(FirstUpload)}/>
+        {indexRoute}
       </Route>
     </Router>
   </Provider>
