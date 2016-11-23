@@ -3,6 +3,7 @@ import {Router, Route, IndexRoute, hashHistory} from "react-router";
 import {Provider, connect} from "react-redux";
 import store from "./store";
 import actions from "./actions";
+import getToken from "./token";
 
 import pageConnector from "./connectors/page-connector";
 import Page from "./components/page.jsx";
@@ -22,9 +23,6 @@ var urls = {
   },
   mapArchetypes(vreId) {
     return vreId ? `/maparchetypes/${vreId}` : "/maparchetypes/:vreId";
-  },
-  collectionsOverview() {
-    return "/collections-overview";
   }
 };
 
@@ -36,6 +34,13 @@ const defaultConnect = connect((state) => state, dispatch => actions(navigateTo,
 
 const connectComponent = (stateToProps) => connect(stateToProps, dispatch => actions(navigateTo, dispatch));
 
+
+const filterAuthorized = (redirectTo) => (nextState, replace) => {
+  if (!getToken()) {
+    replace(redirectTo);
+  }
+};
+
 export default (hasOwnVres) => {
   const indexRoute = hasOwnVres
     ? <IndexRoute component={connectComponent(collectionOverviewConnector)(CollectionOverview)}/>
@@ -46,7 +51,8 @@ export default (hasOwnVres) => {
       <Router history={hashHistory}>
         <Route path="/" component={connectComponent(pageConnector)(Page)}>
           {indexRoute}
-          <Route path={urls.mapArchetypes()} components={connectComponent(connectArchetypeConnector)(ConnectToArchetype)} />
+          <Route onEnter={filterAuthorized("/")}
+            path={urls.mapArchetypes()} components={connectComponent(connectArchetypeConnector)(ConnectToArchetype)} />
         </Route>
       </Router>
     </Provider>
