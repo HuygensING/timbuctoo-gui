@@ -3,7 +3,6 @@ import Page from "../page";
 import camel2label from "./camel2label";
 import { Link } from "react-router";
 import { urls, serializeSearch } from "../../router";
-import { getEntityLocation } from "../../locations";
 
 import cx from "classnames";
 
@@ -55,21 +54,12 @@ class Detail extends React.Component {
     return "[Object]";
   }
 
-  renderDatasetLink() {
-    const { entity, params: { dataset, collectionName } } = this.props;
-    const entityLocation = getEntityLocation(dataset, collectionName, entity._id);
-    return entityLocation
-      ? <a href={entityLocation} target="_blank">Show in {dataset.replace(/^[^_]+_+/, "")} dataset</a>
-      : dataset.replace(/^[^_]+_+/, "");
-  }
-
   render() {
     const { entity, params: { dataset }, prevPage, nextPage, metadata } = this.props;
 
     if (!entity._id) { return <Page />; }
 
     const archetypeFields = getArchetypeFields(entity["@variationRefs"], metadata);
-    console.log(archetypeFields);
 
     const birthDeathBlock = entity["birthDate"] || entity["deathDate"]  ? (
       <div className="row small-marigin text-center">
@@ -114,7 +104,7 @@ class Detail extends React.Component {
               Dataset
             </div>
             <div className="col-xs-6">
-              {this.renderDatasetLink()}
+              {entity["^datasets"] ? entity["^datasets"].map((d) => d.replace(/^[^_]+_+/, "")).join(", ") : dataset.replace(/^[^_]+_+/, "")}
             </div>
           </div>
           {Object.keys(entity).filter((prop) => ["^", "_", "@"].indexOf(prop.charAt(0)) < 0)
