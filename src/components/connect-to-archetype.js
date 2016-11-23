@@ -10,7 +10,7 @@ class ConnectToArchetype extends React.Component {
     const collectionsAreMapped = Object.keys(mappings.collections).length > 0 &&
       Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName).indexOf(null) < 0;
 
-    const fileIsUploadedMessage = showFileIsUploadedMessage ? (
+    const fileIsUploadedMessage = showFileIsUploadedMessage && uploadedFileName ? (
       <Message alertLevel="info" dismissible={true} onCloseMessage={() => onCloseMessage("showFileIsUploadedMessage")}>
         <em>{uploadedFileName}</em> is uploaded.
       </Message>
@@ -28,9 +28,9 @@ class ConnectToArchetype extends React.Component {
           {sheets.map((sheet) => (
             <div className="row" key={sheet.collection}>
               <div className="col-md-2">
-                <span className="from-excel">
+                <a className="from-excel">
                   <img src="images/icon-excel.svg" alt=""/> {sheet.collection}
-                  </span>
+                </a>
               </div>
               <div className="col-md-8">
                 <SelectField

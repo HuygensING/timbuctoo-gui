@@ -36,11 +36,13 @@ class PropertyForm extends React.Component {
       <button className="btn btn-blank" onClick={() => onUnconfirmFieldMappings(name)}>
         <span className="hi-success glyphicon glyphicon-ok" /></button> : null;
 
-    const formComponent = typeMap[type]({
-      ...this.props,
-      onColumnSelect: (value) => onSetFieldMapping(name, value),
-      onClearColumn: (valueIdx) => onClearFieldMapping(name, valueIdx)
-    });
+    const formComponent = typeMap[type]
+      ? typeMap[type]({
+        ...this.props,
+        onColumnSelect: (value) => onSetFieldMapping(name, value),
+        onClearColumn: (valueIdx) => onClearFieldMapping(name, valueIdx)
+      })
+      : <span>type not yet supported: <span style={{color: "red"}}>{type}</span></span>;
 
     return (
       <div className="row small-margin">
