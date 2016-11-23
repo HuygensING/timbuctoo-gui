@@ -10,7 +10,12 @@ import cx from "classnames";
 const ts2date = (ts) => {
   const date = new Date(ts);
   return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
-}
+};
+
+const getArchetypeFields = (variants, metadata) => Object.keys(metadata).map((collectionName) => ({
+    archetypeName: metadata[collectionName].archetypeName || collectionName.replace(/s$/, ""),
+    properties: metadata[collectionName].properties.filter((prop) => prop.type !== "relation").map((prop) => prop.name)
+  })).find((md) => variants.map((v) => v.type).indexOf(md.archetypeName) > -1).properties;
 
 class Detail extends React.Component {
 
@@ -59,9 +64,12 @@ class Detail extends React.Component {
   }
 
   render() {
-    const { entity, params: { dataset }, prevPage, nextPage } = this.props;
+    const { entity, params: { dataset }, prevPage, nextPage, metadata } = this.props;
 
     if (!entity._id) { return <Page />; }
+
+    const archetypeFields = getArchetypeFields(entity["@variationRefs"], metadata);
+    console.log(archetypeFields);
 
     const birthDeathBlock = entity["birthDate"] || entity["deathDate"]  ? (
       <div className="row small-marigin text-center">
@@ -109,9 +117,11 @@ class Detail extends React.Component {
               {this.renderDatasetLink()}
             </div>
           </div>
-          {Object.keys(entity).filter((prop) => ["^", "_", "@"].indexOf(prop.charAt(0)) < 0).map((property) => (
+          {Object.keys(entity).filter((prop) => ["^", "_", "@"].indexOf(prop.charAt(0)) < 0)
+            .sort((a, b) => archetypeFields.indexOf(a) > archetypeFields.indexOf(b) ? -1 : 1)
+            .map((property) => (
             <div key={property} className="row small-margin">
-              <div className="col-xs-6 text-right hi-light-grey">
+              <div className="col-xs-6 text-right hi-light-grey" style={{fontWeight: archetypeFields.indexOf(property) > -1 ? "bold" : "normal"}}>
                 {camel2label(property)}
               </div>
               <div className="col-xs-6">

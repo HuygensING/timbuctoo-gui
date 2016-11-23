@@ -1,13 +1,13 @@
 const baseLocations = {
-  DutchCaribbean: "http://dutch-caribbean.huygens.knaw.nl/",
+/*  DutchCaribbean: "http://dutch-caribbean.huygens.knaw.nl/",
   WomenWriters: "http://resources.huygens.knaw.nl/womenwriters",
   cwno: "http://resources.huygens.knaw.nl/womenwriters",
   cwrs: "http://resources.huygens.knaw.nl/womenwriters",
-  ckcc: "http://ckcc.huygens.knaw.nl/",
+  ckcc: "http://ckcc.huygens.knaw.nl/",*/
 };
 
 const entityLocations = {
-  DutchCaribbean: (collectionName, id) =>
+/*  DutchCaribbean: (collectionName, id) =>
     collectionName === "dcararchives"
       ? `http://database.dutch-caribbean.huygens.knaw.nl/archive/${id}`
       : collectionName === "dcararchivers"
@@ -33,7 +33,7 @@ const entityLocations = {
       : collectionName === "cwrsdocuments"
       ? `http://resources.huygens.knaw.nl/womenwriters/vre/documents/${id}`
       : baseLocations.cwrs,
-  ckcc: (collectionName, id) => baseLocations.ckcc
+  ckcc: (collectionName, id) => baseLocations.ckcc*/
 };
 
 const getBaseLocation = (dataset) => baseLocations[dataset] || null;

@@ -3,7 +3,7 @@ import Search from "./components/faceted-search/faceted-search";
 import Detail from "./components/faceted-search/detail";
 import actions from "./actions";
 import {Provider, connect} from "react-redux";
-import {Router, Route, browserHistory} from "react-router";
+import {Redirect, Router, Route, browserHistory} from "react-router";
 import store from "./store";
 
 
@@ -58,6 +58,7 @@ const connectDetailComponent = connect(
         state.pagination.pages[pageIdx + 1] : null,
       prevPage: typeof pageIdx !== "undefined" && pageIdx > 0 ?
         state.pagination.pages[pageIdx - 1] : null,
+      metadata: state.metadata
     };
   }, (dispatch) => actions(navigateTo, dispatch)
 
@@ -67,6 +68,7 @@ const connectDetailComponent = connect(
 export const routes = (
   <Provider store={store}>
     <Router history={browserHistory}>
+      <Redirect from="/" to="/dataset-search" />
       <Route path={`${urls.root()}`} component={connectAppComponent(Search)}>
       </Route>
       <Route path={urls.entity()} component={connectDetailComponent(Detail)}>

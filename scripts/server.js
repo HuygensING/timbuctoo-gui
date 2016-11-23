@@ -39,6 +39,7 @@ browserSync.init({
 				"^/dataset-search/images/(.*)$ /build/development/images/$1 [L]",
 				"^/dataset-search/fonts/(.*)$ /build/development/fonts/$1 [L]",
 				"^/dataset-search/?.*$ /build/development/index.html [L]",
+				"^/?.*$ /build/development/index.html [L]",
 			])
 		]
 	}
