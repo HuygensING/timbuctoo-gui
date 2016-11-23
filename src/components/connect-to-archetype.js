@@ -7,7 +7,7 @@ class ConnectToArchetype extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { onFetchBulkUploadedMetadata } = this.props;
-    // Triggers fetch data from server based on id from route.
+    // Triggers fetch data from server based on vreId from route.
     if (this.props.params.vreId !== nextProps.params.vreId) {
       onFetchBulkUploadedMetadata(nextProps.params.vreId);
     }
@@ -22,15 +22,78 @@ class ConnectToArchetype extends React.Component {
 
 
   render() {
-    const { vreId, vre, collections } = this.props;
+    const {
+      vreId,
+      vre,
+      archetype,
+      collections,
+      mappings,
+      showFileIsUploadedMessage,
+      uploadedFileName,
+    } = this.props;
+
+    const {
+      onCloseMessage,
+      onMapCollectionArchetype,
+      onConfirmCollectionArchetypeMappings
+    } = this.props;
+
+    if (!collections || vre !== vreId) { return null; }
+
+    const collectionsAreMapped = Object.keys(mappings.collections).length > 0 &&
+      Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName).indexOf(null) < 0;
+
+    const fileIsUploadedMessage = showFileIsUploadedMessage && uploadedFileName ? (
+      <Message alertLevel="info" dismissible={true} onCloseMessage={() => onCloseMessage("showFileIsUploadedMessage")}>
+        <em>{uploadedFileName}</em> is uploaded.
+      </Message>
+    ) : null;
+
 
     return (
       <div>
-        { vreId }
-        {vre}
-        <pre>
-          {JSON.stringify(collections, null, 4)}
-          </pre>
+        <div className="container basic-margin">
+          <h2 className="small-margin">Upload and connect your dataset</h2>
+          {fileIsUploadedMessage}
+          <p>We found {collections.length} collections in the file. Connect the tabs to the Timbuctoo Archetypes.</p>
+        </div>
+
+        <div className="container basic-margin">
+          {collections.map((sheet) => (
+            <div className="row" key={sheet.name}>
+              <div className="col-md-2">
+                <a className="from-excel">
+                  <img src="images/icon-excel.svg" alt=""/> {sheet.name}
+                </a>
+              </div>
+              <div className="col-md-8">
+                <SelectField
+                  onChange={(value) => onMapCollectionArchetype(sheet.name, value)}
+                  onClear={() => onMapCollectionArchetype(sheet.name, null) }
+                  value={mappings.collections[sheet.name].archetypeName}>
+                    <span type="placeholder">
+                      Connect <em>{sheet.name}</em> to a Timbuctoo archetype.
+                    </span>
+                  {Object.keys(archetype).filter((domain) => domain !== "relations").sort().map((option) => (
+                    <span key={option} value={option}>{option}</span>
+                  ))}
+                </SelectField>
+              </div>
+              { mappings.collections[sheet.name].archetypeName ? (
+                <div className="col-sm-1 hi-success" key={sheet.name}>
+                  <span className="glyphicon glyphicon-ok pull-right"/>
+                </div>
+              ) : null
+              }
+            </div>
+          ))}
+
+        </div>
+        <div className="container basic-margin">
+          <button onClick={onConfirmCollectionArchetypeMappings} type="button" className="btn btn-success" disabled={!collectionsAreMapped}>
+            Connect
+          </button>
+        </div>
       </div>
     )
   }
