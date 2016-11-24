@@ -1,7 +1,7 @@
 import React from "react";
 import CollectionTabs from "./collection-tabs";
 import Message from "./message";
-
+import CollectionTable from "./collection-table"
 class ConnectData extends React.Component {
 
   componentWillReceiveProps(nextProps) {
@@ -20,14 +20,18 @@ class ConnectData extends React.Component {
   }
 
   render() {
+    const { onCloseMessage, onSelectCollection } = this.props;
     const {
       params: { vreId },
       vre,
       tabs,
       showCollectionsAreConnectedMessage,
+      rows,
+      headers,
+      nextUrl,
+      activeCollection,
       uploadedFilename
     } = this.props;
-    const { onCloseMessage, onSelectCollection } = this.props;
 
     if (tabs.length === 0 || vre !== vreId) { return null; }
 
@@ -48,10 +52,20 @@ class ConnectData extends React.Component {
         </div>
         <CollectionTabs collectionTabs={tabs} onSelectCollection={onSelectCollection} />
 
-        <pre>
-          {vreId}<br />
-          {JSON.stringify(tabs, null, 4)}
-        </pre>
+
+        <div className="container big-margin">
+          <p className="from-excel">
+            <img src="images/icon-excel.svg" alt=""/>{" "}
+            <em>{activeCollection}</em> {uploadedFilename ? `from ${uploadedFilename}` : ""}
+          </p>
+
+          <CollectionTable
+            rows={rows}
+            headers={headers}
+            nextUrl={nextUrl}
+            onIgnoreColumnToggle={(header) => onIgnoreColumnToggle(activeCollection, header)}
+            onLoadMoreClick={(url) => onLoadMoreClick(url, activeCollection)} />
+        </div>
       </div>
     );
   }
