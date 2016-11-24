@@ -37,7 +37,7 @@ class ConnectToArchetype extends React.Component {
     const {
       onCloseMessage,
       onMapCollectionArchetype,
-      onConfirmCollectionArchetypeMappings
+      onSelectCollection
     } = this.props;
 
     if (!collections || vre !== vreId) { return null; }
@@ -64,7 +64,7 @@ class ConnectToArchetype extends React.Component {
           {collections.map((sheet) => (
             <div className="row" key={sheet.name}>
               <div className="col-md-2">
-                <a className="from-excel">
+                <a className="from-excel" style={{cursor: "pointer"}} onClick={() => onSelectCollection(sheet.name)}>
                   <img src="images/icon-excel.svg" alt=""/> {sheet.name}
                 </a>
               </div>

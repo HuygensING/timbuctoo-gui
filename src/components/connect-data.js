@@ -1,4 +1,5 @@
 import React from "react";
+import CollectionTabs from "./collection-tabs";
 
 class ConnectData extends React.Component {
 
@@ -19,11 +20,14 @@ class ConnectData extends React.Component {
 
   render() {
     const { params: { vreId }, vre, tabs } = this.props;
+    const { onSelectCollection } = this.props;
 
     if (tabs.length === 0 || vre !== vreId) { return null; }
 
     return (
       <div>
+        <CollectionTabs collectionTabs={tabs} onSelectCollection={onSelectCollection} />
+
         <pre>
           {vreId}<br />
           {JSON.stringify(tabs, null, 4)}

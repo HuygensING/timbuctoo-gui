@@ -1,9 +1,12 @@
 import { onUploadFileSelect } from "./actions/upload"
 import { fetchBulkUploadedMetadata } from "./actions/fetch-bulkuploaded-metadata";
+import { selectCollection } from "./actions/select-collection";
 
 export default function actionsMaker(navigateTo, dispatch) {
   return {
     onUploadFileSelect: onUploadFileSelect(navigateTo, dispatch),
+
+    onSelectCollection: (collection) => dispatch(selectCollection(collection)),
 
     onFetchBulkUploadedMetadata: (vreId, mappingsFromUrl) =>
       dispatch(fetchBulkUploadedMetadata(vreId, mappingsFromUrl)),

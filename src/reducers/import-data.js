@@ -41,7 +41,11 @@ export default function(state=initialState, action) {
         uploadedFileName: action.uploadedFileName,
         vre: action.data.vre,
         executeMappingUrl: action.data.executeMapping,
-        collections: action.data.collections
+        collections: action.data.collections.map((col) => ({
+          ...col,
+          nextUrl: col.data,
+          nextUrlWithErrors: col.dataWithErrors
+        }))
       };
 
   }
