@@ -25,7 +25,8 @@ export default function actionsMaker(navigateTo, dispatch) {
     onIgnoreColumnToggle: (collection, variableName) =>
       dispatch({type: "TOGGLE_IGNORED_COLUMN", collection: collection, variableName: variableName}),
 
-    onAddPredicateObjectMap: (predicateName, objectName) => dispatch(addPredicateObjectMap(predicateName, objectName)),
+    onAddPredicateObjectMap: (predicateName, objectName, propertyType) =>
+      dispatch(addPredicateObjectMap(predicateName, objectName, propertyType)),
 
     onRemovePredicateObjectMap: (predicateName) => dispatch(removePredicateObjectMap(predicateName)),
   };

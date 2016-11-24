@@ -13,9 +13,10 @@ const transformCollectionTabs = (collections, mappings, activeCollection) =>
 export default (appState, routed) => {
 
   const { collections } = appState.importData;
-  const { mappings, activeCollection, archetype, predicateObjectMappings } = appState;
+  const { mappings, activeCollection, archetype, predicateObjectMappings : allPredicateObjectmappings } = appState;
 
-  console.log(predicateObjectMappings);
+  const predicateObjectMappings = allPredicateObjectmappings[activeCollection.name] || []
+
   return {
     // from router
     vreId: routed.params.vreId,
@@ -31,7 +32,7 @@ export default (appState, routed) => {
     // from active collection for table
     activeCollection: activeCollection.name,
     rows: transformCollectionRows(collections, activeCollection, mappings),
-    headers: transformCollectionColumns(collections, activeCollection, mappings),
+    headers: transformCollectionColumns(collections, activeCollection, mappings, predicateObjectMappings),
     nextUrl: activeCollection.nextUrl,
 
     // from import data
@@ -42,6 +43,6 @@ export default (appState, routed) => {
     archetypeFields: mappings.collections[activeCollection.name] ? archetype[mappings.collections[activeCollection.name].archetypeName] : [],
     columns: getColumnInfo(collections, activeCollection, mappings).columns,
     ignoredColumns: getColumnInfo(collections, activeCollection, mappings).ignoredColumns,
-    predicateObjectMappings: predicateObjectMappings[activeCollection.name] || []
+    predicateObjectMappings: predicateObjectMappings
   };
 }

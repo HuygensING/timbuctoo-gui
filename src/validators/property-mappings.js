@@ -1,10 +1,12 @@
 const columnMapIsComplete = (predicateObjectMap) =>
-  predicateObjectMap.objectMap && predicateObjectMap.objectMap.column;
+  predicateObjectMap.objectMap &&
+  typeof predicateObjectMap.objectMap.column !== "undefined" &&
+  predicateObjectMap.objectMap.column !== null;
 
-const propertyMappingIsComplete = (type, predicateObjectMap) => {
+const propertyMappingIsComplete = (predicateObjectMap) => {
   if (typeof predicateObjectMap === "undefined") { return false; }
 
-  if (["text", "select", "multiselect", "datable"].indexOf(type) > -1) {
+  if (["text", "select", "multiselect", "datable"].indexOf(predicateObjectMap.propertyType) > -1) {
     return columnMapIsComplete(predicateObjectMap);
   }
 

@@ -25,10 +25,14 @@ class PropertyForm extends React.Component {
       columns: columns,
       ignoredColumns: ignoredColumns,
       selectedColumn: predicateObjectMap && predicateObjectMap.objectMap.column ? predicateObjectMap.objectMap.column : null,
-      onColumnSelect: (value) => onAddPredicateObjectMap(name, value),
+      onColumnSelect: (value) => onAddPredicateObjectMap(name, value, type),
       onClearColumn: () => onRemovePredicateObjectMap(name)
     }) : <span>type not yet supported: <span style={{color: "red"}}>{type}</span></span>;
 
+    const unConfirmButton = propertyMappingIsComplete(predicateObjectMap)
+      ? (<button className="btn btn-blank" onClick={() => onRemovePredicateObjectMap(name)}>
+          <span className="hi-success glyphicon glyphicon-ok" />
+        </button>) : null;
 
     return (
       <div className="row small-margin">
@@ -44,11 +48,8 @@ class PropertyForm extends React.Component {
             : null }
         </div>
         <div className="col-sm-1 hi-success">
-          { propertyMappingIsComplete(type, predicateObjectMap)
-            ? <span className="hi-success glyphicon glyphicon-ok" />
-            : null
-          }
-      </div>
+          {unConfirmButton}
+        </div>
       </div>
     );
   }
