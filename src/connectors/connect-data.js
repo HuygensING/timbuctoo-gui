@@ -28,8 +28,8 @@ export default (appState, routed) => {
 
     // from active collection for table
     activeCollection: activeCollection.name,
-    rows: transformCollectionRows(collections, activeCollection),
-    headers: transformCollectionColumns(collections, activeCollection),
+    rows: transformCollectionRows(collections, activeCollection, mappings),
+    headers: transformCollectionColumns(collections, activeCollection, mappings),
     nextUrl: activeCollection.nextUrl,
 
     // from import data

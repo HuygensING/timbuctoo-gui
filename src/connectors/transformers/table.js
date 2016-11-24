@@ -5,15 +5,18 @@ const sheetRowFromDictToArray = (rowdict, arrayOfVariableNames, mappingErrors) =
   }));
 
 
-const getColumnInfo = (collections, activeCollection) => {
+const getColumnInfo = (collections, activeCollection, mappings) => {
   const collectionInfo = (collections || []).find((coll) => coll.name === activeCollection.name);
   const columns = collectionInfo ? collectionInfo.variables : null;
-  const ignoredColumns = collectionInfo ? collectionInfo.ignoredColumns || [] : null;
+  const ignoredColumns = mappings && mappings.collections[activeCollection.name] ?
+    mappings.collections[activeCollection.name].ignoredColumns : [];
+
+
   return {columns: columns, ignoredColumns: ignoredColumns};
 }
 
-const transformCollectionRows = (collections, activeCollection) => {
-  const { columns, ignoredColumns  } = getColumnInfo(collections, activeCollection);
+const transformCollectionRows = (collections, activeCollection, mappings) => {
+  const { columns, ignoredColumns  } = getColumnInfo(collections, activeCollection, mappings);
   return activeCollection.name && columns
     ? activeCollection.rows
     .map((row) =>
@@ -25,8 +28,8 @@ const transformCollectionRows = (collections, activeCollection) => {
     : [];
 };
 
-const transformCollectionColumns = (collections, activeCollection) => {
-  const { columns, ignoredColumns  } = getColumnInfo(collections, activeCollection);
+const transformCollectionColumns = (collections, activeCollection, mappings) => {
+  const { columns, ignoredColumns  } = getColumnInfo(collections, activeCollection, mappings);
   return (columns || []).map((column, i) => ({
     name: column,
     isConfirmed: false /*ignoredColumns.indexOf(i) < 0 && confirmedCols.indexOf(i) > -1*/,
@@ -36,5 +39,6 @@ const transformCollectionColumns = (collections, activeCollection) => {
 
 export {
   transformCollectionColumns,
-  transformCollectionRows
+  transformCollectionRows,
+  getColumnInfo
 }

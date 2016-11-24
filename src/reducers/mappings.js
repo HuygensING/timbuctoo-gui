@@ -11,6 +11,7 @@ function scaffoldCollectionMappings(init, sheet) {
   return Object.assign(init, {
     [sheet.name]: {
       archetypeName: null,
+      ignoredColumns: []
     }
   });
 }
@@ -21,7 +22,21 @@ const mapCollectionArchetype = (state, action) => {
   return {...state, collections: newCollections};
 };
 
+const toggleIgnoredColumn = (state, action) => {
+  const current = getIn([action.collection, "ignoredColumns"], state.collections);
 
+  if (current.indexOf(action.variableName) < 0) {
+    return {
+      ...state,
+      collections: setIn([action.collection, "ignoredColumns"], current.concat(action.variableName), state.collections)
+    };
+  } else {
+    return {
+      ...state,
+      collections: setIn([action.collection, "ignoredColumns"], current.filter((c) => c !== action.variableName), state.collections)
+    };
+  }
+};
 
 export default function(state=initialState, action) {
   switch (action.type) {
@@ -43,6 +58,8 @@ export default function(state=initialState, action) {
         collections: action.data
       };
 
+    case "TOGGLE_IGNORED_COLUMN":
+      return toggleIgnoredColumn(state, action);
 
     /*
         case "CONFIRM_COLLECTION_ARCHETYPE_MAPPINGS":
@@ -65,9 +82,6 @@ export default function(state=initialState, action) {
 
         case "SET_VALUE_MAPPING":
           return setValueMapping(state, action);
-
-        case "TOGGLE_IGNORED_COLUMN":
-          return toggleIgnoredColumn(state, action);
 
         case "ADD_CUSTOM_PROPERTY":
           return addCustomProperty(state, action);

@@ -20,7 +20,7 @@ class ConnectData extends React.Component {
   }
 
   render() {
-    const { onCloseMessage, onSelectCollection, onLoadMoreClick } = this.props;
+    const { onCloseMessage, onSelectCollection, onLoadMoreClick, onIgnoreColumnToggle } = this.props;
     const {
       params: { vreId },
       vre,
