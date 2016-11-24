@@ -15,7 +15,12 @@ export default (appState, routed) => {
   const { collections } = appState.importData;
   const { mappings, activeCollection, archetype, predicateObjectMappings : allPredicateObjectmappings } = appState;
 
-  const predicateObjectMappings = allPredicateObjectmappings[activeCollection.name] || []
+  const predicateObjectMappings = allPredicateObjectmappings[activeCollection.name] || [];
+
+  const archetypeFields = mappings.collections[activeCollection.name] ?
+    archetype[mappings.collections[activeCollection.name].archetypeName] : [];
+
+  const columnHeaders = transformCollectionColumns(collections, activeCollection, mappings, predicateObjectMappings);
 
   return {
     // from router
@@ -32,7 +37,7 @@ export default (appState, routed) => {
     // from active collection for table
     activeCollection: activeCollection.name,
     rows: transformCollectionRows(collections, activeCollection, mappings),
-    headers: transformCollectionColumns(collections, activeCollection, mappings, predicateObjectMappings),
+    headers: columnHeaders,
     nextUrl: activeCollection.nextUrl,
 
     // from import data
@@ -40,7 +45,7 @@ export default (appState, routed) => {
     vre: appState.importData.vre,
 
     // form data
-    archetypeFields: mappings.collections[activeCollection.name] ? archetype[mappings.collections[activeCollection.name].archetypeName] : [],
+    archetypeFields: archetypeFields,
     columns: getColumnInfo(collections, activeCollection, mappings).columns,
     ignoredColumns: getColumnInfo(collections, activeCollection, mappings).ignoredColumns,
     predicateObjectMappings: predicateObjectMappings
