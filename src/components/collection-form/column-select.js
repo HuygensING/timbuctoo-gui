@@ -6,7 +6,7 @@ class ColumnSelect extends React.Component {
 
 
   render() {
-    const { columns, selectedColumn, onColumnSelect, onClearColumn, placeholder } = this.props;
+    const { columns, selectedColumn, onColumnSelect, onClearColumn, placeholder, ignoredColumns } = this.props;
 
     return (
       <SelectField value={selectedColumn}
@@ -17,7 +17,7 @@ class ColumnSelect extends React.Component {
           <img src="images/icon-excel.svg" alt=""/> {placeholder || "Select an excel column"}
         </span>
 
-        {columns.map((column) => (
+        {columns.filter((column) => ignoredColumns.indexOf(column) < 0).map((column) => (
           <span key={column} value={column} className="from-excel"><img src="images/icon-excel.svg" alt=""/> {column}</span>
         ))}
       </SelectField>
