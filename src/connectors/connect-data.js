@@ -13,11 +13,12 @@ export default (appState, routed) => {
 
   const columnHeaders = transformCollectionColumns(collections, activeCollection, mappings, predicateObjectMappings);
 
+  const collectionTabs = transformCollectionTabs(collections, mappings, activeCollection, allPredicateObjectmappings);
   return {
     // from router
     vreId: routed.params.vreId,
     // transformed for view
-    tabs: transformCollectionTabs(collections, mappings, activeCollection, allPredicateObjectmappings),
+    tabs: collectionTabs,
 
     // mapping data
     mappings: appState.mappings,
@@ -39,6 +40,8 @@ export default (appState, routed) => {
     archetypeFields: archetypeFields,
     columns: getColumnInfo(collections, activeCollection, mappings).columns,
     ignoredColumns: getColumnInfo(collections, activeCollection, mappings).ignoredColumns,
-    predicateObjectMappings: predicateObjectMappings
+    predicateObjectMappings: predicateObjectMappings,
+    publishEnabled: !appState.importData.publishing && collectionTabs.every(tab => tab.complete),
+    publishStatus: appState.importData.publishStatus || "Publish dataset",
   };
 }

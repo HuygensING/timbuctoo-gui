@@ -30,7 +30,7 @@ const transformCollectionRows = (collections, activeCollection, mappings) => {
     : [];
 };
 
-const transformCollectionColumns = (collections, activeCollection, mappings, predicateObjectMappings) => {
+const transformCollectionColumns = (collections, activeCollection, mappings, predicateObjectMappings = []) => {
   const { columns, ignoredColumns  } = getColumnInfo(collections, activeCollection, mappings);
   return (columns || []).map((column, i) => ({
     name: column,

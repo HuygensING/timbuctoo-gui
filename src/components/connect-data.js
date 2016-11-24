@@ -23,7 +23,7 @@ class ConnectData extends React.Component {
   }
 
   render() {
-    const { onCloseMessage, onSelectCollection, onLoadMoreClick, onIgnoreColumnToggle } = this.props;
+    const { onCloseMessage, onSelectCollection, onLoadMoreClick, onIgnoreColumnToggle, onPublishData } = this.props;
 
     const { onAddPredicateObjectMap, onRemovePredicateObjectMap } = this.props;
 
@@ -32,7 +32,9 @@ class ConnectData extends React.Component {
       vre,
       tabs,
       showCollectionsAreConnectedMessage,
-      uploadedFilename
+      uploadedFilename,
+      publishEnabled,
+      publishStatus
     } = this.props;
 
     // table view properties
@@ -63,6 +65,12 @@ class ConnectData extends React.Component {
                         predicateObjectMappings={predicateObjectMappings}
                         onAddPredicateObjectMap={onAddPredicateObjectMap}
                         onRemovePredicateObjectMap={onRemovePredicateObjectMap} />
+
+        <div className="container big-margin">
+          <button onClick={onPublishData} className="btn btn-warning btn-lg pull-right" type="button" disabled={!publishEnabled}>
+            {publishStatus}
+          </button>
+        </div>
 
         <div className="container big-margin">
           <p className="from-excel">

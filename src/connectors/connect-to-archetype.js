@@ -2,7 +2,7 @@ import { transformCollectionRows, transformCollectionColumns } from "./transform
 
 export default (appState, routed) => {
   const { importData: { collections }} = appState;
-  const { activeCollection } = appState;
+  const { activeCollection, mappings } = appState;
 
   return {
     vreId: routed.params.vreId,
@@ -16,7 +16,7 @@ export default (appState, routed) => {
     // from active collection for table
     activeCollection: activeCollection.name,
     rows: transformCollectionRows(collections, activeCollection),
-    headers: transformCollectionColumns(collections, activeCollection),
+    headers: transformCollectionColumns(collections, activeCollection, mappings),
     nextUrl: activeCollection.nextUrl,
 
   };
