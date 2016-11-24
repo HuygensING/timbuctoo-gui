@@ -17,9 +17,19 @@ import CollectionOverview from "./components/collection-overview";
 import connectArchetypeConnector from "./connectors/connect-to-archetype";
 import ConnectToArchetype from "./components/connect-to-archetype";
 
+import connectDataConnector from "./connectors/connect-data";
+import ConnectData from "./components/connect-data";
+
+const serializeArchetypeMappings = (collections) => {
+  return encodeURIComponent(JSON.stringify(collections));
+};
+
+
 var urls = {
-  mapData() {
-    return "/mapdata";
+  mapData(vreId, mappings) {
+    return vreId && mappings
+      ? `/mapdata/${vreId}/${serializeArchetypeMappings(mappings)}`
+      : "/mapdata/:vreId/:serializedArchetypeMappings";
   },
   mapArchetypes(vreId) {
     return vreId ? `/maparchetypes/${vreId}` : "/maparchetypes/:vreId";
@@ -53,6 +63,9 @@ export default (hasOwnVres) => {
           {indexRoute}
           <Route onEnter={filterAuthorized("/")}
             path={urls.mapArchetypes()} components={connectComponent(connectArchetypeConnector)(ConnectToArchetype)} />
+          <Route onEnter={filterAuthorized("/")}
+                 path={urls.mapData()} components={connectComponent(connectDataConnector)(ConnectData)} />
+
         </Route>
       </Router>
     </Provider>

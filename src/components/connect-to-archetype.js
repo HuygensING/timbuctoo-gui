@@ -1,6 +1,8 @@
 import React from "react";
 import SelectField from "./fields/select-field";
 import Message from "./message";
+import { urls } from "../router";
+import { Link } from "react-router";
 
 class ConnectToArchetype extends React.Component {
 
@@ -16,7 +18,7 @@ class ConnectToArchetype extends React.Component {
   componentDidMount() {
     const { onFetchBulkUploadedMetadata, collections, vre, vreId } = this.props;
     if (!collections || vre !== vreId) {
-      onFetchBulkUploadedMetadata(this.props.params.vreId);
+      onFetchBulkUploadedMetadata(vreId);
     }
   }
 
@@ -90,9 +92,15 @@ class ConnectToArchetype extends React.Component {
 
         </div>
         <div className="container basic-margin">
-          <button onClick={onConfirmCollectionArchetypeMappings} type="button" className="btn btn-success" disabled={!collectionsAreMapped}>
-            Connect
-          </button>
+          { collectionsAreMapped ?
+            <Link to={urls.mapData(vre, mappings.collections)} className="btn btn-success">
+              Connect
+            </Link>
+            :
+            <button disabled={true} className="btn btn-success">
+              Connect
+            </button>
+          }
         </div>
       </div>
     )
