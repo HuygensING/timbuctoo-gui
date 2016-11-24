@@ -11,7 +11,7 @@ class CollectionTabs extends React.Component {
         <ul className="nav nav-tabs" role="tablist">
           {collectionTabs.map((collectionTab) => (
             <li key={collectionTab.collectionName} className={cx({active: collectionTab.active})}>
-              <a onClick={() => onSelectCollection(collectionTab.collectionName)}
+              <a onClick={() => collectionTab.active ? false : onSelectCollection(collectionTab.collectionName)}
                  style={{cursor: collectionTab.active ? "default" : "pointer"}}>
                 {collectionTab.archetypeName}{" "}
                 {collectionTab.complete ? <span className="glyphicon glyphicon-ok" /> : null}

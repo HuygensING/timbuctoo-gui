@@ -11,7 +11,9 @@ export default function(state=initialState, action) {
         ...state,
         name: action.data.name,
         nextUrl: action.data._next,
-        rows: action.data.items
+        rows: action.data.name !== state.name
+          ? action.data.items
+          : state.rows.concat(action.data.items)
       };
   }
 

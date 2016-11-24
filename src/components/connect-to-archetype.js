@@ -64,7 +64,8 @@ class ConnectToArchetype extends React.Component {
           {collections.map((sheet) => (
             <div className="row" key={sheet.name}>
               <div className="col-md-2">
-                <a className="from-excel" onClick={() => onSelectCollection(sheet.name)} style={{cursor: "pointer"}}>
+                <a className="from-excel" style={{cursor: "pointer"}}
+                   onClick={() => sheet.name === activeCollection ? false : onSelectCollection(sheet.name)}>
                   <img src="images/icon-excel.svg" alt=""/> {sheet.name} {sheet.name === activeCollection ? "*" : ""}
                 </a>
               </div>
