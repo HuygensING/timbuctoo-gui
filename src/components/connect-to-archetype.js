@@ -34,7 +34,7 @@ class ConnectToArchetype extends React.Component {
     } = this.props;
 
     // actions
-    const { onCloseMessage, onMapCollectionArchetype, onSelectCollection } = this.props;
+    const { onCloseMessage, onMapCollectionArchetype, onSelectCollection, onLoadMoreClick } = this.props;
     // messages
     const { showFileIsUploadedMessage, uploadedFileName } = this.props;
     // table view properties

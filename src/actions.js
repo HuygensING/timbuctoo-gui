@@ -8,6 +8,8 @@ export default function actionsMaker(navigateTo, dispatch) {
 
     onSelectCollection: (collection) => dispatch(selectCollection(collection)),
 
+    onLoadMoreClick: (nextUrl, collection) => dispatch(selectCollection(collection, nextUrl)),
+
     onFetchBulkUploadedMetadata: (vreId, mappingsFromUrl) =>
       dispatch(fetchBulkUploadedMetadata(vreId, mappingsFromUrl)),
 
