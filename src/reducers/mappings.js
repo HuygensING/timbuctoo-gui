@@ -38,7 +38,6 @@ export default function(state=initialState, action) {
       return mapCollectionArchetype(state, action);
 
     case "MAP_COLLECTION_ARCHETYPES":
-      console.log("MAP_COLLECTION_ARCHETYPES", action.data);
       return {
         ...state,
         collections: action.data

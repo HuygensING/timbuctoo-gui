@@ -22,7 +22,7 @@ export default (appState, routed) => {
     // messages
     showCollectionsAreConnectedMessage: appState.messages.showCollectionsAreConnectedMessage,
     // from import data
-    uploadedFileName: appState.importData.uploadedFileName,
+    uploadedFilename: appState.importData.uploadedFileName,
     vre: appState.importData.vre
   };
 }

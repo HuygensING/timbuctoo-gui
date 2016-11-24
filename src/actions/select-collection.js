@@ -4,7 +4,6 @@ const selectCollection = (collection) => (dispatch, getState) => {
   const { importData: { collections }, userdata: { userId }} = getState();
   const selectedCollection = collections.find((col) => col.name === collection);
   if (userId && collections && selectedCollection && selectedCollection.dataUrl) {
-    console.log(selectedCollection.dataUrl, userId);
     dispatch({type: "ACTIVE_COLLECTION_PENDING"});
     xhr.get(selectedCollection.dataUrl, {
       headers: { "Authorization": userId }

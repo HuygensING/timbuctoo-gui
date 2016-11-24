@@ -1,4 +1,5 @@
 import xhr from "xhr";
+import { selectCollection } from "./select-collection";
 
 const onUploadFileSelect = (navigateTo, dispatch) => (files, isReupload = false) => {
   let file = files[0];
@@ -27,9 +28,11 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, isReupload = false)
         const responseData = JSON.parse(body);
         dispatch({type: "FINISH_UPLOAD", data: responseData, uploadedFileName: file.name});
         if (isReupload) {
-          /*actions.onSelectCollection(state.importData.activeCollection);*/
         } else {
           navigateTo("mapArchetypes", [responseData.vre]);
+        }
+        if (responseData.collections && responseData.collections.length) {
+          dispatch(selectCollection(responseData.collections[0].name));
         }
       });
     };
