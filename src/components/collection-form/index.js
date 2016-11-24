@@ -13,7 +13,7 @@ class CollectionForm extends React.Component {
 
     const archeTypePropFields = archetypeFields.filter((af) => af.type !== "relation");
 
-    console.log(predicateObjectMappings);
+    /*console.log(predicateObjectMappings);*/
 
     const propertyForms = archeTypePropFields
       .map((af, i) => (

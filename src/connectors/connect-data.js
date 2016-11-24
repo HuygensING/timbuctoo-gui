@@ -1,14 +1,5 @@
 import { transformCollectionRows, transformCollectionColumns, getColumnInfo } from "./transformers/table";
-
-const transformCollectionTabs = (collections, mappings, activeCollection) =>
-  (collections || [])
-    .filter((collection) => typeof mappings.collections[collection.name] !== "undefined")
-    .map((collection) => ({
-      collectionName: collection.name,
-      archetypeName: mappings.collections[collection.name].archetypeName,
-      active: activeCollection.name === collection.name,
-      complete: false /* mappingsAreComplete(props, sheet) */
-    }));
+import { transformCollectionTabs } from "./transformers/tabs"
 
 export default (appState, routed) => {
 
@@ -26,7 +17,7 @@ export default (appState, routed) => {
     // from router
     vreId: routed.params.vreId,
     // transformed for view
-    tabs: transformCollectionTabs(collections, mappings, activeCollection),
+    tabs: transformCollectionTabs(collections, mappings, activeCollection, allPredicateObjectmappings),
 
     // mapping data
     mappings: appState.mappings,
