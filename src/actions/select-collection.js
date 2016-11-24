@@ -3,10 +3,10 @@ import xhr from "xhr";
 const selectCollection = (collection) => (dispatch, getState) => {
   const { importData: { collections }, userdata: { userId }} = getState();
   const selectedCollection = collections.find((col) => col.name === collection);
-  if (userId && collections && selectedCollection && selectedCollection.nextUrl) {
-    console.log(selectedCollection.nextUrl, userId);
+  if (userId && collections && selectedCollection && selectedCollection.dataUrl) {
+    console.log(selectedCollection.dataUrl, userId);
     dispatch({type: "ACTIVE_COLLECTION_PENDING"});
-    xhr.get(selectedCollection.nextUrl, {
+    xhr.get(selectedCollection.dataUrl, {
       headers: { "Authorization": userId }
     }, (err, resp, body) => {
       if (err) {

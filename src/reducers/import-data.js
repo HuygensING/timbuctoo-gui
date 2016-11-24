@@ -43,8 +43,8 @@ export default function(state=initialState, action) {
         executeMappingUrl: action.data.executeMapping,
         collections: action.data.collections.map((col) => ({
           ...col,
-          nextUrl: col.data,
-          nextUrlWithErrors: col.dataWithErrors
+          dataUrl: col.data,
+          dataUrlWithErrors: col.dataWithErrors
         }))
       };
 
