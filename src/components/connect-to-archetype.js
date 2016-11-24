@@ -3,6 +3,7 @@ import SelectField from "./fields/select-field";
 import Message from "./message";
 import { urls } from "../router";
 import { Link } from "react-router";
+import CollectionTable from "./collection-table";
 
 class ConnectToArchetype extends React.Component {
 
@@ -25,21 +26,19 @@ class ConnectToArchetype extends React.Component {
 
   render() {
     const {
-      vreId,
-      vre,
+      vreId, // from params
+      vre, // from server response
       archetype,
       collections,
       mappings,
-      showFileIsUploadedMessage,
-      uploadedFileName,
-      activeCollection
     } = this.props;
 
-    const {
-      onCloseMessage,
-      onMapCollectionArchetype,
-      onSelectCollection
-    } = this.props;
+    // actions
+    const { onCloseMessage, onMapCollectionArchetype, onSelectCollection } = this.props;
+    // messages
+    const { showFileIsUploadedMessage, uploadedFileName } = this.props;
+    // table view properties
+    const { rows, headers, nextUrl, activeCollection } = this.props;
 
     if (!collections || vre !== vreId) { return null; }
 
@@ -102,6 +101,19 @@ class ConnectToArchetype extends React.Component {
               Connect
             </button>
           }
+        </div>
+        <div className="container big-margin">
+          <p className="from-excel">
+            <img src="images/icon-excel.svg" alt=""/>{" "}
+            <em>{activeCollection}</em> {uploadedFileName ? `from ${uploadedFileName}` : ""}
+          </p>
+
+          <CollectionTable
+            rows={rows}
+            headers={headers}
+            nextUrl={nextUrl}
+            onIgnoreColumnToggle={null}
+            onLoadMoreClick={(url) => onLoadMoreClick(url, activeCollection)} />
         </div>
       </div>
     )

@@ -26,12 +26,11 @@ class ConnectData extends React.Component {
       vre,
       tabs,
       showCollectionsAreConnectedMessage,
-      rows,
-      headers,
-      nextUrl,
-      activeCollection,
       uploadedFilename
     } = this.props;
+
+    // table view properties
+    const { rows, headers, nextUrl, activeCollection } = this.props;
 
     if (tabs.length === 0 || vre !== vreId) { return null; }
 

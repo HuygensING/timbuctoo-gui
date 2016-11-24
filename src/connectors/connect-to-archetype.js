@@ -1,4 +1,8 @@
+import { transformCollectionRows, transformCollectionColumns } from "./transformers/table";
+
 export default (appState, routed) => {
+  const { importData: { collections }} = appState;
+  const { activeCollection } = appState;
 
   return {
     vreId: routed.params.vreId,
@@ -10,6 +14,10 @@ export default (appState, routed) => {
     vre: appState.importData.vre,
 
     // from active collection for table
-    activeCollection: appState.activeCollection.name,
+    activeCollection: activeCollection.name,
+    rows: transformCollectionRows(collections, activeCollection),
+    headers: transformCollectionColumns(collections, activeCollection),
+    nextUrl: activeCollection.nextUrl,
+
   };
 }

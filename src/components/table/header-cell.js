@@ -13,12 +13,14 @@ class HeaderCell extends React.Component {
         danger: !isConfirmed && isIgnored
       })}>
         {header}
-        <a style={{cursor: "pointer"}} className={cx("pull-right", "glyphicon", {
-          "glyphicon-ok-sign": isConfirmed,
-          "glyphicon-question-sign": !isConfirmed && !isIgnored,
-          "glyphicon-remove": !isConfirmed && isIgnored
-        })} onClick={() => !isConfirmed ? onIgnoreColumnToggle(header) : null } >
-        </a>
+        { onIgnoreColumnToggle !== null ? (
+          <a style={{cursor: "pointer"}} className={cx("pull-right", "glyphicon", {
+            "glyphicon-ok-sign": isConfirmed,
+            "glyphicon-question-sign": !isConfirmed && !isIgnored,
+            "glyphicon-remove": !isConfirmed && isIgnored
+          })} onClick={() => !isConfirmed ? onIgnoreColumnToggle(header) : null } >
+          </a>
+        ) : null }
       </th>
     );
   }
