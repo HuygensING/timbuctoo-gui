@@ -1,4 +1,4 @@
-import { transformCollectionRows, transformCollectionColumns } from "./transformers/table";
+import { transformCollectionRows, transformCollectionColumns, getColumnInfo } from "./transformers/table";
 
 const transformCollectionTabs = (collections, mappings, activeCollection) =>
   (collections || [])
@@ -13,8 +13,9 @@ const transformCollectionTabs = (collections, mappings, activeCollection) =>
 export default (appState, routed) => {
 
   const { collections } = appState.importData;
-  const { mappings, activeCollection } = appState;
+  const { mappings, activeCollection, archetype, predicateObjectMappings } = appState;
 
+  console.log(predicateObjectMappings);
   return {
     // from router
     vreId: routed.params.vreId,
@@ -23,6 +24,7 @@ export default (appState, routed) => {
 
     // mapping data
     mappings: appState.mappings,
+
     // messages
     showCollectionsAreConnectedMessage: appState.messages.showCollectionsAreConnectedMessage,
 
@@ -34,6 +36,12 @@ export default (appState, routed) => {
 
     // from import data
     uploadedFilename: appState.importData.uploadedFileName,
-    vre: appState.importData.vre
+    vre: appState.importData.vre,
+
+    // form data
+    archetypeFields: mappings.collections[activeCollection.name] ? archetype[mappings.collections[activeCollection.name].archetypeName] : [],
+    columns: getColumnInfo(collections, activeCollection, mappings).columns,
+    ignoredColumns: getColumnInfo(collections, activeCollection, mappings).ignoredColumns,
+    predicateObjectMappings: predicateObjectMappings[activeCollection.name] || []
   };
 }

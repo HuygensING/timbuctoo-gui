@@ -13,7 +13,7 @@ const getColumnInfo = (collections, activeCollection, mappings) => {
 
 
   return {columns: columns, ignoredColumns: ignoredColumns};
-}
+};
 
 const transformCollectionRows = (collections, activeCollection, mappings) => {
   const { columns, ignoredColumns  } = getColumnInfo(collections, activeCollection, mappings);

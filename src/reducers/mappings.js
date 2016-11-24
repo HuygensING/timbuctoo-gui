@@ -61,44 +61,6 @@ export default function(state=initialState, action) {
     case "TOGGLE_IGNORED_COLUMN":
       return toggleIgnoredColumn(state, action);
 
-    /*
-        case "CONFIRM_COLLECTION_ARCHETYPE_MAPPINGS":
-          return {...state, confirmed: true};
-
-        case "SET_FIELD_MAPPING":
-          return upsertFieldMapping(state, action);
-
-        case "CLEAR_FIELD_MAPPING":
-          return clearFieldMapping(state, action);
-
-        case "SET_DEFAULT_VALUE":
-          return setDefaultValue(state, action);
-
-        case "CONFIRM_FIELD_MAPPINGS":
-          return setFieldConfirmation(state, action, true);
-
-        case "UNCONFIRM_FIELD_MAPPINGS":
-          return setFieldConfirmation(state, action, false);
-
-        case "SET_VALUE_MAPPING":
-          return setValueMapping(state, action);
-
-        case "ADD_CUSTOM_PROPERTY":
-          return addCustomProperty(state, action);
-
-        case "REMOVE_CUSTOM_PROPERTY":
-          return removeCustomProperty(state, action);
-
-        case "PUBLISH_STARTED":
-          return {
-            ...state,
-            publishing: true
-          };
-        case "PUBLISH_FINISHED":
-          return {
-            ...state,
-            publishing: false
-          };*/
   }
   return state;
 }

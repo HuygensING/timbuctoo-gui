@@ -2,6 +2,9 @@ import React from "react";
 import CollectionTabs from "./collection-tabs";
 import Message from "./message";
 import CollectionTable from "./collection-table"
+import CollectionForm from "./collection-form";
+
+
 class ConnectData extends React.Component {
 
   componentWillReceiveProps(nextProps) {
@@ -21,6 +24,9 @@ class ConnectData extends React.Component {
 
   render() {
     const { onCloseMessage, onSelectCollection, onLoadMoreClick, onIgnoreColumnToggle } = this.props;
+
+    const { onAddPredicateObjectMap, onRemovePredicateObjectMap } = this.props;
+
     const {
       params: { vreId },
       vre,
@@ -31,6 +37,9 @@ class ConnectData extends React.Component {
 
     // table view properties
     const { rows, headers, nextUrl, activeCollection } = this.props;
+
+    // form view properties
+    const { archetypeFields, columns, ignoredColumns, predicateObjectMappings } = this.props;
 
     if (tabs.length === 0 || vre !== vreId) { return null; }
 
@@ -50,7 +59,10 @@ class ConnectData extends React.Component {
           <p>Connect the excel columns to the properties of the Archetypes</p>
         </div>
         <CollectionTabs collectionTabs={tabs} onSelectCollection={onSelectCollection} />
-
+        <CollectionForm archetypeFields={archetypeFields} columns={columns} ignoredColumns={ignoredColumns}
+                        predicateObjectMappings={predicateObjectMappings}
+                        onAddPredicateObjectMap={onAddPredicateObjectMap}
+                        onRemovePredicateObjectMap={onRemovePredicateObjectMap} />
 
         <div className="container big-margin">
           <p className="from-excel">

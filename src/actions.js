@@ -2,6 +2,8 @@ import { onUploadFileSelect } from "./actions/upload"
 import { fetchBulkUploadedMetadata } from "./actions/fetch-bulkuploaded-metadata";
 import { selectCollection } from "./actions/select-collection";
 
+import {addPredicateObjectMap, removePredicateObjectMap } from "./actions/predicate-object-mappings";
+
 export default function actionsMaker(navigateTo, dispatch) {
   return {
     onUploadFileSelect: onUploadFileSelect(navigateTo, dispatch),
@@ -22,5 +24,9 @@ export default function actionsMaker(navigateTo, dispatch) {
     // Connecting data
     onIgnoreColumnToggle: (collection, variableName) =>
       dispatch({type: "TOGGLE_IGNORED_COLUMN", collection: collection, variableName: variableName}),
+
+    onAddPredicateObjectMap: (predicateName, objectName) => dispatch(addPredicateObjectMap(predicateName, objectName)),
+
+    onRemovePredicateObjectMap: (predicateName) => dispatch(removePredicateObjectMap(predicateName)),
   };
 }

@@ -7,6 +7,7 @@ import importData from "./import-data";
 import archetype from "./archetype";
 import mappings from "./mappings";
 import activeCollection from "./active-collection";
+import predicateObjectMappings from "./predicate-object-mappings";
 
 export default combineReducers({
   messages: messages,
@@ -15,5 +16,6 @@ export default combineReducers({
   importData: importData,
   archetype: archetype,
   mappings: mappings,
-  activeCollection:  activeCollection
+  activeCollection:  activeCollection,
+  predicateObjectMappings: predicateObjectMappings
 });
