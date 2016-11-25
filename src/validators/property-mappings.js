@@ -1,3 +1,6 @@
+const isBasicProperty = (predicateObjectMap) =>
+  ["text", "select", "multiselect", "datable"].indexOf(predicateObjectMap.propertyType) > -1;
+
 const columnMapIsComplete = (predicateObjectMap) =>
   predicateObjectMap.objectMap &&
   typeof predicateObjectMap.objectMap.column !== "undefined" &&
@@ -6,11 +9,11 @@ const columnMapIsComplete = (predicateObjectMap) =>
 const propertyMappingIsComplete = (predicateObjectMap) => {
   if (typeof predicateObjectMap === "undefined") { return false; }
 
-  if (["text", "select", "multiselect", "datable"].indexOf(predicateObjectMap.propertyType) > -1) {
+  if (isBasicProperty(predicateObjectMap)) {
     return columnMapIsComplete(predicateObjectMap);
   }
 
   return false;
 };
 
-export { propertyMappingIsComplete }
+export { propertyMappingIsComplete, isBasicProperty }

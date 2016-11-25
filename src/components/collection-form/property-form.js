@@ -5,9 +5,11 @@ import { propertyMappingIsComplete } from "../../validators/property-mappings"
 
 const typeMap = {
   text: (props) => <ColumnSelect {...props} />,
-  select: (props) => <ColumnSelect {...props} />,
-  multiselect: (props) => <ColumnSelect {...props} />,
   datable: (props) => <ColumnSelect {...props} />,
+  select: (props) => <ColumnSelect {...props} />,
+/*
+  multiselect: (props) => <ColumnSelect {...props} />,
+*/
 };
 
 

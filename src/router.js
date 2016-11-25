@@ -26,6 +26,9 @@ const serializeArchetypeMappings = (collections) => {
 
 
 var urls = {
+  root() {
+    return "/";
+  },
   mapData(vreId, mappings) {
     return vreId && mappings
       ? `/mapdata/${vreId}/${serializeArchetypeMappings(mappings)}`

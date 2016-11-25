@@ -1,5 +1,9 @@
 const initialState = {
   isUploading: false,
+  publishEnabled: true,
+  publishStatus: undefined,
+  publishErrorCount: 0,
+  tripleCount: 0
 };
 
 
@@ -47,7 +51,49 @@ export default function(state=initialState, action) {
           dataUrlWithErrors: col.dataWithErrors
         }))
       };
-
+    case "PUBLISH_STATUS_UPDATE":
+      var publishErrorCount = state.publishErrorCount + (action.data === "F" ? 1 : 0);
+      var tripleCount = action.data === "F" ? state.tripleCount : action.data;
+      var publishStatus = "Publishing " + tripleCount + " triples" + (publishErrorCount > 0 ? " (" + publishErrorCount + " errors)" : "");
+      return {
+        ...state,
+        publishErrorCount,
+        tripleCount,
+        publishStatus
+      };
+    case "PUBLISH_HAD_ERROR":
+      // clear the sheets to force reload
+      return {
+        ...state,
+        publishErrors: true,
+        collections: state.collections.map((col) => ({
+          ...col,
+          dataUrl: col.data,
+          dataUrlWithErrors: col.dataWithErrors
+        }))
+      };
+    case "PUBLISH_SUCCEEDED":
+      // clear the sheets to force reload
+      return {
+        ...state,
+        publishStatus: undefined,
+        publishEnabled: true,
+        publishErrors: false,
+        collections: state.collections.map((col) => ({
+          ...col,
+          dataUrl: col.data,
+          dataUrlWithErrors: col.dataWithErrors
+        }))
+      };
+    case "PUBLISH_FINISHED":
+      // clear the sheets to force reload
+      return {
+        ...state,
+        publishStatus: undefined,
+        publishEnabled: true,
+        publishErrorCount: 0,
+        tripleCount: 0
+      };
   }
 
   return state;

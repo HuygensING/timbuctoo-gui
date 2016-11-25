@@ -5,7 +5,7 @@ const mappingsAreComplete = (allColumns, ignoredColumns, predicateObjectMappings
   const validMappings = predicateObjectMappings
     .filter((pom) => propertyMappingIsComplete(pom));
 
-  return evaluateColumns.length === validMappings.length;
+  return evaluateColumns.length <= validMappings.length;
 };
 
 const transformCollectionTabs = (collections, mappings, activeCollection, predicateObjectMappings) =>
