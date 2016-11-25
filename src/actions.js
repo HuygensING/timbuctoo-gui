@@ -1,8 +1,14 @@
 import { onUploadFileSelect } from "./actions/upload"
 import { fetchBulkUploadedMetadata } from "./actions/fetch-bulkuploaded-metadata";
 import { selectCollection } from "./actions/select-collection";
-import {addPredicateObjectMap, removePredicateObjectMap } from "./actions/predicate-object-mappings";
-import {publishMappings} from "./actions/publish-mappings";
+import {
+  addPredicateObjectMap,
+  removePredicateObjectMap,
+  addCustomProperty,
+  removeCustomProperty
+} from "./actions/predicate-object-mappings";
+
+import { publishMappings } from "./actions/publish-mappings";
 
 export default function actionsMaker(navigateTo, dispatch) {
   return {
@@ -29,6 +35,10 @@ export default function actionsMaker(navigateTo, dispatch) {
       dispatch(addPredicateObjectMap(predicateName, objectName, propertyType)),
 
     onRemovePredicateObjectMap: (predicateName, objectName) => dispatch(removePredicateObjectMap(predicateName, objectName)),
+
+    onAddCustomProperty: (name, type) => dispatch(addCustomProperty(name, type)),
+
+    onRemoveCustomProperty: (index) => dispatch(removeCustomProperty(index)),
 
     onPublishData: () => dispatch(publishMappings(navigateTo))
   };

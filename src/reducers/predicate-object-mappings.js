@@ -24,7 +24,7 @@ const setPredicateObjectMapping = (state, action) => {
 
 const removePredicateObjectMapping = (state, action) => {
   const collectionPredicateObjectMappings = state[action.subjectCollection] || [];
-  console.log(action);
+
   return {
     ...state,
     [action.subjectCollection]: collectionPredicateObjectMappings

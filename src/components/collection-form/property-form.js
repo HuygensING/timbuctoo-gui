@@ -20,9 +20,9 @@ class PropertyForm extends React.Component {
 
   render() {
 
-    const { onAddPredicateObjectMap, onRemovePredicateObjectMap } = this.props;
+    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onRemoveCustomProperty } = this.props;
 
-    const { name, type, custom, columns, ignoredColumns, predicateObjectMap, predicateObjectMappings } = this.props;
+    const { name, type, custom, customIndex, columns, ignoredColumns, predicateObjectMap, predicateObjectMappings } = this.props;
 
     const formComponent = typeMap[type]
       ? typeMap[type]({
@@ -47,7 +47,7 @@ class PropertyForm extends React.Component {
         </div>
         <div className="col-sm-1">
           { custom
-            ? (<button className="btn btn-blank pull-right" type="button" onClick={() => onRemoveCustomProperty(name)}>
+            ? (<button className="btn btn-blank pull-right" type="button" onClick={() => onRemoveCustomProperty(customIndex)}>
             <span className="glyphicon glyphicon-remove"/>
           </button>)
             : null }

@@ -4,19 +4,21 @@ import { transformCollectionTabs } from "./transformers/tabs"
 export default (appState, routed) => {
 
   const { collections } = appState.importData;
-  const { mappings, activeCollection, archetype, predicateObjectMappings : allPredicateObjectmappings } = appState;
+  const { mappings, activeCollection, archetype, customProperties,
+    predicateObjectMappings : allPredicateObjectMappings } = appState;
 
-  const predicateObjectMappings = allPredicateObjectmappings[activeCollection.name] || [];
+  const predicateObjectMappings = allPredicateObjectMappings[activeCollection.name] || [];
 
   const archetypeFields = mappings.collections[activeCollection.name] ?
     archetype[mappings.collections[activeCollection.name].archetypeName] : [];
 
   const columnHeaders = transformCollectionColumns(collections, activeCollection, mappings, predicateObjectMappings);
 
-  const collectionTabs = transformCollectionTabs(collections, mappings, activeCollection, allPredicateObjectmappings);
+  const collectionTabs = transformCollectionTabs(collections, mappings, activeCollection, allPredicateObjectMappings);
 
   const availableArchetypes = Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName);
 
+  console.log(predicateObjectMappings);
   return {
     // from router
     vreId: routed.params.vreId,
@@ -47,5 +49,6 @@ export default (appState, routed) => {
     predicateObjectMappings: predicateObjectMappings,
     publishEnabled: !appState.importData.publishing && collectionTabs.every(tab => tab.complete),
     publishStatus: appState.importData.publishStatus || "Publish dataset",
+    customProperties: customProperties[activeCollection.name] || []
   };
 }

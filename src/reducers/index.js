@@ -8,6 +8,8 @@ import archetype from "./archetype";
 import mappings from "./mappings";
 import activeCollection from "./active-collection";
 import predicateObjectMappings from "./predicate-object-mappings";
+import customProperties from "./custom-properties";
+
 
 export default combineReducers({
   messages: messages,
@@ -17,5 +19,6 @@ export default combineReducers({
   archetype: archetype,
   mappings: mappings,
   activeCollection:  activeCollection,
-  predicateObjectMappings: predicateObjectMappings
+  predicateObjectMappings: predicateObjectMappings,
+  customProperties: customProperties
 });

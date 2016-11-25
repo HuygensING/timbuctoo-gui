@@ -2,7 +2,7 @@ import React from "react";
 import CollectionTabs from "./collection-tabs";
 import Message from "./message";
 import CollectionTable from "./collection-table"
-import CollectionForm from "./collection-form";
+import CollectionForm from "./collection-form/collection-form";
 
 
 class ConnectData extends React.Component {
@@ -25,7 +25,7 @@ class ConnectData extends React.Component {
   render() {
     const { onCloseMessage, onSelectCollection, onLoadMoreClick, onIgnoreColumnToggle, onPublishData } = this.props;
 
-    const { onAddPredicateObjectMap, onRemovePredicateObjectMap } = this.props;
+    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onAddCustomProperty, onRemoveCustomProperty } = this.props;
 
     const {
       params: { vreId },
@@ -35,7 +35,8 @@ class ConnectData extends React.Component {
       uploadedFilename,
       publishEnabled,
       publishStatus,
-      availableArchetypes
+      availableArchetypes,
+      customProperties
     } = this.props;
 
     // table view properties
@@ -64,6 +65,9 @@ class ConnectData extends React.Component {
         <CollectionTabs collectionTabs={tabs} onSelectCollection={onSelectCollection} />
         <CollectionForm archetypeFields={archetypeFields} columns={columns} ignoredColumns={ignoredColumns}
                         availableArchetypes={availableArchetypes}
+                        customProperties={customProperties}
+                        onAddCustomProperty={onAddCustomProperty}
+                        onRemoveCustomProperty={onRemoveCustomProperty}
                         predicateObjectMappings={predicateObjectMappings}
                         onAddPredicateObjectMap={onAddPredicateObjectMap}
                         onRemovePredicateObjectMap={onRemovePredicateObjectMap} />

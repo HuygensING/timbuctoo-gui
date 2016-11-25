@@ -5,15 +5,15 @@ import AddProperty from "./add-property";
 class CollectionForm extends React.Component {
 
   render() {
-    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onAddCustomProperty } = this.props;
+    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onAddCustomProperty, onRemoveCustomProperty } = this.props;
 
     const { archetypeFields, availableArchetypes, columns, ignoredColumns } = this.props;
 
-    const { predicateObjectMappings } = this.props;
+    const { predicateObjectMappings, customProperties } = this.props;
 
     const archeTypePropFields = archetypeFields.filter((af) => af.type !== "relation");
 
-    /*console.log(predicateObjectMappings);*/
+    console.log(customProperties);
 
     const propertyForms = archeTypePropFields
       .map((af, i) => (
@@ -25,13 +25,24 @@ class CollectionForm extends React.Component {
                       onRemovePredicateObjectMap={onRemovePredicateObjectMap} />
       ));
 
+    const customPropertyForms = customProperties
+      .map((customProp, i) => (
+        <PropertyForm key={i} name={customProp.propertyName} type={customProp.propertyType} custom={true} customIndex={i}
+                      columns={columns} ignoredColumns={ignoredColumns}
+                      predicateObjectMap={predicateObjectMappings.find((pom) => pom.predicate === customProp.propertyName)}
+                      predicateObjectMappings={predicateObjectMappings}
+                      onAddPredicateObjectMap={onAddPredicateObjectMap}
+                      onRemovePredicateObjectMap={onRemovePredicateObjectMap}
+                      onRemoveCustomProperty={onRemoveCustomProperty} />
+      ));
     return (
       <div className="container basic-margin">
         {propertyForms}
+        {customPropertyForms}
         <AddProperty
           archetypeFields={archetypeFields}
           availableArchetypes={availableArchetypes}
-          onAddCustomProperty={(name, type) => onAddCustomProperty(name, type)} />
+          onAddCustomProperty={onAddCustomProperty} />
       </div>
     );
   }
