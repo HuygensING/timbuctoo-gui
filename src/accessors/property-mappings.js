@@ -25,6 +25,12 @@ const getColumnValue = (predicateObjectMap) => {
     return predicateObjectMap.objectMap && predicateObjectMap.objectMap.column ? predicateObjectMap.objectMap.column : null;
   }
 
+  if (predicateObjectMap.propertyType === "relation") {
+    return predicateObjectMap.objectMap &&
+      predicateObjectMap.objectMap.joinCondition &&
+      predicateObjectMap.objectMap.joinCondition.child ? predicateObjectMap.objectMap.joinCondition.child : null;
+  }
+
   return null;
 };
 

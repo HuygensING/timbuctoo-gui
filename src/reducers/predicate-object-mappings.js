@@ -1,9 +1,7 @@
 import {getColumnValue} from "../accessors/property-mappings";
 const initialState = { };
 
-const setPredicateObjectMapping = (state, action) => {
-  const collectionPredicateObjectMappings = state[action.subjectCollection] || [];
-
+function setBasicPredicateObjectMap(action, collectionPredicateObjectMappings) {
   const predicateObjectMap = {
     predicate: action.predicate,
     objectMap: {
@@ -12,10 +10,31 @@ const setPredicateObjectMapping = (state, action) => {
     propertyType: action.propertyType
   };
 
-  const newCollectionPredicateObjectMappings = collectionPredicateObjectMappings
+  return collectionPredicateObjectMappings
     .filter((predObjMap) => predObjMap.predicate !== action.predicate)
     .concat(predicateObjectMap);
+}
 
+
+function setRelationPredicateObjectMap(action, collectionPredicateObjectMappings) {
+  const predicateObjectMap = {
+    predicate: action.predicate,
+    objectMap: action.object,
+    propertyType: "relation"
+  };
+
+  return collectionPredicateObjectMappings
+    .filter((predObjMap) => predObjMap.predicate !== action.predicate)
+    .concat(predicateObjectMap);
+}
+
+
+const setPredicateObjectMapping = (state, action) => {
+  const collectionPredicateObjectMappings = state[action.subjectCollection] || [];
+  const newCollectionPredicateObjectMappings =
+    action.propertyType === "relation"
+      ? setRelationPredicateObjectMap(action, collectionPredicateObjectMappings)
+      : setBasicPredicateObjectMap(action, collectionPredicateObjectMappings);
 
   return {
     ...state,

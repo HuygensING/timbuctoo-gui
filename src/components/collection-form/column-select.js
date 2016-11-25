@@ -6,10 +6,11 @@ class ColumnSelect extends React.Component {
 
 
   render() {
-    const { columns, selectedColumn, onColumnSelect, onClearColumn, placeholder, ignoredColumns } = this.props;
+    const { columns, selectedColumn, onColumnSelect, onClearColumn, placeholder, ignoredColumns, valuePrefix } = this.props;
 
     return (
       <SelectField value={selectedColumn} style={{display: "inline-block"}}
+                   valuePrefix={valuePrefix}
                    onChange={(column) => onColumnSelect(column)}
                    onClear={() => onClearColumn(selectedColumn)}>
 
@@ -18,7 +19,11 @@ class ColumnSelect extends React.Component {
         </span>
 
         {columns.filter((column) => ignoredColumns.indexOf(column) < 0).map((column) => (
-          <span key={column} value={column} className="from-excel"><img src="images/icon-excel.svg" alt=""/> {column}</span>
+          <span key={column} value={column} className="from-excel">
+            <img src="images/icon-excel.svg" alt=""/>{" "}
+            {valuePrefix && column === selectedColumn ? valuePrefix : ""}
+            {column}
+          </span>
         ))}
       </SelectField>
     );
