@@ -1,3 +1,4 @@
+import {getColumnValue} from "../validators/property-mappings";
 const initialState = { };
 
 const setPredicateObjectMapping = (state, action) => {
@@ -28,7 +29,7 @@ const removePredicateObjectMapping = (state, action) => {
   return {
     ...state,
     [action.subjectCollection]: collectionPredicateObjectMappings
-      .filter((pom) => !(pom.predicate === action.predicate && pom.objectMap.column === action.object))
+      .filter((pom) => !(pom.predicate === action.predicate && getColumnValue(pom) === action.object))
   };
 };
 

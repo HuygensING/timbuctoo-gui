@@ -1,12 +1,13 @@
 import React from "react";
 import ColumnSelect from "./column-select";
 import camel2label from "../../util/camel2label";
+import {getColumnValue} from "../../validators/property-mappings";
 
 
 const getObjectForPredicate = (predicateObjectMappings, predicate) =>
   predicateObjectMappings
     .filter((pom) => pom.predicate === predicate)
-    .map((pom) => pom.objectMap && pom.objectMap.column ? pom.objectMap.column : null)[0]
+    .map((pom) => getColumnValue(pom))[0]
 
 class NamesForm extends React.Component {
 

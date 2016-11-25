@@ -16,4 +16,16 @@ const propertyMappingIsComplete = (predicateObjectMap) => {
   return false;
 };
 
-export { propertyMappingIsComplete, isBasicProperty }
+const getColumnValue = (predicateObjectMap) => {
+  if (!predicateObjectMap) {
+    return null;
+  }
+
+  if (isBasicProperty(predicateObjectMap)) {
+    return predicateObjectMap.objectMap && predicateObjectMap.objectMap.column ? predicateObjectMap.objectMap.column : null;
+  }
+
+  return null;
+};
+
+export { propertyMappingIsComplete, isBasicProperty, getColumnValue }

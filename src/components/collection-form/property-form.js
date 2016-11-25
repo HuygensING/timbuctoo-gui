@@ -3,6 +3,7 @@ import React from "react";
 import ColumnSelect from "./column-select";
 import NamesForm from "./names-form";
 import { propertyMappingIsComplete } from "../../validators/property-mappings"
+import {getColumnValue} from "../../validators/property-mappings";
 
 const typeMap = {
   text: (props) => <ColumnSelect {...props} />,
@@ -28,14 +29,14 @@ class PropertyForm extends React.Component {
       ? typeMap[type]({
       columns: columns,
       ignoredColumns: ignoredColumns,
-      selectedColumn: predicateObjectMap && predicateObjectMap.objectMap.column ? predicateObjectMap.objectMap.column : null,
+      selectedColumn: getColumnValue(predicateObjectMap),
       predicateObjectMappings: predicateObjectMappings,
       onColumnSelect: (value, predicate) => onAddPredicateObjectMap(predicate || name, value, type),
       onClearColumn: (value, predicate) => onRemovePredicateObjectMap(predicate || name, value)
     }) : <span>type not yet supported: <span style={{color: "red"}}>{type}</span></span>;
 
     const unConfirmButton = propertyMappingIsComplete(predicateObjectMap)
-      ? (<button className="btn btn-blank" onClick={() => onRemovePredicateObjectMap(name, predicateObjectMap.objectMap.column)}>
+      ? (<button className="btn btn-blank" onClick={() => onRemovePredicateObjectMap(name, getColumnValue(predicateObjectMap))}>
           <span className="hi-success glyphicon glyphicon-ok" />
         </button>) : null;
 

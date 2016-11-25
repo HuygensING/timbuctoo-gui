@@ -1,3 +1,4 @@
+import {getColumnValue} from "../validators/property-mappings";
 const addPredicateObjectMap = (predicate, object, propertyType) => (dispatch, getState) => {
   const {activeCollection: { name : subjectCollection }} = getState();
 
@@ -49,7 +50,7 @@ const removeCustomProperty = (index) => (dispatch, getState) => {
       type: "REMOVE_PREDICATE_OBJECT_MAPPING",
       subjectCollection: collectionName,
       predicate: customProperty.propertyName,
-      object: predicateObjectMapping.objectMap.column
+      object: getColumnValue(predicateObjectMapping)
     });
   }
   dispatch({

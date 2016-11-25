@@ -1,4 +1,5 @@
 import { propertyMappingIsComplete } from "../../validators/property-mappings"
+import {getColumnValue} from "../../validators/property-mappings";
 
 const sheetRowFromDictToArray = (rowdict, arrayOfVariableNames, mappingErrors) =>
   arrayOfVariableNames.map(name => ({
@@ -34,10 +35,7 @@ const transformCollectionColumns = (collections, activeCollection, mappings, pre
   const { columns, ignoredColumns  } = getColumnInfo(collections, activeCollection, mappings);
   return (columns || []).map((column, i) => ({
     name: column,
-    isConfirmed: propertyMappingIsComplete(predicateObjectMappings
-      .filter((pom) => {
-        return pom.objectMap && pom.objectMap.column ? pom.objectMap.column === column : false;
-      })[0]),
+    isConfirmed: propertyMappingIsComplete(predicateObjectMappings.find((pom) => getColumnValue(pom) === column)),
     isIgnored: ignoredColumns.indexOf(column) > -1
   }));
 };
