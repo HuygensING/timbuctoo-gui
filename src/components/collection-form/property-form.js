@@ -1,12 +1,14 @@
 import React from "react";
 
 import ColumnSelect from "./column-select";
+import NamesForm from "./names-form";
 import { propertyMappingIsComplete } from "../../validators/property-mappings"
 
 const typeMap = {
   text: (props) => <ColumnSelect {...props} />,
   datable: (props) => <ColumnSelect {...props} />,
   select: (props) => <ColumnSelect {...props} />,
+  names: (props) => <NamesForm {...props} />
 /*
   multiselect: (props) => <ColumnSelect {...props} />,
 */
@@ -20,19 +22,20 @@ class PropertyForm extends React.Component {
 
     const { onAddPredicateObjectMap, onRemovePredicateObjectMap } = this.props;
 
-    const { name, type, custom, columns, ignoredColumns, predicateObjectMap } = this.props;
+    const { name, type, custom, columns, ignoredColumns, predicateObjectMap, predicateObjectMappings } = this.props;
 
     const formComponent = typeMap[type]
       ? typeMap[type]({
       columns: columns,
       ignoredColumns: ignoredColumns,
       selectedColumn: predicateObjectMap && predicateObjectMap.objectMap.column ? predicateObjectMap.objectMap.column : null,
-      onColumnSelect: (value) => onAddPredicateObjectMap(name, value, type),
-      onClearColumn: () => onRemovePredicateObjectMap(name)
+      predicateObjectMappings: predicateObjectMappings,
+      onColumnSelect: (value, predicate) => onAddPredicateObjectMap(predicate || name, value, type),
+      onClearColumn: (value, predicate) => onRemovePredicateObjectMap(predicate || name, value)
     }) : <span>type not yet supported: <span style={{color: "red"}}>{type}</span></span>;
 
     const unConfirmButton = propertyMappingIsComplete(predicateObjectMap)
-      ? (<button className="btn btn-blank" onClick={() => onRemovePredicateObjectMap(name)}>
+      ? (<button className="btn btn-blank" onClick={() => onRemovePredicateObjectMap(name, predicateObjectMap.objectMap.column)}>
           <span className="hi-success glyphicon glyphicon-ok" />
         </button>) : null;
 

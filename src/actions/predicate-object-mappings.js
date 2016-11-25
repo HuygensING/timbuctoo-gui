@@ -1,6 +1,8 @@
 const addPredicateObjectMap = (predicate, object, propertyType) => (dispatch, getState) => {
   const {activeCollection: { name : subjectCollection }} = getState();
 
+  console.log(predicate, object, propertyType);
+
   dispatch({
     type: "SET_PREDICATE_OBJECT_MAPPING",
     subjectCollection: subjectCollection,
@@ -10,13 +12,14 @@ const addPredicateObjectMap = (predicate, object, propertyType) => (dispatch, ge
   })
 };
 
-const removePredicateObjectMap = (predicate) => (dispatch, getState) => {
+const removePredicateObjectMap = (predicate, object) => (dispatch, getState) => {
   const {activeCollection: { name : subjectCollection }} = getState();
 
   dispatch({
     type: "REMOVE_PREDICATE_OBJECT_MAPPING",
     subjectCollection: subjectCollection,
-    predicate: predicate
+    predicate: predicate,
+    object: object
   })
 };
 

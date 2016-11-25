@@ -9,9 +9,9 @@ class ColumnSelect extends React.Component {
     const { columns, selectedColumn, onColumnSelect, onClearColumn, placeholder, ignoredColumns } = this.props;
 
     return (
-      <SelectField value={selectedColumn}
+      <SelectField value={selectedColumn} style={{display: "inline-block"}}
                    onChange={(column) => onColumnSelect(column)}
-                   onClear={() => onClearColumn()}>
+                   onClear={() => onClearColumn(selectedColumn)}>
 
         <span type="placeholder" className="from-excel">
           <img src="images/icon-excel.svg" alt=""/> {placeholder || "Select an excel column"}

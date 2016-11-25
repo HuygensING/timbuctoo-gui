@@ -1,4 +1,5 @@
 import generateRmlMapping from "../util/generate-rml-mapping";
+import {fetchMyVres} from "./fetch-my-vres";
 
 const publishMappings = (navigateTo) => (dispatch, getState) => {
   const {
@@ -35,11 +36,9 @@ const publishMappings = (navigateTo) => (dispatch, getState) => {
     } else {
       dispatch(function (dispatch, getState) {
         var state = getState();
-        console.log(state.importData);
         if (state.importData.publishErrorCount === 0) {
           dispatch({type: "PUBLISH_SUCCEEDED"});
-          console.log("Hello??");
-          navigateTo("root");
+          dispatch(fetchMyVres(userId, () => navigateTo("root")));
         } else {
           dispatch({type: "PUBLISH_HAD_ERROR"});
           /*actions.onSelectCollection(state.importData.activeCollection);*/

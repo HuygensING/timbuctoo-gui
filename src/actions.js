@@ -28,7 +28,7 @@ export default function actionsMaker(navigateTo, dispatch) {
     onAddPredicateObjectMap: (predicateName, objectName, propertyType) =>
       dispatch(addPredicateObjectMap(predicateName, objectName, propertyType)),
 
-    onRemovePredicateObjectMap: (predicateName) => dispatch(removePredicateObjectMap(predicateName)),
+    onRemovePredicateObjectMap: (predicateName, objectName) => dispatch(removePredicateObjectMap(predicateName, objectName)),
 
     onPublishData: () => dispatch(publishMappings(navigateTo))
   };

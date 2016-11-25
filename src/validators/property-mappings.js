@@ -1,5 +1,5 @@
 const isBasicProperty = (predicateObjectMap) =>
-  ["text", "select", "multiselect", "datable"].indexOf(predicateObjectMap.propertyType) > -1;
+  ["text", "select", "multiselect", "datable", "names"].indexOf(predicateObjectMap.propertyType) > -1;
 
 const columnMapIsComplete = (predicateObjectMap) =>
   predicateObjectMap.objectMap &&

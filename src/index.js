@@ -4,6 +4,7 @@ import store from "./store";
 import xhr from "xhr";
 import router from "./router";
 import getToken from "./token"
+import {fetchMyVres} from "./actions/fetch-my-vres";
 
 xhr.get(process.env.server + "/v2.1/javascript-globals", (err, res) => {
   var globals = JSON.parse(res.body);
@@ -23,6 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
     store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
     const token = getToken();
     if (token) {
+      store.dispatch(fetchMyVres(token, (vreData) => initialRender(vreData.mine)));
+/*
       xhr(process.env.server + "/v2.1/system/users/me/vres", {
         headers: {
           "Authorization": token
@@ -33,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         initialRender(vreData.mine);
       });
+*/
     } else {
       initialRender(false);
     }

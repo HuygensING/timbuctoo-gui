@@ -20,6 +20,7 @@ class CollectionForm extends React.Component {
         <PropertyForm key={i} name={af.name} type={af.type} custom={false}
                       columns={columns} ignoredColumns={ignoredColumns}
                       predicateObjectMap={predicateObjectMappings.find((pom) => pom.predicate === af.name)}
+                      predicateObjectMappings={predicateObjectMappings}
                       onAddPredicateObjectMap={onAddPredicateObjectMap}
                       onRemovePredicateObjectMap={onRemovePredicateObjectMap} />
       ));

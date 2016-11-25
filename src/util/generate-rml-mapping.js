@@ -72,8 +72,11 @@ const mapCollection = (vre, archetypeName, collectionName, predicateObjectMaps) 
   ].concat(predicateObjectMaps.map((pom) => makePredicateObjectMap(vre, pom)).filter((pom) => pom !== null) )
 });
 
-export default (vre, collectionMappings, predicateObjectMappings) => ({
-  ...rmlTemplate,
-  "@graph": Object.keys(predicateObjectMappings)
-    .map((collectionName) => mapCollection(vre, collectionMappings[collectionName].archetypeName, collectionName, predicateObjectMappings[collectionName]))
-})
+export default (vre, collectionMappings, predicateObjectMappings) => {
+  console.log(collectionMappings);
+  return {
+    ...rmlTemplate,
+    "@graph": Object.keys(predicateObjectMappings)
+      .map((collectionName) => mapCollection(vre, collectionMappings[collectionName].archetypeName, collectionName, predicateObjectMappings[collectionName]))
+  };
+}

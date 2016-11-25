@@ -24,10 +24,11 @@ const setPredicateObjectMapping = (state, action) => {
 
 const removePredicateObjectMapping = (state, action) => {
   const collectionPredicateObjectMappings = state[action.subjectCollection] || [];
-
+  console.log(action);
   return {
     ...state,
-    [action.subjectCollection]: collectionPredicateObjectMappings.filter((pom) => pom.predicate !== action.predicate)
+    [action.subjectCollection]: collectionPredicateObjectMappings
+      .filter((pom) => !(pom.predicate === action.predicate && pom.objectMap.column === action.object))
   };
 };
 
