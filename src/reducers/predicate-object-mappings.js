@@ -34,6 +34,8 @@ const removePredicateObjectMapping = (state, action) => {
 
 export default function(state=initialState, action) {
   switch (action.type) {
+    case "LOGIN":
+      return initialState;
     case "SET_PREDICATE_OBJECT_MAPPING":
       return setPredicateObjectMapping(state, action);
     case "REMOVE_PREDICATE_OBJECT_MAPPING":
