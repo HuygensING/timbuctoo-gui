@@ -2,6 +2,14 @@ import {isBasicProperty} from "../validators/property-mappings";
 
 const defaultNamespace = "http://timbuctoo.com/";
 
+const nameSpaces = {
+  surname: "http://www.tei-c.org/ns/1.0/",
+  forename: "http://www.tei-c.org/ns/1.0/",
+  roleName: "http://www.tei-c.org/ns/1.0/",
+  nameLink: "http://www.tei-c.org/ns/1.0/",
+  genName: "http://www.tei-c.org/ns/1.0/",
+};
+
 const rmlTemplate =  {
   "@context": {
     "@vocab": "http://www.w3.org/ns/r2rml#",
@@ -28,13 +36,16 @@ const rmlTemplate =  {
   }
 };
 
+const getNameSpaceFor = (predicate) =>
+  typeof nameSpaces[predicate]  === "undefined" ? defaultNamespace : nameSpaces[predicate];
+
 const makeMapName = (vre, localName) => `http://timbuctoo.com/mapping/${vre}/${localName}`;
 
 const mapBasicProperty = (predicateObjectMap) => ({
   "objectMap": {
     "column": predicateObjectMap.objectMap.column
   },
-  "predicate": `${predicateObjectMap.predicateNamespace || defaultNamespace}${predicateObjectMap.predicate}`
+  "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
 });
 
 const makePredicateObjectMap = (vre, predicateObjectMap) => {
