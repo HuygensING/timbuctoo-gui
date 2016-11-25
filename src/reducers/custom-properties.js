@@ -25,6 +25,7 @@ const removeCustomProperty = (state, action) => {
 
 export default function(state=initialState, action) {
   switch (action.type) {
+    case "FINISH_UPLOAD":
     case "LOGIN":
       return initialState;
     case "ADD_CUSTOM_PROPERTY":

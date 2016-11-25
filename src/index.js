@@ -25,18 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const token = getToken();
     if (token) {
       store.dispatch(fetchMyVres(token, (vreData) => initialRender(vreData.mine)));
-/*
-      xhr(process.env.server + "/v2.1/system/users/me/vres", {
-        headers: {
-          "Authorization": token
-        }
-      }, (err, resp, body) => {
-        const vreData = JSON.parse(body);
-        store.dispatch({type: "LOGIN", data: token, vreData: vreData});
-
-        initialRender(vreData.mine);
-      });
-*/
     } else {
       initialRender(false);
     }

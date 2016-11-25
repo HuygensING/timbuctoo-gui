@@ -1,12 +1,12 @@
 import xhr from "xhr";
 
-const selectCollection = (collection, altUrl) => (dispatch, getState) => {
+const selectCollection = (collection, altUrl = null, onlyErrors = false) => (dispatch, getState) => {
   const { importData: { collections }, userdata: { userId }} = getState();
   const selectedCollection = collections.find((col) => col.name === collection);
 
   if (userId && collections && selectedCollection && selectedCollection.dataUrl) {
     dispatch({type: "ACTIVE_COLLECTION_PENDING"});
-    xhr.get(altUrl || selectedCollection.dataUrl, {
+    xhr.get((altUrl || selectedCollection.dataUrl) + (onlyErrors ? "?onlyErrors=true" : ""), {
       headers: { "Authorization": userId }
     }, (err, resp, body) => {
       if (err) {

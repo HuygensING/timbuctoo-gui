@@ -48,9 +48,21 @@ const mapBasicProperty = (predicateObjectMap) => ({
   "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
 });
 
+const mapRelationProperty = (vre, predicateObjectMap) => ({
+  "objectMap": {
+    "joinCondition": predicateObjectMap.objectMap.joinCondition,
+    "parentTriplesMap": `http://timbuctoo.com/mapping/${vre}/${predicateObjectMap.objectMap.parentTriplesMap}`
+  },
+  "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
+});
+
 const makePredicateObjectMap = (vre, predicateObjectMap) => {
   if (isBasicProperty(predicateObjectMap)) {
     return mapBasicProperty(predicateObjectMap);
+  }
+
+  if (predicateObjectMap.propertyType === "relation") {
+    return mapRelationProperty(vre, predicateObjectMap);
   }
   return null;
 };

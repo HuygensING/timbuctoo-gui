@@ -50,6 +50,7 @@ export default (appState, routed) => {
     nextUrl: activeCollection.nextUrl,
 
     // from import data
+    uploadStatus: appState.importData.uploadStatus,
     uploadedFilename: appState.importData.uploadedFileName,
     vre: appState.importData.vre,
 
@@ -60,6 +61,7 @@ export default (appState, routed) => {
     columns: getColumnInfo(collections, activeCollection, mappings).columns,
     ignoredColumns: getColumnInfo(collections, activeCollection, mappings).ignoredColumns,
     predicateObjectMappings: predicateObjectMappings,
+    publishErrors: appState.importData.publishErrors,
     publishEnabled: !appState.importData.publishing && collectionTabs.every(tab => tab.complete),
     publishStatus: appState.importData.publishStatus || "Publish dataset",
     customProperties: customProperties[activeCollection.name] || []

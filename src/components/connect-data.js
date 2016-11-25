@@ -3,7 +3,7 @@ import CollectionTabs from "./collection-tabs";
 import Message from "./message";
 import CollectionTable from "./collection-table"
 import CollectionForm from "./collection-form/collection-form";
-
+import UploadButton from "./upload-button";
 
 class ConnectData extends React.Component {
 
@@ -23,7 +23,7 @@ class ConnectData extends React.Component {
   }
 
   render() {
-    const { onCloseMessage, onSelectCollection, onLoadMoreClick, onIgnoreColumnToggle, onPublishData } = this.props;
+    const { onCloseMessage, onSelectCollection, onLoadMoreClick, onIgnoreColumnToggle, onPublishData, onUploadFileSelect } = this.props;
 
     const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onAddCustomProperty, onRemoveCustomProperty } = this.props;
 
@@ -35,6 +35,8 @@ class ConnectData extends React.Component {
       uploadedFilename,
       publishEnabled,
       publishStatus,
+      publishErrors,
+      uploadStatus,
       availableArchetypes,
       customProperties,
       availableCollectionColumnsPerArchetype
@@ -46,7 +48,17 @@ class ConnectData extends React.Component {
     // form view properties
     const { archetypeFields, columns, ignoredColumns, predicateObjectMappings } = this.props;
 
-    if (tabs.length === 0 || vre !== vreId) { return null; }
+    if (!archetypeFields || tabs.length === 0 || vre !== vreId) { return null; }
+
+
+    const publishFailedMessage = publishErrors ? (
+      <Message alertLevel="danger" dismissible={false}>
+        <UploadButton classNames={["btn", "btn-danger", "pull-right", "btn-xs"]} label="Re-upload"
+                      onUploadFileSelect={onUploadFileSelect} uploadStatus={uploadStatus} />
+        <span className="glyphicon glyphicon-exclamation-sign" />{" "}
+        Publish failed. Please fix the mappings or re-upload the data.
+      </Message>
+    ) : null;
 
     const collectionsAreConnectedMessage = showCollectionsAreConnectedMessage && uploadedFilename ?
       <Message alertLevel="info" dismissible={true} onCloseMessage={() => onCloseMessage("showCollectionsAreConnectedMessage")}>
@@ -60,7 +72,7 @@ class ConnectData extends React.Component {
         <div className="container basic-margin">
           <h2 className="small-margin">Upload and connect your dataset</h2>
           {collectionsAreConnectedMessage}
-          {/*publishFailedMessage*/}
+          {publishFailedMessage}
           <p>Connect the excel columns to the properties of the Archetypes</p>
         </div>
         <CollectionTabs collectionTabs={tabs} onSelectCollection={onSelectCollection} />
