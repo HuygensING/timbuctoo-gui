@@ -1,4 +1,4 @@
-import {isBasicProperty} from "../validators/property-mappings";
+import {isBasicProperty} from "../accessors/property-mappings";
 
 const defaultNamespace = "http://timbuctoo.com/";
 

@@ -2,8 +2,8 @@ import React from "react";
 
 import ColumnSelect from "./column-select";
 import NamesForm from "./names-form";
-import { propertyMappingIsComplete } from "../../validators/property-mappings"
-import {getColumnValue} from "../../validators/property-mappings";
+import { propertyMappingIsComplete } from "../../accessors/property-mappings"
+import {getColumnValue} from "../../accessors/property-mappings";
 
 const typeMap = {
   text: (props) => <ColumnSelect {...props} />,

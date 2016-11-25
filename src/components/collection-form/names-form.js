@@ -1,7 +1,7 @@
 import React from "react";
 import ColumnSelect from "./column-select";
 import camel2label from "../../util/camel2label";
-import {getColumnValue} from "../../validators/property-mappings";
+import {getColumnValue} from "../../accessors/property-mappings";
 
 
 const getObjectForPredicate = (predicateObjectMappings, predicate) =>

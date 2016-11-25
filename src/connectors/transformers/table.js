@@ -1,5 +1,5 @@
-import { propertyMappingIsComplete } from "../../validators/property-mappings"
-import {getColumnValue} from "../../validators/property-mappings";
+import { propertyMappingIsComplete } from "../../accessors/property-mappings"
+import {getColumnValue} from "../../accessors/property-mappings";
 
 const sheetRowFromDictToArray = (rowdict, arrayOfVariableNames, mappingErrors) =>
   arrayOfVariableNames.map(name => ({

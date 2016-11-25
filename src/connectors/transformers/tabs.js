@@ -1,6 +1,6 @@
-import {propertyMappingIsComplete} from "../../validators/property-mappings";
+import {propertyMappingIsComplete} from "../../accessors/property-mappings";
 import {uniq} from "../../util/uniq";
-import {getColumnValue} from "../../validators/property-mappings";
+import {getColumnValue} from "../../accessors/property-mappings";
 
 const mappingsAreComplete = (allColumns, ignoredColumns, predicateObjectMappings) => {
   const evaluateColumns = allColumns.filter((col) => ignoredColumns.indexOf(col) < 0);
