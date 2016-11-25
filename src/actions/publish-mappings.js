@@ -18,6 +18,8 @@ const publishMappings = (navigateTo) => (dispatch, getState) => {
   req.setRequestHeader("Authorization", userId);
   req.setRequestHeader("Content-type", "application/ld+json");
 
+  dispatch({type: "PUBLISH_START"});
+
   let pos = 0;
   req.onreadystatechange = function handleData() {
     if (req.readyState != null && (req.readyState < 3 || req.status != 200)) {

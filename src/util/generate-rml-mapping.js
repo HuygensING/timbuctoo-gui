@@ -73,7 +73,6 @@ const mapCollection = (vre, archetypeName, collectionName, predicateObjectMaps) 
 });
 
 export default (vre, collectionMappings, predicateObjectMappings) => {
-  console.log(collectionMappings);
   return {
     ...rmlTemplate,
     "@graph": Object.keys(predicateObjectMappings)

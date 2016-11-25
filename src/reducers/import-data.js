@@ -1,5 +1,6 @@
 const initialState = {
   isUploading: false,
+  publishing: false,
   publishEnabled: true,
   publishStatus: undefined,
   publishErrorCount: 0,
@@ -51,6 +52,13 @@ export default function(state=initialState, action) {
           dataUrlWithErrors: col.dataWithErrors
         }))
       };
+
+    case "PUBLISH_START":
+      return {
+        ...state,
+        publishing: true
+      };
+
     case "PUBLISH_STATUS_UPDATE":
       var publishErrorCount = state.publishErrorCount + (action.data === "F" ? 1 : 0);
       var tripleCount = action.data === "F" ? state.tripleCount : action.data;
@@ -92,7 +100,8 @@ export default function(state=initialState, action) {
         publishStatus: undefined,
         publishEnabled: true,
         publishErrorCount: 0,
-        tripleCount: 0
+        tripleCount: 0,
+        publishing: false
       };
   }
 

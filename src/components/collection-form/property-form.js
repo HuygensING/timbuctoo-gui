@@ -2,7 +2,7 @@ import React from "react";
 
 import ColumnSelect from "./column-select";
 import NamesForm from "./names-form";
-import RelationForm from "./relation";
+import RelationForm from "./relation-form";
 
 import { propertyMappingIsComplete } from "../../accessors/property-mappings"
 import {getColumnValue} from "../../accessors/property-mappings";
@@ -24,20 +24,24 @@ class PropertyForm extends React.Component {
 
   render() {
 
-    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onRemoveCustomProperty } = this.props;
+    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onRemoveCustomProperty,
+      availableCollectionColumnsPerArchetype, relationTypeInfo } = this.props;
 
     const { name, type, custom, customIndex, columns, ignoredColumns, predicateObjectMap, predicateObjectMappings } = this.props;
 
     const formComponent = typeMap[type]
       ? typeMap[type]({
-      columns: columns,
-      ignoredColumns: ignoredColumns,
-      selectedColumn: getColumnValue(predicateObjectMap),
-      predicateObjectMap: predicateObjectMap,
-      predicateObjectMappings: predicateObjectMappings,
-      onColumnSelect: (value, predicate) => onAddPredicateObjectMap(predicate || name, value, type),
-      onClearColumn: (value, predicate) => onRemovePredicateObjectMap(predicate || name, value)
-    }) : <span>type not yet supported: <span style={{color: "red"}}>{type}</span></span>;
+        columns: columns,
+        ignoredColumns: ignoredColumns,
+        selectedColumn: getColumnValue(predicateObjectMap),
+        predicateObjectMap: predicateObjectMap,
+        predicateObjectMappings: predicateObjectMappings,
+        availableCollectionColumnsPerArchetype: availableCollectionColumnsPerArchetype,
+        relationTypeInfo: relationTypeInfo,
+        onColumnSelect: (value, predicate) => onAddPredicateObjectMap(predicate || name, value, type),
+        onClearColumn: (value, predicate) => onRemovePredicateObjectMap(predicate || name, value)
+      })
+      : <span>type not yet supported: <span style={{color: "red"}}>{type}</span></span>;
 
     const unConfirmButton = propertyMappingIsComplete(predicateObjectMap)
       ? (<button className="btn btn-blank" onClick={() => onRemovePredicateObjectMap(name, getColumnValue(predicateObjectMap))}>

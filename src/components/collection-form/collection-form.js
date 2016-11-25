@@ -7,13 +7,11 @@ class CollectionForm extends React.Component {
   render() {
     const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onAddCustomProperty, onRemoveCustomProperty } = this.props;
 
-    const { archetypeFields, availableArchetypes, columns, ignoredColumns } = this.props;
+    const { archetypeFields, availableArchetypes, columns, ignoredColumns, availableCollectionColumnsPerArchetype } = this.props;
 
     const { predicateObjectMappings, customProperties } = this.props;
 
     const archeTypePropFields = archetypeFields.filter((af) => af.type !== "relation");
-
-    console.log(customProperties);
 
     const propertyForms = archeTypePropFields
       .map((af, i) => (
@@ -33,7 +31,10 @@ class CollectionForm extends React.Component {
                       predicateObjectMappings={predicateObjectMappings}
                       onAddPredicateObjectMap={onAddPredicateObjectMap}
                       onRemovePredicateObjectMap={onRemovePredicateObjectMap}
-                      onRemoveCustomProperty={onRemoveCustomProperty} />
+                      onRemoveCustomProperty={onRemoveCustomProperty}
+                      availableCollectionColumnsPerArchetype={availableCollectionColumnsPerArchetype}
+                      relationTypeInfo={archetypeFields.find((af) => af.name === customProp.propertyName)}
+        />
       ));
     return (
       <div className="container basic-margin">

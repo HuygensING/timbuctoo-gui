@@ -18,7 +18,19 @@ export default (appState, routed) => {
 
   const availableArchetypes = Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName);
 
-  console.log(predicateObjectMappings);
+  const availableCollectionColumnsPerArchetype = availableArchetypes.map((archetypeName) => ({
+    key: archetypeName,
+    values: Object.keys(mappings.collections)
+      .filter((collectionName) => mappings.collections[collectionName].archetypeName === archetypeName)
+      .map((collectionName) => ({
+        collectionName: collectionName,
+        columns: collections.find((coll) => coll.name === collectionName).variables
+      }))
+  })).reduce((accum, cur) => ({...accum, [cur.key]: cur.values}), {});
+
+  console.log("--- Mapping preview ---");
+  console.log(JSON.stringify(allPredicateObjectMappings, null, 2));
+
   return {
     // from router
     vreId: routed.params.vreId,
@@ -44,6 +56,7 @@ export default (appState, routed) => {
     // form data
     archetypeFields: archetypeFields,
     availableArchetypes: availableArchetypes,
+    availableCollectionColumnsPerArchetype: availableCollectionColumnsPerArchetype,
     columns: getColumnInfo(collections, activeCollection, mappings).columns,
     ignoredColumns: getColumnInfo(collections, activeCollection, mappings).ignoredColumns,
     predicateObjectMappings: predicateObjectMappings,

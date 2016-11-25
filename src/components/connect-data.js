@@ -36,7 +36,8 @@ class ConnectData extends React.Component {
       publishEnabled,
       publishStatus,
       availableArchetypes,
-      customProperties
+      customProperties,
+      availableCollectionColumnsPerArchetype
     } = this.props;
 
     // table view properties
@@ -65,6 +66,7 @@ class ConnectData extends React.Component {
         <CollectionTabs collectionTabs={tabs} onSelectCollection={onSelectCollection} />
         <CollectionForm archetypeFields={archetypeFields} columns={columns} ignoredColumns={ignoredColumns}
                         availableArchetypes={availableArchetypes}
+                        availableCollectionColumnsPerArchetype={availableCollectionColumnsPerArchetype}
                         customProperties={customProperties}
                         onAddCustomProperty={onAddCustomProperty}
                         onRemoveCustomProperty={onRemoveCustomProperty}

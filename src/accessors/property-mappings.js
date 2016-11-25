@@ -6,11 +6,22 @@ const columnMapIsComplete = (predicateObjectMap) =>
   typeof predicateObjectMap.objectMap.column !== "undefined" &&
   predicateObjectMap.objectMap.column !== null;
 
+const joinConditionMapIsComplete = (predicateObjectMap) =>
+  predicateObjectMap.objectMap &&
+    predicateObjectMap.objectMap.parentTriplesMap &&
+    predicateObjectMap.objectMap.joinCondition &&
+    typeof predicateObjectMap.objectMap.joinCondition.parent !== "undefined" &&
+    typeof predicateObjectMap.objectMap.joinCondition.child !== "undefined";
+
 const propertyMappingIsComplete = (predicateObjectMap) => {
   if (typeof predicateObjectMap === "undefined") { return false; }
 
   if (isBasicProperty(predicateObjectMap)) {
     return columnMapIsComplete(predicateObjectMap);
+  }
+
+  if (predicateObjectMap.propertyType === "relation") {
+    return joinConditionMapIsComplete(predicateObjectMap);
   }
 
   return false;
