@@ -14,6 +14,9 @@ export default (appState, routed) => {
   const columnHeaders = transformCollectionColumns(collections, activeCollection, mappings, predicateObjectMappings);
 
   const collectionTabs = transformCollectionTabs(collections, mappings, activeCollection, allPredicateObjectmappings);
+
+  const availableArchetypes = Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName);
+
   return {
     // from router
     vreId: routed.params.vreId,
@@ -38,6 +41,7 @@ export default (appState, routed) => {
 
     // form data
     archetypeFields: archetypeFields,
+    availableArchetypes: availableArchetypes,
     columns: getColumnInfo(collections, activeCollection, mappings).columns,
     ignoredColumns: getColumnInfo(collections, activeCollection, mappings).ignoredColumns,
     predicateObjectMappings: predicateObjectMappings,

@@ -34,7 +34,8 @@ class ConnectData extends React.Component {
       showCollectionsAreConnectedMessage,
       uploadedFilename,
       publishEnabled,
-      publishStatus
+      publishStatus,
+      availableArchetypes
     } = this.props;
 
     // table view properties
@@ -62,6 +63,7 @@ class ConnectData extends React.Component {
         </div>
         <CollectionTabs collectionTabs={tabs} onSelectCollection={onSelectCollection} />
         <CollectionForm archetypeFields={archetypeFields} columns={columns} ignoredColumns={ignoredColumns}
+                        availableArchetypes={availableArchetypes}
                         predicateObjectMappings={predicateObjectMappings}
                         onAddPredicateObjectMap={onAddPredicateObjectMap}
                         onRemovePredicateObjectMap={onRemovePredicateObjectMap} />

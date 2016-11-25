@@ -1,13 +1,13 @@
 import React from "react";
 import PropertyForm from "./property-form";
-
+import AddProperty from "./add-property";
 
 class CollectionForm extends React.Component {
 
   render() {
-    const { onAddPredicateObjectMap, onRemovePredicateObjectMap } = this.props;
+    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onAddCustomProperty } = this.props;
 
-    const { archetypeFields, columns, ignoredColumns } = this.props;
+    const { archetypeFields, availableArchetypes, columns, ignoredColumns } = this.props;
 
     const { predicateObjectMappings } = this.props;
 
@@ -28,6 +28,10 @@ class CollectionForm extends React.Component {
     return (
       <div className="container basic-margin">
         {propertyForms}
+        <AddProperty
+          archetypeFields={archetypeFields}
+          availableArchetypes={availableArchetypes}
+          onAddCustomProperty={(name, type) => onAddCustomProperty(name, type)} />
       </div>
     );
   }
