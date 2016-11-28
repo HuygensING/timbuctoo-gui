@@ -39,7 +39,8 @@ class ConnectData extends React.Component {
       uploadStatus,
       availableArchetypes,
       customProperties,
-      availableCollectionColumnsPerArchetype
+      availableCollectionColumnsPerArchetype,
+      targetableVres
     } = this.props;
 
     // table view properties
@@ -84,7 +85,8 @@ class ConnectData extends React.Component {
                         onRemoveCustomProperty={onRemoveCustomProperty}
                         predicateObjectMappings={predicateObjectMappings}
                         onAddPredicateObjectMap={onAddPredicateObjectMap}
-                        onRemovePredicateObjectMap={onRemovePredicateObjectMap} />
+                        onRemovePredicateObjectMap={onRemovePredicateObjectMap}
+                        targetableVres={targetableVres} />
 
         <div className="container big-margin">
           <button onClick={onPublishData} className="btn btn-warning btn-lg pull-right" type="button" disabled={!publishEnabled}>

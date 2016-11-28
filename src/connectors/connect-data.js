@@ -1,11 +1,24 @@
 import { transformCollectionRows, transformCollectionColumns, getColumnInfo } from "./transformers/table";
 import { transformCollectionTabs } from "./transformers/tabs"
 
+function getTargetableVres(mine, vres) {
+  const myVres = Object.keys(mine || {})
+    .map((key) => mine[key])
+    .filter((vre) => vre.published)
+    .map((vre) => vre.name);
+  const publicVres = Object.keys(vres || {})
+    .map((key) => vres[key].name);
+
+  return myVres.concat(publicVres);
+}
+
 export default (appState, routed) => {
 
   const { collections } = appState.importData;
   const { mappings, activeCollection, archetype, customProperties,
     predicateObjectMappings : allPredicateObjectMappings } = appState;
+
+  const { userdata: { myVres }, datasets: { publicVres }} = appState;
 
   const predicateObjectMappings = allPredicateObjectMappings[activeCollection.name] || [];
 
@@ -64,6 +77,8 @@ export default (appState, routed) => {
     publishErrors: appState.importData.publishErrors,
     publishEnabled: !appState.importData.publishing && collectionTabs.every(tab => tab.complete),
     publishStatus: appState.importData.publishStatus || "Publish dataset",
-    customProperties: customProperties[activeCollection.name] || []
+    customProperties: customProperties[activeCollection.name] || [],
+    targetableVres: getTargetableVres(myVres, publicVres),
+
   };
 }

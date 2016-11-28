@@ -7,7 +7,14 @@ class CollectionForm extends React.Component {
   render() {
     const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onAddCustomProperty, onRemoveCustomProperty } = this.props;
 
-    const { archetypeFields, availableArchetypes, columns, ignoredColumns, availableCollectionColumnsPerArchetype } = this.props;
+    const {
+      archetypeFields,
+      availableArchetypes,
+      columns,
+      ignoredColumns,
+      availableCollectionColumnsPerArchetype,
+      targetableVres
+    } = this.props;
 
     const { predicateObjectMappings, customProperties } = this.props;
 
@@ -34,6 +41,7 @@ class CollectionForm extends React.Component {
                       onRemoveCustomProperty={onRemoveCustomProperty}
                       availableCollectionColumnsPerArchetype={availableCollectionColumnsPerArchetype}
                       relationTypeInfo={archetypeFields.find((af) => af.name === customProp.propertyName)}
+                      targetableVres={targetableVres}
         />
       ));
     return (

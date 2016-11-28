@@ -3,7 +3,7 @@ import React from "react";
 import ColumnSelect from "./column-select";
 import NamesForm from "./names-form";
 import RelationForm from "./relation-form";
-
+import RelationToExistingForm from "./relation-to-existing-form";
 import { propertyMappingIsComplete } from "../../accessors/property-mappings"
 import {getColumnValue} from "../../accessors/property-mappings";
 
@@ -12,7 +12,8 @@ const typeMap = {
   datable: (props) => <ColumnSelect {...props} />,
   select: (props) => <ColumnSelect {...props} />,
   names: (props) => <NamesForm {...props} />,
-  relation: (props) => <RelationForm {...props} />
+  relation: (props) => <RelationForm {...props} />,
+  "relation-to-existing": (props) => <RelationToExistingForm {...props} />
 /*
   multiselect: (props) => <ColumnSelect {...props} />,
 */
@@ -25,7 +26,7 @@ class PropertyForm extends React.Component {
   render() {
 
     const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onRemoveCustomProperty,
-      availableCollectionColumnsPerArchetype, relationTypeInfo } = this.props;
+      availableCollectionColumnsPerArchetype, relationTypeInfo, targetableVres } = this.props;
 
     const { name, type, custom, customIndex, columns, ignoredColumns, predicateObjectMap, predicateObjectMappings } = this.props;
 
@@ -38,6 +39,7 @@ class PropertyForm extends React.Component {
         predicateObjectMappings: predicateObjectMappings,
         availableCollectionColumnsPerArchetype: availableCollectionColumnsPerArchetype,
         relationTypeInfo: relationTypeInfo,
+        targetableVres: targetableVres,
         onColumnSelect: (value, predicate) => onAddPredicateObjectMap(predicate || name, value, type),
         onClearColumn: (value, predicate) => onRemovePredicateObjectMap(predicate || name, value)
       })
