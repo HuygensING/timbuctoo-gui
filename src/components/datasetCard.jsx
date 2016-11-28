@@ -9,7 +9,7 @@ function DataSetCard(props) {
   if (props.mine && !props.published) {
     return (
       <div className="card-dataset">
-        <Link className="card-dataset btn btn-default explore" to={urls.mapArchetypes(props.caption)}>
+        <Link className="card-dataset btn btn-default explore" to={urls.mapArchetypes(props.vreId)}>
           Finish mapping<br />
           <strong title={props.caption} style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
             {props.caption.replace(/^[^_]+_+/, "")}
