@@ -20,7 +20,8 @@ function setRelationPredicateObjectMap(action, collectionPredicateObjectMappings
   const predicateObjectMap = {
     predicate: action.predicate,
     objectMap: action.object,
-    propertyType: "relation"
+    propertyType: action.propertyType,
+    dataset: action.dataset
   };
 
   return collectionPredicateObjectMappings
@@ -32,7 +33,7 @@ function setRelationPredicateObjectMap(action, collectionPredicateObjectMappings
 const setPredicateObjectMapping = (state, action) => {
   const collectionPredicateObjectMappings = state[action.subjectCollection] || [];
   const newCollectionPredicateObjectMappings =
-    action.propertyType === "relation"
+    action.propertyType === "relation" || action.propertyType === "relation-to-existing"
       ? setRelationPredicateObjectMap(action, collectionPredicateObjectMappings)
       : setBasicPredicateObjectMap(action, collectionPredicateObjectMappings);
 

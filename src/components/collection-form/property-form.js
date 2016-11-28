@@ -25,10 +25,10 @@ class PropertyForm extends React.Component {
 
   render() {
 
-    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onRemoveCustomProperty,
+    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onRemoveCustomProperty, onTargetDatasetSelect,
       availableCollectionColumnsPerArchetype, relationTypeInfo, targetableVres } = this.props;
 
-    const { name, type, custom, customIndex, columns, ignoredColumns, predicateObjectMap, predicateObjectMappings } = this.props;
+    const { name: predicateName, type, custom, customIndex, columns, ignoredColumns, predicateObjectMap, predicateObjectMappings } = this.props;
 
     const formComponent = typeMap[type]
       ? typeMap[type]({
@@ -40,20 +40,21 @@ class PropertyForm extends React.Component {
         availableCollectionColumnsPerArchetype: availableCollectionColumnsPerArchetype,
         relationTypeInfo: relationTypeInfo,
         targetableVres: targetableVres,
-        onColumnSelect: (value, predicate) => onAddPredicateObjectMap(predicate || name, value, type),
-        onClearColumn: (value, predicate) => onRemovePredicateObjectMap(predicate || name, value)
+        onTargetDatasetSelect: (value) => onTargetDatasetSelect(predicateName, value),
+        onColumnSelect: (value, predicate) => onAddPredicateObjectMap(predicate || predicateName, value, type),
+        onClearColumn: (value, predicate) => onRemovePredicateObjectMap(predicate || predicateName, value)
       })
       : <span>type not yet supported: <span style={{color: "red"}}>{type}</span></span>;
 
     const unConfirmButton = propertyMappingIsComplete(predicateObjectMap)
-      ? (<button className="btn btn-blank" onClick={() => onRemovePredicateObjectMap(name, getColumnValue(predicateObjectMap))}>
+      ? (<button className="btn btn-blank" onClick={() => onRemovePredicateObjectMap(predicateName, getColumnValue(predicateObjectMap))}>
           <span className="hi-success glyphicon glyphicon-ok" />
         </button>) : null;
 
     return (
       <div className="row small-margin">
         <div className="col-sm-2 pad-6-12">
-          <strong>{name}</strong>
+          <strong>{predicateName}</strong>
           <span className="pull-right" style={{fontSize: "0.7em"}}>({type})</span>
         </div>
         <div className="col-sm-8">

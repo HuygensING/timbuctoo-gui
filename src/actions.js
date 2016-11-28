@@ -5,7 +5,8 @@ import {
   addPredicateObjectMap,
   removePredicateObjectMap,
   addCustomProperty,
-  removeCustomProperty
+  removeCustomProperty,
+  setTargetDataset
 } from "./actions/predicate-object-mappings";
 
 import { publishMappings } from "./actions/publish-mappings";
@@ -35,6 +36,8 @@ export default function actionsMaker(navigateTo, dispatch) {
       dispatch(addPredicateObjectMap(predicateName, objectName, propertyType)),
 
     onRemovePredicateObjectMap: (predicateName, objectName) => dispatch(removePredicateObjectMap(predicateName, objectName)),
+
+    onTargetDatasetSelect: (predicateName, dataset) => dispatch(setTargetDataset(predicateName, dataset)),
 
     onAddCustomProperty: (name, type) => dispatch(addCustomProperty(name, type)),
 

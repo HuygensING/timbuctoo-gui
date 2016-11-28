@@ -24,6 +24,12 @@ const propertyMappingIsComplete = (predicateObjectMap) => {
     return joinConditionMapIsComplete(predicateObjectMap);
   }
 
+  if (predicateObjectMap.propertyType === "relation-to-existing") {
+    return columnMapIsComplete(predicateObjectMap) &&
+      predicateObjectMap.dataset !== null &&
+      typeof predicateObjectMap.dataset !== "undefined"
+  }
+
   return false;
 };
 
@@ -32,7 +38,7 @@ const getColumnValue = (predicateObjectMap) => {
     return null;
   }
 
-  if (isBasicProperty(predicateObjectMap)) {
+  if (isBasicProperty(predicateObjectMap) || predicateObjectMap.propertyType === "relation-to-existing") {
     return predicateObjectMap.objectMap && predicateObjectMap.objectMap.column ? predicateObjectMap.objectMap.column : null;
   }
 

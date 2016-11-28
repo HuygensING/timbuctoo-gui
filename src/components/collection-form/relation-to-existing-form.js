@@ -7,24 +7,36 @@ class Form extends React.Component {
 
 
   render() {
-    const { targetableVres } = this.props;
+    const { onColumnSelect, onTargetDatasetSelect } = this.props;
+
+    const { predicateObjectMap: optionalPredicateObjectMap, targetableVres } = this.props;
+
+    const predicateObjectMap = optionalPredicateObjectMap || {};
+
+    const objectMap = predicateObjectMap.objectMap || {};
 
     const sourceColumnProps = {
       ...this.props,
+      valuePrefix: "(source) ",
       placeholder: "Select a source column...",
-      onColumnSelect: (value) => console.log(value)
+      onColumnSelect: (value) => onColumnSelect({
+        ...(objectMap || {}),
+        column: value
+      })
     };
 
     return (
       <div>
         <ColumnSelect {...sourceColumnProps} />
-        <SelectField value={null}
-                     onChange={(value) => console.log(value)}
-                     onClear={() => console.log("-clear-")}>
+        <SelectField value={predicateObjectMap.dataset}
+                     onChange={onTargetDatasetSelect}
+                     noClear={true}>
 
           <span type="placeholder" className="to-timbuctoo"><img src="images/logo-timbuctoo-icon.svg" alt=""/> Select a target dataset...</span>
           {targetableVres.map((dataset) => (
-            <span key={dataset} value={dataset} className="from-excel"><img src="images/icon-excel.svg" alt=""/> {dataset.replace(/^[^_]+_+/, "")}</span>
+            <span key={dataset} value={dataset} className="from-excel"><img src="images/icon-excel.svg" alt=""/>{" "}
+              {dataset === predicateObjectMap.dataset ? "(target collection) " + dataset.replace(/^[^_]+_+/, "") : dataset.replace(/^[^_]+_+/, "")}
+            </span>
           ))}
         </SelectField>
       </div>

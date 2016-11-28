@@ -11,6 +11,27 @@ const addPredicateObjectMap = (predicate, object, propertyType) => (dispatch, ge
   })
 };
 
+const setTargetDataset = (predicate, dataset) => (dispatch, getState) => {
+  const {activeCollection: { name : subjectCollection }} = getState();
+
+  const { predicateObjectMappings: allPredicateObjectMappings } = getState();
+
+  const predicateObjectMappings = allPredicateObjectMappings[subjectCollection] || {};
+
+  const predicateObjectMap = predicateObjectMappings.find((pom) => pom.predicate === predicate) || {};
+
+
+  dispatch({
+    type: "SET_PREDICATE_OBJECT_MAPPING",
+    subjectCollection: subjectCollection,
+    predicate: predicate,
+    object: predicateObjectMap.objectMap || {},
+    dataset: dataset,
+    propertyType: "relation-to-existing"
+  })
+};
+
+
 const removePredicateObjectMap = (predicate, object) => (dispatch, getState) => {
   const {activeCollection: { name : subjectCollection }} = getState();
 
@@ -21,6 +42,7 @@ const removePredicateObjectMap = (predicate, object) => (dispatch, getState) => 
     object: object
   });
 };
+
 
 const addCustomProperty = (name, type) => (dispatch, getState) => {
   const { activeCollection: { name: collectionName }} = getState();
@@ -60,4 +82,5 @@ const removeCustomProperty = (index) => (dispatch, getState) => {
   })
 };
 
-export { addPredicateObjectMap, removePredicateObjectMap, addCustomProperty, removeCustomProperty }
+
+export { addPredicateObjectMap, removePredicateObjectMap, addCustomProperty, removeCustomProperty, setTargetDataset }

@@ -25,7 +25,7 @@ class ConnectData extends React.Component {
   render() {
     const { onCloseMessage, onSelectCollection, onLoadMoreClick, onIgnoreColumnToggle, onPublishData, onUploadFileSelect } = this.props;
 
-    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onAddCustomProperty, onRemoveCustomProperty } = this.props;
+    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onAddCustomProperty, onRemoveCustomProperty, onTargetDatasetSelect } = this.props;
 
     const {
       params: { vreId },
@@ -86,7 +86,8 @@ class ConnectData extends React.Component {
                         predicateObjectMappings={predicateObjectMappings}
                         onAddPredicateObjectMap={onAddPredicateObjectMap}
                         onRemovePredicateObjectMap={onRemovePredicateObjectMap}
-                        targetableVres={targetableVres} />
+                        targetableVres={targetableVres}
+                        onTargetDatasetSelect={onTargetDatasetSelect} />
 
         <div className="container big-margin">
           <button onClick={onPublishData} className="btn btn-warning btn-lg pull-right" type="button" disabled={!publishEnabled}>

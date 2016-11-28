@@ -5,7 +5,8 @@ import AddProperty from "./add-property";
 class CollectionForm extends React.Component {
 
   render() {
-    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onAddCustomProperty, onRemoveCustomProperty } = this.props;
+    const { onAddPredicateObjectMap, onRemovePredicateObjectMap,
+      onAddCustomProperty, onRemoveCustomProperty, onTargetDatasetSelect } = this.props;
 
     const {
       archetypeFields,
@@ -42,6 +43,7 @@ class CollectionForm extends React.Component {
                       availableCollectionColumnsPerArchetype={availableCollectionColumnsPerArchetype}
                       relationTypeInfo={archetypeFields.find((af) => af.name === customProp.propertyName)}
                       targetableVres={targetableVres}
+                      onTargetDatasetSelect={onTargetDatasetSelect}
         />
       ));
     return (
