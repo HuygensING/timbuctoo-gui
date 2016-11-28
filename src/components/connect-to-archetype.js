@@ -78,7 +78,13 @@ class ConnectToArchetype extends React.Component {
                       Connect <em>{sheet.name}</em> to a Timbuctoo archetype.
                     </span>
                   {Object.keys(archetype).filter((domain) => domain !== "relations").sort().map((option) => (
-                    <span key={option} value={option}>{option}</span>
+                    <span key={option} value={option}>{option}
+                      <br /><span style={{color: "#666", fontSize: "0.6em"}}>
+                        Properties: {archetype[option]
+                          .filter((prop) => prop.type !== "relation")
+                          .map((prop) => `${prop.name} (${prop.type})`).join(", ")}
+                      </span>
+                    </span>
                   ))}
                 </SelectField>
               </div>
