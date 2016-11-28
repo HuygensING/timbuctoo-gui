@@ -5,7 +5,7 @@ import NamesForm from "./names-form";
 import RelationForm from "./relation-form";
 import RelationToExistingForm from "./relation-to-existing-form";
 import { propertyMappingIsComplete } from "../../accessors/property-mappings"
-import {getColumnValue} from "../../accessors/property-mappings";
+import { getColumnValue } from "../../accessors/property-mappings";
 
 const typeMap = {
   text: (props) => <ColumnSelect {...props} />,
@@ -19,7 +19,11 @@ const typeMap = {
 */
 };
 
-
+const isCompleteForNames = (type, predicateObjectMappings) =>
+  type === "names" && predicateObjectMappings
+    .filter((pom) => ["forename", "surname", "nameLink", "genName", "roleName"].indexOf(pom.predicate) > -1)
+    .filter((pom) => propertyMappingIsComplete(pom))
+    .length > 0;
 
 class PropertyForm extends React.Component {
 
@@ -46,7 +50,7 @@ class PropertyForm extends React.Component {
       })
       : <span>type not yet supported: <span style={{color: "red"}}>{type}</span></span>;
 
-    const unConfirmButton = propertyMappingIsComplete(predicateObjectMap)
+    const unConfirmButton = propertyMappingIsComplete(predicateObjectMap) || isCompleteForNames(type, predicateObjectMappings)
       ? (<button className="btn btn-blank" onClick={() => onRemovePredicateObjectMap(predicateName, getColumnValue(predicateObjectMap))}>
           <span className="hi-success glyphicon glyphicon-ok" />
         </button>) : null;

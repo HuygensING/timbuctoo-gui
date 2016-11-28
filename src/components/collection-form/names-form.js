@@ -7,7 +7,7 @@ import {getColumnValue} from "../../accessors/property-mappings";
 const getObjectForPredicate = (predicateObjectMappings, predicate) =>
   predicateObjectMappings
     .filter((pom) => pom.predicate === predicate)
-    .map((pom) => getColumnValue(pom))[0]
+    .map((pom) => getColumnValue(pom))[0];
 
 class NamesForm extends React.Component {
 

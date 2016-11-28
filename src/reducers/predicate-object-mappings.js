@@ -46,7 +46,11 @@ const setPredicateObjectMapping = (state, action) => {
 const removePredicateObjectMapping = (state, action) => {
   const collectionPredicateObjectMappings = state[action.subjectCollection] || [];
 
-  return {
+  return action.predicate === "names" ?  {
+    ...state,
+    [action.subjectCollection]: collectionPredicateObjectMappings
+      .filter((pom) => !(pom.propertyType === "names" && ["forename", "surname", "nameLink", "genName", "roleName"].indexOf(pom.predicate) > -1))
+  } : {
     ...state,
     [action.subjectCollection]: collectionPredicateObjectMappings
       .filter((pom) => !(pom.predicate === action.predicate && getColumnValue(pom) === action.object))
