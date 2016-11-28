@@ -1,4 +1,5 @@
 import {isBasicProperty} from "../accessors/property-mappings";
+import {uniq} from "./uniq";
 
 const defaultNamespace = "http://timbuctoo.com/";
 
@@ -56,6 +57,15 @@ const mapRelationProperty = (vre, predicateObjectMap) => ({
   "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
 });
 
+const mapRelationToExistingProperty = (vre, predicateObjectMap) => ({
+  "objectMap": {
+    "column": predicateObjectMap.objectMap.column,
+    "termType": "http://www.w3.org/ns/r2rml#IRI"
+  },
+  "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`,
+  "http://timbuctoo.com/mapping/existingTimbuctooVre": predicateObjectMap.dataset
+});
+
 const makePredicateObjectMap = (vre, predicateObjectMap) => {
   if (isBasicProperty(predicateObjectMap)) {
     return mapBasicProperty(predicateObjectMap);
@@ -63,6 +73,10 @@ const makePredicateObjectMap = (vre, predicateObjectMap) => {
 
   if (predicateObjectMap.propertyType === "relation") {
     return mapRelationProperty(vre, predicateObjectMap);
+  }
+
+  if (predicateObjectMap.propertyType === "relation-to-existing") {
+    return mapRelationToExistingProperty(vre, predicateObjectMap);
   }
   return null;
 };

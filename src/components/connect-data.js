@@ -40,6 +40,7 @@ class ConnectData extends React.Component {
       availableArchetypes,
       customProperties,
       availableCollectionColumnsPerArchetype,
+      rmlPreviewData,
       targetableVres
     } = this.props;
 
@@ -51,6 +52,14 @@ class ConnectData extends React.Component {
 
     if (!archetypeFields || tabs.length === 0 || vre !== vreId) { return null; }
 
+
+    const rmlPreviewBlock = rmlPreviewData ? (
+      <div style={{position: "absolute", zIndex: "10", width: "100%", top: "90px"}}>
+        <pre style={{width: "80%", margin: "0 auto", backgroundColor: "#ddd"}}>
+          {JSON.stringify(rmlPreviewData, null, 2)}
+        </pre>
+      </div>
+    ) : null;
 
     const publishFailedMessage = publishErrors ? (
       <Message alertLevel="danger" dismissible={false}>
@@ -70,6 +79,7 @@ class ConnectData extends React.Component {
 
     return (
       <div>
+        {rmlPreviewBlock}
         <div className="container basic-margin">
           <h2 className="small-margin">Upload and connect your dataset</h2>
           {collectionsAreConnectedMessage}

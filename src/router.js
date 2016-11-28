@@ -54,24 +54,19 @@ const filterAuthorized = (redirectTo) => (nextState, replace) => {
   }
 };
 
-export default (hasOwnVres) => {
-  const indexRoute = hasOwnVres
-    ? <IndexRoute component={connectComponent(collectionOverviewConnector)(CollectionOverview)}/>
-    : <IndexRoute component={connectComponent(firstUploadConnector)(FirstUpload)}/>;
+export default (
+  <Provider store={store}>
+    <Router history={hashHistory}>
+      <Route path="/" component={connectComponent(pageConnector)(Page)}>
+        <IndexRoute component={connectComponent(collectionOverviewConnector)(CollectionOverview)}/>
+        <Route onEnter={filterAuthorized("/")}
+          path={urls.mapArchetypes()} components={connectComponent(connectArchetypeConnector)(ConnectToArchetype)} />
+        <Route onEnter={filterAuthorized("/")}
+               path={urls.mapData()} components={connectComponent(connectDataConnector)(ConnectData)} />
 
-  return (
-    <Provider store={store}>
-      <Router history={hashHistory}>
-        <Route path="/" component={connectComponent(pageConnector)(Page)}>
-          {indexRoute}
-          <Route onEnter={filterAuthorized("/")}
-            path={urls.mapArchetypes()} components={connectComponent(connectArchetypeConnector)(ConnectToArchetype)} />
-          <Route onEnter={filterAuthorized("/")}
-                 path={urls.mapData()} components={connectComponent(connectDataConnector)(ConnectData)} />
+      </Route>
+    </Router>
+  </Provider>
+);
 
-        </Route>
-      </Router>
-    </Provider>
-  );
-}
 export { urls };

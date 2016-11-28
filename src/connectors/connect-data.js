@@ -1,7 +1,9 @@
 import { transformCollectionRows, transformCollectionColumns, getColumnInfo } from "./transformers/table";
 import { transformCollectionTabs } from "./transformers/tabs"
+import generateRmlMapping from "../util/generate-rml-mapping";
+import {uniq} from "../util/uniq";
 
-function getTargetableVres(mine, vres) {
+function getTargetableVres(mine, vres, activeVre) {
   const myVres = Object.keys(mine || {})
     .map((key) => mine[key])
     .filter((vre) => vre.published)
@@ -9,7 +11,7 @@ function getTargetableVres(mine, vres) {
   const publicVres = Object.keys(vres || {})
     .map((key) => vres[key].name);
 
-  return myVres.concat(publicVres);
+  return myVres.concat(publicVres).reduce(uniq, []).filter(vre => vre !== activeVre);
 }
 
 export default (appState, routed) => {
@@ -41,17 +43,12 @@ export default (appState, routed) => {
       }))
   })).reduce((accum, cur) => ({...accum, [cur.key]: cur.values}), {});
 
-  console.log("--- Mapping preview ---");
-  console.log(JSON.stringify(allPredicateObjectMappings, null, 2));
 
   return {
     // from router
     vreId: routed.params.vreId,
     // transformed for view
     tabs: collectionTabs,
-
-    // mapping data
-    mappings: appState.mappings,
 
     // messages
     showCollectionsAreConnectedMessage: appState.messages.showCollectionsAreConnectedMessage,
@@ -78,7 +75,12 @@ export default (appState, routed) => {
     publishEnabled: !appState.importData.publishing && collectionTabs.every(tab => tab.complete),
     publishStatus: appState.importData.publishStatus || "Publish dataset",
     customProperties: customProperties[activeCollection.name] || [],
-    targetableVres: getTargetableVres(myVres, publicVres),
+    targetableVres: getTargetableVres(myVres, publicVres, appState.importData.vre),
 
+    // ctrl-shift-F4
+    rmlPreviewData:
+      appState.previewRml.showRMLPreview ?
+        generateRmlMapping(appState.importData.vre, appState.mappings.collections, allPredicateObjectMappings)
+        : null
   };
 }

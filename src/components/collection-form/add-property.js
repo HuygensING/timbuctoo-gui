@@ -13,6 +13,12 @@ class AddProperty extends React.Component {
   }
 
 
+  onEnter(newName, newType) {
+
+    this.setState({newName: null, newType: null});
+    this.props.onAddCustomProperty(newName, newType);
+  }
+
   render() {
     const { newName, newType } = this.state;
     const { onAddCustomProperty, archetypeFields, availableArchetypes } = this.props;
@@ -37,6 +43,7 @@ class AddProperty extends React.Component {
             ) : (
               <input className="form-control"
                       onChange={(ev) => this.setState({newName: ev.target.value})}
+                      onKeyPress={(ev) => ev.key === "Enter" ? this.onEnter(newName, newType) : false}
                       placeholder="Property name"
                       value={newName}
                       disabled={newType !== "text"}/>

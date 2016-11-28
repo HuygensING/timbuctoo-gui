@@ -9,7 +9,7 @@ import mappings from "./mappings";
 import activeCollection from "./active-collection";
 import predicateObjectMappings from "./predicate-object-mappings";
 import customProperties from "./custom-properties";
-
+import previewRml from "./preview-rml";
 
 export default combineReducers({
   messages: messages,
@@ -20,5 +20,6 @@ export default combineReducers({
   mappings: mappings,
   activeCollection:  activeCollection,
   predicateObjectMappings: predicateObjectMappings,
-  customProperties: customProperties
+  customProperties: customProperties,
+  previewRml: previewRml
 });

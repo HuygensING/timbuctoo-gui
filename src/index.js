@@ -15,7 +15,7 @@ xhr.get(process.env.server + "/v2.1/system/vres", (err, resp, body) => {
   store.dispatch({type: "SET_PUBLIC_VRES", payload: JSON.parse(body)});
 });
 
-const initialRender = (hasOwnVres) => ReactDOM.render(router(hasOwnVres), document.getElementById("app"));
+const initialRender = () => ReactDOM.render(router, document.getElementById("app"));
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -24,10 +24,41 @@ document.addEventListener("DOMContentLoaded", () => {
     store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
     const token = getToken();
     if (token) {
-      store.dispatch(fetchMyVres(token, (vreData) => initialRender(vreData.mine)));
+      store.dispatch(fetchMyVres(token, () => initialRender()));
     } else {
-      initialRender(false);
+      initialRender();
     }
   });
+});
 
+let comboMap = {
+  ctrl: false,
+  shift: false,
+  f4: false
+};
+
+const keyMap = {
+  17: "ctrl",
+  16: "shift",
+  115: "f4"
+};
+
+document.addEventListener("keydown", (ev) => {
+  if (keyMap[ev.keyCode]) {
+    comboMap[keyMap[ev.keyCode]] = true;
+  }
+
+  if (Object.keys(comboMap).map(k => comboMap[k]).filter(isPressed => isPressed).length === 3) {
+    store.dispatch({type: "PREVIEW_RML"});
+  }
+
+  if (ev.keyCode === 27) {
+    store.dispatch({type: "HIDE_RML_PREVIEW"});
+  }
+});
+
+document.addEventListener("keyup", (ev) => {
+  if (keyMap[ev.keyCode]) {
+    comboMap[keyMap[ev.keyCode]] = false;
+  }
 });

@@ -1,6 +1,7 @@
 import React from "react";
 import UploadButton from "./upload-button";
 import DatasetCards from "./dataset-cards"
+import FirstUpload from "./firstUpload";
 
 function CollectionOverview(props) {
   const { onUploadFileSelect, userId, uploadStatus, vres, searchGuiUrl, onContinueMapping } = props;
@@ -14,15 +15,18 @@ function CollectionOverview(props) {
       onUploadFileSelect={onUploadFileSelect} />
   );
 
-  return (
-    <div>
-      <div className="container">
-        <DatasetCards userId={userId} caption="My datasets" vres={vres} mine={true} searchGuiUrl={searchGuiUrl}
-          onContinueMapping={onContinueMapping}>
-          {uploadButton}
-        </DatasetCards>
+  return vres && Object.keys(vres).length > 0
+    ? (
+      <div>
+        <div className="container">
+          <DatasetCards userId={userId} caption="My datasets" vres={vres} mine={true} searchGuiUrl={searchGuiUrl}
+            onContinueMapping={onContinueMapping}>
+            {uploadButton}
+          </DatasetCards>
+        </div>
       </div>
-    </div>
+  ) : (
+    <FirstUpload {...props} />
   );
 }
 

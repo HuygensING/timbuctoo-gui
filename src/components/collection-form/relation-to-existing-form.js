@@ -25,6 +25,7 @@ class Form extends React.Component {
       })
     };
 
+    console.log(predicateObjectMap.dataset);
     return (
       <div>
         <ColumnSelect {...sourceColumnProps} />

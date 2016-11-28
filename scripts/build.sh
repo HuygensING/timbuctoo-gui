@@ -1,19 +1,5 @@
 #!/bin/sh
 NODE_ENV="${NODE_ENV:-development}"
-if [ "${NODE_ENV}" = "development" ]; then
-	USE_MOCK="${USE_MOCK:-true}"
-else
-	USE_MOCK="${USE_MOCK:-false}"
-fi
-
-echo "NODE_ENV=$NODE_ENV"
-if [ "$USE_MOCK" = "true" ]; then
-	echo "USE_MOCK is enabled"
-	server="http://test.repository.huygens.knaw.nl"
-else
-	echo "USE_MOCK is disabled"
-	echo "server=$server"
-fi
 
 
 if [ "$1" = "--watch" ]; then
