@@ -30,7 +30,23 @@ class AddProperty extends React.Component {
 
     return (
       <div className="row small-margin">
-        <div className="col-sm-2">
+        <div className="col-sm-3 pad-6-12">
+          <strong>Add a new property or relation</strong>
+        </div>
+        <div className="col-sm-4" >
+          <span>
+            <SelectField
+              value={newType}
+              onChange={(value) => this.setState({newType: value, newName: value === "relation" ? null : newName})}
+              onClear={() => this.setState({newType: null})}>
+              <span type="placeholder">Choose a type...</span>
+              <span value="text">Text</span>
+              <span value="relation">Relation</span>
+              <span value="relation-to-existing">Relation to existing Timbuctoo collection</span>
+            </SelectField>
+          </span>
+        </div>
+        <div className="col-sm-3">
           {newType === "relation" || newType === "relation-to-existing"
             ? (
               <SelectField
@@ -50,19 +66,7 @@ class AddProperty extends React.Component {
             )
           }
         </div>
-        <div className="col-sm-8" >
-          <span>
-            <SelectField
-              value={newType}
-              onChange={(value) => this.setState({newType: value, newName: value === "relation" ? null : newName})}
-              onClear={() => this.setState({newType: null})}>
-              <span type="placeholder">Choose a type...</span>
-              <span value="text">Text</span>
-              <span value="relation">Relation</span>
-              <span value="relation-to-existing">Relation to existing Timbuctoo collection</span>
-            </SelectField>
-          </span>
-        </div>
+
 
         <div className="col-sm-2">
 
