@@ -13,10 +13,8 @@ const typeMap = {
   select: (props) => <ColumnSelect {...props} />,
   names: (props) => <NamesForm {...props} />,
   relation: (props) => <RelationForm {...props} />,
-  "relation-to-existing": (props) => <RelationToExistingForm {...props} />
-/*
+  "relation-to-existing": (props) => <RelationToExistingForm {...props} />,
   multiselect: (props) => <ColumnSelect {...props} />,
-*/
 };
 
 const isCompleteForNames = (type, predicateObjectMappings) =>
