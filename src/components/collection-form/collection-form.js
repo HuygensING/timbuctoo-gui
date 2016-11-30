@@ -1,6 +1,7 @@
 import React from "react";
 import PropertyForm from "./property-form";
 import AddProperty from "./add-property";
+import AddRelation from "./add-relation";
 
 class CollectionForm extends React.Component {
 
@@ -50,7 +51,8 @@ class CollectionForm extends React.Component {
       <div className="container basic-margin">
         {propertyForms}
         {customPropertyForms}
-        <AddProperty
+        <AddProperty onAddCustomProperty={onAddCustomProperty} />
+        <AddRelation
           archetypeFields={archetypeFields}
           availableArchetypes={availableArchetypes}
           onAddCustomProperty={onAddCustomProperty} />

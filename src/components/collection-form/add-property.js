@@ -14,57 +14,39 @@ class AddProperty extends React.Component {
 
 
   onEnter(newName, newType) {
-
-    this.setState({newName: null, newType: null});
-    this.props.onAddCustomProperty(newName, newType);
+    if (newType !== null) {
+      this.setState({newName: null, newType: null});
+      this.props.onAddCustomProperty(newName, newType);
+    }
   }
 
   render() {
     const { newName, newType } = this.state;
-    const { onAddCustomProperty, archetypeFields, availableArchetypes } = this.props;
-
-    const relationTypeOptions = archetypeFields
-      .filter((prop) => prop.type === "relation")
-      .filter((prop) => newType === "relation-to-existing" || availableArchetypes.indexOf(prop.relation.targetCollection) > -1)
-      .map((prop) => <span key={prop.name} value={prop.name}>{prop.name}</span>);
+    const { onAddCustomProperty } = this.props;
 
     return (
       <div className="row small-margin">
-        <div className="col-sm-3 pad-6-12">
-          <strong>Add a new property or relation</strong>
+        <div className="col-sm-2 pad-6-12">
+          <strong>Add a new property</strong>
         </div>
-        <div className="col-sm-4" >
+        <div className="col-sm-6" >
           <span>
             <SelectField
               value={newType}
-              onChange={(value) => this.setState({newType: value, newName: value === "relation" ? null : newName})}
+              onChange={(value) => this.setState({newType: value, newName: newName})}
               onClear={() => this.setState({newType: null})}>
               <span type="placeholder">Choose a type...</span>
               <span value="text">Text</span>
-              <span value="relation">Relation</span>
-              <span value="relation-to-existing">Relation to existing Timbuctoo collection</span>
+              <span value="datable">Datable</span>
             </SelectField>
           </span>
         </div>
-        <div className="col-sm-3">
-          {newType === "relation" || newType === "relation-to-existing"
-            ? (
-              <SelectField
-                value={newName}
-                onChange={(value) => this.setState({newName: value})}
-                onClear={() => this.setState({newName: ""})}>
-                <span type="placeholder">Choose a relation type...</span>
-                {relationTypeOptions}
-              </SelectField>
-            ) : (
-              <input className="form-control"
-                      onChange={(ev) => this.setState({newName: ev.target.value})}
-                      onKeyPress={(ev) => ev.key === "Enter" ? this.onEnter(newName, newType) : false}
-                      placeholder="Property name"
-                      value={newName}
-                      disabled={newType !== "text"}/>
-            )
-          }
+        <div className="col-sm-2">
+          <input className="form-control"
+                  onChange={(ev) => this.setState({newName: ev.target.value})}
+                  onKeyPress={(ev) => ev.key === "Enter" ? this.onEnter(newName, newType) : false}
+                  placeholder="Property name"
+                  value={newName} />
         </div>
 
 
