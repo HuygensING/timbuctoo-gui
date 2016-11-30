@@ -9,6 +9,7 @@ const nameSpaces = {
   roleName: "http://www.tei-c.org/ns/1.0/",
   nameLink: "http://www.tei-c.org/ns/1.0/",
   genName: "http://www.tei-c.org/ns/1.0/",
+  sameAs: "http://www.w3.org/2002/07/owl#"
 };
 
 const rmlTemplate =  {
@@ -44,7 +45,9 @@ const makeMapName = (vre, localName) => `http://timbuctoo.huygens.knaw.nl/mappin
 
 const mapBasicProperty = (predicateObjectMap) => ({
   "objectMap": {
-    "column": predicateObjectMap.objectMap.column
+    "column": predicateObjectMap.objectMap.column,
+    "termType": predicateObjectMap.propertyType === "sameAs" ? "http://www.w3.org/ns/r2rml#IRI" : undefined
+
   },
   "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
 });

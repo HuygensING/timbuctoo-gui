@@ -5,11 +5,13 @@ import NamesForm from "./names-form";
 import RelationForm from "./relation-form";
 import { propertyMappingIsComplete } from "../../accessors/property-mappings"
 import { getColumnValue } from "../../accessors/property-mappings";
+import camel2label from "../../util/camel2label";
 
 const typeMap = {
   text: (props) => <ColumnSelect {...props} />,
   datable: (props) => <ColumnSelect {...props} />,
   select: (props) => <ColumnSelect {...props} />,
+  sameAs: (props) => <ColumnSelect {...props} />,
   names: (props) => <NamesForm {...props} />,
   relation: (props) => <RelationForm {...props} />,
   "relation-to-existing": (props) => <RelationToExistingForm {...props} />,
@@ -54,7 +56,7 @@ class PropertyForm extends React.Component {
     return (
       <div className="row small-margin">
         <div className="col-sm-2 pad-6-12">
-          <strong>{predicateName}</strong>
+          <strong>{camel2label(predicateName)}</strong>
           <span className="pull-right" style={{fontSize: "0.7em"}}>({type})</span>
         </div>
         <div className="col-sm-8">

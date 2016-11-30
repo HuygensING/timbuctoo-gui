@@ -18,6 +18,7 @@ class CollectionForm extends React.Component {
       targetableVres
     } = this.props;
 
+    if (!columns) { return null; }
     const { predicateObjectMappings, customProperties } = this.props;
 
     const archeTypePropFields = archetypeFields.filter((af) => af.type !== "relation");
@@ -48,6 +49,13 @@ class CollectionForm extends React.Component {
       ));
     return (
       <div className="container basic-margin">
+        <PropertyForm name="sameAs" type="sameAs" custom={false}
+                      columns={columns} ignoredColumns={ignoredColumns}
+                      predicateObjectMap={predicateObjectMappings.find((pom) => pom.predicate === "sameAs")}
+                      predicateObjectMappings={predicateObjectMappings}
+                      onAddPredicateObjectMap={onAddPredicateObjectMap}
+                      onRemovePredicateObjectMap={onRemovePredicateObjectMap}
+        />
         {propertyForms}
         {customPropertyForms}
         <AddProperty onAddCustomProperty={onAddCustomProperty} />
