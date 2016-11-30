@@ -33,7 +33,7 @@ function setRelationPredicateObjectMap(action, collectionPredicateObjectMappings
 const setPredicateObjectMapping = (state, action) => {
   const collectionPredicateObjectMappings = state[action.subjectCollection] || [];
   const newCollectionPredicateObjectMappings =
-    action.propertyType === "relation" || action.propertyType === "relation-to-existing"
+    action.propertyType === "relation"
       ? setRelationPredicateObjectMap(action, collectionPredicateObjectMappings)
       : setBasicPredicateObjectMap(action, collectionPredicateObjectMappings);
 

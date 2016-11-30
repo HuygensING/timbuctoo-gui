@@ -3,7 +3,6 @@ import React from "react";
 import ColumnSelect from "./column-select";
 import NamesForm from "./names-form";
 import RelationForm from "./relation-form";
-import RelationToExistingForm from "./relation-to-existing-form";
 import { propertyMappingIsComplete } from "../../accessors/property-mappings"
 import { getColumnValue } from "../../accessors/property-mappings";
 
@@ -27,7 +26,7 @@ class PropertyForm extends React.Component {
 
   render() {
 
-    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onRemoveCustomProperty, onTargetDatasetSelect,
+    const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onRemoveCustomProperty,
       availableCollectionColumnsPerArchetype, relationTypeInfo, targetableVres } = this.props;
 
     const { name: predicateName, type, custom, customIndex, columns, ignoredColumns, predicateObjectMap, predicateObjectMappings } = this.props;
@@ -42,7 +41,6 @@ class PropertyForm extends React.Component {
         availableCollectionColumnsPerArchetype: availableCollectionColumnsPerArchetype,
         relationTypeInfo: relationTypeInfo,
         targetableVres: targetableVres,
-        onTargetDatasetSelect: (value) => onTargetDatasetSelect(predicateName, value),
         onColumnSelect: (value, predicate) => onAddPredicateObjectMap(predicate || predicateName, value, type),
         onClearColumn: (value, predicate) => onRemovePredicateObjectMap(predicate || predicateName, value)
       })

@@ -57,15 +57,6 @@ const mapRelationProperty = (vre, predicateObjectMap) => ({
   "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
 });
 
-const mapRelationToExistingProperty = (vre, predicateObjectMap) => ({
-  "objectMap": {
-    "column": predicateObjectMap.objectMap.column,
-    "termType": "http://www.w3.org/ns/r2rml#IRI"
-  },
-  "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`,
-  "http://timbuctoo.huygens.knaw.nl/mapping/existingTimbuctooVre": predicateObjectMap.dataset
-});
-
 const makePredicateObjectMap = (vre, predicateObjectMap) => {
   if (isBasicProperty(predicateObjectMap)) {
     return mapBasicProperty(predicateObjectMap);
@@ -75,9 +66,6 @@ const makePredicateObjectMap = (vre, predicateObjectMap) => {
     return mapRelationProperty(vre, predicateObjectMap);
   }
 
-  if (predicateObjectMap.propertyType === "relation-to-existing") {
-    return mapRelationToExistingProperty(vre, predicateObjectMap);
-  }
   return null;
 };
 
