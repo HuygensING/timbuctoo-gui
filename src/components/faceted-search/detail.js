@@ -61,6 +61,8 @@ class Detail extends React.Component {
 
     const archetypeFields = getArchetypeFields(entity["@variationRefs"], metadata);
 
+    const datasets = entity["^datasets"] && entity["^datasets"].length ? entity["^datasets"] : [dataset];
+
     const birthDeathBlock = entity["birthDate"] || entity["deathDate"]  ? (
       <div className="row small-marigin text-center">
         <div className="col-xs-3 text-right" />
@@ -100,11 +102,15 @@ class Detail extends React.Component {
         </div>
         <div className="container basic-margin">
           <div className="row small-margin">
-            <div className="col-xs-6 text-right hi-light-grey">
-              Dataset
+            <div className="col-xs-6 text-right hi-light-grey" style={{fontWeight: "bold"}}>
+              Datasets
             </div>
             <div className="col-xs-6">
-              {entity["^datasets"] ? entity["^datasets"].map((d) => d.replace(/^[^_]+_+/, "")).join(", ") : dataset.replace(/^[^_]+_+/, "")}
+              <ul style={{padding: "0", margin: "0", listStyle: "none", maxHeight: "200px", overflowY: "auto"}}>
+                {datasets.map((d) => (
+                  <li style={{color: d === dataset ? "#000" : "#666"}}>{d.replace(/^[^_]+_+/, "")}</li>
+                ))}
+              </ul>
             </div>
           </div>
           {Object.keys(entity).filter((prop) => ["^", "_", "@"].indexOf(prop.charAt(0)) < 0)

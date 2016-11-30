@@ -40,11 +40,13 @@ export default function actionsMaker(navigateTo, dispatch) {
 
 
           const entity = JSON.parse(body);
-          if (entity["^rdfAlternatives"]) {
+          const uris = [entity["^rdfAlternatives"] || []].concat(entity["^rdfUri"] || null)
+            .filter(uri => uri !== null);
+          if (uris.length > 0) {
             xhr({
               url: "/repositorysolr/aggregated",
               method: "POST",
-              data: `q=${encodeURIComponent(buildRdfUriQuery(entity["^rdfAlternatives"]))}&fl=dataset_s&wt=json`,
+              data: `q=${encodeURIComponent(buildRdfUriQuery(uris))}&fl=dataset_s&wt=json`,
               headers: {
                 "Content-type": "application/x-www-form-urlencoded"
               }
