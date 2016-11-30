@@ -1,7 +1,7 @@
 import {isBasicProperty} from "../accessors/property-mappings";
 import {uniq} from "./uniq";
 
-const defaultNamespace = "http://timbuctoo.com/";
+const defaultNamespace = "http://timbuctoo.huygens.knaw.nl/";
 
 const nameSpaces = {
   surname: "http://www.tei-c.org/ns/1.0/",
@@ -15,7 +15,7 @@ const rmlTemplate =  {
   "@context": {
     "@vocab": "http://www.w3.org/ns/r2rml#",
     "rml": "http://semweb.mmlab.be/ns/rml#",
-    "tim": "http://timbuctoo.com/mapping#",
+    "tim": "http://timbuctoo.huygens.knaw.nl/mapping#",
     "http://www.w3.org/2000/01/rdf-schema#subClassOf": {
       "@type": "@id"
     },
@@ -40,7 +40,7 @@ const rmlTemplate =  {
 const getNameSpaceFor = (predicate) =>
   typeof nameSpaces[predicate]  === "undefined" ? defaultNamespace : nameSpaces[predicate];
 
-const makeMapName = (vre, localName) => `http://timbuctoo.com/mapping/${vre}/${localName}`;
+const makeMapName = (vre, localName) => `http://timbuctoo.huygens.knaw.nl/mapping/${vre}/${localName}`;
 
 const mapBasicProperty = (predicateObjectMap) => ({
   "objectMap": {
@@ -52,7 +52,7 @@ const mapBasicProperty = (predicateObjectMap) => ({
 const mapRelationProperty = (vre, predicateObjectMap) => ({
   "objectMap": {
     "joinCondition": predicateObjectMap.objectMap.joinCondition,
-    "parentTriplesMap": `http://timbuctoo.com/mapping/${vre}/${predicateObjectMap.objectMap.parentTriplesMap}`
+    "parentTriplesMap": `http://timbuctoo.huygens.knaw.nl/mapping/${vre}/${predicateObjectMap.objectMap.parentTriplesMap}`
   },
   "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
 });
@@ -63,7 +63,7 @@ const mapRelationToExistingProperty = (vre, predicateObjectMap) => ({
     "termType": "http://www.w3.org/ns/r2rml#IRI"
   },
   "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`,
-  "http://timbuctoo.com/mapping/existingTimbuctooVre": predicateObjectMap.dataset
+  "http://timbuctoo.huygens.knaw.nl/mapping/existingTimbuctooVre": predicateObjectMap.dataset
 });
 
 const makePredicateObjectMap = (vre, predicateObjectMap) => {
@@ -83,7 +83,7 @@ const makePredicateObjectMap = (vre, predicateObjectMap) => {
 
 const mapCollection = (vre, archetypeName, collectionName, predicateObjectMaps) => ({
   "@id": makeMapName(vre, collectionName),
-  "http://www.w3.org/2000/01/rdf-schema#subClassOf": `http://timbuctoo.com/${archetypeName.replace(/s$/, "")}`,
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf": `http://timbuctoo.huygens.knaw.nl/${archetypeName.replace(/s$/, "")}`,
   "rml:logicalSource": {
     "rml:source": {
       "tim:rawCollection": collectionName,
