@@ -15,6 +15,13 @@ function DataSetCard(props) {
             {props.caption.replace(/^[^_]+_+/, "")}
           </strong>
         </Link>
+        {props.userId
+          ? (<a className="card-dataset btn btn-default" onClick={() => props.onDeleteVreClick(props.vreId)} style={{cursor: "pointer"}}>
+          <span className="glyphicon glyphicon-trash" />{" "}
+          Delete
+        </a>)
+          : null
+        }
       </div>
     )
   }
