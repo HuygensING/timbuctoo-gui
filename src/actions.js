@@ -22,6 +22,15 @@ export default function actionsMaker(navigateTo, dispatch) {
     // Closing informative messages
     onCloseMessage: (messageId) => dispatch({type: "TOGGLE_MESSAGE", messageId: messageId}),
 
+    // Deleting own vres
+    onDeleteVreClick: (vreId) => dispatch({type: "SHOW_DELETE_VRE_MODAL", vreId: vreId}),
+
+    onComfirmDeleteVre: (vreId, userConfirmationInputValue) => {
+      if (vreId === userConfirmationInputValue) {
+        console.log("TODO: delete vre", vreId);
+      }
+    },
+
     // Mapping collections archetypes
     onMapCollectionArchetype: (collection, value) =>
       dispatch({type: "MAP_COLLECTION_ARCHETYPE", collection: collection, value: value}),

@@ -1,6 +1,7 @@
 const initialState = {
   searchGuiUrl: undefined,
-  publicVres: []
+  publicVres: [],
+  vreIdOfDeleteVreModal: null
 };
 
 
@@ -15,6 +16,11 @@ export default function(state=initialState, action) {
       return {
         ...state,
         publicVres: action.payload
+      };
+    case "SHOW_DELETE_VRE_MODAL":
+      return {
+        ...state,
+        vreIdOfDeleteVreModal: action.vreId
       }
   }
 

@@ -35,6 +35,13 @@ function DataSetCard(props) {
             Edit
           </a>)
         : null}
+      {props.userId
+        ? (<a className="card-dataset btn btn-default" onClick={() => props.onDeleteVreClick(props.vreId)} style={{cursor: "pointer"}}>
+          <span className="glyphicon glyphicon-trash" />{" "}
+            Delete
+          </a>)
+        : null
+      }
     </div>
   );
 }
