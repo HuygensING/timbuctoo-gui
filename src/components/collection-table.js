@@ -4,7 +4,6 @@ import DataRow from "./table/data-row";
 
 class CollectionTable extends React.Component {
   render() {
-    const { onIgnoreColumnToggle } = this.props;
     const { rows, headers, nextUrl } = this.props;
 
     return (
@@ -13,8 +12,7 @@ class CollectionTable extends React.Component {
           <thead>
             <tr>
               {headers.map((header) => (
-                <HeaderCell key={header.name} header={header.name} onIgnoreColumnToggle={onIgnoreColumnToggle}
-                            isIgnored={header.isIgnored} isConfirmed={header.isConfirmed} />
+                <HeaderCell key={header.name} header={header.name} isConfirmed={header.isConfirmed} />
               ))}
             </tr>
           </thead>

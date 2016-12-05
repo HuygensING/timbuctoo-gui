@@ -34,7 +34,6 @@ class RelationForm extends React.Component {
       valuePrefix: "(target) ",
       columns: targetCollectionColumns,
       selectedColumn: getSelectedTargetColumn(objectMap),
-      ignoredColumns: [],
       placeholder: "Select a target column...",
       onColumnSelect: (value) => onColumnSelect({
         ...(objectMap || {}),

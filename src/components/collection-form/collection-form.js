@@ -13,7 +13,6 @@ class CollectionForm extends React.Component {
       archetypeFields,
       availableArchetypes,
       columns,
-      ignoredColumns,
       availableCollectionColumnsPerArchetype,
       targetableVres
     } = this.props;
@@ -26,7 +25,7 @@ class CollectionForm extends React.Component {
     const propertyForms = archeTypePropFields
       .map((af, i) => (
         <PropertyForm key={i} name={af.name} type={af.type} custom={false}
-                      columns={columns} ignoredColumns={ignoredColumns}
+                      columns={columns}
                       predicateObjectMap={predicateObjectMappings.find((pom) => pom.predicate === af.name)}
                       predicateObjectMappings={predicateObjectMappings}
                       onAddPredicateObjectMap={onAddPredicateObjectMap}
@@ -36,7 +35,7 @@ class CollectionForm extends React.Component {
     const customPropertyForms = customProperties
       .map((customProp, i) => (
         <PropertyForm key={i} name={customProp.propertyName} type={customProp.propertyType} custom={true} customIndex={i}
-                      columns={columns} ignoredColumns={ignoredColumns}
+                      columns={columns}
                       predicateObjectMap={predicateObjectMappings.find((pom) => pom.predicate === customProp.propertyName)}
                       predicateObjectMappings={predicateObjectMappings}
                       onAddPredicateObjectMap={onAddPredicateObjectMap}
@@ -50,7 +49,7 @@ class CollectionForm extends React.Component {
     return (
       <div className="container basic-margin">
         <PropertyForm name="sameAs" type="sameAs" custom={false}
-                      columns={columns} ignoredColumns={ignoredColumns}
+                      columns={columns}
                       predicateObjectMap={predicateObjectMappings.find((pom) => pom.predicate === "sameAs")}
                       predicateObjectMappings={predicateObjectMappings}
                       onAddPredicateObjectMap={onAddPredicateObjectMap}

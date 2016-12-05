@@ -119,7 +119,6 @@ class ConnectToArchetype extends React.Component {
             rows={rows}
             headers={headers}
             nextUrl={nextUrl}
-            onIgnoreColumnToggle={null}
             onLoadMoreClick={(url) => onLoadMoreClick(url, activeCollection)} />
         </div>
       </div>

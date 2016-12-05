@@ -9,7 +9,6 @@ class DataRow extends React.Component {
       <tr>
         {row.map((cell, i) => (
           <td className={cx({
-            ignored: cell.ignored,
             danger: cell.error ? true : false
           })} key={i}>
             {cell.value}

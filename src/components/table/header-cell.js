@@ -4,23 +4,19 @@ import cx from "classnames";
 class HeaderCell extends React.Component {
 
   render() {
-    const { header, isConfirmed, isIgnored, onIgnoreColumnToggle } = this.props;
+    const { header, isConfirmed } = this.props;
 
     return (
       <th className={cx({
         success: isConfirmed,
-        info: !isConfirmed && !isIgnored,
-        danger: !isConfirmed && isIgnored
+        info: !isConfirmed
       })}>
         {header}
-        { onIgnoreColumnToggle !== null ? (
-          <a style={{cursor: "pointer"}} className={cx("pull-right", "glyphicon", {
-            "glyphicon-ok-sign": isConfirmed,
-            "glyphicon-question-sign": !isConfirmed && !isIgnored,
-            "glyphicon-remove": !isConfirmed && isIgnored
-          })} onClick={() => !isConfirmed ? onIgnoreColumnToggle(header) : null } >
-          </a>
-        ) : null }
+        <span className={cx("pull-right", "glyphicon", {
+          "glyphicon-ok-sign": isConfirmed,
+          "glyphicon-question-sign": !isConfirmed,
+        })}>
+        </span>
       </th>
     );
   }
@@ -28,9 +24,7 @@ class HeaderCell extends React.Component {
 
 HeaderCell.propTypes = {
   header: React.PropTypes.string,
-  isConfirmed: React.PropTypes.bool,
-  isIgnored: React.PropTypes.bool,
-  onIgnoreColumnToggle: React.PropTypes.func
+  isConfirmed: React.PropTypes.bool
 };
 
 export default HeaderCell;

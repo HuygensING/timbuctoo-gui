@@ -31,12 +31,11 @@ class PropertyForm extends React.Component {
     const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onRemoveCustomProperty,
       availableCollectionColumnsPerArchetype, relationTypeInfo, targetableVres } = this.props;
 
-    const { name: predicateName, type, custom, customIndex, columns, ignoredColumns, predicateObjectMap, predicateObjectMappings } = this.props;
+    const { name: predicateName, type, custom, customIndex, columns, predicateObjectMap, predicateObjectMappings } = this.props;
 
     const formComponent = typeMap[type]
       ? typeMap[type]({
         columns: columns,
-        ignoredColumns: ignoredColumns,
         selectedColumn: getColumnValue(predicateObjectMap),
         predicateObjectMap: predicateObjectMap,
         predicateObjectMappings: predicateObjectMappings,

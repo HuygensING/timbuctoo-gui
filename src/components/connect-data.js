@@ -23,7 +23,7 @@ class ConnectData extends React.Component {
   }
 
   render() {
-    const { onCloseMessage, onSelectCollection, onLoadMoreClick, onIgnoreColumnToggle, onPublishData, onUploadFileSelect } = this.props;
+    const { onCloseMessage, onSelectCollection, onLoadMoreClick, onPublishData, onUploadFileSelect } = this.props;
 
     const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onAddCustomProperty, onRemoveCustomProperty } = this.props;
 
@@ -48,7 +48,7 @@ class ConnectData extends React.Component {
     const { rows, headers, nextUrl, activeCollection } = this.props;
 
     // form view properties
-    const { archetypeFields, columns, ignoredColumns, predicateObjectMappings } = this.props;
+    const { archetypeFields, columns, predicateObjectMappings } = this.props;
 
     if (!archetypeFields || tabs.length === 0 || vre !== vreId) { return null; }
 
@@ -87,7 +87,7 @@ class ConnectData extends React.Component {
           <p>Connect the excel columns to the properties of the Archetypes</p>
         </div>
         <CollectionTabs collectionTabs={tabs} onSelectCollection={onSelectCollection} />
-        <CollectionForm archetypeFields={archetypeFields} columns={columns} ignoredColumns={ignoredColumns}
+        <CollectionForm archetypeFields={archetypeFields} columns={columns}
                         availableArchetypes={availableArchetypes}
                         availableCollectionColumnsPerArchetype={availableCollectionColumnsPerArchetype}
                         customProperties={customProperties}
@@ -114,7 +114,6 @@ class ConnectData extends React.Component {
             rows={rows}
             headers={headers}
             nextUrl={nextUrl}
-            onIgnoreColumnToggle={(header) => onIgnoreColumnToggle(activeCollection, header)}
             onLoadMoreClick={(url) => onLoadMoreClick(url, activeCollection)} />
         </div>
       </div>

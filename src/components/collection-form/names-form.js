@@ -13,7 +13,7 @@ class NamesForm extends React.Component {
 
 
   render() {
-    const { columns, predicateObjectMappings, onColumnSelect, onClearColumn, ignoredColumns } = this.props;
+    const { columns, predicateObjectMappings, onColumnSelect, onClearColumn } = this.props;
 
     const formRows = ["forename", "surname", "nameLink", "genName", "roleName"]
       .map((predicate) => (
@@ -21,7 +21,7 @@ class NamesForm extends React.Component {
           <span style={{display: "inline-block", paddingLeft: "12px", width: "92px"}}>
             {camel2label(predicate)}
           </span>
-          <ColumnSelect columns={columns} ignoredColumns={ignoredColumns}
+          <ColumnSelect columns={columns}
                         selectedColumn={getObjectForPredicate(predicateObjectMappings, predicate)}
                         onColumnSelect={(value) => onColumnSelect(value, predicate)}
                         onClearColumn={(value) => onClearColumn(value, predicate)}

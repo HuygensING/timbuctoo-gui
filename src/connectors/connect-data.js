@@ -69,7 +69,6 @@ export default (appState, routed) => {
     availableArchetypes: availableArchetypes,
     availableCollectionColumnsPerArchetype: availableCollectionColumnsPerArchetype,
     columns: getColumnInfo(collections, activeCollection, mappings).columns,
-    ignoredColumns: getColumnInfo(collections, activeCollection, mappings).ignoredColumns,
     predicateObjectMappings: predicateObjectMappings,
     publishErrors: appState.importData.publishErrors,
     publishEnabled: !appState.importData.publishing && collectionTabs.every(tab => tab.complete),
