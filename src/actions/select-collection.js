@@ -13,6 +13,7 @@ const selectCollection = (collection, altUrl = null, onlyErrors = false) => (dis
         dispatch({type: "ACTIVE_COLLECTION_FETCH_ERROR", collection: collection, error: err});
       } else {
         try {
+          console.log(JSON.parse(body));
           dispatch({type: "RECEIVE_ACTIVE_COLLECTION", collection: collection, data: JSON.parse(body)});
         } catch(e) {
           dispatch({type: "ACTIVE_COLLECTION_FETCH_ERROR", collection: collection, error: e})

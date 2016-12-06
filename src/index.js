@@ -14,7 +14,7 @@ if (process.env.USE_MOCK === "true") {
   var orig = window.XMLHttpRequest;
   xhrmock.setup(); //mock window.XMLHttpRequest usages
   var mock = window.XMLHttpRequest;
-  window.XMLHttpRequest = orig;
+  window.XMLHttpRequest = mock;
   xhr.XMLHttpRequest = mock;
   xhr.XDomainRequest = mock;
   setupMocks(xhrmock, orig);

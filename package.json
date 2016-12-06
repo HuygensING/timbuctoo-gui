@@ -14,7 +14,7 @@
     "build": "scripts/build.sh",
     "timbuild": "server='' scripts/build.sh",
     "watch": "scripts/build.sh --watch",
-    "watch:mock": "export USE_MOCK=true; export server=http://test.repository.huygens.knaw.nl; scripts/build.sh --watch"
+    "watch:mock": "export USE_MOCK=true; export server='http://servermock'; scripts/build.sh --watch"
   },
   "dependencies": {
     "classnames": "^2.2.5",

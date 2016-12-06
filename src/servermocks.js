@@ -1,6 +1,7 @@
+console.log(process.env.server);
 export default function setupMocks(xhrmock, orig) {
   xhrmock
-    .get("http://test.repository.huygens.knaw.nl/v2.1/metadata/Admin", function (req, resp) {
+    .get(process.env.server + "/v2.1/metadata/Admin", function (req, resp) {
       return resp
         .status(200)
         .body(`{
@@ -44,7 +45,7 @@ export default function setupMocks(xhrmock, orig) {
           ]
         }`);
     })
-    .get("http://test.repository.huygens.knaw.nl/v2.1/system/users/me/vres", function(req, resp) {
+    .get(process.env.server + "/v2.1/system/users/me/vres", function(req, resp) {
       console.log("fetch-my-vres");
       return resp
         .status(200)
@@ -67,16 +68,11 @@ export default function setupMocks(xhrmock, orig) {
           }
         }`);
     })
-    .post("http://test.repository.huygens.knaw.nl/v2.1/bulk-upload", function (req, resp) {
+    .post(process.env.server + "/v2.1/bulk-upload", function (req, resp) {
       console.log("bulk-upload");
       return resp
         .status(200)
-        .header("Location", "<<The get raw data url that the server provides>>");
-    })
-    .post("<<The save mapping url that the server provides>>", function (req, resp) {
-      console.log("save mapping", req.body());
-      return resp
-        .status(204);
+        .header("Location", process.env.server + "/v2.1/bulk-upload/thevrename");
     })
     .post("<<The execute mapping url that the server provides>>", function (req, resp) {
       console.log("execute mapping with failures", req.body());
@@ -86,7 +82,7 @@ export default function setupMocks(xhrmock, orig) {
           success: false
         }));
     })
-    .get("<<The get raw data url that the server provides>>", function (req, resp) {
+    .get(process.env.server + "/v2.1/bulk-upload/thevrename", function (req, resp) {
       console.log("get raw data");
       return resp
         .status(200)
@@ -116,6 +112,7 @@ export default function setupMocks(xhrmock, orig) {
         .status(200)
         .body(JSON.stringify({
           "_next": "<<more data>>",
+            "name": "mockpersons",
             "items": [
               {
                 values: {
@@ -150,6 +147,7 @@ export default function setupMocks(xhrmock, orig) {
         .status(200)
         .body(JSON.stringify({
           "_next": "<<more data>>",
+          "name": "mockpersons",
           "items": [{
             values: {
               "ID": "1",
@@ -172,6 +170,7 @@ export default function setupMocks(xhrmock, orig) {
       return resp
         .status(200)
         .body(JSON.stringify({
+          "name": "mockpersons",
           "items": [
             {
               values: {
@@ -205,8 +204,7 @@ export default function setupMocks(xhrmock, orig) {
       return resp
         .status(200)
         .body(JSON.stringify({
-            "name": "someCollection",
-            "variables": ["tim_id", "var1", "var2"],
+            "name": "mockdocuments",
             "items": [
               {
                 values: {
@@ -236,24 +234,27 @@ export default function setupMocks(xhrmock, orig) {
       return resp
         .status(200)
         .body(JSON.stringify({
-          "name": "someCollection",
-          "variables": ["tim_id", "var1", "var2"],
+          "name": "mockdocuments",
           "items": []
         }));
     })
-    .get("http://test.repository.huygens.knaw.nl/v2.1/javascript-globals", function(req, res) {
+    .get(process.env.server + "/v2.1/javascript-globals", function(req, res) {
       console.log("get javascript globals");
       return res
         .status(200)
         .body('{"env":{"TIMBUCTOO_SEARCH_URL":"http://example.com/"}}')
     })
-    .get("http://test.repository.huygens.knaw.nl/v2.1/system/vres", function(req, res) {
+    .get(process.env.server + "/v2.1/system/vres", function(req, res) {
       console.log("get public datasets");
       return res
         .status(200)
-        .body('[{"name":"CharterPortaal","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/CharterPortaal"},{"name":"EuropeseMigratie","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/EuropeseMigratie"},{"name":"ckcc","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/ckcc"},{"name":"DutchCaribbean","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/DutchCaribbean"},{"name":"cwrs","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/cwrs"},{"name":"cwno","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/cwno"},{"name":"cnw","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/cnw"},{"name":"Base","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/Base"},{"name":"Admin","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/Admin"},{"name":"WomenWriters","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/WomenWriters"},{"name":"bdd0805ab976990595c6a475b6dd0d9d68562ccf_BIA","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/bdd0805ab976990595c6a475b6dd0d9d68562ccf_BIA"},{"name":"33707283d426f900d4d55b410a78996dc730b2f7_demo-upload","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/33707283d426f900d4d55b410a78996dc730b2f7_demo-upload"},{"name":"33707283d426f900d4d55b410a78996dc730b2f7_Esuli","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/33707283d426f900d4d55b410a78996dc730b2f7_Esuli"},{"name":"33707283d426f900d4d55b410a78996dc730b2f7_cofk_union_person_short","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/33707283d426f900d4d55b410a78996dc730b2f7_cofk_union_person_short"},{"name":"33707283d426f900d4d55b410a78996dc730b2f7_migrant_steekproef_masterdb____","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/33707283d426f900d4d55b410a78996dc730b2f7_migrant_steekproef_masterdb____"},{"name":"33707283d426f900d4d55b410a78996dc730b2f7_Emigratiedienst_Australie","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/33707283d426f900d4d55b410a78996dc730b2f7_Emigratiedienst_Australie"}]')
+        .body('[{"name":"CharterPortaal","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/CharterPortaal"},{"name":"EuropeseMigratie","metadata":"http://test.repository.huygens.knaw.nl/v2.1/metadata/EuropeseMigratie"}]')
     })
     .mock(function (req, resp) {
-      console.error("unmocked request", req.url(), req, resp);
+      if (req.url().match("browser-sync")) {
+        console.warn("browser-sync disabled in mock mode");
+      } else {
+        console.error("unmocked request", req.url(), req, resp);
+      }
     });
 }
