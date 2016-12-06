@@ -60,8 +60,12 @@ class CollectionForm extends React.Component {
         <AddProperty onAddCustomProperty={onAddCustomProperty} />
         <AddRelation
           archetypeFields={archetypeFields}
+          columns={columns}
           availableArchetypes={availableArchetypes}
-          onAddCustomProperty={onAddCustomProperty} />
+          onAddCustomProperty={onAddCustomProperty}
+          availableCollectionColumnsPerArchetype={availableCollectionColumnsPerArchetype}
+
+        />
       </div>
     );
   }

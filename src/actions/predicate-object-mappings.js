@@ -23,7 +23,7 @@ const removePredicateObjectMap = (predicate, object) => (dispatch, getState) => 
 };
 
 
-const addCustomProperty = (name, type) => (dispatch, getState) => {
+const addCustomProperty = (name, type, sourceColumn, targetColumn) => (dispatch, getState) => {
   const { activeCollection: { name: collectionName }} = getState();
 
   dispatch({
@@ -32,6 +32,22 @@ const addCustomProperty = (name, type) => (dispatch, getState) => {
     propertyName: name,
     propertyType: type
   });
+
+  if (type === "relation" && sourceColumn && targetColumn) {
+    dispatch({
+      type: "SET_PREDICATE_OBJECT_MAPPING",
+      subjectCollection: collectionName,
+      predicate: name,
+      object: {
+        joinCondition: {
+          child: sourceColumn,
+          parent: targetColumn.split("!")[1]
+        },
+        parentTriplesMap: targetColumn.split("!")[0]
+      },
+      propertyType: "relation"
+    });
+  }
 };
 
 const removeCustomProperty = (index) => (dispatch, getState) => {

@@ -40,7 +40,8 @@ export default function actionsMaker(navigateTo, dispatch) {
 
     onRemovePredicateObjectMap: (predicateName, objectName) => dispatch(removePredicateObjectMap(predicateName, objectName)),
 
-    onAddCustomProperty: (name, type) => dispatch(addCustomProperty(name, type)),
+    onAddCustomProperty: (name, type, sourceColumn = null, targetColumn = null) =>
+      dispatch(addCustomProperty(name, type, sourceColumn, targetColumn)),
 
     onRemoveCustomProperty: (index) => dispatch(removeCustomProperty(index)),
 

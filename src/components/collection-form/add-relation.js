@@ -1,5 +1,6 @@
 import React from "react";
 import SelectField from "../fields/select-field";
+import ColumnSelect from "./column-select";
 
 class AddRelation extends React.Component {
 
@@ -7,42 +8,70 @@ class AddRelation extends React.Component {
     super(props);
 
     this.state = {
-      newName: "",
+      newRelation: null,
+      selectedSourceColumn: null,
+      selectedTargetColumn: null
     };
   }
 
 
   render() {
-    const { newName, newType } = this.state;
-    const { onAddCustomProperty, archetypeFields, availableArchetypes } = this.props;
+    const { newRelation, selectedSourceColumn, selectedTargetColumn } = this.state;
+    const { onAddCustomProperty, archetypeFields, availableArchetypes, columns, availableCollectionColumnsPerArchetype } = this.props;
 
     const relationTypeOptions = archetypeFields
       .filter((prop) => prop.type === "relation")
       .filter((prop) => availableArchetypes.indexOf(prop.relation.targetCollection) > -1)
       .map((prop) => <span key={prop.name} value={prop.name}>{prop.name}</span>);
 
+    const relationTypeInfo = newRelation
+      ? archetypeFields.find((af) => af.name === newRelation)
+      : null;
+
+    const targetCollectionColumns = relationTypeInfo
+      ? availableCollectionColumnsPerArchetype[relationTypeInfo.relation.targetCollection]
+          .map((targetCollectionCols) => targetCollectionCols.columns.map((column) => `${targetCollectionCols.collectionName}!${column}`))
+          .reduce((a, b) => a.concat(b)) : null;
+
+    const targetColumnSelect = targetCollectionColumns
+      ? <ColumnSelect columns={targetCollectionColumns} selectedColumn={selectedTargetColumn}
+          valuePrefix="(target) "
+          placeholder="Select a target column..."
+          onClearColumn={() => this.setState({selectedTargetColumn: null})}
+          onColumnSelect={(column) => this.setState({selectedTargetColumn: column})} />
+      : null;
+
     return (
       <div className="row small-margin">
         <div className="col-sm-2 pad-6-12">
           <strong>Add a relation</strong>
         </div>
-        <div className="col-sm-8" >
+        <div className="col-sm-3">
+          <ColumnSelect columns={columns} selectedColumn={selectedSourceColumn}
+                        valuePrefix="(source) "
+                        placeholder="Select a source column..."
+                        onClearColumn={() => this.setState({selectedSourceColumn: null})}
+                        onColumnSelect={(column) => this.setState({selectedSourceColumn: column})} />
+        </div>
+        <div className="col-sm-3">
             <SelectField
-              value={newName}
-              onChange={(value) => this.setState({newName: value})}
-              onClear={() => this.setState({newName: ""})}>
+              value={newRelation}
+              onChange={(value) => this.setState({newRelation: value})}
+              onClear={() => this.setState({newRelation: null})}>
               <span type="placeholder">Choose a relation type...</span>
               {relationTypeOptions}
             </SelectField>
         </div>
+        <div className="col-sm-3">
+          {targetColumnSelect}
+        </div>
 
+        <div className="col-sm-1">
 
-        <div className="col-sm-2">
-
-          <button className="pull-right btn btn-default" disabled={!newName}
+          <button className="pull-right btn btn-default" disabled={!(newRelation && selectedSourceColumn && selectedTargetColumn)}
                   onClick={() => {
-                    this.setState({newName: null});
-                    onAddCustomProperty(newName, "relation");
+                    this.setState({newRelation: null});
+                    onAddCustomProperty(newRelation, "relation", selectedSourceColumn, selectedTargetColumn);
                   }}>
             Add relation
           </button>
