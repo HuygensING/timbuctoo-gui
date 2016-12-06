@@ -1,4 +1,3 @@
-console.log(process.env.server);
 export default function setupMocks(xhrmock, orig) {
   xhrmock
     .get(process.env.server + "/v2.1/metadata/Admin", function (req, resp) {
@@ -105,6 +104,11 @@ export default function setupMocks(xhrmock, orig) {
             }
           ]
         }));
+    })
+    .delete(process.env.server + "/v2.1/bulk-upload/thevrename", function (req, resp) {
+      console.log("delete vre");
+      return resp
+        .status(403);
     })
     .get("<<url for person data>>", function (req, resp) {
       console.log("get person items data");

@@ -4,6 +4,7 @@ export default function(appState) {
     vres: appState.userdata.myVres || {},
     searchGuiUrl: appState.datasets.searchGuiUrl,
     uploadStatus: appState.importData.uploadStatus,
-    showDeleteVreModalFor: appState.datasets.vreIdOfDeleteVreModal
+    showDeleteVreModalFor: appState.datasets.vreIdOfDeleteVreModal,
+    showDeleteVreFailedMessage: appState.messages.showDeleteVreFailedMessage
   }
 }

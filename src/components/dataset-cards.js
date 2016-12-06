@@ -11,7 +11,7 @@ export default function(props) {
         <h3>{caption}</h3>
       </div>
       <div className="big-margin">
-        { Object.keys(vres).map((vre) => (
+        { Object.keys(vres).filter((vre) => !vres[vre].deletePending).map((vre) => (
           <DataSetCard key={vre} mine={mine} published={vres[vre].published} searchGuiUrl={searchGuiUrl}
                        onContinueMapping={onContinueMapping} onDeleteVreClick={onDeleteVreClick}
                        userId={userId} vreId={vres[vre].name} caption={vres[vre].name.replace(/^[a-z0-9]+_/, "")} />

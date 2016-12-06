@@ -21,7 +21,12 @@ export default function(state=initialState, action) {
       return {
         ...state,
         vreIdOfDeleteVreModal: action.vreId
-      }
+      };
+    case "BEFORE_DELETE_VRE":
+      return {
+        ...state,
+        vreIdOfDeleteVreModal: null
+      };
   }
 
   return state;

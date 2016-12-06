@@ -4,10 +4,12 @@ import DatasetCards from "./dataset-cards"
 import FirstUpload from "./firstUpload";
 import DeleteVreConfirmationForm from "./delete-vre-confirmation-form";
 import Modal from "./fields/modal";
+import Message from "./message";
+
 
 function CollectionOverview(props) {
-  const { onUploadFileSelect, onContinueMapping, onDeleteVreClick, onComfirmDeleteVre } = props;
-  const { userId, uploadStatus, vres, searchGuiUrl, showDeleteVreModalFor } = props;
+  const { onUploadFileSelect, onContinueMapping, onDeleteVreClick, onComfirmDeleteVre, onCloseMessage } = props;
+  const { userId, uploadStatus, vres, searchGuiUrl, showDeleteVreModalFor, showDeleteVreFailedMessage } = props;
 
 
   const uploadButton = (
@@ -18,6 +20,12 @@ function CollectionOverview(props) {
       label="Upload new dataset"
       onUploadFileSelect={onUploadFileSelect} />
   );
+
+  const deleteVreFailedMessage = showDeleteVreFailedMessage ? (
+    <Message alertLevel="danger" dismissible={true} onCloseMessage={() => onCloseMessage("showDeleteVreFailedMessage")}>
+      Failed to delete dataset
+    </Message>
+  ) : null;
 
   const deleteVreModal = showDeleteVreModalFor
     ? (
@@ -32,6 +40,7 @@ function CollectionOverview(props) {
       <div>
         {deleteVreModal}
         <div className="container">
+          {deleteVreFailedMessage}
           <DatasetCards userId={userId} caption="My datasets" vres={vres} mine={true} searchGuiUrl={searchGuiUrl}
             onDeleteVreClick={onDeleteVreClick} onContinueMapping={onContinueMapping}>
             {uploadButton}

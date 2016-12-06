@@ -10,6 +10,8 @@ import {
 
 import { publishMappings } from "./actions/publish-mappings";
 
+import { deleteVre } from "./actions/delete-vre";
+
 export default function actionsMaker(navigateTo, dispatch) {
   return {
     onUploadFileSelect: onUploadFileSelect(navigateTo, dispatch),
@@ -25,11 +27,7 @@ export default function actionsMaker(navigateTo, dispatch) {
     // Deleting own vres
     onDeleteVreClick: (vreId) => dispatch({type: "SHOW_DELETE_VRE_MODAL", vreId: vreId}),
 
-    onComfirmDeleteVre: (vreId, userConfirmationInputValue) => {
-      if (vreId === userConfirmationInputValue) {
-        console.log("TODO: delete vre", vreId);
-      }
-    },
+    onComfirmDeleteVre: (vreId, userConfirmationInputValue) => dispatch(deleteVre(vreId, userConfirmationInputValue)),
 
     // Mapping collections archetypes
     onMapCollectionArchetype: (collection, value) =>
