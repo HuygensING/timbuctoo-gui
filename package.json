@@ -11,11 +11,10 @@
   },
   "scripts": {
     "start": "scripts/server.js",
-    "test": "mocha --compilers js:babel/register --recursive test",
-    "test:watch": "nodemon -x \"mocha --compilers js:babel/register --recursive --watch test\" -w test -w build",
     "build": "scripts/build.sh",
     "timbuild": "server='' scripts/build.sh",
-    "watch": "scripts/build.sh --watch"
+    "watch": "scripts/build.sh --watch",
+    "watch:mock": "export USE_MOCK=true; export server=http://test.repository.huygens.knaw.nl; scripts/build.sh --watch"
   },
   "dependencies": {
     "classnames": "^2.2.5",
@@ -55,6 +54,6 @@
     "stylus": "^0.53.0",
     "stylus-loader": "^2.1.2",
     "watchify": "^3.7.0",
-    "xhr-mock": "^1.6.0"
+    "xhr-mock": "^1.7.0"
   }
 }

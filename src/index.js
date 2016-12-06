@@ -6,6 +6,20 @@ import router from "./router";
 import getToken from "./token"
 import {fetchMyVres} from "./actions/fetch-my-vres";
 
+import xhrmock from "xhr-mock";
+import setupMocks from "./servermocks";
+
+if (process.env.USE_MOCK === "true") {
+  console.log("Using mock server!")
+  var orig = window.XMLHttpRequest;
+  xhrmock.setup(); //mock window.XMLHttpRequest usages
+  var mock = window.XMLHttpRequest;
+  window.XMLHttpRequest = orig;
+  xhr.XMLHttpRequest = mock;
+  xhr.XDomainRequest = mock;
+  setupMocks(xhrmock, orig);
+}
+
 xhr.get(process.env.server + "/v2.1/javascript-globals", (err, res) => {
   var globals = JSON.parse(res.body);
   store.dispatch({type: "SET_SEARCH_URL", data: globals.env.TIMBUCTOO_SEARCH_URL});
