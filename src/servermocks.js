@@ -141,7 +141,7 @@ export default function setupMocks(xhrmock, orig) {
             ]
         }));
     })
-    .get("<<url for person data with errors>>", function (req, resp) {
+    .get("<<url for person data>>?onlyErrors=true", function (req, resp) {
       console.log("get person items data with errors");
       return resp
         .status(200)
