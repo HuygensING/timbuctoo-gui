@@ -47,7 +47,7 @@ class DeleteVreConfirmationForm extends React.Component {
           <button className="btn btn-default btn-danger" onClick={() => onComfirmDeleteVre(vreId, confirmValue)} disabled={vreId !== confirmValue}>
             Delete
           </button>
-          <button className="btn btn-default" onClick={onClose}>Close</button>
+          <button className="btn btn-default" onClick={onClose}>Cancel</button>
         </div>
       </div>
     );
