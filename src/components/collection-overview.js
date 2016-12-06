@@ -22,7 +22,7 @@ function CollectionOverview(props) {
   const deleteVreModal = showDeleteVreModalFor
     ? (
       <Modal onClose={() => onDeleteVreClick(null)} header="Delete dataset">
-        <DeleteVreConfirmationForm vreId={showDeleteVreModalFor} onComfirmDeleteVre={onComfirmDeleteVre} />
+        <DeleteVreConfirmationForm vreId={showDeleteVreModalFor} onComfirmDeleteVre={onComfirmDeleteVre} onClose={() => onDeleteVreClick(null)} />
       </Modal>
     )
     : null;

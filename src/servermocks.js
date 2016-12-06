@@ -55,8 +55,8 @@ export default function setupMocks(xhrmock, orig) {
               "name": "migrant_steekproef_masterdb (6).xlsx",
               "published": true
             },
-            "testerdetest": {
-              "name": "testerdetest",
+            "thevrename": {
+              "name": "thevrename",
               "published": false,
               "rmlUri": "<<The get raw data url that the server provides>>"
             }

@@ -40,9 +40,6 @@ class Modal extends React.Component {
               {headerBody}
             </div>
             {this.props.children}
-            <div className="modal-footer">
-              <button className="btn btn-default" onClick={onClose}>Close</button>
-            </div>
           </div>
         </div>
 
