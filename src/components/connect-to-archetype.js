@@ -43,7 +43,7 @@ class ConnectToArchetype extends React.Component {
     if (!collections || vre !== vreId) { return null; }
 
     const collectionsAreMapped = Object.keys(mappings.collections).length > 0 &&
-      Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName).indexOf(null) < 0;
+      Object.keys(mappings.collections).map((key) => mappings.collections[key].archetypeName).filter(val => val !== null).length > 0;
 
     const fileIsUploadedMessage = showFileIsUploadedMessage && uploadedFileName ? (
       <Message alertLevel="info" dismissible={true} onCloseMessage={() => onCloseMessage("showFileIsUploadedMessage")}>

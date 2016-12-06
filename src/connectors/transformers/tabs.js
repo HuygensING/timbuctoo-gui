@@ -11,6 +11,7 @@ const mappingsAreComplete = (predicateObjectMappings) => {
 const transformCollectionTabs = (collections, mappings, activeCollection, predicateObjectMappings) =>
   (collections || [])
     .filter((collection) => typeof mappings.collections[collection.name] !== "undefined")
+    .filter((collection) => mappings.collections[collection.name].archetypeName !== null)
     .map((collection) => ({
       collectionName: collection.name,
       archetypeName: mappings.collections[collection.name].archetypeName,

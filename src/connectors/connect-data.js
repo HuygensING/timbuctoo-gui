@@ -24,8 +24,9 @@ export default (appState, routed) => {
 
   const predicateObjectMappings = allPredicateObjectMappings[activeCollection.name] || [];
 
-  const archetypeFields = mappings.collections[activeCollection.name] ?
-    archetype[mappings.collections[activeCollection.name].archetypeName] : [];
+  const archetypeName = (mappings.collections[activeCollection.name] || {archetypeName: null}).archetypeName;
+  const archetypeFields = archetypeName !== null && mappings.collections[activeCollection.name] ?
+    archetype[archetypeName] : [];
 
   const columnHeaders = transformCollectionColumns(collections, activeCollection, mappings, predicateObjectMappings);
 
@@ -55,6 +56,7 @@ export default (appState, routed) => {
 
     // from active collection for table
     activeCollection: activeCollection.name,
+    firstMappedCollection: archetypeName === null && collectionTabs.length > 0 ? collectionTabs[0].collectionName : null,
     rows: transformCollectionRows(collections, activeCollection, mappings),
     headers: columnHeaders,
     nextUrl: activeCollection.nextUrl,

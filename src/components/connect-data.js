@@ -8,17 +8,30 @@ import UploadButton from "./upload-button";
 class ConnectData extends React.Component {
 
   componentWillReceiveProps(nextProps) {
-    const { onFetchBulkUploadedMetadata, params: { serializedArchetypeMappings } } = this.props;
-    // Triggers fetch data from server based on vreId from route.
+    const { onFetchBulkUploadedMetadata, params: { serializedArchetypeMappings }, onSelectCollection } = this.props;
+    const { firstMappedCollection } = nextProps;
+
     if (this.props.params.vreId !== nextProps.params.vreId) {
+      // Triggers fetch data from server based on vreId from route.
       onFetchBulkUploadedMetadata(nextProps.params.vreId, JSON.parse(decodeURIComponent(serializedArchetypeMappings)));
+    } else if (firstMappedCollection) {
+      // If the currently active collection is not mapped, show the first one that _is_ mapped
+      onSelectCollection(firstMappedCollection);
     }
   }
 
   componentDidMount() {
-    const { onFetchBulkUploadedMetadata, tabs, vre, vreId, params: { serializedArchetypeMappings }  } = this.props;
+    const {
+      onFetchBulkUploadedMetadata, tabs, vre, vreId, params: { serializedArchetypeMappings },
+      firstMappedCollection, onSelectCollection
+    } = this.props;
+
     if (tabs.length === 0 || vre !== vreId) {
+      // Triggers fetch data from server based on vreId from route.
       onFetchBulkUploadedMetadata(vreId, JSON.parse(decodeURIComponent(serializedArchetypeMappings)));
+    } else if (firstMappedCollection) {
+      // If the currently active collection is not mapped, show the first one that _is_ mapped
+      onSelectCollection(firstMappedCollection);
     }
   }
 
