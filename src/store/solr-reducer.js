@@ -19,9 +19,14 @@ export default function(state=initialState, action) {
 			};
 
 		case "SET_SEARCH_STATE":
-			let newState = {...state};
-			newState.searchStates[action.collectionName] = action.searchState;
-			return newState;
+			return {
+				...state,
+				searchStates: {
+					...state.searchStates,
+					[action.collectionName]: action.searchState
+				}
+			};
+
 		default:
 			return state;
 	}
