@@ -233,7 +233,7 @@ export default function setupMocks(xhrmock, orig) {
             ]
         }));
     })
-    .get("<<url for document data with errors>>", function (req, resp) {
+    .get("<<url for document data>>?onlyErrors=true", function (req, resp) {
       console.log("get document items data with errors");
       return resp
         .status(200)

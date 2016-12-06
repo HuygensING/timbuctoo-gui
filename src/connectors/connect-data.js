@@ -24,7 +24,7 @@ export default (appState, routed) => {
 
   const predicateObjectMappings = allPredicateObjectMappings[activeCollection.name] || [];
 
-  const archetypeName = (mappings.collections[activeCollection.name] || {archetypeName: null}).archetypeName;
+  const archetypeName = (mappings.collections[activeCollection.name] || {}).archetypeName;
   const archetypeFields = archetypeName !== null && mappings.collections[activeCollection.name] ?
     archetype[archetypeName] : [];
 
