@@ -3,7 +3,7 @@ import {uniq} from "../../util/uniq";
 import {getColumnValue} from "../../accessors/property-mappings";
 
 const mappingsAreComplete = (predicateObjectMappings) => {
-  return predicateObjectMappings
+  return predicateObjectMappings.length > 0 && predicateObjectMappings
     .filter((pom) => !propertyMappingIsComplete(pom))
     .length === 0;
 };

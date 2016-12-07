@@ -31,6 +31,7 @@ class ConnectToArchetype extends React.Component {
       archetype,
       collections,
       mappings,
+      rmlPreviewData
     } = this.props;
 
     // actions
@@ -51,9 +52,17 @@ class ConnectToArchetype extends React.Component {
       </Message>
     ) : null;
 
+    const rmlPreviewBlock = rmlPreviewData ? (
+      <div style={{position: "absolute", zIndex: "10", width: "100%", top: "90px"}}>
+        <pre style={{width: "80%", margin: "0 auto", backgroundColor: "#ddd"}}>
+          {JSON.stringify(rmlPreviewData, null, 2)}
+        </pre>
+      </div>
+    ) : null;
 
     return (
       <div>
+        {rmlPreviewBlock}
         <div className="container basic-margin">
           <h2 className="small-margin">Upload and connect your dataset</h2>
           {fileIsUploadedMessage}

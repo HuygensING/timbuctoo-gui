@@ -92,8 +92,9 @@ const mapCollection = (vre, archetypeName, collectionName, predicateObjectMaps) 
 export default (vre, collectionMappings, predicateObjectMappings) => {
   return {
     ...rmlTemplate,
-    "@graph": Object.keys(predicateObjectMappings)
-      .map((collectionName) => mapCollection(vre, collectionMappings[collectionName].archetypeName, collectionName, predicateObjectMappings[collectionName]))
+    "@graph": Object.keys(collectionMappings)
+      .filter((collectionName) => collectionMappings[collectionName].archetypeName !== null)
+      .map((collectionName) => mapCollection(vre, collectionMappings[collectionName].archetypeName, collectionName, predicateObjectMappings[collectionName] || []))
   };
 }
 
