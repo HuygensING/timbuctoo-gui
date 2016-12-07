@@ -70,7 +70,7 @@ class AddRelation extends React.Component {
 
           <button className="pull-right btn btn-default" disabled={!(newRelation && selectedSourceColumn && selectedTargetColumn)}
                   onClick={() => {
-                    this.setState({newRelation: null});
+                    this.setState({newRelation: null, selectedSourceColumn: null, selectedTargetColumn: null});
                     onAddCustomProperty(newRelation, "relation", selectedSourceColumn, selectedTargetColumn);
                   }}>
             Add relation
