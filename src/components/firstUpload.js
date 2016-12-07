@@ -16,7 +16,6 @@ function FirstUpload(props) {
       onUploadFileSelect={onUploadFileSelect} />
   );
 
-  console.log(userId);
   return (
     <div className="container">
       <div className="jumbotron first-upload upload-bg">

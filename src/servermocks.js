@@ -81,14 +81,24 @@ export default function setupMocks(xhrmock, orig) {
           success: false
         }));
     })
+    .post("<<The save mapping url that the server provides>>", function (req, resp) {
+      console.log("save mapping", req.body());
+      localStorage.setItem("saved-mapping", req.body());
+      return resp
+        .status(200)
+        .body(JSON.stringify({
+          success: true
+        }));
+    })
     .get(process.env.server + "/v2.1/bulk-upload/thevrename", function (req, resp) {
-      console.log("get raw data");
+      console.log("Get VRE information, saved mapping: ", localStorage.getItem("saved-mapping"));
       return resp
         .status(200)
         .body(JSON.stringify({
           vre: "thevrename",
           saveMapping: "<<The save mapping url that the server provides>>",
           executeMapping: "<<The execute mapping url that the server provides>>",
+          savedMappingState: JSON.parse(localStorage.getItem("saved-mapping") || "null"),
           collections: [
             {
               name: "mockpersons",

@@ -77,5 +77,9 @@ const removeCustomProperty = (index) => (dispatch, getState) => {
   })
 };
 
+const deserializeSavedRmlMapping = (savedMappings) => (dispatch, getState) => {
+  const graph = savedMappings["@graph"];
+  console.log(graph);
+};
 
-export { addPredicateObjectMap, removePredicateObjectMap, addCustomProperty, removeCustomProperty }
+export { addPredicateObjectMap, removePredicateObjectMap, addCustomProperty, removeCustomProperty, deserializeSavedRmlMapping }

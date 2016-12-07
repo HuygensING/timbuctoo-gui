@@ -36,7 +36,7 @@ class ConnectData extends React.Component {
   }
 
   render() {
-    const { onCloseMessage, onSelectCollection, onLoadMoreClick, onPublishData, onUploadFileSelect } = this.props;
+    const { onCloseMessage, onSelectCollection, onLoadMoreClick, onPublishData, onUploadFileSelect, onSaveMappingState } = this.props;
 
     const { onAddPredicateObjectMap, onRemovePredicateObjectMap, onAddCustomProperty, onRemoveCustomProperty } = this.props;
 
@@ -114,6 +114,9 @@ class ConnectData extends React.Component {
         <div className="container big-margin">
           <button onClick={onPublishData} className="btn btn-warning btn-lg pull-right" type="button" disabled={!publishEnabled}>
             {publishStatus}
+          </button>
+          <button onClick={onSaveMappingState} className="btn btn-default btn-lg pull-right" style={{marginRight: "4px"}}>
+            Save
           </button>
         </div>
 

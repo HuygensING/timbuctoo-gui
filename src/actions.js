@@ -8,7 +8,7 @@ import {
   removeCustomProperty,
 } from "./actions/predicate-object-mappings";
 
-import { publishMappings } from "./actions/publish-mappings";
+import { publishMappings, saveMappingState } from "./actions/publish-mappings";
 
 import { deleteVre } from "./actions/delete-vre";
 
@@ -44,6 +44,8 @@ export default function actionsMaker(navigateTo, dispatch) {
       dispatch(addCustomProperty(name, type, sourceColumn, targetColumn)),
 
     onRemoveCustomProperty: (index) => dispatch(removeCustomProperty(index)),
+
+    onSaveMappingState: () => dispatch(saveMappingState()),
 
     onPublishData: () => dispatch(publishMappings(navigateTo))
   };

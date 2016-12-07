@@ -10,7 +10,6 @@ export default function(state=initialState, action) {
     case "PUBLISH_START":
       return {...initialState};
     case "RECEIVE_ACTIVE_COLLECTION":
-      console.log(action.data.items);
       return {
         ...state,
         name: action.data.name,
