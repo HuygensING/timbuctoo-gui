@@ -6,7 +6,15 @@ export default function setupMocks(xhrmock, orig) {
         .body(`{
           "persons": [
             {
-              "name": "name",
+              "name": "names",
+              "type": "names"
+            },
+            {
+              "name": "birthDate",
+              "type": "datable"
+            },
+            {
+              "name": "floruit",
               "type": "text"
             },
             {
@@ -38,7 +46,7 @@ export default function setupMocks(xhrmock, orig) {
           ],
           "documents": [
             {
-              "name": "name",
+              "name": "title",
               "type": "text"
             }
           ]

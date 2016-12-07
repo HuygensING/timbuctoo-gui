@@ -96,3 +96,5 @@ export default (vre, collectionMappings, predicateObjectMappings) => {
       .map((collectionName) => mapCollection(vre, collectionMappings[collectionName].archetypeName, collectionName, predicateObjectMappings[collectionName]))
   };
 }
+
+export { nameSpaces, defaultNamespace }
