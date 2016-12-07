@@ -42,7 +42,7 @@ const publishMappings = (navigateTo) => (dispatch, getState) => {
   });
 };
 
-const saveMappingState = () => (dispatch, getState) => {
+const saveMappingState = (navigateTo = null, redirectTo = null) => (dispatch, getState) => {
   const {
     importData: { vre, saveMappingUrl },
     mappings: { collections },
@@ -64,10 +64,20 @@ const saveMappingState = () => (dispatch, getState) => {
     if (err) {
       dispatch({type: "SAVE_HAD_ERROR"});
     } else {
-      dispatch({type: "SAVE_SUCCEEDED"})
+      dispatch({type: "SAVE_SUCCEEDED"});
+      if (redirectTo) {
+        console.log(redirectTo);
+        navigateTo(redirectTo, [vre, "asd"]);
+      }
     }
     dispatch({type: "SAVE_FINISHED"});
   })
 };
 
-export { publishMappings, saveMappingState }
+const saveNewMappingState = (navigateTo) => (dispatch) => {
+  dispatch({type: "CLEAR_PREDICATE_OBJECT_MAPPINGS"});
+
+  dispatch(saveMappingState(navigateTo, "mapData"));
+};
+
+export { publishMappings, saveMappingState, saveNewMappingState }

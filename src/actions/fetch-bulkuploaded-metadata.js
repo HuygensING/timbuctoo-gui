@@ -16,9 +16,9 @@ const fetchBulkUploadedMetadata = (vreId, mappingsFromUrl) => (dispatch, getStat
       dispatch(deserializeSavedRmlMapping(responseData.savedMappingState));
     }
 
-    if (mappingsFromUrl) {
+/*    if (mappingsFromUrl) {
       dispatch({type: "MAP_COLLECTION_ARCHETYPES", data: mappingsFromUrl});
-    }
+    }*/
   });
 };
 

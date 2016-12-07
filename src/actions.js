@@ -8,7 +8,7 @@ import {
   removeCustomProperty,
 } from "./actions/predicate-object-mappings";
 
-import { publishMappings, saveMappingState } from "./actions/publish-mappings";
+import { publishMappings, saveMappingState, saveNewMappingState } from "./actions/publish-mappings";
 
 import { deleteVre } from "./actions/delete-vre";
 
@@ -19,7 +19,7 @@ export default function actionsMaker(navigateTo, dispatch) {
     // loading import data
     onSelectCollection: (collection) => dispatch(selectCollection(collection)),
     onLoadMoreClick: (nextUrl, collection) => dispatch(selectCollection(collection, nextUrl)),
-    onFetchBulkUploadedMetadata: (vreId, mappingsFromUrl) => dispatch(fetchBulkUploadedMetadata(vreId, mappingsFromUrl)),
+    onFetchBulkUploadedMetadata: (vreId) => dispatch(fetchBulkUploadedMetadata(vreId)),
 
     // Closing informative messages
     onCloseMessage: (messageId) => dispatch({type: "TOGGLE_MESSAGE", messageId: messageId}),
@@ -46,6 +46,8 @@ export default function actionsMaker(navigateTo, dispatch) {
     onRemoveCustomProperty: (index) => dispatch(removeCustomProperty(index)),
 
     onSaveMappingState: () => dispatch(saveMappingState()),
+
+    onSaveNewMappingState: () => dispatch(saveNewMappingState(navigateTo)),
 
     onPublishData: () => dispatch(publishMappings(navigateTo))
   };

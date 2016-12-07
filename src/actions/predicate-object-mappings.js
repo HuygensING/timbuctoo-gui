@@ -118,6 +118,8 @@ const deserializeSavedRmlMapping = (savedMappings) => (dispatch, getState) => {
     const collectionName = collectionMapping["rml:logicalSource"]["rml:source"]["tim:rawCollection"];
     const archetypeName = stripNamespace(collectionMapping["http://www.w3.org/2000/01/rdf-schema#subClassOf"]) + "s";
 
+    dispatch({type: "MAP_COLLECTION_ARCHETYPE", collection: collectionName, value: archetypeName});
+
     const knownProperties = archetypeProperties[archetypeName]
       .filter((prop) => prop.type !== "relation")
       .concat({name: "sameAs", type: "sameAs"});

@@ -61,6 +61,7 @@ export default function(state=initialState, action) {
   switch (action.type) {
     case "FINISH_UPLOAD":
     case "LOGIN":
+    case "CLEAR_PREDICATE_OBJECT_MAPPINGS":
       return initialState;
     case "SET_PREDICATE_OBJECT_MAPPING":
       return setPredicateObjectMapping(state, action);

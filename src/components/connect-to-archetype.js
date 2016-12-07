@@ -35,7 +35,7 @@ class ConnectToArchetype extends React.Component {
     } = this.props;
 
     // actions
-    const { onCloseMessage, onMapCollectionArchetype, onSelectCollection, onLoadMoreClick } = this.props;
+    const { onCloseMessage, onMapCollectionArchetype, onSelectCollection, onLoadMoreClick, onSaveNewMappingState } = this.props;
     // messages
     const { showFileIsUploadedMessage, uploadedFileName } = this.props;
     // table view properties
@@ -108,15 +108,9 @@ class ConnectToArchetype extends React.Component {
 
         </div>
         <div className="container basic-margin">
-          { collectionsAreMapped ?
-            <Link to={urls.mapData(vre, mappings.collections)} className="btn btn-success">
-              Connect
-            </Link>
-            :
-            <button disabled={true} className="btn btn-success">
-              Connect
-            </button>
-          }
+          <button disabled={!collectionsAreMapped} onClick={onSaveNewMappingState} className="btn btn-success">
+            Connect
+          </button>
         </div>
         <div className="container big-margin">
           <p className="from-excel">

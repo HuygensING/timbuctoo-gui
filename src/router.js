@@ -20,19 +20,14 @@ import ConnectToArchetype from "./components/connect-to-archetype";
 import connectDataConnector from "./connectors/connect-data";
 import ConnectData from "./components/connect-data";
 
-const serializeArchetypeMappings = (collections) => {
-  return encodeURIComponent(JSON.stringify(collections));
-};
-
-
 var urls = {
   root() {
     return "/";
   },
-  mapData(vreId, mappings) {
-    return vreId && mappings
-      ? `/mapdata/${vreId}/${serializeArchetypeMappings(mappings)}`
-      : "/mapdata/:vreId/:serializedArchetypeMappings";
+  mapData(vreId) {
+    return vreId
+      ? `/mapdata/${vreId}`
+      : "/mapdata/:vreId";
   },
   mapArchetypes(vreId) {
     return vreId ? `/maparchetypes/${vreId}` : "/maparchetypes/:vreId";
