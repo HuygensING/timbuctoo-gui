@@ -35,6 +35,8 @@ export default function actionsMaker(navigateTo, dispatch) {
 
 
     // Connecting data
+    onContinueMapping: (vreId) => dispatch(fetchBulkUploadedMetadata(vreId, navigateTo)),
+
     onAddPredicateObjectMap: (predicateName, objectName, propertyType) =>
       dispatch(addPredicateObjectMap(predicateName, objectName, propertyType)),
 

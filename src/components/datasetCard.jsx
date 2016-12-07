@@ -9,12 +9,12 @@ function DataSetCard(props) {
   if (props.mine && !props.published) {
     return (
       <div className="card-dataset">
-        <Link className="card-dataset btn btn-default explore" to={urls.mapArchetypes(props.vreId)}>
+        <a className="card-dataset btn btn-default explore" onClick={() => props.onContinueMapping(props.vreId)}>
           Finish mapping<br />
           <strong title={props.caption} style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
             {props.caption.replace(/^[^_]+_+/, "")}
           </strong>
-        </Link>
+        </a>
         {props.userId
           ? (<a className="card-dataset btn btn-default" onClick={() => props.onDeleteVreClick(props.vreId)} style={{cursor: "pointer"}}>
           <span className="glyphicon glyphicon-trash" />{" "}
