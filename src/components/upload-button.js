@@ -6,7 +6,7 @@ class UploadButton extends React.Component {
   render() {
     const { classNames, uploadStatus, onUploadFileSelect, glyphicon, label, vreName } = this.props;
     return (
-      <form style={{display: "inline-block"}}>
+      <form style={{display: "inline-block", float: "right"}}>
         <label className={cx(...classNames, {disabled: !!uploadStatus})}>
           <span className={glyphicon}></span>
           {" "}

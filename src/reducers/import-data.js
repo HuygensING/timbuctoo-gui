@@ -61,14 +61,9 @@ export default function(state=initialState, action) {
       };
 
     case "PUBLISH_STATUS_UPDATE":
-      var publishErrorCount = state.publishErrorCount + (action.data === "F" ? 1 : 0);
-      var tripleCount = action.data === "F" ? state.tripleCount : action.data;
-      var publishStatus = "Publishing " + tripleCount + " triples" + (publishErrorCount > 0 ? " (" + publishErrorCount + " errors)" : "");
       return {
         ...state,
-        publishErrorCount,
-        tripleCount,
-        publishStatus
+        publishStatus: action.data
       };
     case "PUBLISH_HAD_ERROR":
       // clear the sheets to force reload
