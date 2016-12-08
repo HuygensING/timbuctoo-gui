@@ -15,7 +15,7 @@ export default function(state=initialState, action) {
     case "SET_PUBLIC_VRES":
       return {
         ...state,
-        publicVres: action.payload
+        publicVres: action.payload.filter((vre) => vre.isPublished)
       };
     case "SHOW_DELETE_VRE_MODAL":
       return {
