@@ -38,7 +38,7 @@ class UploadForm extends React.Component {
             label="Upload"
             onUploadFileSelect={onUploadFileSelect}
           />
-          <button className="btn btn-default" disabled={!!uploadStatus} onClick={onCloseUploadDialog}>
+          <button className="btn btn-default pull-right" disabled={!!uploadStatus} onClick={onCloseUploadDialog}>
             Cancel
           </button>
         </div>
