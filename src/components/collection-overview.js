@@ -55,8 +55,8 @@ function CollectionOverview(props) {
 
   const uploadDialog = showUploadDialog
     ? (
-      <Modal onClose={onCloseUploadDialog} header="Upload new dataset">
-        <UploadForm onCloseUploadDialog={onCloseUploadDialog} onSetNewVreName={onSetNewVreName} newVreName={newVreName}
+      <Modal  onClose={uploadStatus ? () => {} : onCloseUploadDialog} header="Upload new dataset">
+        <UploadForm onCloseUploadDialog={uploadStatus ? () => {} : onCloseUploadDialog} onSetNewVreName={onSetNewVreName} newVreName={newVreName}
                     onUploadFileSelect={onUploadFileSelect} uploadStatus={uploadStatus} />
       </Modal>
     )

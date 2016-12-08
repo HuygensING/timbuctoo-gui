@@ -28,7 +28,7 @@ class UploadForm extends React.Component {
           <div>Please enter a name for the new dataset.</div>
           <div>If no dataset name is entered, the filename of the uploaded file will be used.</div>
           <br />
-          <input type="text" placeholder="Enter dataset name" value={newVreName || ""} onChange={this.onChange.bind(this)} />
+          <input type="text" disabled={!!uploadStatus}  placeholder="Enter dataset name" value={newVreName || ""} onChange={this.onChange.bind(this)} />
         </div>
         <div className="modal-footer">
           <UploadButton
@@ -38,7 +38,7 @@ class UploadForm extends React.Component {
             label="Upload"
             onUploadFileSelect={onUploadFileSelect}
           />
-          <button className="btn btn-default" onClick={onCloseUploadDialog}>
+          <button className="btn btn-default" disabled={!!uploadStatus} onClick={onCloseUploadDialog}>
             Cancel
           </button>
         </div>
