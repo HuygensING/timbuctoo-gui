@@ -24,6 +24,7 @@ class UploadForm extends React.Component {
           <UploadButton
             classNames={["btn", "btn-primary"]}
             uploadStatus={uploadStatus}
+            vreName={newVreName}
             label="Upload"
             onUploadFileSelect={onUploadFileSelect}
           />

@@ -3,10 +3,14 @@ import { selectCollection } from "./select-collection";
 import { fetchMyVres } from "./fetch-my-vres";
 
 
-const onUploadFileSelect = (navigateTo, dispatch) => (files, isReupload = false) => {
+const onUploadFileSelect = (navigateTo, dispatch) => (files, vreName = null) => {
   let file = files[0];
   let formData = new FormData();
+  if (vreName) {
+    formData.append("vreName", vreName);
+  }
   formData.append("file", file);
+
   dispatch({type: "START_UPLOAD"});
   dispatch(function (dispatch, getState) {
     var state = getState();
@@ -29,11 +33,9 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, isReupload = false)
       xhr.get(location, {headers: {"Authorization": state.userdata.userId}}, function (err, resp, body) {
         const responseData = JSON.parse(body);
         dispatch({type: "FINISH_UPLOAD", data: responseData, uploadedFileName: file.name});
-        if (isReupload) {
-        } else {
-          navigateTo("mapArchetypes", [responseData.vre]);
-          dispatch(fetchMyVres(state.userdata.userId, () => {}));
-        }
+        navigateTo("mapArchetypes", [responseData.vre]);
+        dispatch(fetchMyVres(state.userdata.userId, () => {}));
+
         if (responseData.collections && responseData.collections.length) {
           dispatch(selectCollection(responseData.collections[0].name));
         }

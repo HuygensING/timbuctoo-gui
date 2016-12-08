@@ -14,12 +14,13 @@ import { deleteVre } from "./actions/delete-vre";
 
 export default function actionsMaker(navigateTo, dispatch) {
   return {
-    onUploadFileSelect: onUploadFileSelect(navigateTo, dispatch),
 
     // loading import data
     onOpenUploadDialog: () => dispatch({type: "OPEN_UPLOAD_DIALOG"}),
 
     onCloseUploadDialog: () => dispatch({type: "CLOSE_UPLOAD_DIALOG"}),
+
+    onUploadFileSelect: onUploadFileSelect(navigateTo, dispatch),
 
     onSetNewVreName: (value) => dispatch({type: "SET_NEW_VRE_NAME", newVreName: value}),
 
