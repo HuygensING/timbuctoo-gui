@@ -1,5 +1,7 @@
 import xhr from "xhr";
 import { selectCollection } from "./select-collection";
+import { fetchMyVres } from "./fetch-my-vres";
+
 
 const onUploadFileSelect = (navigateTo, dispatch) => (files, isReupload = false) => {
   let file = files[0];
@@ -30,6 +32,7 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, isReupload = false)
         if (isReupload) {
         } else {
           navigateTo("mapArchetypes", [responseData.vre]);
+          dispatch(fetchMyVres(state.userdata.userId, () => {}));
         }
         if (responseData.collections && responseData.collections.length) {
           dispatch(selectCollection(responseData.collections[0].name));
