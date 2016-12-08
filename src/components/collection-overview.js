@@ -1,5 +1,5 @@
 import React from "react";
-import UploadButton from "./upload-button";
+import UploadForm from "./upload-form";
 import DatasetCards from "./dataset-cards"
 import FirstUpload from "./firstUpload";
 import DeleteVreConfirmationForm from "./delete-vre-confirmation-form";
@@ -8,17 +8,35 @@ import Message from "./message";
 
 
 function CollectionOverview(props) {
-  const { onUploadFileSelect, onContinueMapping, onDeleteVreClick, onComfirmDeleteVre, onCloseMessage } = props;
-  const { userId, uploadStatus, vres, searchGuiUrl, showDeleteVreModalFor, showDeleteVreFailedMessage } = props;
+  const {
+    onUploadFileSelect,
+    onContinueMapping,
+    onDeleteVreClick,
+    onComfirmDeleteVre,
+    onCloseMessage,
+    onOpenUploadDialog,
+    onCloseUploadDialog,
+    onSetNewVreName
+  } = props;
 
+  const {
+    userId,
+    uploadStatus,
+    vres,
+    searchGuiUrl,
+    showDeleteVreModalFor,
+    showDeleteVreFailedMessage,
+    showUploadDialog,
+    newVreName
+  } = props;
+
+  const hasOwnVres = (vres && Object.keys(vres).length > 0) > 0;
 
   const uploadButton = (
-    <UploadButton
-      classNames={["btn", "btn-lg", "btn-primary", "pull-right"]}
-      glyphicon="glyphicon glyphicon-cloud-upload"
-      uploadStatus={uploadStatus}
-      label="Upload new dataset"
-      onUploadFileSelect={onUploadFileSelect} />
+    <button className={`btn btn-lg btn-primary ${hasOwnVres ? "pull-right" : ""}`} onClick={onOpenUploadDialog}>
+      <span className="glyphicon glyphicon-cloud-upload" />{" "}
+      {hasOwnVres ? "Upload new dataset" : "Browse"}
+    </button>
   );
 
   const deleteVreFailedMessage = showDeleteVreFailedMessage ? (
@@ -35,10 +53,20 @@ function CollectionOverview(props) {
     )
     : null;
 
-  return vres && Object.keys(vres).length > 0
+  const uploadDialog = showUploadDialog
+    ? (
+      <Modal onClose={onCloseUploadDialog} header="Upload new dataset">
+        <UploadForm onCloseUploadDialog={onCloseUploadDialog} onSetNewVreName={onSetNewVreName} newVreName={newVreName}
+                    onUploadFileSelect={onUploadFileSelect} uploadStatus={uploadStatus} />
+      </Modal>
+    )
+    : null;
+
+  return hasOwnVres
     ? (
       <div>
         {deleteVreModal}
+        {uploadDialog}
         <div className="container">
           {deleteVreFailedMessage}
           <DatasetCards userId={userId} caption="My datasets" vres={vres} mine={true} searchGuiUrl={searchGuiUrl}
@@ -48,7 +76,10 @@ function CollectionOverview(props) {
         </div>
       </div>
   ) : (
-    <FirstUpload {...props} />
+    <FirstUpload {...props}>
+      {uploadDialog}
+      {uploadButton}
+    </FirstUpload>
   );
 }
 

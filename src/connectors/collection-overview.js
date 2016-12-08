@@ -5,6 +5,8 @@ export default function(appState) {
     searchGuiUrl: appState.datasets.searchGuiUrl,
     uploadStatus: appState.importData.uploadStatus,
     showDeleteVreModalFor: appState.datasets.vreIdOfDeleteVreModal,
-    showDeleteVreFailedMessage: appState.messages.showDeleteVreFailedMessage
+    showDeleteVreFailedMessage: appState.messages.showDeleteVreFailedMessage,
+    showUploadDialog: appState.uploadDialog.showUploadDialog,
+    newVreName: appState.uploadDialog.newVreName
   }
 }

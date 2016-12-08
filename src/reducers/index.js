@@ -10,6 +10,7 @@ import activeCollection from "./active-collection";
 import predicateObjectMappings from "./predicate-object-mappings";
 import customProperties from "./custom-properties";
 import previewRml from "./preview-rml";
+import uploadDialog from "./upload-dialog";
 
 export default combineReducers({
   messages: messages,
@@ -21,5 +22,6 @@ export default combineReducers({
   activeCollection:  activeCollection,
   predicateObjectMappings: predicateObjectMappings,
   customProperties: customProperties,
-  previewRml: previewRml
+  previewRml: previewRml,
+  uploadDialog: uploadDialog
 });

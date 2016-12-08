@@ -8,9 +8,6 @@ import getToken from "./token";
 import pageConnector from "./connectors/page-connector";
 import Page from "./components/page.jsx";
 
-import firstUploadConnector from "./connectors/first-upload";
-import FirstUpload from "./components/firstUpload.js";
-
 import collectionOverviewConnector from "./connectors/collection-overview";
 import CollectionOverview from "./components/collection-overview";
 

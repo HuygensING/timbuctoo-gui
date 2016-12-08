@@ -1,5 +1,4 @@
 import setIn from "../util/set-in";
-import getIn from "../util/get-in";
 
 const initialState = {
   collections: {},

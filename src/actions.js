@@ -17,8 +17,16 @@ export default function actionsMaker(navigateTo, dispatch) {
     onUploadFileSelect: onUploadFileSelect(navigateTo, dispatch),
 
     // loading import data
+    onOpenUploadDialog: () => dispatch({type: "OPEN_UPLOAD_DIALOG"}),
+
+    onCloseUploadDialog: () => dispatch({type: "CLOSE_UPLOAD_DIALOG"}),
+
+    onSetNewVreName: (value) => dispatch({type: "SET_NEW_VRE_NAME", newVreName: value}),
+
     onSelectCollection: (collection) => dispatch(selectCollection(collection)),
+
     onLoadMoreClick: (nextUrl, collection) => dispatch(selectCollection(collection, nextUrl)),
+
     onFetchBulkUploadedMetadata: (vreId) => dispatch(fetchBulkUploadedMetadata(vreId)),
 
     // Closing informative messages
