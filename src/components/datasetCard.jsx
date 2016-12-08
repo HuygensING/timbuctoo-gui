@@ -8,7 +8,7 @@ function DataSetCard(props) {
 
   if (props.mine && !props.published) {
     return (
-      <div className="card-dataset">
+      <div className="card-dataset" style={{height: "215px"}}>
         <a className="card-dataset btn btn-default explore" onClick={() => props.onContinueMapping(props.vreId)}>
           Finish mapping<br />
           <strong title={props.caption} style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
