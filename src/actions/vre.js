@@ -14,7 +14,7 @@ const listVres = () => (dispatch) =>
 		dispatch({type: "LIST_VRES", list: JSON.parse(resp.body)});
 	}, null, "List VREs");
 
-const setVre = (vreId) => (dispatch) =>
+const setVre = (vreId, next = () => { }) => (dispatch) =>
 	server.performXhr({
 		method: "GET",
 		headers: {
@@ -34,6 +34,7 @@ const setVre = (vreId) => (dispatch) =>
 			dispatch(makeNewEntity(defaultDomain))
 			dispatch({type: "SET_DOMAIN", defaultDomain});
 			dispatch(fetchEntityList(defaultDomain));
+			next();
 		}
 	}, () => dispatch({type: "SET_VRE", vreId: vreId, collections: {}}), `Fetch VRE description for ${vreId}`);
 

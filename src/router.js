@@ -6,23 +6,10 @@ import getAutocompleteValues from "./actions/autocomplete";
 import actions from "./actions";
 
 import EditGui from "./components/edit-gui/edit-gui";
+import {urls} from "./urls";
 
 
-const urls = {
-	root() {
-		return "/";
-	},
-	newEntity(collection) {
-		return collection
-			? `/${collection}`
-			: "/:collection";
-	},
-	entity(collection, id) {
-		return collection && id
-			? `/${collection}/${id}`
-			: "/:collection/:id";
-	}
-};
+
 
 export function navigateTo(key, args) {
 	hashHistory.push(urls[key].apply(null, args));
@@ -44,4 +31,3 @@ export default (
 	</Provider>
 );
 
-export { urls }

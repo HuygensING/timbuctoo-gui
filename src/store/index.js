@@ -11,5 +11,5 @@ const logger = () => next => action => {
   return next(action);
 };
 
-let createStoreWithMiddleware = applyMiddleware(logger, thunkMiddleware)(createStore);
+let createStoreWithMiddleware = applyMiddleware(/*logger,*/ thunkMiddleware)(createStore);
 export default createStoreWithMiddleware(reducers);

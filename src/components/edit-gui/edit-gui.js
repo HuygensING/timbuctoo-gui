@@ -13,6 +13,21 @@ import Messages from "./messages/list";
 
 class EditGui extends React.Component {
 
+	componentWillReceiveProps(nextProps) {
+		const { onSelect } = this.props;
+
+		// Triggers fetch data from server based on id from route.
+		if (this.props.params.id !== nextProps.params.id) {
+			onSelect({domain: nextProps.params.collection, id: nextProps.params.id});
+		}
+	}
+
+	componentDidMount() {
+		if (this.props.params.id) {
+			this.props.onSelect({domain: this.props.params.collection, id: this.props.params.id});
+		}
+	}
+
 	render() {
 		const { onSelect, onNew, onSave, onDelete, onSelectDomain, onDismissMessage, onChange } = this.props;
 		const { onQuickSearchQueryChange, onQuickSearch, onPaginateLeft, onPaginateRight } = this.props;
@@ -20,7 +35,7 @@ class EditGui extends React.Component {
 		const { quickSearch, entity, vre, messages } = this.props;
 		const currentMode = entity.domain && entity.data._id ? "edit" : "new";
 
-		console.log("RENDER", vre);
+		if (entity.domain === null || !vre.collections[entity.domain]) { return null; }
 		return (
 			<Page>
 				<CollectionTabs collections={vre.collections} onNew={onNew} onSelectDomain={onSelectDomain}

@@ -17,7 +17,9 @@ const setUser = (response) => {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-	ReactDOM.render(router, document.getElementById("app"));
+	function initRouter() {
+		ReactDOM.render(router, document.getElementById("app"));
+	}
 
 	function getVreId() {
 		let path = window.location.search.substr(1);
@@ -44,6 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 		return undefined;
 	}
-	store.dispatch(setVre(getVreId()));
+	store.dispatch(setVre(getVreId(), initRouter));
 	store.dispatch(setUser(getLogin()));
 });

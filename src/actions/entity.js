@@ -72,10 +72,20 @@ const sendQuickSearch = () => (dispatch, getState) => {
 	}
 };
 
+const selectDomain = (domain) => (dispatch) => {
+	dispatch({type: "SET_DOMAIN", domain});
+	dispatch(fetchEntityList(domain));
+	dispatch({type: "SET_QUICKSEARCH_QUERY", value: ""});
+};
+
 // 1) Fetch entity
 // 2) Dispatch RECEIVE_ENTITY for render
 const selectEntity = (domain, entityId, errorMessage = null, successMessage = null, next = () => { }) =>
-	(dispatch) => {
+	(dispatch, getState) => {
+		const { entity: { domain: currentDomain } } = getState();
+		if (currentDomain !== domain) {
+			dispatch(selectDomain(domain));
+		}
 		crud.fetchEntity(`${process.env.server}/v2.1/domain/${domain}/${entityId}`, (data) => {
 			dispatch({type: "RECEIVE_ENTITY", domain: domain, data: data, errorMessage: errorMessage});
 			if (successMessage !== null) {
