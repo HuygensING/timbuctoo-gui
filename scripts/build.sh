@@ -24,7 +24,12 @@ node_modules/.bin/browserify \
 	--transform [ envify --NODE_ENV="${NODE_ENV}" ] \
 	--require classnames \
 	--require react \
-	--require react-dom > "build/${NODE_ENV}/js/react-libs.js"
+	--require react-dom \
+	--require react-redux \
+	--require react-router \
+	--require redux \
+	--require redux-thunk \
+	--require xhr > "build/${NODE_ENV}/js/react-libs.js"
 
 node_modules/.bin/$cmd src/index.js \
 	--debug \
@@ -32,6 +37,11 @@ node_modules/.bin/$cmd src/index.js \
 	--external classnames \
 	--external react \
 	--external react-dom \
+	--external react-redux \
+	--external react-router \
+	--external redux \
+	--external redux-thunk \
+	--external xhr \
 	--standalone TimbuctooEdit \
 	--transform [ babelify --presets [ es2015 react ] --plugins [ transform-es2015-destructuring transform-object-rest-spread transform-object-assign] ] \
 	--transform [ envify --NODE_ENV="${NODE_ENV}" --USE_MOCK="${USE_MOCK}" --server="$server" ] \
