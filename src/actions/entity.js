@@ -109,6 +109,8 @@ const deleteEntity = () => (dispatch, getState) => {
 // 2) Save the relations for this entity
 // 3) Refetch entity for render
 const saveEntity = () => (dispatch, getState) => {
+	const collectionLabel = getState().vre.collections[getState().entity.domain].collectionLabel.replace(/s$/, "");
+
 	// Make a deep copy of the data to be saved in order to leave application state unaltered
 	let saveData = clone(getState().entity.data);
 	// Make a deep copy of the relation data in order to leave application state unaltered
@@ -122,9 +124,9 @@ const saveEntity = () => (dispatch, getState) => {
 			// 2) Save relations using server response for current relations to diff against relationData
 			dispatch((redispatch) => saveRelations(JSON.parse(resp.body), relationData, getState().vre.collections[getState().entity.domain].properties, getState().user.token, getState().vre.vreId, () =>
 				// 3) Refetch entity for render
-				redispatch(selectEntity(getState().entity.domain, getState().entity.data._id, null, `Succesfully saved ${getState().entity.domain} with ID ${getState().entity.data._id}`, () => dispatch(fetchEntityList(getState().entity.domain)))))), () =>
+				redispatch(selectEntity(getState().entity.domain, getState().entity.data._id, null, `Succesfully saved ${collectionLabel} with ID ${getState().entity.data._id}`, () => dispatch(fetchEntityList(getState().entity.domain)))))), () =>
 					// 2a) Handle error by refetching and passing along an error message
-					dispatch(selectEntity(getState().entity.domain, getState().entity.data._id, `Failed to save ${getState().entity.domain} with ID ${getState().entity.data._id}`)));
+					dispatch(selectEntity(getState().entity.domain, getState().entity.data._id, `Failed to save ${collectionLabel} with ID ${getState().entity.data._id}`)));
 
 	} else {
 		// 1) Create new entity with saveData
@@ -134,9 +136,9 @@ const saveEntity = () => (dispatch, getState) => {
 				// 3) Save relations using server response for current relations to diff against relationData
 				saveRelations(data, relationData, getState().vre.collections[getState().entity.domain].properties, getState().user.token, getState().vre.vreId, () =>
 					// 4) Refetch entity for render
-					redispatch(selectEntity(getState().entity.domain, data._id, null, `Succesfully saved ${getState().entity.domain}`, () => dispatch(fetchEntityList(getState().entity.domain))))))), () =>
+					redispatch(selectEntity(getState().entity.domain, data._id, null, `Succesfully saved ${collectionLabel}`, () => dispatch(fetchEntityList(getState().entity.domain))))))), () =>
 						// 2a) Handle error by refetching and passing along an error message
-						dispatch(makeNewEntity(getState().entity.domain, `Failed to save new ${getState().entity.domain}`)));
+						dispatch(makeNewEntity(getState().entity.domain, `Failed to save new ${collectionLabel}`)));
 	}
 };
 
