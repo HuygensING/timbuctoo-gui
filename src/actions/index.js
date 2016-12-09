@@ -1,4 +1,4 @@
-import { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateLeft, paginateRight, sendQuickSearch } from "./entity";
+import { saveEntity, selectEntity, makeNewEntity, deleteEntity, selectDomain, paginateLeft, paginateRight, sendQuickSearch } from "./entity";
 import { setVre } from "./vre";
 
 export default (navigateTo, dispatch) => ({
@@ -10,7 +10,9 @@ export default (navigateTo, dispatch) => ({
 	onLoginChange: (response) => dispatch(setUser(response)),
 	onSelectVre: (vreId) => dispatch(setVre(vreId)),
 	onDismissMessage: (messageIndex) => dispatch({type: "DISMISS_MESSAGE", messageIndex: messageIndex}),
-	onSelectDomain: (domain) => { dispatch({type: "SET_DOMAIN", domain}); dispatch(fetchEntityList(domain)); dispatch({type: "SET_QUICKSEARCH_QUERY", value: ""}); },
+	onSelectDomain: (domain) => {
+		dispatch(selectDomain(domain));
+	},
 	onPaginateLeft: () => dispatch(paginateLeft()),
 	onPaginateRight: () => dispatch(paginateRight()),
 	onQuickSearchQueryChange: (value) => dispatch({type: "SET_QUICKSEARCH_QUERY", value: value}),

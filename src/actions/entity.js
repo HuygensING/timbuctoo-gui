@@ -153,4 +153,4 @@ const saveEntity = () => (dispatch, getState) => {
 };
 
 
-export { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateRight, paginateLeft, sendQuickSearch };
+export { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateRight, paginateLeft, sendQuickSearch, selectDomain };

@@ -1,6 +1,7 @@
 import React from "react";
 import classnames from "classnames";
-
+import {urls} from "../../urls";
+import { Link } from "react-router";
 
 class CollectionTabs extends React.Component {
 
@@ -20,9 +21,9 @@ class CollectionTabs extends React.Component {
             .filter(d => !(collections[d].unknown || collections[d].relationCollection))
             .map((domain) => (
               <li className={classnames({active: domain === activeDomain})} key={domain}>
-                <a onClick={domain === activeDomain ? () => {} : () => this.onDomainSelect(domain)}>
+                <Link to={urls.newEntity(domain)}>
                   {collections[domain].collectionLabel}
-                </a>
+                </Link>
               </li>
             ))}
         </ul>

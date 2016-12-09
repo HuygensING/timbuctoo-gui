@@ -14,18 +14,26 @@ import Messages from "./messages/list";
 class EditGui extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
-		const { onSelect } = this.props;
+		const { onSelect, onNew, onSelectDomain } = this.props;
 
 		// Triggers fetch data from server based on id from route.
 		if (this.props.params.id !== nextProps.params.id) {
 			onSelect({domain: nextProps.params.collection, id: nextProps.params.id});
+		} else if (this.props.params.collection !== nextProps.params.collection) {
+			onNew(nextProps.params.collection);
+			onSelectDomain(nextProps.params.collection);
 		}
 	}
 
 	componentDidMount() {
+
 		if (this.props.params.id) {
 			this.props.onSelect({domain: this.props.params.collection, id: this.props.params.id});
+		} else if (this.props.params.collection) {
+			this.props.onNew(this.props.params.collection);
+			this.props.onSelectDomain(this.props.params.collection);
 		}
+
 	}
 
 	render() {
