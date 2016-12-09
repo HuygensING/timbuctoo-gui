@@ -1,5 +1,7 @@
 import server from "./server";
 import actions from "./index";
+import {makeNewEntity} from "./entity";
+import {fetchEntityList} from "./entity";
 
 const listVres = () => (dispatch) =>
 	server.performXhr({
@@ -24,9 +26,14 @@ const setVre = (vreId) => (dispatch) =>
 			var body = JSON.parse(resp.body);
 			dispatch({type: "SET_VRE", vreId: vreId, collections: body});
 
-      let defaultDomain = Object.keys(body)[0];
-      actions.onNew(defaultDomain);
-      actions.onSelectDomain(defaultDomain);
+			let defaultDomain = Object.keys(body)
+				.map(collectionName => body[collectionName])
+				.filter(collection => !collection.unknown && !collection.relationCollection)[0]
+				.collectionName;
+
+			dispatch(makeNewEntity(defaultDomain))
+			dispatch({type: "SET_DOMAIN", defaultDomain});
+			dispatch(fetchEntityList(defaultDomain));
 		}
 	}, () => dispatch({type: "SET_VRE", vreId: vreId, collections: {}}), `Fetch VRE description for ${vreId}`);
 

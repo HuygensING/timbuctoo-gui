@@ -20,6 +20,7 @@ class EditGui extends React.Component {
 		const { quickSearch, entity, vre, messages } = this.props;
 		const currentMode = entity.domain && entity.data._id ? "edit" : "new";
 
+		console.log("RENDER", vre);
 		return (
 			<Page>
 				<CollectionTabs collections={vre.collections} onNew={onNew} onSelectDomain={onSelectDomain}

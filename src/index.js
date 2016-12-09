@@ -6,14 +6,18 @@ import {setVre} from "./actions/vre";
 import App from "./components/edit-gui/edit-gui";
 import getAutocompleteValues from "./actions/autocomplete";
 
+import router from "./router";
+
+const setUser = (response) => {
+	return {
+		type: "SET_USER",
+		user: response
+	};
+};
+
 document.addEventListener("DOMContentLoaded", () => {
 
-	store.subscribe(() =>
-		ReactDOM.render(
-			<App {...store.getState()} {...actions} getAutocompleteValues={getAutocompleteValues}  />,
-		 	document.getElementById("app"))
-	);
-
+	ReactDOM.render(router, document.getElementById("app"));
 
 	function getVreId() {
 		let path = window.location.search.substr(1);
@@ -41,5 +45,5 @@ document.addEventListener("DOMContentLoaded", () => {
 		return undefined;
 	}
 	store.dispatch(setVre(getVreId()));
-	actions.onLoginChange(getLogin());
+	store.dispatch(setUser(getLogin()));
 });

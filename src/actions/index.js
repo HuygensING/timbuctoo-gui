@@ -2,17 +2,10 @@ import store from "../store";
 import { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateLeft, paginateRight, sendQuickSearch } from "./entity";
 import { setVre } from "./vre";
 
-const setUser = (response) => {
-	return {
-		type: "SET_USER",
-		user: response
-	};
-};
 
 
 
-
-export default {
+export default (navigateTo, dispatch) => ({
 	onNew: (domain) => store.dispatch(makeNewEntity(domain)),
 	onSelect: (record) => store.dispatch(selectEntity(record.domain, record.id)),
 	onSave: () => store.dispatch(saveEntity()),
@@ -26,4 +19,4 @@ export default {
 	onPaginateRight: () => store.dispatch(paginateRight()),
 	onQuickSearchQueryChange: (value) => store.dispatch({type: "SET_QUICKSEARCH_QUERY", value: value}),
 	onQuickSearch: () => store.dispatch(sendQuickSearch())
-};
+});
