@@ -1,9 +1,8 @@
 import server from "./server";
-import config from "../config";
 
 export default function(path, query, done) {
 	let options = {
-		url: `${config.apiUrl[config.apiVersion]}/${path.replace(/^\/v[^/]+\//, "")}?query=${query}*`
+		url: `${process.env.server}/v2.1/${path.replace(/^\/v[^/]+\//, "")}?query=${query}*`
 	};
 
 	let xhrDone = function(err, response, body) {

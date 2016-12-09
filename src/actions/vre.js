@@ -1,5 +1,4 @@
 import server from "./server";
-import config from "../config";
 import actions from "./index";
 
 const listVres = () => (dispatch) =>
@@ -8,7 +7,7 @@ const listVres = () => (dispatch) =>
 		headers: {
 			"Accept": "application/json"
 		},
-		url: `${config.apiUrl.v4}/system/vres`
+		url: `${process.env.server}/v2.1/system/vres`
 	}, (err, resp) => {
 		dispatch({type: "LIST_VRES", list: JSON.parse(resp.body)});
 	}, null, "List VREs");
@@ -19,7 +18,7 @@ const setVre = (vreId) => (dispatch) =>
 		headers: {
 			"Accept": "application/json"
 		},
-		url: `${config.apiUrl.v4}/metadata/${vreId}?withCollectionInfo=true`
+		url: `${process.env.server}/v2.1/metadata/${vreId}?withCollectionInfo=true`
 	}, (err, resp) => {
 		if (resp.statusCode === 200) {
 			var body = JSON.parse(resp.body);
