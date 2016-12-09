@@ -23,16 +23,16 @@ cp src/static/images/* "build/${NODE_ENV}/images"
 node_modules/.bin/browserify \
 	--transform [ envify --NODE_ENV="${NODE_ENV}" ] \
 	--require classnames \
-	--require immutable \
 	--require react \
 	--require react-dom > "build/${NODE_ENV}/js/react-libs.js"
 
 node_modules/.bin/$cmd src/index.js \
-	--transform [ babelify ] \
-	--transform [ envify --NODE_ENV="${NODE_ENV}" --USE_MOCK="${USE_MOCK}" --server="$server" ] \
+	--debug \
 	--outfile "build/${NODE_ENV}/js/index.js" \
 	--external classnames \
 	--external react \
 	--external react-dom \
 	--standalone TimbuctooEdit \
+	--transform [ babelify --presets [ es2015 react ] --plugins [ transform-es2015-destructuring transform-object-rest-spread transform-object-assign] ] \
+	--transform [ envify --NODE_ENV="${NODE_ENV}" --USE_MOCK="${USE_MOCK}" --server="$server" ] \
 	--verbose
