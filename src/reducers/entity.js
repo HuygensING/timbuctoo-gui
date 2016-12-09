@@ -1,7 +1,9 @@
 import setIn from "../util/set-in";
 
 let initialState = {
-	data: null,
+	data: {
+		"@relations": []
+	},
 	domain: null,
 	errorMessage: null
 };
@@ -22,7 +24,9 @@ export default function(state=initialState, action) {
 
 		case "RECEIVE_ENTITY_FAILURE":
 			return {...state, ...{
-				data: null,
+				data: {
+					"@relations": []
+				},
 				errorMessage: action.errorMessage
 			}};
 
