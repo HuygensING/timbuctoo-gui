@@ -17,9 +17,15 @@ import ConnectToArchetype from "./components/connect-to-archetype";
 import connectDataConnector from "./connectors/connect-data";
 import ConnectData from "./components/connect-data";
 
+import newDatasetConnector from "./connectors/new-dataset";
+import NewDataset from "./components/new-dataset";
+
 var urls = {
   root() {
     return "/";
+  },
+  newDataset() {
+    return "/new-dataset";
   },
   mapData(vreId) {
     return vreId
@@ -50,11 +56,13 @@ export default (
   <Provider store={store}>
     <Router history={hashHistory}>
       <Route path="/" component={connectComponent(pageConnector)(Page)}>
-        <IndexRoute component={connectComponent(collectionOverviewConnector)(CollectionOverview)}/>
+        <IndexRoute component={connectComponent(collectionOverviewConnector)(CollectionOverview)} />
         <Route onEnter={filterAuthorized("/")}
-          path={urls.mapArchetypes()} components={connectComponent(connectArchetypeConnector)(ConnectToArchetype)} />
+               path={urls.newDataset()} component={connectComponent(newDatasetConnector)(NewDataset)} />
         <Route onEnter={filterAuthorized("/")}
-               path={urls.mapData()} components={connectComponent(connectDataConnector)(ConnectData)} />
+               path={urls.mapArchetypes()} component={connectComponent(connectArchetypeConnector)(ConnectToArchetype)} />
+        <Route onEnter={filterAuthorized("/")}
+               path={urls.mapData()} component={connectComponent(connectDataConnector)(ConnectData)} />
 
       </Route>
     </Router>
