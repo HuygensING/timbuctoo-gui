@@ -2,6 +2,7 @@ import { transformCollectionRows, transformCollectionColumns, getColumnInfo } fr
 import { transformCollectionTabs } from "./transformers/tabs"
 import generateRmlMapping from "../util/generate-rml-mapping";
 import {uniq} from "../util/uniq";
+import PublishState from "../util/publish-state";
 
 function getTargetableVres(mine, vres, activeVre) {
   const myVres = Object.keys(mine || {})
@@ -44,7 +45,6 @@ export default (appState, routed) => {
       }))
   })).reduce((accum, cur) => ({...accum, [cur.key]: cur.values}), {});
 
-
   return {
     // from router
     vreId: routed.params.vreId,
@@ -77,6 +77,7 @@ export default (appState, routed) => {
     publishStatus: appState.importData.publishStatus || "Publish dataset",
     customProperties: customProperties[activeCollection.name] || [],
     targetableVres: getTargetableVres(myVres, publicVres, appState.importData.vre),
+    hasMappingErrors: myVres[routed.params.vreId].publishState === PublishState.MAPPING_CREATION_AFTER_ERRORS,
 
     // ctrl-shift-F4
     rmlPreviewData:

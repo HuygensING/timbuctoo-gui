@@ -1,5 +1,4 @@
 import {isBasicProperty} from "../accessors/property-mappings";
-import {uniq} from "./uniq";
 
 const defaultNamespace = "http://timbuctoo.huygens.knaw.nl/";
 
@@ -47,7 +46,7 @@ const mapBasicProperty = (predicateObjectMap) => ({
   "objectMap": {
     "column": predicateObjectMap.objectMap.column,
     "termType": predicateObjectMap.propertyType === "sameAs" ? "http://www.w3.org/ns/r2rml#IRI" : undefined
-
+    // "datatype": "valid IRI string"
   },
   "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
 });

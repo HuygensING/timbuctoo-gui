@@ -49,6 +49,7 @@ class ConnectData extends React.Component {
       publishEnabled,
       publishStatus,
       publishErrors,
+      hasMappingErrors,
       uploadStatus,
       availableArchetypes,
       customProperties,
@@ -74,7 +75,7 @@ class ConnectData extends React.Component {
       </div>
     ) : null;
 
-    const publishFailedMessage = publishErrors ? (
+    const publishFailedMessage = publishErrors || hasMappingErrors ? (
       <Message alertLevel="danger" dismissible={false}>
         <UploadButton classNames={["btn", "btn-danger", "pull-right", "btn-xs"]} label="Re-upload"
                       onUploadFileSelect={onUploadFileSelect} uploadStatus={uploadStatus}
