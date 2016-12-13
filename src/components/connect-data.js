@@ -118,7 +118,7 @@ class ConnectData extends React.Component {
           <button onClick={onPublishData} className="btn btn-warning btn-lg pull-right" type="button" disabled={!publishEnabled}>
             {publishStatus}
           </button>
-          <button onClick={onSaveMappingState} className="btn btn-default btn-lg pull-right" style={{marginRight: "4px"}}>
+          <button onClick={onSaveMappingState} className="btn btn-default btn-lg pull-right" style={{marginRight: "4px"}} disabled={!publishEnabled}>
             Save
           </button>
         </div>
