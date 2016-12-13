@@ -1,3 +1,6 @@
+import PublishState from "./util/publish-state";
+
+
 export default function setupMocks(xhrmock, orig) {
   xhrmock
     .get(process.env.server + "/v2.1/metadata/Admin", function (req, resp) {
@@ -65,6 +68,7 @@ export default function setupMocks(xhrmock, orig) {
             "thevrename": {
               "name": "thevrename",
               "published": false,
+              "publishState": "${PublishState.MAPPING_CREATION}",
               "rmlUri": "<<The get raw data url that the server provides>>"
             }
           },
