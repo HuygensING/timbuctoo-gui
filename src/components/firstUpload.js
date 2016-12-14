@@ -1,5 +1,4 @@
 import React from "react";
-import UploadButton from "./upload-button";
 
 function FirstUpload(props) {
   const { userId } = props;

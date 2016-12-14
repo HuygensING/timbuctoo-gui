@@ -28,7 +28,7 @@ function CollectionOverview(props) {
   const uploadButton = (
     <Link to={urls.newDataset()} className={`btn btn-lg btn-primary ${hasOwnVres ? "pull-right" : ""}`}>
       <span className="glyphicon glyphicon-cloud-upload" />{" "}
-      {hasOwnVres ? "Upload new dataset" : "Browse"}
+      {hasOwnVres ? "Upload new dataset" : "Upload your first dataset"}
     </Link>
   );
 

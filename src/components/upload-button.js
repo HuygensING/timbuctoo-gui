@@ -4,7 +4,7 @@ import cx from "classnames";
 class UploadButton extends React.Component {
 
   render() {
-    const { classNames, uploadStatus, onUploadFileSelect, glyphicon, label, vreName, float } = this.props;
+    const { classNames, redirectPath, uploadStatus, onUploadFileSelect, glyphicon, label, vreName, vreId, float } = this.props;
     return (
       <form style={{display: "inline-block", float: float || "right"}}>
         <label className={cx(...classNames, {disabled: !!uploadStatus})}>
@@ -13,7 +13,11 @@ class UploadButton extends React.Component {
           {uploadStatus || label}
           <input
             disabled={!!uploadStatus}
-            onChange={e => onUploadFileSelect(e.target.files, vreName)}
+            onChange={e => onUploadFileSelect(e.target.files, {
+              vreName: vreName,
+              vreId: vreId,
+              redirectTo: redirectPath || null
+            })}
             style={{display: "none"}}
             type="file" />
         </label>

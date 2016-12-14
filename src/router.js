@@ -17,15 +17,20 @@ import ConnectToArchetype from "./components/connect-to-archetype";
 import connectDataConnector from "./connectors/connect-data";
 import ConnectData from "./components/connect-data";
 
-import newDatasetConnector from "./connectors/new-dataset";
-import NewDataset from "./components/new-dataset";
+import datasetSettingsConnector from "./connectors/dataset-settings";
+import DatasetSettings from "./components/dataset-settings";
 
 var urls = {
   root() {
     return "/";
   },
   newDataset() {
-    return "/new-dataset";
+    return "/dataset-settings";
+  },
+  editDataset(vreId) {
+    return vreId
+      ? `/dataset-settings/${vreId}`
+      : "/dataset-settings/:vreId";
   },
   mapData(vreId) {
     return vreId
@@ -33,7 +38,9 @@ var urls = {
       : "/mapdata/:vreId";
   },
   mapArchetypes(vreId) {
-    return vreId ? `/maparchetypes/${vreId}` : "/maparchetypes/:vreId";
+    return vreId
+      ? `/maparchetypes/${vreId}`
+      : "/maparchetypes/:vreId";
   }
 };
 
@@ -58,7 +65,9 @@ export default (
       <Route path="/" component={connectComponent(pageConnector)(Page)}>
         <IndexRoute component={connectComponent(collectionOverviewConnector)(CollectionOverview)} />
         <Route onEnter={filterAuthorized("/")}
-               path={urls.newDataset()} component={connectComponent(newDatasetConnector)(NewDataset)} />
+               path={urls.editDataset()} component={connectComponent(datasetSettingsConnector)(DatasetSettings)} />
+        <Route onEnter={filterAuthorized("/")}
+               path={urls.newDataset()} component={connectComponent(datasetSettingsConnector)(DatasetSettings)} />
         <Route onEnter={filterAuthorized("/")}
                path={urls.mapArchetypes()} component={connectComponent(connectArchetypeConnector)(ConnectToArchetype)} />
         <Route onEnter={filterAuthorized("/")}

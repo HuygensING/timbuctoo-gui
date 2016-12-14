@@ -78,8 +78,9 @@ class ConnectData extends React.Component {
     const publishFailedMessage = publishErrors || hasMappingErrors ? (
       <Message alertLevel="danger" dismissible={false}>
         <UploadButton classNames={["btn", "btn-danger", "pull-right", "btn-xs"]} label="Re-upload"
+                      redirectPath="mapArchetypes"
                       onUploadFileSelect={onUploadFileSelect} uploadStatus={uploadStatus}
-                      vreName={vre.replace(/^[^_]+_+/, "")}
+                      vreId={vre}
         />
         <span className="glyphicon glyphicon-exclamation-sign" />{" "}
         Publish failed. Please fix the mappings or re-upload the data.
