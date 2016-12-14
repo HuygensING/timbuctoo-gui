@@ -60,6 +60,16 @@ const getMappingState = (publishState, uploadStatus) => {
   }
 };
 
+const availableColorCodes = [
+  "ce7060",
+  "92e3fc",
+  "fade8d",
+  "9ce479",
+  "e39061",
+  "d3b2d6",
+  "95cac4"
+];
+
 class DatasetSettings extends  React.Component {
 
   componentWillReceiveProps(nextProps) {
@@ -163,7 +173,14 @@ class DatasetSettings extends  React.Component {
           <div className="row">
             <div className="col-md-6">
               <h4>Color</h4>
-              <span>{newColorCode}</span>
+              {editDisabled
+                ? editPlaceholder
+                : availableColorCodes.map((colorCode) =>
+                <a key={colorCode} style={{float: "left", width: "33%", cursor: "pointer", fontWeight: colorCode === newColorCode ? "500" : "300"}} onClick={() => onSetNewColorCode(colorCode)}>
+                  <span style={{borderRadius: "4px", display: "inline-block", border: `2px solid ${colorCode === newColorCode ? "black" : `#${colorCode}`}`, width: "14px", height: "14px", backgroundColor: `#${colorCode}`}} />{" "}
+                  {colorCode}
+                </a>
+              )}
             </div>
 
 
