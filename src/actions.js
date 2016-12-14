@@ -11,6 +11,7 @@ import {
 import { publishMappings, saveMappingState, saveNewMappingState } from "./actions/publish-mappings";
 
 import { deleteVre } from "./actions/delete-vre";
+import {saveDatasetSettings} from "./actions/upload";
 
 export default function actionsMaker(navigateTo, dispatch) {
   return {
@@ -18,8 +19,16 @@ export default function actionsMaker(navigateTo, dispatch) {
     // loading import data
     onUploadFileSelect: onUploadFileSelect(navigateTo, dispatch),
 
-    onSetNewVreName: (value) => dispatch({type: "SET_NEW_VRE_NAME", newVreName: value}),
 
+    onClearFormSettingData: () => dispatch({type: "CLEAR_DATASET_SETTINGS"}),
+    onSetNewVreName: (value) => dispatch({type: "SET_NEW_VRE_NAME", newVreName: value}),
+    onSetNewDescription: (value) => dispatch({type: "SET_DESCRIPTION", description: value}),
+    onSetNewProvenance: (value) => dispatch({type: "SET_PROVENANCE", provenance: value}),
+    onSetNewColorCode: (value) => dispatch({type: "SET_COLOR_CODE", colorCode: value}),
+
+    onSaveVreSettings: (vreId, next = () => {}) => dispatch(saveDatasetSettings(vreId, next)),
+
+    // Fetching raw data
     onSelectCollection: (collection) => dispatch(selectCollection(collection)),
 
     onLoadMoreClick: (nextUrl, collection) => dispatch(selectCollection(collection, nextUrl)),

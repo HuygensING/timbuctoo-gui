@@ -18,9 +18,9 @@ function DataSetCard(props) {
     const {text, disabled} = getMappingState(props.publishState);
     return (
       <div className="card-dataset" style={{height: "215px"}}>
-        <button disabled={disabled} className="card-dataset btn btn-default explore" onClick={() => props.onContinueMapping(props.vreId)}>
+        <button title={props.caption} disabled={disabled} className="card-dataset btn btn-default explore" onClick={() => props.onContinueMapping(props.vreId)}>
           {text}<br />
-          <strong title={props.caption} style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+          <strong style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
             {props.caption.replace(/^[^_]+_+/, "")}
           </strong>
         </button>
@@ -39,9 +39,10 @@ function DataSetCard(props) {
   return (
     <div className="card-dataset">
       <a className="card-dataset btn btn-default explore"
+         title={props.caption}
          href={`${searchUrl}?vreId=${props.vreId}`} target="_blank">
         Explore<br />
-        <strong title={props.caption} style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+        <strong  style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
             {props.caption.replace(/^[^_]+_+/, "")}
         </strong>
       </a>

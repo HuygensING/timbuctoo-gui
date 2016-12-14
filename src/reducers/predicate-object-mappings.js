@@ -60,7 +60,7 @@ const removePredicateObjectMapping = (state, action) => {
 export default function(state=initialState, action) {
   switch (action.type) {
     case "FINISH_UPLOAD":
-    case "LOGIN":
+    case "RECEIVE_MY_VRES":
     case "CLEAR_PREDICATE_OBJECT_MAPPINGS":
       return initialState;
     case "SET_PREDICATE_OBJECT_MAPPING":

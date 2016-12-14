@@ -62,24 +62,40 @@ const getMappingState = (publishState, uploadStatus) => {
 
 class DatasetSettings extends  React.Component {
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.vreId !== this.props.vreId) {
+      this.props.onClearFormSettingData();
+    }
+  }
+
+  componentDidMount() {
+    this.props.onClearFormSettingData();
+  }
+
   onChange(ev) {
     const sanitized = ev.target.value
       .replace(/[^a-zA-Z\s\-]+/, "")
       .replace(/^\s*/, "");
 
     this.props.onSetNewVreName(sanitized);
-
   }
 
   render() {
     const {
       newVreName,
+      newDescription,
+      newProvenance,
+      newColorCode,
       onUploadFileSelect,
       uploadStatus,
       publishState,
       vreId,
       uploadedFileName,
-      onContinueMapping
+      onContinueMapping,
+      onSaveVreSettings,
+      onSetNewDescription,
+      onSetNewProvenance,
+      onSetNewColorCode
     } = this.props;
 
     const finalVreName = newVreName ?
@@ -120,7 +136,7 @@ class DatasetSettings extends  React.Component {
             <UploadButton
               classNames={["btn", "btn-primary"]}
               uploadStatus={finalVreName === null ? "Please enter a title first..." : uploadButtonStatus}
-              vreName={finalVreName}
+              vreName={vreId ? null : finalVreName}
               vreId={vreId}
               label={uploadButtonLabel}
               float="left"
@@ -133,18 +149,21 @@ class DatasetSettings extends  React.Component {
 
         <div className="container basic-margin">
           <h4>Description</h4>
-          <textarea disabled={editDisabled} placeholder={editPlaceholder || "Enter a description..."} className="form-control" rows="3" />
+          <textarea disabled={editDisabled} value={newDescription} onChange={(ev) => { onSetNewDescription(ev.target.value)}}
+                    placeholder={editPlaceholder || "Enter a description..."} className="form-control" rows="3" />
         </div>
 
         <div className="container basic-margin">
           <h4>Provenance</h4>
-          <textarea disabled={editDisabled} placeholder={editPlaceholder || "Enter a provenance..."} className="form-control" rows="3" />
+          <textarea disabled={editDisabled} value={newProvenance} onChange={(ev) => { onSetNewProvenance(ev.target.value)}}
+                    placeholder={editPlaceholder || "Enter provenance..."} className="form-control" rows="3" />
         </div>
 
         <div className="container basic-margin">
           <div className="row">
             <div className="col-md-6">
               <h4>Color</h4>
+              <span>{newColorCode}</span>
             </div>
 
 
@@ -165,7 +184,7 @@ class DatasetSettings extends  React.Component {
         </div>
 
         <div className="container basic-margin">
-          <button className="btn btn-default pull-right" disabled={continueDisabled} onClick={() => onContinueMapping(vreId)}>
+          <button className="btn btn-default pull-right" disabled={continueDisabled} onClick={() => onSaveVreSettings(vreId, () => onContinueMapping(vreId))}>
             Save settings and continue to mapping
           </button>
           <button className="btn btn-default pull-right" style={{marginRight: "4px"}} disabled={editDisabled} onClick={() => onSaveVreSettings(vreId)}>

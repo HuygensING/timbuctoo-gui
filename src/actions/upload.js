@@ -33,12 +33,12 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
       if (!isRedirectedToSettings) {
         isRedirectedToSettings = true;
         dispatch(fetchMyVres(state.userdata.userId, (vreData) => {
-          if (vreName) {
+          if (vreId) {
+            navigateTo(redirectTo || "editDataset", [vreId]);
+          } else if (vreName) {
             const vreIdFromLabel = Object.keys(vreData.mine)
               .map(key => vreData.mine[key]).find(vre => vre.label === vreName).name;
             navigateTo(redirectTo || "editDataset", [vreIdFromLabel]);
-          } else if (vreId) {
-            navigateTo(redirectTo || "editDataset", [vreId]);
           }
         }));
       }
@@ -57,8 +57,7 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
       xhr.get(location, {headers: {"Authorization": state.userdata.userId}}, function (err, resp, body) {
         const responseData = JSON.parse(body);
         dispatch({type: "FINISH_UPLOAD", data: responseData, uploadedFileName: file.name});
-//        navigateTo("mapArchetypes", [responseData.vre]);
-        dispatch(fetchMyVres(state.userdata.userId, (vreData) => { console.log(vreData)}));
+        dispatch(fetchMyVres(state.userdata.userId, () => { }));
 
         if (responseData.collections && responseData.collections.length) {
           dispatch(selectCollection(responseData.collections[0].name));
@@ -67,6 +66,27 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
     };
     req.send(formData);
   });
-}
+};
 
-export { onUploadFileSelect };
+const saveDatasetSettings = (vreId, next = () => {}) => (dispatch, getState) => {
+  const { datasetSettings, userdata: { userId } } = getState();
+  xhr({
+    url: `${process.env.server}/v2.1/bulk-upload/${vreId}`,
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json",
+      "Authorization": userId
+    },
+    data: JSON.stringify({
+      label: datasetSettings.newVreName,
+      provenance: datasetSettings.provenance,
+      colorCode: datasetSettings.colorCode,
+      description: datasetSettings.description
+    })
+  }, (err, resp, body) => {
+    dispatch(fetchMyVres(userId, () => { }));
+    next();
+  });
+};
+
+export { onUploadFileSelect, saveDatasetSettings };

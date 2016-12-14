@@ -8,7 +8,7 @@ export default function(state=initialState, action) {
   let newMyVres;
 
   switch (action.type) {
-    case "LOGIN":
+    case "RECEIVE_MY_VRES":
       return {
         ...state,
         userId: action.data,

@@ -16,7 +16,7 @@ export default function(props) {
                        publishState={vres[vre].publishState}
                        searchGuiUrl={searchGuiUrl}
                        onContinueMapping={onContinueMapping} onDeleteVreClick={onDeleteVreClick}
-                       userId={userId} vreId={vres[vre].name} caption={vres[vre].name.replace(/^[a-z0-9]+_/, "")} />
+                       userId={userId} vreId={vres[vre].name} caption={vres[vre].label} />
         ))}
      </div>
     </div>

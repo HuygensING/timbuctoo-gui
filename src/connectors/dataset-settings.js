@@ -1,9 +1,16 @@
 export default function(appState, routed) {
   const vreId = routed.params.vreId;
-  const vreData = vreId ? (appState.userdata.myVres[vreId] || {}) : {};
-  const vreLabel = vreData.label;
+  const vreData = vreId ? (appState.userdata.myVres[vreId] || {
+    vreMetadata: {}
+  }) : {
+    vreMetadata: {}
+  };
+  const { label: vreLabel, vreMetadata: { provenance, colorCode, description }} = vreData;
   return {
-    newVreName: appState.newDataset.newVreName || vreLabel,
+    newVreName: appState.datasetSettings.newVreName || vreLabel,
+    newDescription: appState.datasetSettings.description === null ? description : appState.datasetSettings.description,
+    newProvenance:  appState.datasetSettings.provenance === null ? provenance : appState.datasetSettings.provenance,
+    newColorCode: appState.datasetSettings.colorCode === null ? colorCode : appState.datasetSettings.colorCode,
     uploadStatus: appState.importData.uploadStatus,
     publishState: vreData.publishState,
     vreId: vreId,

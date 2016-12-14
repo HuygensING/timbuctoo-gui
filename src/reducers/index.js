@@ -10,7 +10,7 @@ import activeCollection from "./active-collection";
 import predicateObjectMappings from "./predicate-object-mappings";
 import customProperties from "./custom-properties";
 import previewRml from "./preview-rml";
-import newDataset from "./new-dataset";
+import datasetSettings from "./dataset-settings";
 
 export default combineReducers({
   messages: messages,
@@ -23,5 +23,5 @@ export default combineReducers({
   predicateObjectMappings: predicateObjectMappings,
   customProperties: customProperties,
   previewRml: previewRml,
-  newDataset: newDataset
+  datasetSettings: datasetSettings
 });

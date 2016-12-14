@@ -7,7 +7,7 @@ const fetchMyVres = (token, callback) => (dispatch) => {
     }
   }, (err, resp, body) => {
     const vreData = JSON.parse(body);
-    dispatch({type: "LOGIN", data: token, vreData: vreData});
+    dispatch({type: "RECEIVE_MY_VRES", data: token, vreData: vreData});
     callback(vreData);
   });
 };
