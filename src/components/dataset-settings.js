@@ -36,6 +36,17 @@ const getMappingState = (publishState, uploadStatus) => {
         title: "Dataset settings",
         uploadButtonStatus: "This dataset is currently being published an may not be edited"
       };
+    case PublishState.AVAILABLE:
+      return {
+        nameEditDisabled: false,
+        continueDisabled: true,
+        editDisabled: false,
+        editPlaceHolder: null,
+        statusMessage: uploadStatus || "This dataset is already published. You can edit the settings from here.",
+        title: "Dataset settings",
+        uploadButtonStatus: null,
+        uploadButtonLabel: "Re-Upload (deletes currently published data)"
+      }
   }
   return  {
     nameEditDisabled: false,
