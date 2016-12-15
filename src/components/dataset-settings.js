@@ -111,7 +111,8 @@ class DatasetSettings extends  React.Component {
       onCloseImageError,
       imageUploadStatus,
       imageUploadErrorMessage,
-      imageUrl
+      imageUrl,
+      uploadedFilenameFromVre
     } = this.props;
 
     const finalVreName = newVreName ?
@@ -174,7 +175,7 @@ class DatasetSettings extends  React.Component {
               float="left"
               onUploadFileSelect={onUploadFileSelect}
             />
-            <input type="text" className="form-control" disabled={true} value={uploadedFileName} style={{maxWidth: "400px"}} />
+            <input type="text" className="form-control" disabled={true} value={uploadedFileName || uploadedFilenameFromVre} style={{maxWidth: "400px"}} />
         </div>
 
 
@@ -207,7 +208,6 @@ class DatasetSettings extends  React.Component {
               <div className="card-dataset" style={{clear: "left", marginTop: "20px"}}>
                 <button title={finalVreName} style={{...imageStyle, backgroundColor: newColorCode ? `#${newColorCode}` : "#e6e6e6"}}
                         className="card-dataset btn btn-default explore">
-                  Explore<br />
                   <strong style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
                     {finalVreName}
                   </strong>

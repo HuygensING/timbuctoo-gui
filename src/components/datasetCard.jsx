@@ -64,7 +64,6 @@ function DataSetCard(props) {
          title={props.caption}
          style={{...imageStyle, backgroundColor: colorCode ? `#${colorCode}` : "#e6e6e6" }}
          href={`${searchUrl}?vreId=${props.vreId}`} target="_blank">
-        Explore<br />
         <strong  style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
             {props.caption.replace(/^[^_]+_+/, "")}
         </strong>
