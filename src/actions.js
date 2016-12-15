@@ -12,6 +12,7 @@ import { publishMappings, saveMappingState, saveNewMappingState } from "./action
 
 import { deleteVre } from "./actions/delete-vre";
 import {saveDatasetSettings} from "./actions/upload";
+import {uploadImage} from "./actions/upload";
 
 export default function actionsMaker(navigateTo, dispatch) {
   return {
@@ -25,7 +26,8 @@ export default function actionsMaker(navigateTo, dispatch) {
     onSetNewDescription: (value) => dispatch({type: "SET_DESCRIPTION", description: value}),
     onSetNewProvenance: (value) => dispatch({type: "SET_PROVENANCE", provenance: value}),
     onSetNewColorCode: (value) => dispatch({type: "SET_COLOR_CODE", colorCode: value}),
-
+    onUploadImage: (vreId, files) => dispatch(uploadImage(vreId, files)),
+    onCloseImageError: () => dispatch({type: "DISMISS_IMAGE_ERROR"}),
     onSaveVreSettings: (vreId, next = () => {}) => dispatch(saveDatasetSettings(vreId, next)),
 
     // Fetching raw data

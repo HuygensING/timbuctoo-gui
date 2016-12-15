@@ -14,6 +14,8 @@ export default function(appState, routed) {
     uploadStatus: appState.importData.uploadStatus,
     publishState: vreData.publishState,
     vreId: vreId,
-    uploadedFileName: appState.importData.uploadedFileName
+    uploadedFileName: appState.importData.uploadedFileName,
+    imageUploadStatus: appState.datasetSettings.imageUploadStatus,
+    imageUploadErrorMessage: appState.datasetSettings.imageUploadErrorMessage,
   }
 }

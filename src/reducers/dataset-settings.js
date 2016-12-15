@@ -2,7 +2,9 @@ const initialState = {
   newVreName: null,
   provenance: null,
   description: null,
-  colorCode: null
+  colorCode: null,
+  imageUploadStatus: null,
+  imageUploadErrorMessage: null
 };
 
 export default function(state = initialState, action) {
@@ -36,6 +38,27 @@ export default function(state = initialState, action) {
         ...state,
         colorCode: action.colorCode
       };
+    case "IMAGE_UPLOAD_STARTED":
+      return {
+        ...state,
+        imageUploadStatus: "Uploading image..."
+      };
+    case "IMAGE_UPLOAD_ERROR":
+      return {
+        ...state,
+        imageUploadErrorMessage: action.message
+      };
+    case "IMAGE_UPLOAD_SUCCESS":
+    case "DISMISS_IMAGE_ERROR":
+      return {
+        ...state,
+        imageUploadErrorMessage: null
+      };
+    case "IMAGE_UPLOAD_FINISHED":
+      return {
+        ...state,
+        imageUploadStatus: null
+      }
   }
 
   return state;

@@ -1,6 +1,7 @@
 import React from "react";
 import UploadButton from "./upload-button";
 import PublishState from "../util/publish-state";
+import Message from "./message";
 
 const getMappingState = (publishState, uploadStatus) => {
   switch (publishState) {
@@ -44,7 +45,7 @@ const getMappingState = (publishState, uploadStatus) => {
         editPlaceHolder: null,
         statusMessage: uploadStatus || "This dataset is already published. You can edit the settings from here.",
         title: "Dataset settings",
-        uploadButtonStatus: null,
+        uploadButtonStatus: "This dataset is already published",
         uploadButtonLabel: "Re-Upload (deletes currently published data)"
       }
   }
@@ -105,7 +106,11 @@ class DatasetSettings extends  React.Component {
       onSaveVreSettings,
       onSetNewDescription,
       onSetNewProvenance,
-      onSetNewColorCode
+      onSetNewColorCode,
+      onUploadImage,
+      onCloseImageError,
+      imageUploadStatus,
+      imageUploadErrorMessage
     } = this.props;
 
     const finalVreName = newVreName ?
@@ -122,6 +127,9 @@ class DatasetSettings extends  React.Component {
       uploadButtonLabel
     } = getMappingState(publishState, uploadStatus);
 
+    const imageError = imageUploadErrorMessage
+      ? <Message alertLevel="danger" onCloseMessage={onCloseImageError} dismissible={true}>{imageUploadErrorMessage}</Message>
+      : null;
     return (
       <div>
         <div className="container basic-margin">
@@ -170,6 +178,7 @@ class DatasetSettings extends  React.Component {
         </div>
 
         <div className="container basic-margin">
+          {imageError}
           <div className="row">
             <div className="col-md-6">
               <h4>Color</h4>
@@ -190,10 +199,11 @@ class DatasetSettings extends  React.Component {
                 <UploadButton
                   classNames={["btn", "btn-primary"]}
                   vreId={vreId}
-                  uploadStatus={editPlaceholder}
+                  accept="image/jpeg,image/gif,image/png"
+                  uploadStatus={imageUploadStatus || editPlaceholder}
                   label="Browse..."
                   float="none"
-                  onUploadFileSelect={(...args) => console.log(args)}
+                  onUploadFileSelect={(files) => onUploadImage(vreId, files)}
                 />
               </div>
             </div>

@@ -1,5 +1,7 @@
 import React from 'react';
 import PublishState from "../util/publish-state";
+import { Link } from "react-router";
+import { urls } from "../router";
 
 const getMappingState = (publishState) => {
   switch (publishState) {
@@ -17,13 +19,21 @@ function DataSetCard(props) {
   if (props.mine && !props.published) {
     const {text, disabled} = getMappingState(props.publishState);
     return (
-      <div className="card-dataset" style={{height: "215px"}}>
+      <div className="card-dataset" style={{height: "280px"}}>
         <button title={props.caption} disabled={disabled} className="card-dataset btn btn-default explore" onClick={() => props.onContinueMapping(props.vreId)}>
           {text}<br />
           <strong style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
             {props.caption.replace(/^[^_]+_+/, "")}
           </strong>
         </button>
+        {props.userId
+          ? (
+          <Link className="card-dataset btn btn-default" to={urls.editDataset(props.vreId)}>
+            <span className="glyphicon glyphicon-wrench" />{" "}
+            Settings
+          </Link>
+        ) : null
+        }
         {props.userId
           ? (
             <button disabled={disabled} className="card-dataset btn btn-default" onClick={() => props.onDeleteVreClick(props.vreId)}>
@@ -46,6 +56,14 @@ function DataSetCard(props) {
             {props.caption.replace(/^[^_]+_+/, "")}
         </strong>
       </a>
+      {props.userId
+        ? (
+        <Link className="card-dataset btn btn-default" to={urls.editDataset(props.vreId)}>
+          <span className="glyphicon glyphicon-wrench" />{" "}
+          Settings
+        </Link>
+      ) : null
+      }
       {props.userId
         ? (<a className="card-dataset btn btn-default"
               href={`${process.env.server}/static/edit-gui/?vreId=${props.vreId}&hsid=${props.userId}`} target="_blank">

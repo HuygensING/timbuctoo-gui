@@ -68,6 +68,32 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
   });
 };
 
+const uploadImage = (vreId, files) => (dispatch, getState) => {
+  const { userdata: { userId } } = getState();
+
+  const file = files[0];
+  const formData = new FormData();
+  const req = new XMLHttpRequest();
+
+  formData.append("file", file);
+
+  req.open('POST', `${process.env.server}/v2.1/bulk-upload/${vreId}/image`, true);
+  req.setRequestHeader("Authorization", userId);
+  dispatch({type: "IMAGE_UPLOAD_STARTED"});
+  req.onload = function() {
+    if (this.status >= 300 || this.status < 200) {
+      dispatch({type: "IMAGE_UPLOAD_ERROR", message: this.responseText});
+    } else {
+      dispatch({type: "IMAGE_UPLOAD_SUCCESS"});
+      dispatch(fetchMyVres(userId, () => { }));
+    }
+    dispatch({type: "IMAGE_UPLOAD_FINISHED"});
+  };
+
+  req.send(formData);
+
+};
+
 const saveDatasetSettings = (vreId, next = () => {}) => (dispatch, getState) => {
   const { datasetSettings, userdata: { userId } } = getState();
   xhr({
@@ -89,4 +115,4 @@ const saveDatasetSettings = (vreId, next = () => {}) => (dispatch, getState) => 
   });
 };
 
-export { onUploadFileSelect, saveDatasetSettings };
+export { onUploadFileSelect, saveDatasetSettings, uploadImage };
