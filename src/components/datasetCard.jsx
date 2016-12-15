@@ -16,11 +16,23 @@ const getMappingState = (publishState) => {
 function DataSetCard(props) {
   var searchUrl = props.searchGuiUrl;
 
+
+  const { colorCode, image } = props.vreMetadata;
+
+  const imageStyle = image ? {
+    backgroundImage: `url(${image})`,
+    backgroundPosition: "center center",
+    backgroundRepeat: "no-repeat",
+    backgroundBlendMode: "multiply",
+    color: "white"
+  } : {};
   if (props.mine && !props.published) {
     const {text, disabled} = getMappingState(props.publishState);
     return (
       <div className="card-dataset" style={{height: "280px"}}>
-        <button title={props.caption} disabled={disabled} className="card-dataset btn btn-default explore" onClick={() => props.onContinueMapping(props.vreId)}>
+        <button title={props.caption} disabled={disabled}
+                style={{...imageStyle, backgroundColor: colorCode ? `#${colorCode}` : "#e6e6e6"}}
+                className="card-dataset btn btn-default explore" onClick={() => props.onContinueMapping(props.vreId)}>
           {text}<br />
           <strong style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
             {props.caption.replace(/^[^_]+_+/, "")}
@@ -50,6 +62,7 @@ function DataSetCard(props) {
     <div className="card-dataset">
       <a className="card-dataset btn btn-default explore"
          title={props.caption}
+         style={{...imageStyle, backgroundColor: colorCode ? `#${colorCode}` : "#e6e6e6" }}
          href={`${searchUrl}?vreId=${props.vreId}`} target="_blank">
         Explore<br />
         <strong  style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>

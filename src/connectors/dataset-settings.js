@@ -5,7 +5,7 @@ export default function(appState, routed) {
   }) : {
     vreMetadata: {}
   };
-  const { label: vreLabel, vreMetadata: { provenance, colorCode, description }} = vreData;
+  const { label: vreLabel, vreMetadata: { provenance, colorCode, description, image }} = vreData;
   return {
     newVreName: appState.datasetSettings.newVreName || vreLabel,
     newDescription: appState.datasetSettings.description === null ? description : appState.datasetSettings.description,
@@ -17,5 +17,6 @@ export default function(appState, routed) {
     uploadedFileName: appState.importData.uploadedFileName,
     imageUploadStatus: appState.datasetSettings.imageUploadStatus,
     imageUploadErrorMessage: appState.datasetSettings.imageUploadErrorMessage,
+    imageUrl: image
   }
 }

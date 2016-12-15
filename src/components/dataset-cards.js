@@ -14,6 +14,7 @@ export default function(props) {
         { Object.keys(vres).filter((vre) => !vres[vre].deletePending).map((vre) => (
           <DataSetCard key={vre} mine={mine} published={vres[vre].published}
                        publishState={vres[vre].publishState}
+                       vreMetadata={vres[vre].vreMetadata}
                        searchGuiUrl={searchGuiUrl}
                        onContinueMapping={onContinueMapping} onDeleteVreClick={onDeleteVreClick}
                        userId={userId} vreId={vres[vre].name} caption={vres[vre].label} />

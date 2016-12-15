@@ -110,7 +110,8 @@ class DatasetSettings extends  React.Component {
       onUploadImage,
       onCloseImageError,
       imageUploadStatus,
-      imageUploadErrorMessage
+      imageUploadErrorMessage,
+      imageUrl
     } = this.props;
 
     const finalVreName = newVreName ?
@@ -130,6 +131,19 @@ class DatasetSettings extends  React.Component {
     const imageError = imageUploadErrorMessage
       ? <Message alertLevel="danger" onCloseMessage={onCloseImageError} dismissible={true}>{imageUploadErrorMessage}</Message>
       : null;
+
+    const imageTag = imageUrl
+      ? <img src={imageUrl} style={{maxWidth: "100%"}} />
+      : null;
+
+    const imageStyle = imageUrl ? {
+      backgroundImage: `url(${imageUrl})`,
+      backgroundPosition: "center center",
+      backgroundRepeat: "no-repeat",
+      backgroundBlendMode: "multiply",
+      color: "white"
+    } : {};
+
     return (
       <div>
         <div className="container basic-margin">
@@ -190,6 +204,15 @@ class DatasetSettings extends  React.Component {
                   {colorCode}
                 </a>
               )}
+              <div className="card-dataset" style={{clear: "left", marginTop: "20px"}}>
+                <button title={finalVreName} style={{...imageStyle, backgroundColor: newColorCode ? `#${newColorCode}` : "#e6e6e6"}}
+                        className="card-dataset btn btn-default explore">
+                  Explore<br />
+                  <strong style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                    {finalVreName}
+                  </strong>
+                </button>
+              </div>
             </div>
 
 
@@ -206,6 +229,7 @@ class DatasetSettings extends  React.Component {
                   onUploadFileSelect={(files) => onUploadImage(vreId, files)}
                 />
               </div>
+              {imageTag}
             </div>
           </div>
         </div>
