@@ -55,8 +55,8 @@ class PropertyForm extends React.Component {
     return (
       <div className="row small-margin">
         <div className="col-sm-2 pad-6-12">
-          <strong>{camel2label(predicateName)}</strong>
-          <span className="pull-right" style={{fontSize: "0.7em"}}>({type})</span>
+          <strong>{predicateName === "sameAs" ? "Persistent identifier" : camel2label(predicateName)}</strong>
+          {predicateName === "sameAs" ? null : <span className="pull-right" style={{fontSize: "0.7em"}}>({type})</span>}
         </div>
         <div className="col-sm-8">
           {formComponent}
