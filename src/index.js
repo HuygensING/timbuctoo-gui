@@ -33,7 +33,7 @@ const initialRender = () => ReactDOM.render(router, document.getElementById("app
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  xhr(process.env.server + "/v2.1/metadata/Admin", (err, resp) => {
+  xhr(process.env.server + "/v2.1/metadata/Admin?withCollectionInfo=true", (err, resp) => {
 
     store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
     const token = getToken();

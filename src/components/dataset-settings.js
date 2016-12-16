@@ -18,6 +18,17 @@ const getMappingState = (publishState, uploadStatus) => {
         uploadButtonStatus: uploadStatus || null,
         uploadButtonLabel: "Upload a new file"
       };
+    case PublishState.UPLOAD_FAILED:
+      return  {
+        nameEditDisabled: false,
+        continueDisabled: true,
+        editDisabled: true,
+        editPlaceholder: "Please upload a dataset first...",
+        uploadButtonStatus: uploadStatus || null,
+        statusMessage: "Upload failed, please try again.",
+        title: "Create a new dataset",
+        uploadButtonLabel: "Upload a new file"
+      };
     case PublishState.UPLOADING:
       return {
         nameEditDisabled: false,
@@ -47,7 +58,7 @@ const getMappingState = (publishState, uploadStatus) => {
         statusMessage: uploadStatus || "This dataset is already published. You can edit the settings from here.",
         title: "Dataset settings",
         uploadButtonStatus: "This dataset is already published",
-        uploadButtonLabel: "Re-Upload (deletes currently published data)"
+        uploadButtonLabel: null
       }
   }
   return  {
@@ -101,6 +112,7 @@ class DatasetSettings extends  React.Component {
       onSetNewColorCode,
       onUploadImage,
       onCloseImageError,
+      returnToRoot,
       imageUploadStatus,
       imageUploadErrorMessage,
       imageUrl,
@@ -125,6 +137,9 @@ class DatasetSettings extends  React.Component {
       ? <Message alertLevel="danger" onCloseMessage={onCloseImageError} dismissible={true}>{imageUploadErrorMessage}</Message>
       : null;
 
+    const uploadError = publishState === PublishState.UPLOAD_FAILED
+      ? <Message alertLevel="danger">Upload failed, please try again.</Message>
+      : null;
     const imageTag = imageUrl
       ? <img src={imageUrl} style={{maxWidth: "100%"}} />
       : null;
@@ -159,16 +174,17 @@ class DatasetSettings extends  React.Component {
 
         <div className="container basic-margin">
           <h4>Upload Excel file</h4>
-            <UploadButton
-              classNames={["btn", "btn-primary"]}
-              uploadStatus={finalVreName === null ? "Please enter a title first..." : uploadButtonStatus}
-              vreName={vreId ? null : finalVreName}
-              vreId={vreId}
-              label={uploadButtonLabel}
-              float="left"
-              onUploadFileSelect={onUploadFileSelect}
-            />
-            <input type="text" className="form-control" disabled={true} value={uploadedFileName || uploadedFilenameFromVre} style={{maxWidth: "400px"}} />
+          {uploadError}
+          <UploadButton
+            classNames={["btn", "btn-primary"]}
+            uploadStatus={finalVreName === null ? "Please enter a title first..." : uploadButtonStatus}
+            vreName={vreId ? null : finalVreName}
+            vreId={vreId}
+            label={uploadButtonLabel}
+            float="left"
+            onUploadFileSelect={onUploadFileSelect}
+          />
+          <input type="text" className="form-control" disabled={true} value={uploadedFileName || uploadedFilenameFromVre} style={{maxWidth: "400px"}} />
         </div>
 
 
@@ -230,7 +246,7 @@ class DatasetSettings extends  React.Component {
           <button className="btn btn-default pull-right" disabled={continueDisabled} onClick={() => onSaveVreSettings(vreId, () => onContinueMapping(vreId))}>
             Save settings and continue to mapping
           </button>
-          <button className="btn btn-default pull-right" style={{marginRight: "4px"}} disabled={editDisabled} onClick={() => onSaveVreSettings(vreId)}>
+          <button className="btn btn-default pull-right" style={{marginRight: "4px"}} disabled={editDisabled} onClick={() => onSaveVreSettings(vreId, returnToRoot)}>
             Save settings
           </button>
         </div>

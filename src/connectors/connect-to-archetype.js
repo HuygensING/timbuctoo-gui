@@ -10,6 +10,7 @@ export default (appState, routed) => {
     collections: appState.importData.collections,
     uploadedFileName: appState.importData.uploadedFileName,
     archetype: appState.archetype,
+    archetypeDescriptions: appState.archetypeDescriptions,
     mappings: appState.mappings,
     showFileIsUploadedMessage: appState.messages.showFileIsUploadedMessage,
     vre: appState.importData.vre,

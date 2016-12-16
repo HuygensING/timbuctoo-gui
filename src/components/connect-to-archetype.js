@@ -4,6 +4,7 @@ import Message from "./message";
 import { urls } from "../router";
 import { Link } from "react-router";
 import CollectionTable from "./collection-table";
+import camel2label from "../util/camel2label";
 
 class ConnectToArchetype extends React.Component {
 
@@ -29,6 +30,7 @@ class ConnectToArchetype extends React.Component {
       vreId, // from params
       vre, // from server response
       archetype,
+      archetypeDescriptions,
       collections,
       mappings,
       rmlPreviewData
@@ -87,11 +89,9 @@ class ConnectToArchetype extends React.Component {
                       Connect <em>{sheet.name}</em> to a Timbuctoo archetype.
                     </span>
                   {Object.keys(archetype).filter((domain) => domain !== "relations").sort().map((option) => (
-                    <span key={option} value={option}>{option}
-                      <br /><span style={{color: "#666", fontSize: "0.6em"}}>
-                        Properties: {archetype[option]
-                          .filter((prop) => prop.type !== "relation")
-                          .map((prop) => `${prop.name} (${prop.type})`).join(", ")}
+                    <span key={option} value={option}>{camel2label(option)}
+                      <br /><span className="regular">
+                        {archetypeDescriptions[option]}
                       </span>
                     </span>
                   ))}

@@ -16,7 +16,7 @@ import {uploadImage} from "./actions/upload";
 
 export default function actionsMaker(navigateTo, dispatch) {
   return {
-
+    returnToRoot: () => navigateTo("root"),
     // loading import data
     onUploadFileSelect: onUploadFileSelect(navigateTo, dispatch),
 
@@ -35,7 +35,7 @@ export default function actionsMaker(navigateTo, dispatch) {
 
     onLoadMoreClick: (nextUrl, collection) => dispatch(selectCollection(collection, nextUrl)),
 
-    onFetchBulkUploadedMetadata: (vreId) => dispatch(fetchBulkUploadedMetadata(vreId)),
+    onFetchBulkUploadedMetadata: (vreId) => dispatch(fetchBulkUploadedMetadata(vreId, null, () => navigateTo("root"))),
 
     // Closing informative messages
     onCloseMessage: (messageId) => dispatch({type: "TOGGLE_MESSAGE", messageId: messageId}),
@@ -51,7 +51,7 @@ export default function actionsMaker(navigateTo, dispatch) {
 
 
     // Connecting data
-    onContinueMapping: (vreId) => dispatch(fetchBulkUploadedMetadata(vreId, navigateTo)),
+    onContinueMapping: (vreId) => dispatch(fetchBulkUploadedMetadata(vreId, navigateTo, () => navigateTo("root"))),
 
     onAddPredicateObjectMap: (predicateName, objectName, propertyType) =>
       dispatch(addPredicateObjectMap(predicateName, objectName, propertyType)),

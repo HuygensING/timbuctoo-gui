@@ -47,7 +47,7 @@ class SelectField extends React.Component {
     return (
 
       <div className={cx("dropdown", {open: this.state.isOpen})} style={this.props.style || {}}>
-        <button className="btn btn-blank dropdown-toggle" onClick={this.toggleSelect.bind(this)}>
+        <button className="btn btn-blank dropdown-toggle" onClick={this.toggleSelect.bind(this)} style={{textAlign: "left"}}>
           {selectedOption.length ? selectedOption : placeholder} <span className="caret" />
         </button>
 

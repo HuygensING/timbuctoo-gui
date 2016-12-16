@@ -66,3 +66,7 @@ strong {
 	width:160px;
 	height:auto;
 	}
+
+.regular {
+	font-weight: 300;
+}

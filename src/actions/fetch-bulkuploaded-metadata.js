@@ -2,9 +2,13 @@ import xhr from "xhr";
 import { selectCollection } from "./select-collection"
 import { deserializeSavedRmlMapping } from "./predicate-object-mappings";
 
-const fetchBulkUploadedMetadata = (vreId, navigateTo) => (dispatch, getState)  => {
+const fetchBulkUploadedMetadata = (vreId, navigateTo, onFetchError = () => {}) => (dispatch, getState)  => {
   let location = `${process.env.server}/v2.1/bulk-upload/${vreId}`;
   xhr.get(location, {headers: {"Authorization": getState().userdata.userId}}, function (err, resp, body) {
+    if (resp.statusCode > 299 || resp.statusCode < 200) {
+      return onFetchError();
+    }
+
     const responseData = JSON.parse(body);
     dispatch({type: "FINISH_UPLOAD", data: responseData});
 

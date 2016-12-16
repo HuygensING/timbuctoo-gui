@@ -7,9 +7,9 @@ export default function(state=initialState, action) {
       return Object.keys(action.data)
         .map((collectionName) => ({
           collectionName: collectionName,
-          properties: action.data[collectionName].properties
+          description: action.data[collectionName].description
         })).reduce((accum, cur) => {
-          accum[cur.collectionName] = cur.properties;
+          accum[cur.collectionName] = cur.description;
           return accum
         }, {});
   }
