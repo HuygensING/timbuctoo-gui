@@ -11,6 +11,12 @@ const nameSpaces = {
   sameAs: "http://www.w3.org/2002/07/owl#"
 };
 
+const dataTypes = {
+  datable: "http://timbuctoo.huygens.knaw.nl/types/datable",
+  text: "https://www.w3.org/TR/2001/REC-xmlschema-2-20010502/#string",
+  names: "https://www.w3.org/TR/2001/REC-xmlschema-2-20010502/#string"
+};
+
 const rmlTemplate =  {
   "@context": {
     "@vocab": "http://www.w3.org/ns/r2rml#",
@@ -40,13 +46,16 @@ const rmlTemplate =  {
 const getNameSpaceFor = (predicate) =>
   typeof nameSpaces[predicate]  === "undefined" ? defaultNamespace : nameSpaces[predicate];
 
+const getDataTypeFor = (propertyType) =>
+  typeof dataTypes[propertyType] === "undefined" ? undefined : dataTypes[propertyType];
+
 const makeMapName = (vre, localName) => `http://timbuctoo.huygens.knaw.nl/mapping/${vre}/${localName}`;
 
 const mapBasicProperty = (predicateObjectMap) => ({
   "objectMap": {
     "column": predicateObjectMap.objectMap.column,
-    "termType": predicateObjectMap.propertyType === "sameAs" ? "http://www.w3.org/ns/r2rml#IRI" : undefined
-    // "datatype": "valid IRI string"
+    "termType": predicateObjectMap.propertyType === "sameAs" ? "http://www.w3.org/ns/r2rml#IRI" : undefined,
+    "datatype": getDataTypeFor(predicateObjectMap.propertyType)
   },
   "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
 });
