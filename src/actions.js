@@ -17,6 +17,8 @@ import {uploadImage} from "./actions/upload";
 export default function actionsMaker(navigateTo, dispatch) {
   return {
     returnToRoot: () => navigateTo("root"),
+    redirectTo: (urlKey, args) => navigateTo(urlKey, args),
+
     // loading import data
     onUploadFileSelect: onUploadFileSelect(navigateTo, dispatch),
 

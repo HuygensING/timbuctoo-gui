@@ -8,6 +8,7 @@ const getMappingState = (publishState) => {
     case PublishState.MAPPING_CREATION: return {text: "Finish mapping", disabled: false};
     case PublishState.MAPPING_CREATION_AFTER_ERRORS: return {text: "Fix mappings", disabled: false};
     case PublishState.UPLOADING: return {text: "Uploading...", disabled: true};
+    case PublishState.UPLOAD_FAILED: return {text: "Re-upload", disabled: false};
     case PublishState.MAPPING_EXECUTION: return {text: "Publishing", disabled: true};
   }
   return {text: "", disabled: ""};
@@ -27,13 +28,19 @@ function DataSetCard(props) {
     backgroundSize: "125% auto",
     color: "white"
   } : {};
+
+  const onContinueClick = props.publishState === PublishState.UPLOAD_FAILED
+    ? () => props.redirectTo("editDataset", [props.vreId])
+    : () => props.onContinueMapping(props.vreId);
+
   if (props.mine && !props.published) {
     const {text, disabled} = getMappingState(props.publishState);
     return (
       <div className="card-dataset" style={{height: "280px"}}>
         <button title={props.caption} disabled={disabled}
                 style={{...imageStyle, backgroundColor: colorCode ? `#${colorCode}` : "#e6e6e6"}}
-                className="card-dataset btn btn-default explore" onClick={() => props.onContinueMapping(props.vreId)}>
+                className="card-dataset btn btn-default explore"
+                onClick={onContinueClick}>
           {text}<br />
           <strong style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
             {props.caption.replace(/^[^_]+_+/, "")}

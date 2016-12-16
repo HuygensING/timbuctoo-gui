@@ -72,6 +72,10 @@ class ConnectToArchetype extends React.Component {
         </div>
 
         <div className="container basic-margin">
+          <div className="row">
+            <div className="col-md-2 hi-light-grey">Your excel sheet</div>
+            <div className="col-md-8 hi-light-grey">Connect to a Timbuctoo Archetype</div>
+          </div>
           {collections.map((sheet) => (
             <div className="row" key={sheet.name}>
               <div className="col-md-2">
@@ -89,8 +93,10 @@ class ConnectToArchetype extends React.Component {
                       Connect <em>{sheet.name}</em> to a Timbuctoo archetype.
                     </span>
                   {Object.keys(archetype).filter((domain) => domain !== "relations").sort().map((option) => (
-                    <span key={option} value={option}>{camel2label(option)}
-                      <br /><span className="regular">
+                    <span key={option} value={option}>
+                      <strong>{camel2label(option)}</strong>
+                      <br />
+                      <span className="regular">
                         {archetypeDescriptions[option]}
                       </span>
                     </span>

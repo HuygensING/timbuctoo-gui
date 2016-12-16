@@ -45,6 +45,12 @@ export default (appState, routed) => {
       }))
   })).reduce((accum, cur) => ({...accum, [cur.key]: cur.values}), {});
 
+  const vreData = routed.params.vreId ? (appState.userdata.myVres[routed.params.vreId] || {
+    vreMetadata: {}
+  }) : {
+    vreMetadata: {}
+  };
+  const { label: vreLabel, vreMetadata: { uploadedFilename }} = vreData;
   return {
     // from router
     vreId: routed.params.vreId,
@@ -63,7 +69,7 @@ export default (appState, routed) => {
 
     // from import data
     uploadStatus: appState.importData.uploadStatus,
-    uploadedFilename: appState.importData.uploadedFileName,
+    uploadedFilename: uploadedFilename,
     vre: appState.importData.vre,
 
     // form data

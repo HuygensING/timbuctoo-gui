@@ -12,7 +12,8 @@ function CollectionOverview(props) {
     onContinueMapping,
     onDeleteVreClick,
     onComfirmDeleteVre,
-    onCloseMessage
+    onCloseMessage,
+    redirectTo
   } = props;
 
   const {
@@ -54,7 +55,7 @@ function CollectionOverview(props) {
         <div className="container">
           {deleteVreFailedMessage}
           <DatasetCards userId={userId} caption="My datasets" vres={vres} mine={true} searchGuiUrl={searchGuiUrl}
-            onDeleteVreClick={onDeleteVreClick} onContinueMapping={onContinueMapping}>
+            onDeleteVreClick={onDeleteVreClick} onContinueMapping={onContinueMapping} redirectTo={redirectTo}>
             {uploadButton}
           </DatasetCards>
         </div>

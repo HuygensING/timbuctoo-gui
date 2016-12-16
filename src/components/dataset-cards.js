@@ -2,7 +2,7 @@ import React from 'react';
 import DataSetCard from './datasetCard.jsx';
 
 export default function(props) {
-  const { vres, caption, userId, searchGuiUrl, mine, onContinueMapping, onDeleteVreClick } = props;
+  const { vres, caption, userId, searchGuiUrl, mine, onContinueMapping, onDeleteVreClick, redirectTo } = props;
 
   return (
     <div className="container">
@@ -16,7 +16,9 @@ export default function(props) {
                        publishState={vres[vre].publishState}
                        vreMetadata={vres[vre].vreMetadata}
                        searchGuiUrl={searchGuiUrl}
-                       onContinueMapping={onContinueMapping} onDeleteVreClick={onDeleteVreClick}
+                       onContinueMapping={onContinueMapping}
+                       redirectTo={redirectTo}
+                       onDeleteVreClick={onDeleteVreClick}
                        userId={userId} vreId={vres[vre].name} caption={vres[vre].label} />
         ))}
      </div>

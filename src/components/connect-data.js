@@ -4,6 +4,8 @@ import Message from "./message";
 import CollectionTable from "./collection-table"
 import CollectionForm from "./collection-form/collection-form";
 import UploadButton from "./upload-button";
+import {urls} from "../router";
+import { Link } from "react-router";
 
 class ConnectData extends React.Component {
 
@@ -92,6 +94,8 @@ class ConnectData extends React.Component {
         {tabs.map((tab) => <em key={tab.collectionName}>{tab.collectionName}</em>)
           .reduce((accu, elem) => accu === null ? [elem] : [...accu, ' and ', elem], null)
         } from <em>{uploadedFilename}</em> {tabs.length === 1 ? "is" : "are" } connected to the Timbuctoo Archetypes.
+        {" "}
+        <Link to={urls.mapArchetypes(vre)}>Map again</Link>
       </Message> : null;
 
     return (
