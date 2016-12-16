@@ -1,6 +1,7 @@
 import xhr from "xhr";
 import { selectCollection } from "./select-collection"
 import { deserializeSavedRmlMapping } from "./predicate-object-mappings";
+import PublishState from "../util/publish-state";
 
 const fetchBulkUploadedMetadata = (vreId, navigateTo, onFetchError = () => {}) => (dispatch, getState)  => {
   let location = `${process.env.server}/v2.1/bulk-upload/${vreId}`;
@@ -26,6 +27,9 @@ const fetchBulkUploadedMetadata = (vreId, navigateTo, onFetchError = () => {}) =
       } else {
         navigateTo("mapArchetypes", [vreId]);
       }
+    }
+    if(responseData.publishState === PublishState.AVAILABLE) {
+      onFetchError();
     }
   });
 };
