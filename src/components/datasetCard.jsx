@@ -24,6 +24,7 @@ function DataSetCard(props) {
     backgroundPosition: "center center",
     backgroundRepeat: "no-repeat",
     backgroundBlendMode: "multiply",
+    backgroundSize: "125% auto",
     color: "white"
   } : {};
   if (props.mine && !props.published) {
