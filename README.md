@@ -19,7 +19,8 @@ Build using a client side mock server (without browser-sync support)
  npm run watch:mock
 ```
 
-Building a new deployment for Timbuctoo
+## Building a new deployment for Timbuctoo
+
 ```sh
  export NODE_ENV=production
  npm run timbuild
