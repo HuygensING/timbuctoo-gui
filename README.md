@@ -1,6 +1,7 @@
 # timbuctoo-default-frontend
 
-This is the default frontend for [Timbuctoo](https://github.com/HuygensING/timbuctoo) and is served out through the Timbuctoo [static assets](https://github.com/HuygensING/timbuctoo/tree/master/timbuctoo-instancev4/src/main/resources/static/upload)
+This is the default frontend for [Timbuctoo](https://github.com/HuygensING/timbuctoo) and is served out through the Timbuctoo [static assets](https://github.com/HuygensING/timbuctoo/tree/master/timbuctoo-instancev4/src/main/resources/static/upload).
+It exposes a GUI for uploading excel files and mapping them to the Timbuctoo data model.
 
 ## Building and running for local development
 
