@@ -1,5 +1,7 @@
 import React from "react";
 import camel2label from "./camel2label";
+import { Link } from "react-router";
+import { urls } from "../../../../urls";
 
 class RelationField extends React.Component {
   constructor(props) {
@@ -66,7 +68,7 @@ class RelationField extends React.Component {
     const values = entity.data["@relations"][this.props.name] || [];
     const itemElements = values.filter((val) => val.accepted).map((value, i) => (
       <div key={`${i}-${value.id}`} className="item-element">
-        <strong>{value.displayName}</strong>
+        <Link to={value.path.replace(/^domain\//, "")} >{value.displayName}</Link>
         <button className="btn btn-blank btn-xs pull-right"
           onClick={() => this.onRemove(value)}>
           <span className="glyphicon glyphicon-remove" />

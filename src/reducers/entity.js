@@ -10,6 +10,13 @@ let initialState = {
 
 export default function(state=initialState, action) {
 	switch (action.type) {
+
+		case "BEFORE_FETCH_ENTITY":
+			return {...state, ...{
+				data: {
+					"@relations": []
+				}
+			}};
 		case "RECEIVE_ENTITY":
 			return {...state, ...{
 				data: action.data,
