@@ -56,7 +56,7 @@ class EntityForm extends React.Component {
     const { onDelete, onChange, getAutocompleteValues } = this.props;
     const { entity, currentMode, properties, entityLabel } = this.props;
     const { fieldsToAdd } = this.state;
-    console.log(entity.data);
+
     return (
       <div className="col-sm-6 col-md-8">
         <div className="basic-margin">

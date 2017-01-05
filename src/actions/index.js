@@ -10,6 +10,7 @@ export default (navigateTo, dispatch) => ({
 	onChange: (fieldPath, value) => dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
 	onAddSelectedFields: (fields) => dispatch(addFieldsToEntity(fields)),
 
+	onRedirectToFirst: (collection, id) => (navigateTo("entity", [collection, id])),
 
 	onLoginChange: (response) => dispatch(setUser(response)),
 	onSelectVre: (vreId) => dispatch(setVre(vreId)),

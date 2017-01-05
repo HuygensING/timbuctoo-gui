@@ -5,7 +5,8 @@ let initialState = {
 		"@relations": []
 	},
 	domain: null,
-	errorMessage: null
+	errorMessage: null,
+	pending: false
 };
 
 export default function(state=initialState, action) {
@@ -15,13 +16,15 @@ export default function(state=initialState, action) {
 			return {...state, ...{
 				data: {
 					"@relations": []
-				}
+				},
+				pending: true
 			}};
 		case "RECEIVE_ENTITY":
 			return {...state, ...{
 				data: action.data,
 				domain: action.domain,
-				errorMessage: action.errorMessage || null
+				errorMessage: action.errorMessage || null,
+				pending: false
 			}};
 
 		case "SET_ENTITY_FIELD_VALUE":
@@ -34,7 +37,8 @@ export default function(state=initialState, action) {
 				data: {
 					"@relations": []
 				},
-				errorMessage: action.errorMessage
+				errorMessage: action.errorMessage,
+				pending: false
 			}};
 
 		case "SET_VRE": {

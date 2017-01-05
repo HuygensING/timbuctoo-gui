@@ -11,10 +11,11 @@ import EntityForm from "./entity-form/form";
 import CollectionTabs from "./collection-tabs";
 import Messages from "./messages/list";
 
+
 class EditGui extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
-		const { onSelect, onNew, onSelectDomain } = this.props;
+		const { onSelect, onNew, onSelectDomain, onRedirectToFirst } = this.props;
 
 		// Triggers fetch data from server based on id from route.
 		if (this.props.params.id !== nextProps.params.id) {
@@ -22,6 +23,11 @@ class EditGui extends React.Component {
 		} else if (this.props.params.collection !== nextProps.params.collection) {
 			onNew(nextProps.params.collection);
 			onSelectDomain(nextProps.params.collection);
+		} if ((nextProps.location.pathname.match(/\/first$/) || nextProps.location.pathname === "/") &&
+				nextProps.quickSearch.list.length > 0 &&
+				nextProps.quickSearch.list[0]["@type"] === (nextProps.entity.domain || "").replace(/s$/, "")) {
+
+			onRedirectToFirst(nextProps.entity.domain, nextProps.quickSearch.list[0]._id);
 		}
 	}
 
@@ -32,6 +38,8 @@ class EditGui extends React.Component {
 		} else if (this.props.params.collection) {
 			this.props.onNew(this.props.params.collection);
 			this.props.onSelectDomain(this.props.params.collection);
+		} else {
+			console.log(this.props.location);
 		}
 
 	}
@@ -63,9 +71,14 @@ class EditGui extends React.Component {
 								start={quickSearch.start}
 								list={quickSearch.list}
 								onSelect={onSelect}
-								domain={entity.domain} />
+								domain={entity.domain}
+								selectedId={entity.data._id}
+								entityPending={entity.pending}
+							/>
 						</div>
-						{ entity.domain ? (
+						{entity.pending ? (
+							<div className="basic-margin">Loading, please wait...</div>
+						) : entity.domain ? (
 							<EntityForm currentMode={currentMode} getAutocompleteValues={getAutocompleteValues}
 								onAddSelectedFields={onAddSelectedFields}
 								entity={entity} onNew={onNew} onDelete={onDelete} onChange={onChange}
@@ -85,8 +98,10 @@ class EditGui extends React.Component {
 							onPaginateRight={onPaginateRight} />
 					</div>
 					<div className="col-sm-6 col-md-8" style={{textAlign: "left", padding: '0'}}>
-						<SaveFooter onSave={onSave} onCancel={() => currentMode === "edit" ?
-							onSelect({domain: entity.domain, id: entity.data._id}) : onNew(entity.domain)} />
+						{!entity.pending ?
+							<SaveFooter onSave={onSave} onCancel={() => currentMode === "edit" ?
+								onSelect({domain: entity.domain, id: entity.data._id}) : onNew(entity.domain)}/> : null
+						}
 					</div>
 				</div>
 			</Page>

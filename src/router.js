@@ -25,6 +25,7 @@ export default (
 	<Provider store={store}>
 		<Router history={hashHistory}>
 			<Route path={urls.root()} components={defaultConnect(EditGui)} />
+			<Route path={urls.firstEntity()} components={defaultConnect(EditGui)} />
 			<Route path={urls.newEntity()} components={defaultConnect(EditGui)} />
 			<Route path={urls.entity()} components={defaultConnect(EditGui)} />
 		</Router>
