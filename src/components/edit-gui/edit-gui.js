@@ -75,8 +75,8 @@ class EditGui extends React.Component {
 					</div>
 				</div>
 
-				<div type="footer-body">
-					<div className="col-sm-6 col-md-4">
+				<div type="footer-body" className="row">
+					<div className="col-sm-6 col-md-4" style={{textAlign: "left", padding: '0'}}>
 						<Paginate
 							start={quickSearch.start}
 							listLength={quickSearch.list.length}
@@ -84,12 +84,10 @@ class EditGui extends React.Component {
 							onPaginateLeft={onPaginateLeft}
 							onPaginateRight={onPaginateRight} />
 					</div>
-					<div className="col-sm-6 col-md-8">
+					<div className="col-sm-6 col-md-8" style={{textAlign: "left", padding: '0'}}>
 						<SaveFooter onSave={onSave} onCancel={() => currentMode === "edit" ?
 							onSelect({domain: entity.domain, id: entity.data._id}) : onNew(entity.domain)} />
 					</div>
-				</div>
-				<div type="footer-body">
 				</div>
 			</Page>
 		)
