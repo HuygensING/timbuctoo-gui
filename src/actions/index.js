@@ -1,4 +1,5 @@
-import { saveEntity, selectEntity, makeNewEntity, deleteEntity, selectDomain, paginateLeft, paginateRight, sendQuickSearch } from "./entity";
+import { saveEntity, selectEntity, makeNewEntity, deleteEntity, addFieldsToEntity,
+	selectDomain, paginateLeft, paginateRight, sendQuickSearch } from "./entity";
 import { setVre } from "./vre";
 
 export default (navigateTo, dispatch) => ({
@@ -7,6 +8,9 @@ export default (navigateTo, dispatch) => ({
 	onSave: () => dispatch(saveEntity()),
 	onDelete: () => dispatch(deleteEntity()),
 	onChange: (fieldPath, value) => dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
+	onAddSelectedFields: (fields) => dispatch(addFieldsToEntity(fields)),
+
+
 	onLoginChange: (response) => dispatch(setUser(response)),
 	onSelectVre: (vreId) => dispatch(setVre(vreId)),
 	onDismissMessage: (messageIndex) => dispatch({type: "DISMISS_MESSAGE", messageIndex: messageIndex}),

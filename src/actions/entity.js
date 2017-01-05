@@ -21,22 +21,14 @@ const initialData = {
 const initialDataForType = (fieldDef) =>
 	fieldDef.defaultValue || (fieldDef.type === "relation" || fieldDef.type === "keyword" ? {} : initialData[fieldDef.type]);
 
-// Return the initial name-key for a certain field type
-const nameForType = (fieldDef) =>
-	fieldDef.type === "relation" || fieldDef.type === "keyword" ? "@relations" : fieldDef.name;
-
-
-// Create a new empty entity based on the fieldDefinitions
-const makeSkeleton = function (vre, domain) {
-	if (vre && vre.collections && vre.collections[domain] && vre.collections[domain].properties) {
-		return vre.collections[domain].properties
-			.map((fieldDef) => [nameForType(fieldDef), initialDataForType(fieldDef)])
-			.concat([["@type", domain.replace(/s$/, "")]])
-			.reduce((obj, cur) => {
-				obj[cur[0]] = cur[1];
-				return obj;
-			}, {});
-	}
+const addFieldsToEntity = (fields) => (dispatch) => {
+	fields.forEach((field) => {
+		if (field.type === "relation") {
+			dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: ["@relations", field.name], value: []});
+		} else {
+			dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: [field.name], value: initialDataForType(field)});
+		}
+	})
 };
 
 const fetchEntityList = (domain) => (dispatch, getState) => {
@@ -86,7 +78,7 @@ const selectEntity = (domain, entityId, errorMessage = null, successMessage = nu
 		if (currentDomain !== domain) {
 			dispatch(selectDomain(domain));
 		}
-		dispatch({type: "BEFORE_FETCH_ENTITY"});
+		dispatch({type: "BEFORE_FETCH_ENTITY"})
 		crud.fetchEntity(`${process.env.server}/v2.1/domain/${domain}/${entityId}`, (data) => {
 			dispatch({type: "RECEIVE_ENTITY", domain: domain, data: data, errorMessage: errorMessage});
 			if (successMessage !== null) {
@@ -102,7 +94,7 @@ const makeNewEntity = (domain, errorMessage = null) =>
 	(dispatch, getState) => dispatch({
 		type: "RECEIVE_ENTITY",
 		domain: domain,
-		data: makeSkeleton(getState().vre, domain) || {},
+		data: {"@relations": {}},
 		errorMessage: errorMessage
 	});
 
@@ -154,4 +146,4 @@ const saveEntity = () => (dispatch, getState) => {
 };
 
 
-export { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateRight, paginateLeft, sendQuickSearch, selectDomain };
+export { saveEntity, selectEntity, makeNewEntity, deleteEntity, fetchEntityList, paginateRight, paginateLeft, sendQuickSearch, selectDomain, addFieldsToEntity };

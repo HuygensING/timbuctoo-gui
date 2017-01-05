@@ -37,7 +37,7 @@ class EditGui extends React.Component {
 	}
 
 	render() {
-		const { onSelect, onNew, onSave, onDelete, onSelectDomain, onDismissMessage, onChange } = this.props;
+		const { onSelect, onNew, onSave, onDelete, onSelectDomain, onDismissMessage, onChange, onAddSelectedFields } = this.props;
 		const { onQuickSearchQueryChange, onQuickSearch, onPaginateLeft, onPaginateRight } = this.props;
 		const { getAutocompleteValues } = this.props;
 		const { quickSearch, entity, vre, messages } = this.props;
@@ -67,6 +67,7 @@ class EditGui extends React.Component {
 						</div>
 						{ entity.domain ? (
 							<EntityForm currentMode={currentMode} getAutocompleteValues={getAutocompleteValues}
+								onAddSelectedFields={onAddSelectedFields}
 								entity={entity} onNew={onNew} onDelete={onDelete} onChange={onChange}
 								properties={vre.collections[entity.domain].properties} 
 								entityLabel={vre.collections[entity.domain].collectionLabel.replace(/s$/, "") } />
