@@ -7,7 +7,8 @@ class RelationField extends React.Component {
 
     this.state = {
       query: "",
-      suggestions: []
+      suggestions: [],
+      blurIsBlocked: false
     }
   }
 
@@ -26,6 +27,8 @@ class RelationField extends React.Component {
     if (currentValues.map((val) => val.id).indexOf(suggestion.key) > -1) {
       return;
     }
+    this.setState({suggestions: [], query: "", blurIsBlocked: false});
+
     this.props.onChange(
       ["@relations", this.props.name],
       currentValues.concat({
@@ -39,9 +42,23 @@ class RelationField extends React.Component {
   onQueryChange(ev) {
     const { getAutocompleteValues, path } = this.props;
     this.setState({query: ev.target.value});
-    getAutocompleteValues(path, ev.target.value, (results) => {
-      this.setState({suggestions: results})
-    });
+    if (ev.target.value === "") {
+      this.setState({suggestions: []});
+    } else {
+      getAutocompleteValues(path, ev.target.value, (results) => {
+        this.setState({suggestions: results});
+      });
+    }
+  }
+
+  onQueryClear(ev) {
+    if (!this.state.blurIsBlocked) {
+      this.setState({suggestions: [], query: ""});
+    }
+  }
+
+  onBlurBlock(toggle) {
+    this.setState({blurIsBlocked: toggle});
   }
 
   render() {
@@ -61,11 +78,16 @@ class RelationField extends React.Component {
       <div className="basic-margin">
         <h4>{camel2label(name)}</h4>
         {itemElements}
-        <input className="form-control" onChange={this.onQueryChange.bind(this)}
-          value={this.state.query} placeholder="Search..." />
-        <div style={{overflowY: "auto", maxHeight: "300px"}}>
-          {this.state.suggestions.map((suggestion) => (
-            <a key={suggestion.key} className="item-element"
+        <input className="form-control"
+               onBlur={this.onQueryClear.bind(this)}
+               onChange={this.onQueryChange.bind(this)}
+               value={this.state.query} placeholder="Search..." />
+
+        <div onMouseOver={() => this.onBlurBlock(true)}
+             onMouseOut={() => this.onBlurBlock(false)}
+             style={{overflowY: "auto", maxHeight: "300px"}}>
+          {this.state.suggestions.map((suggestion, i) => (
+            <a key={`${i}-${suggestion.key}`} className="item-element"
               onClick={() => this.onAdd(suggestion)}>
               {suggestion.value}
             </a>
