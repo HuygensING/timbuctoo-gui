@@ -55,7 +55,9 @@ const mapBasicProperty = (predicateObjectMap) => ({
   "objectMap": {
     "column": predicateObjectMap.objectMap.column,
     "termType": predicateObjectMap.propertyType === "sameAs" ? "http://www.w3.org/ns/r2rml#IRI" : undefined,
-    "datatype": getDataTypeFor(predicateObjectMap.propertyType)
+    "datatype": {
+      "@id": getDataTypeFor(predicateObjectMap.propertyType)
+    }
   },
   "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
 });
