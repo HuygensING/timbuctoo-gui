@@ -23,13 +23,37 @@ const fieldMap = {
 	"names": (fieldDef, props) => (<NamesField {...props} name={fieldDef.name} options={fieldDef.options} />)
 };
 
+const applyFilter = (field, filter) =>
+    field.toLowerCase().indexOf(filter.toLowerCase()) > -1 ||
+    camel2label(field).toLowerCase().indexOf(filter.toLowerCase()) > -1;
+
 class EntityForm extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      fieldsToAdd: []
+      fieldsToAdd: [],
+      addFieldFilter: ""
+    }
+  }
+
+  onFilterChange(ev) {
+    this.setState({addFieldFilter: ev.target.value}, () => {
+      const filtered = this.getAddableFieldsFromProperties().filter(prop => applyFilter(prop.name, this.state.addFieldFilter));
+      if (filtered.length > 0) {
+        if (this.state.addFieldFilter === "") {
+          this.setState({fieldsToAdd: []})
+        } else {
+          this.setState({fieldsToAdd: [filtered[0].name]})
+        }
+      }
+    });
+  }
+
+  onFilterKeyDown(ev) {
+    if (ev.key === "Enter" && this.state.fieldsToAdd.length > 0) {
+      this.onAddSelectedFields();
     }
   }
 
@@ -49,13 +73,22 @@ class EntityForm extends React.Component {
       type: properties.find((prop) => prop.name === fAdd).type
     })));
 
-    this.setState({fieldsToAdd: []});
+    this.setState({fieldsToAdd: [], addFieldFilter: ""});
+  }
+
+  getAddableFieldsFromProperties() {
+    const { entity, properties } = this.props;
+
+    return properties
+      .filter((fieldDef) => fieldMap.hasOwnProperty(fieldDef.type))
+      .filter((fieldDef) => !entity.data.hasOwnProperty(fieldDef.name) && !entity.data["@relations"].hasOwnProperty(fieldDef.name))
+
   }
 
   render() {
     const { onDelete, onChange, getAutocompleteValues } = this.props;
     const { entity, currentMode, properties, entityLabel } = this.props;
-    const { fieldsToAdd } = this.state;
+    const { fieldsToAdd, addFieldFilter } = this.state;
 
     return (
       <div className="col-sm-6 col-md-8">
@@ -84,10 +117,13 @@ class EntityForm extends React.Component {
 
         <div className="basic-margin add-field-form">
           <h4>Add fields</h4>
+          <input className="form-control" value={addFieldFilter} placeholder="Filter..."
+                 onChange={this.onFilterChange.bind(this)}
+                 onKeyPress={this.onFilterKeyDown.bind(this)}
+          />
           <div style={{maxHeight: "250px", overflowY: "auto"}}>
-            {properties
-              .filter((fieldDef) => fieldMap.hasOwnProperty(fieldDef.type))
-              .filter((fieldDef) => !entity.data.hasOwnProperty(fieldDef.name) && !entity.data["@relations"].hasOwnProperty(fieldDef.name))
+            {this.getAddableFieldsFromProperties()
+              .filter((fieldDef) => applyFilter(fieldDef.name, addFieldFilter))
               .map((fieldDef, i) => (
                 <div key={i} onClick={() => this.toggleFieldToAdd(fieldDef.name)}
                      className={fieldsToAdd.indexOf(fieldDef.name) > -1 ? "selected" : ""}>
