@@ -4,7 +4,7 @@ Timbuctoo multi collection search
 This project expects:
 
 1. a running [Timbuctoo](https://github.com/HuygensING/timbuctoo) instance  
-2. a solr instance index built from that Timbuctoo index with this docker script ([details](https://github.com/HuygensING/timbuctoo/tree/master/timbuctoo-instancev4/src/main/scripts/index_scripts/federated-indexer)):
+2. a solr instance index built from that Timbuctoo instance with this docker script ([details](https://github.com/HuygensING/timbuctoo/tree/master/timbuctoo-instancev4/src/main/scripts/index_scripts/federated-indexer)):
 
 ```sh
 docker run -e TIMBUCTOO_SCRAPE_URL=http://12.123.12.12:8080 -e SOLR_URL=http://12.123.12.12:8983/solr -e SOLR_AUTH=your_secret -e INDEX_NAME=indexname -t huygensing/timbuctoo:faceted-search-multi-collection-site
