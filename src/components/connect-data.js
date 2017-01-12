@@ -98,6 +98,7 @@ class ConnectData extends React.Component {
         <Link to={urls.mapArchetypes(vre)}>Map again</Link>
       </Message> : null;
 
+
     return (
       <div>
         {rmlPreviewBlock}
@@ -108,7 +109,8 @@ class ConnectData extends React.Component {
           <p>Connect the excel columns to the properties of the Archetypes</p>
         </div>
         <CollectionTabs collectionTabs={tabs} onSelectCollection={onSelectCollection} />
-        <CollectionForm archetypeFields={archetypeFields} columns={columns}
+        <CollectionForm key={activeCollection}
+                        archetypeFields={archetypeFields} columns={columns}
                         availableArchetypes={availableArchetypes}
                         availableCollectionColumnsPerArchetype={availableCollectionColumnsPerArchetype}
                         customProperties={customProperties}
