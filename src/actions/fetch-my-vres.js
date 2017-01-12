@@ -6,9 +6,13 @@ const fetchMyVres = (token, callback) => (dispatch) => {
       "Authorization": token
     }
   }, (err, resp, body) => {
-    const vreData = JSON.parse(body);
-    dispatch({type: "RECEIVE_MY_VRES", data: token, vreData: vreData});
-    callback(vreData);
+    if (resp.statusCode >= 200 && resp.statusCode < 300) {
+      const vreData = JSON.parse(body);
+      dispatch({type: "RECEIVE_MY_VRES", data: token, vreData: vreData});
+      callback(vreData);
+    } else {
+      location.href = location.href.replace(/\?.*$/, "");
+    }
   });
 };
 
