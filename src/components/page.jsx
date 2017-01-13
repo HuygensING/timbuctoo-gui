@@ -26,7 +26,11 @@ function Page(props) {
             <DatasetCards caption="Explore all datasets" vres={props.vres} searchGuiUrl={props.searchGuiUrl} onDeleteVreClick={props.onDeleteVreClick} />
           </div>) : null}
       </div>
-      <Footer />
+      <Footer>
+        <div>
+          This is an initial release of Timbuctoo. <a href="https://github.com/huygensing/timbuctoo/issues/new" target="_blank">Suggestions</a> for improvement are very welcome!
+          </div>
+      </Footer>
     </div>
   );
 }
