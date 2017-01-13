@@ -8,7 +8,7 @@ function Page(props) {
 
   return (
     <div className="page">
-      <div className="basic-margin hi-Green container-fluid">
+      <div className="small-margin hi-Green container-fluid">
         <nav className="navbar ">
           <div className="container">
             <div className="navbar-header"> <a className="navbar-brand" href="#"><img src="images/logo-timbuctoo.svg" className="logo" alt="timbuctoo"/></a> </div>

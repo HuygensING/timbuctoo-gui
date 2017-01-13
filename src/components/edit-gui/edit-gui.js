@@ -56,6 +56,9 @@ class EditGui extends React.Component {
 		);
 		return (
 			<Page>
+				<div className="container" style={{textAlign: "right"}}>
+					This edit interface is machine-generated based on the data-model. <a href="https://github.com/huygensing/timbuctoo/issues/new" target="_blank">Suggestions</a> for improvement are very welcome!
+				</div>
 				<CollectionTabs collections={vre.collections} onNew={onNew} onSelectDomain={onSelectDomain} onRedirectToFirst={onRedirectToFirst}
 					activeDomain={entity.domain} />
 				<div className="container">
