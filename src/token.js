@@ -5,8 +5,10 @@ export default function() {
   for(let i in params) {
     let [key, value] = params[i].split('=');
     if(key === 'hsid') {
-      return value;
+      localStorage.setItem("token", value);
+      location.href = window.location.href.replace("hsid=" + value, "");
+      return undefined;
     }
   }
-  return null;
+  return localStorage.getItem("token") || null;
 }

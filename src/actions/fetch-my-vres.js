@@ -1,6 +1,6 @@
 import xhr from "xhr";
 
-const fetchMyVres = (token, callback) => (dispatch) => {
+const fetchMyVres = (token, callback, redirectToRoot = () => {}) => (dispatch) => {
   xhr(process.env.server + "/v2.1/system/users/me/vres", {
     headers: {
       "Authorization": token
@@ -11,7 +11,7 @@ const fetchMyVres = (token, callback) => (dispatch) => {
       dispatch({type: "RECEIVE_MY_VRES", data: token, vreData: vreData});
       callback(vreData);
     } else {
-      location.href = location.href.replace(/\?.*$/, "");
+      redirectToRoot();
     }
   });
 };

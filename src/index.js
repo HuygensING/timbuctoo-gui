@@ -38,8 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
     store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
     const token = getToken();
     if (token) {
-      store.dispatch(fetchMyVres(token, () => initialRender()));
-    } else {
+      store.dispatch(fetchMyVres(token, () => initialRender(), () => {
+        localStorage.removeItem("token");
+        location.href = location.href.replace(/\?.*$/, "");
+      }));
+    } else if (token !== undefined) {
       initialRender();
     }
   });
