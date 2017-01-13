@@ -138,9 +138,9 @@ class EntityForm extends React.Component {
         {currentMode === "edit"
           ? (<div className="basic-margin">
               <h4>Delete</h4>
-              <buton className="btn btn-danger" onClick={onDelete}>
+              <button className="btn btn-danger" onClick={onDelete} disabled={!this.props.user}>
                 Delete {entityLabel}
-              </buton>
+              </button>
             </div>
           ) : null}
       </div>

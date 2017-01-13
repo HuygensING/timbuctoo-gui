@@ -9,6 +9,8 @@ export default function(state=initialState, action) {
 				return state;
 			}
 			break;
+		case "SESSION_EXPIRED":
+			return null;
 		default:
 			return state;
 	}

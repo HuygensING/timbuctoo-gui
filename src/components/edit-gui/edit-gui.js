@@ -10,7 +10,7 @@ import EntityForm from "./entity-form/form";
 
 import CollectionTabs from "./collection-tabs";
 import Messages from "./messages/list";
-
+import Message from "../message";
 
 class EditGui extends React.Component {
 
@@ -42,11 +42,24 @@ class EditGui extends React.Component {
 		const currentMode = entity.domain && entity.data._id ? "edit" : "new";
 
 		if (entity.domain === null || !vre.collections[entity.domain]) { return null; }
+		const loginMessage = this.props.user ? null : (
+			<Message dismissible={false} alertLevel="warning">
+				<form action="https://secure.huygens.knaw.nl/saml2/login" method="POST" style={{display: "inline-block", float: "right"}}>
+					<input name="hsurl" value={`${location.href}`} type="hidden" />
+					<button className="btn btn-warning btn-sm" type="submit">
+						<span className="glyphicon glyphicon-log-in" /> Log in
+					</button>
+				</form>
+				<span className="glyphicon glyphicon-exclamation-sign" />{" "}
+				You are not logged in, your session has expired, or you are not allowed to edit this dataset
+			</Message>
+		);
 		return (
 			<Page>
 				<CollectionTabs collections={vre.collections} onNew={onNew} onSelectDomain={onSelectDomain} onRedirectToFirst={onRedirectToFirst}
 					activeDomain={entity.domain} />
 				<div className="container">
+					{loginMessage}
 					<Messages
 						types={["SUCCESS_MESSAGE", "ERROR_MESSAGE"]}
 						messages={messages}
@@ -71,7 +84,7 @@ class EditGui extends React.Component {
 						) : entity.domain ? (
 							<EntityForm currentMode={currentMode} getAutocompleteValues={getAutocompleteValues}
 								onAddSelectedFields={onAddSelectedFields}
-								entity={entity} onNew={onNew} onDelete={onDelete} onChange={onChange}
+								entity={entity} onNew={onNew} onDelete={onDelete} onChange={onChange} user={this.props.user}
 								properties={vre.collections[entity.domain].properties} 
 								entityLabel={vre.collections[entity.domain].collectionLabel.replace(/s$/, "") } />
 						) : null }
@@ -90,7 +103,7 @@ class EditGui extends React.Component {
 					<div className="col-sm-6 col-md-8" style={{textAlign: "left", padding: '0'}}>
 						{!entity.pending ?
 							<SaveFooter onSave={onSave} onCancel={() => currentMode === "edit" ?
-								onSelect({domain: entity.domain, id: entity.data._id}) : onNew(entity.domain)}/> : null
+								onSelect({domain: entity.domain, id: entity.data._id}) : onNew(entity.domain)} user={this.props.user}/> : null
 						}
 					</div>
 				</div>
