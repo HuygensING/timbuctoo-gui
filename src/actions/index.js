@@ -1,5 +1,5 @@
 import { saveEntity, selectEntity, makeNewEntity, deleteEntity, addFieldsToEntity,
-	selectDomain, paginateLeft, paginateRight, sendQuickSearch } from "./entity";
+	selectDomain, paginateLeft, paginateRight, sendQuickSearch, fetchEntityList } from "./entity";
 import { setVre } from "./vre";
 
 export default (navigateTo, dispatch) => ({
@@ -10,7 +10,11 @@ export default (navigateTo, dispatch) => ({
 	onChange: (fieldPath, value) => dispatch({type: "SET_ENTITY_FIELD_VALUE", fieldPath: fieldPath, value: value}),
 	onAddSelectedFields: (fields) => dispatch(addFieldsToEntity(fields)),
 
-	onRedirectToFirst: (collection, id) => (navigateTo("entity", [collection, id])),
+	onRedirectToFirst: (collection) => dispatch(fetchEntityList(collection, (list) => {
+		if (list.length > 0) {
+			navigateTo('entity', [collection, list[0]._id]);
+		}
+	})),
 
 	onLoginChange: (response) => dispatch(setUser(response)),
 	onSelectVre: (vreId) => dispatch(setVre(vreId)),

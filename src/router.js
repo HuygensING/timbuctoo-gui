@@ -8,9 +8,6 @@ import actions from "./actions";
 import EditGui from "./components/edit-gui/edit-gui";
 import {urls} from "./urls";
 
-
-
-
 export function navigateTo(key, args) {
 	hashHistory.push(urls[key].apply(null, args));
 }
@@ -25,10 +22,8 @@ export default (
 	<Provider store={store}>
 		<Router history={hashHistory}>
 			<Route path={urls.root()} components={defaultConnect(EditGui)} />
-			<Route path={urls.firstEntity()} components={defaultConnect(EditGui)} />
 			<Route path={urls.newEntity()} components={defaultConnect(EditGui)} />
 			<Route path={urls.entity()} components={defaultConnect(EditGui)} />
 		</Router>
 	</Provider>
 );
-

@@ -31,9 +31,12 @@ const addFieldsToEntity = (fields) => (dispatch) => {
 	})
 };
 
-const fetchEntityList = (domain) => (dispatch, getState) => {
+const fetchEntityList = (domain, next = () => {}) => (dispatch, getState) => {
 	dispatch({type: "SET_PAGINATION_START", start: 0});
-	crud.fetchEntityList(domain, 0, getState().quickSearch.rows, (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data}));
+	crud.fetchEntityList(domain, 0, getState().quickSearch.rows, (data) => {
+		dispatch({type: "RECEIVE_ENTITY_LIST", data: data});
+		next(data);
+	});
 };
 
 const paginateLeft = () => (dispatch, getState) => {

@@ -7,11 +7,6 @@ const urls = {
 			? `/${collection}/new`
 			: "/:collection/new";
 	},
-	firstEntity(collection) {
-		return collection
-			? `/${collection}/first`
-			: "/:collection/first";
-	},
 	entity(collection, id) {
 		return collection && id
 			? `/${collection}/${id}`

@@ -15,19 +15,11 @@ import Messages from "./messages/list";
 class EditGui extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
-		const { onSelect, onNew, onSelectDomain, onRedirectToFirst } = this.props;
+		const { onSelect, onNew, onSelectDomain } = this.props;
 
 		// Triggers fetch data from server based on id from route.
 		if (this.props.params.id !== nextProps.params.id) {
 			onSelect({domain: nextProps.params.collection, id: nextProps.params.id});
-		} else if (this.props.params.collection !== nextProps.params.collection) {
-			onNew(nextProps.params.collection);
-			onSelectDomain(nextProps.params.collection);
-		} if ((nextProps.location.pathname.match(/\/first$/) || nextProps.location.pathname === "/") &&
-				nextProps.quickSearch.list.length > 0 &&
-				nextProps.quickSearch.list[0]["@type"] === (nextProps.entity.domain || "").replace(/s$/, "")) {
-
-			onRedirectToFirst(nextProps.entity.domain, nextProps.quickSearch.list[0]._id);
 		}
 	}
 
@@ -35,17 +27,15 @@ class EditGui extends React.Component {
 
 		if (this.props.params.id) {
 			this.props.onSelect({domain: this.props.params.collection, id: this.props.params.id});
-		} else if (this.props.params.collection) {
-			this.props.onNew(this.props.params.collection);
-			this.props.onSelectDomain(this.props.params.collection);
-		} else {
-			console.log(this.props.location);
+		} else if (!this.props.params.collection && !this.props.location.pathname.match(/new$/) && this.props.entity.domain) {
+			this.props.onRedirectToFirst(this.props.entity.domain)
+		} else if (this.props.location.pathname.match(/new$/)) {
+			this.props.onNew(this.props.entity.domain);
 		}
-
 	}
 
 	render() {
-		const { onSelect, onNew, onSave, onDelete, onSelectDomain, onDismissMessage, onChange, onAddSelectedFields } = this.props;
+		const { onSelect, onNew, onSave, onDelete, onSelectDomain, onDismissMessage, onChange, onAddSelectedFields, onRedirectToFirst } = this.props;
 		const { onQuickSearchQueryChange, onQuickSearch, onPaginateLeft, onPaginateRight } = this.props;
 		const { getAutocompleteValues } = this.props;
 		const { quickSearch, entity, vre, messages } = this.props;
@@ -54,7 +44,7 @@ class EditGui extends React.Component {
 		if (entity.domain === null || !vre.collections[entity.domain]) { return null; }
 		return (
 			<Page>
-				<CollectionTabs collections={vre.collections} onNew={onNew} onSelectDomain={onSelectDomain}
+				<CollectionTabs collections={vre.collections} onNew={onNew} onSelectDomain={onSelectDomain} onRedirectToFirst={onRedirectToFirst}
 					activeDomain={entity.domain} />
 				<div className="container">
 					<Messages
