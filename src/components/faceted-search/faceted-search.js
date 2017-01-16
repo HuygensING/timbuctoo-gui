@@ -79,6 +79,11 @@ class FacetedSearch extends React.Component {
                       numFound={activeCollection.results.numFound}
                       start={activeCollection.query.start || 0}
                       rows={activeCollection.query.rows} />
+          <div style={{position: "fixed", bottom: "0", left: "0", zIndex: 10, width: "100%"}}>
+            <div className="container">
+              This search is machine-generated based on the data-model. <a href="https://github.com/huygensing/timbuctoo/issues/new" target="_blank">Suggestions</a> for improvement are very welcome!
+            </div>
+          </div>
         </span>
       </Page>
     )
