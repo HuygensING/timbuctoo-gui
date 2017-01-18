@@ -6,28 +6,44 @@ import {setVre} from "./actions/vre";
 import router from "./router";
 import xhr from "xhr";
 
-const setUser = (response) => {
+const setUser = (user) => {
 	// TODO: validate user session.
-	xhr({
-		url: `${process.env.server}/v2.1/system/users/me/vres`,
-		headers: {
-			'Authorization': response.token
-		}
-	}, (err, resp) => {
-		if (err || resp.statusCode >= 300) {
-			store.dispatch({type: "SESSION_EXPIRED"});
-		} else {
-			const data = JSON.parse(resp.body);
-			if (!data.mine || Object.keys(data.mine).indexOf(getVreId()) < 0) {
-				store.dispatch({type: "ERROR_MESSAGE", message: "You are not allowed to edit this vre"});
-				store.dispatch({type: "SESSION_EXPIRED"});
-
+	if (user) {
+		xhr({
+			url: `${process.env.server}/v2.1/system/users/me/vres`,
+			headers: {
+				'Authorization': user.token
 			}
-		}
-	});
+		}, (err, resp) => {
+			if (err || resp.statusCode >= 300) {
+				store.dispatch({type: "SESSION_EXPIRED"});
+			} else {
+				const data = JSON.parse(resp.body);
+				if (!data.mine || Object.keys(data.mine).indexOf(getVreId()) < 0) {
+					store.dispatch({type: "ERROR_MESSAGE", message: "You are not allowed to edit this vre"});
+					store.dispatch({type: "SESSION_EXPIRED"});
+				}
+			}
+		});
+
+		xhr({
+			url: `${process.env.server}/v2.1/system/users/me`,
+			headers: {
+				'Authorization': user.token
+			}
+		}, (err, resp) => {
+			try {
+				const userData = JSON.parse(resp.body);
+				store.dispatch({type: "SET_USER_DATA", userData: userData});
+			} catch (e) {
+				console.warn(e);
+			}
+		});
+	}
+
 	return {
 		type: "SET_USER",
-		user: response
+		user: user
 	};
 };
 

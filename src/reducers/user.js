@@ -11,6 +11,10 @@ export default function(state=initialState, action) {
 			break;
 		case "SESSION_EXPIRED":
 			return null;
+		case "SET_USER_DATA":
+			return state
+				? {...state, userData: action.userData }
+				: null;
 		default:
 			return state;
 	}
