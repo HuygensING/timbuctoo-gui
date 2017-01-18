@@ -31,6 +31,26 @@ xhr.get(process.env.server + "/v2.1/system/vres", (err, resp, body) => {
 
 const initialRender = () => ReactDOM.render(router, document.getElementById("app"));
 
+const initialize = (token = null) => {
+  if (token) {
+    xhr.get({
+      url: process.env.server + "/v2.1/system/users/me",
+      headers: {
+        'Authorization': token
+      }
+    }, (err, resp, body) => {
+      try {
+        const userData = JSON.parse(body);
+        store.dispatch({type: "SET_USER_DATA", userData: userData})
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  }
+  initialRender();
+
+};
+
 document.addEventListener("DOMContentLoaded", () => {
 
   xhr(process.env.server + "/v2.1/metadata/Admin?withCollectionInfo=true", (err, resp) => {
@@ -38,12 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
     store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
     const token = getToken();
     if (token) {
-      store.dispatch(fetchMyVres(token, () => initialRender(), () => {
+      store.dispatch(fetchMyVres(token, () => initialize(token), () => {
         localStorage.removeItem("token");
         location.href = location.href.replace(/\?.*$/, "");
       }));
     } else if (token !== undefined) {
-      initialRender();
+      initialize();
     }
   });
 });

@@ -1,6 +1,7 @@
 const initialState = {
   userId: undefined,
   myVres: undefined,
+  userData: undefined
 };
 
 
@@ -32,6 +33,11 @@ export default function(state=initialState, action) {
         ...state,
         myVres: newMyVres
       };
+    case "SET_USER_DATA":
+      return {
+        ...state,
+        userData: action.userData
+      }
   }
 
   return state;
