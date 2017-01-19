@@ -14,8 +14,8 @@ export default function actionsMaker(navigateTo, dispatch) {
 				})
 				
 			});
-			
-		}
+		},
+		onSetActiveClient: (name) => dispatch({type: "SET_ACTIVE_CLIENT", activeClient: name})
 	};
 	return actions;
 };

@@ -1,7 +1,8 @@
 let initialState = {
 	indexPresent: false,
 	indexesPending: false,
-	searchStates: {}
+	searchStates: {},
+	activeClient: null
 };
 
 export default function(state=initialState, action) {
@@ -25,6 +26,12 @@ export default function(state=initialState, action) {
 					...state.searchStates,
 					[action.collectionName]: action.searchState
 				}
+			};
+
+		case "SET_ACTIVE_CLIENT":
+			return {
+				...state,
+				activeClient: action.activeClient
 			};
 
 		default:

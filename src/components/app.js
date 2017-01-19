@@ -5,20 +5,14 @@ import Page from "./page.jsx";
 
 
 class App extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			activeClient: null
-		}
-	}
 
 	setActiveClient(name) {
-		this.setState({activeClient: name});
+		this.props.onSetActiveClient(name);
 	}
 
 	render() {
 		const { solr, onCreateIndexes, metadata: { vreId } } = this.props;
-		const { activeClient } = this.state;
+		const { solr: { activeClient } } = this.props;
 
 		const searchClients = getSearchClients();
 
