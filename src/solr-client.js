@@ -39,8 +39,8 @@ const searchClient = new SolrClient({
   pageStrategy: "paginate",
   facetSort: "count",
   onChange: (state) => {
-    store.dispatch(setPagination(state));
     store.dispatch({type: "SET_SEARCH_STATE", state: state});
+    store.dispatch(setPagination(state));
   }
 });
 
