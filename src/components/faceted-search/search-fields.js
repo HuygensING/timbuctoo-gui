@@ -19,6 +19,7 @@ class SearchFields extends React.Component {
         {fields.map((searchField, i) => {
           const { type, field } = searchField;
           const SearchComponent = components[type];
+          if (typeof SearchComponent === 'undefined') { return; }
           const facets = type === "list-facet" || type === "range-facet" ? results.facets[field] || [] : null;
           return (<SearchComponent key={`${i}_${field}`} facets={facets} onChange={onSearchFieldChange}
                                    collapse={searchField.collapse}
