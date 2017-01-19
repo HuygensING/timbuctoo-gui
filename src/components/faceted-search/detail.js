@@ -8,7 +8,12 @@ import cx from "classnames";
 const ts2date = (ts) => {
   const date = new Date(ts);
   return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
-}
+};
+
+const getArchetypeFields = (variants, metadata) => Object.keys(metadata).map((collectionName) => ({
+  archetypeName: metadata[collectionName].archetypeName || collectionName.replace(/s$/, ""),
+  properties: metadata[collectionName].properties.filter((prop) => prop.type !== "relation").map((prop) => prop.name)
+})).find((md) => variants.map((v) => v.type).indexOf(md.archetypeName) > -1).properties;
 
 class Detail extends React.Component {
 
@@ -36,23 +41,28 @@ class Detail extends React.Component {
       return value;
     } else if (value.components) {
       return value.components.map((com) => com.value).join(" ");
+    } else if (value.url) {
+      return <a href={value.url}>{value.label}</a>
     }
   }
 
   renderProp(propertyValue) {
     if (typeof propertyValue === "string" || typeof propertyValue === "number") {
       return propertyValue;
-    } else if (Array.isArray(propertyValue)) {
-      return propertyValue.map((val) => this.renderPropPart(val)).join(", ")
+    } else if (Array.isArray(propertyValue) && propertyValue.length > 0) {
+      return (<ul style={{listStyle: "none", padding: 0, margin: 0}}>
+        {propertyValue.map((val, i) => <li key={i}>{this.renderPropPart(val)}</li>)}
+      </ul>)
     }
-    return "[Object]";
+    return null;
   }
 
   render() {
-    const { entity, collectionMetadata, vreId, nextId, prevId} = this.props;
+    const { entity, collectionMetadata, vreId, nextId, prevId, metadata} = this.props;
 
     if (!entity._id) { return <Page />; }
 
+    const archetypeFields = getArchetypeFields(entity["@variationRefs"], metadata);
     const birthDeathBlock = collectionMetadata.archetypeName === "person" ? (
       <div className="row small-marigin text-center">
         <div className="col-xs-3 text-right" />
@@ -92,21 +102,39 @@ class Detail extends React.Component {
           {birthDeathBlock}
         </div>
         <div className="container basic-margin">
-          {collectionMetadata.properties
-            .filter((property) => entity[property.name] || entity["@relations"][property.name])
+          {Object.keys(entity).filter((prop) => ["^", "_", "@"].indexOf(prop.charAt(0)) < 0)
+            .sort((a, b) => archetypeFields.indexOf(a) > archetypeFields.indexOf(b) ? -1 : 1)
             .map((property) => (
-              <div key={property.name} className="row small-margin">
-                <div className="col-xs-6 text-right hi-light-grey">
-                  {camel2label(property.name)}
+              <div key={property} className="row small-margin">
+                <div className="col-xs-6 text-right hi-light-grey" style={{fontWeight: archetypeFields.indexOf(property) > -1 ? "bold" : "normal"}}>
+                  {camel2label(property)}
                 </div>
                 <div className="col-xs-6">
-                  {entity["@relations"][property.name] ? entity["@relations"][property.name]
-                    .filter((rel) => rel.displayName.length > 0)
-                    .map((rel) => rel.displayName).join(", ")
-                  : this.renderProp(entity[property.name])}
+                  {this.renderProp(entity[property])}
                 </div>
               </div>
-          ))}
+            ))}
+
+          {Object.keys(entity["@relations"] || {})
+            .filter((property) => !property.match(/^inverse:/))
+            .map((property) => (
+              <div key={property} className="row small-margin">
+                <div className="col-xs-6 text-right hi-light-grey">
+                  {camel2label(property)}
+                </div>
+                <div className="col-xs-6">
+                  <ul style={{padding: "0", margin: "0", listStyle: "none", maxHeight: "200px", overflowY: "auto"}}>
+                    {entity["@relations"][property]
+                      .map((rel) => (
+                        <li key={rel.path}>
+                            {rel.displayName || "<no display name found>"}
+                        </li>
+                      ))
+                    }
+                  </ul>
+                </div>
+              </div>
+            ))}
         </div>
         <div className="hi-light-grey-bg">
           <div className="container big-margin">
