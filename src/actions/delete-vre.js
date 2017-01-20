@@ -11,7 +11,7 @@ const deleteVre = (vreId, confirmedVreId) => (dispatch, getState) => {
   dispatch({type: "BEFORE_DELETE_VRE", vreId: confirmedVreId});
 
   xhr({
-    uri: `${process.env.server}/v2.1/bulk-upload/${confirmedVreId}`,
+    uri: `${process.env.server}/v2.1/system/vres/${confirmedVreId}`,
     headers: {
       "Authorization": userId
     },
