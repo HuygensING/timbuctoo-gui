@@ -47,8 +47,8 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
       }
       var newPart = req.responseText.substr(pos);
       pos = req.responseText.length;
-      newPart.split("\n").forEach((line, idx) => {
-        if (idx % 21 === 0) { dispatch({type: "UPLOAD_STATUS_UPDATE", data: line}); }
+      newPart.split("\n").forEach((line) => {
+        dispatch({type: "UPLOAD_STATUS_UPDATE", data: line});
       });
     };
 

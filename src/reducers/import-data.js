@@ -15,24 +15,8 @@ export default function(state=initialState, action) {
       return {...initialState, uploadStatus: "transfering file", uploadedFileName: action.uploadedFileName};
     case "UPLOAD_STATUS_UPDATE":
       if (action.data) {
-        var failures = state.failures || 0;
-        var currentSheet = state.currentSheet || "";
-        var rows = state.rows || 0;
-        var prevRows = state.prevRows || 0;
-        if (action.data.substr(0, "failure: ".length) === "failure: ") {
-          failures += 1;
-        } else if (action.data.substr(0, "sheet: ".length) === "sheet: ") {
-          currentSheet = action.data.substr("sheet: ".length);
-          prevRows = rows;
-        } else {
-          rows = action.data*1 - prevRows;
-        }
-        var uploadStatus = "processing " + currentSheet + " (row " + rows + (failures > 0 ? ", " + failures + " failures" : "") + ")";
         return {...state,
-          failures,
-          rows,
-          currentSheet,
-          uploadStatus: uploadStatus
+          uploadStatus: action.data
         };
       }
       return state;
