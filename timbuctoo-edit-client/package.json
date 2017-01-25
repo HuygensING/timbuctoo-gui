@@ -1,0 +1,49 @@
+{
+  "name": "timbuctoo-edit-client",
+  "version": "0.0.0",
+  "author": {
+    "name": "René van der Ark",
+    "email": "rene.van.der.ark@huygens.knaw.nl"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {
+    "start": "scripts/server.js",
+    "build": "scripts/build.sh",
+    "timbuild": "server='' scripts/build.sh",
+    "watch": "scripts/build.sh --watch"
+  },
+  "dependencies": {
+    "classnames": "^2.2.3",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.6.1",
+    "redux": "^3.2.1",
+    "redux-thunk": "^1.0.3",
+    "xhr": "^2.2.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-eslint": "^6.1.2",
+    "babel-plugin-transform-es2015-destructuring": "^6.9.0",
+    "babel-plugin-transform-object-assign": "^6.8.0",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "babelify": "^7.3.0",
+    "browser-sync": "^2.9.6",
+    "browserify": "^11.2.0",
+    "envify": "^3.4.1",
+    "clone-deep": "^0.2.4",
+    "connect-modrewrite": "^0.8.2",
+    "eslint": "^1.5.1",
+    "eslint-plugin-react": "^3.16.1",
+    "expect": "^1.14.0",
+    "lodash.debounce": "^3.1.1",
+    "url": "^0.11.0",
+    "watchify": "^3.7.0"
+  }
+}
