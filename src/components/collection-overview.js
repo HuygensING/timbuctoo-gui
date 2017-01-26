@@ -54,7 +54,7 @@ function CollectionOverview(props) {
         {deleteVreModal}
         <div className="container">
           {deleteVreFailedMessage}
-          <DatasetCards userId={userId} caption="My datasets" vres={vres} mine={true} searchGuiUrl={searchGuiUrl}
+          <DatasetCards userId={userId} caption="My datasets" vres={vres} mine={true} searchGuiUrl={searchGuiUrl} height="280px"
             onDeleteVreClick={onDeleteVreClick} onContinueMapping={onContinueMapping} redirectTo={redirectTo}>
             {uploadButton}
           </DatasetCards>

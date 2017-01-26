@@ -36,7 +36,7 @@ function DataSetCard(props) {
   if (props.mine && !props.published) {
     const {text, disabled} = getMappingState(props.publishState);
     return (
-      <div className="card-dataset" style={{height: "280px"}}>
+      <div className="card-dataset" style={{height: props.height}}>
         <button title={props.caption} disabled={disabled}
                 style={{...imageStyle, backgroundColor: colorCode ? `#${colorCode}` : "#e6e6e6"}}
                 className="card-dataset btn btn-default explore"
@@ -67,7 +67,7 @@ function DataSetCard(props) {
   }
 
   return (
-    <div className="card-dataset">
+    <div className="card-dataset" style={{height: props.height}}>
       <a className="card-dataset btn btn-default explore"
          title={props.caption}
          style={{...imageStyle, backgroundColor: colorCode ? `#${colorCode}` : "#e6e6e6" }}
