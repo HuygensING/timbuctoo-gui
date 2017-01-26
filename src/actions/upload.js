@@ -3,8 +3,7 @@ import { selectCollection } from "./select-collection";
 import { fetchMyVres } from "./fetch-my-vres";
 
 
-const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, redirectTo }) => {
-
+const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, redirectTo, format }) => {
   let file = files[0];
   let formData = new FormData();
   if (!vreId && vreName) {
@@ -34,11 +33,11 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
         isRedirectedToSettings = true;
         dispatch(fetchMyVres(state.userdata.userId, (vreData) => {
           if (vreId) {
-            navigateTo(redirectTo || "editDataset", [vreId]);
+            navigateTo(redirectTo || "editDatasetWithFormat", [vreId, format]);
           } else if (vreName) {
             const vreIdFromLabel = Object.keys(vreData.mine)
               .map(key => vreData.mine[key]).find(vre => vre.label === vreName).name;
-            navigateTo(redirectTo || "editDataset", [vreIdFromLabel]);
+            navigateTo(redirectTo || "editDatasetWithFormat", [vreIdFromLabel, format]);
           }
         }));
       }

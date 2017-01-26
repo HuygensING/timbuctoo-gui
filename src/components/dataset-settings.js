@@ -1,6 +1,7 @@
 import React from "react";
 import UploadButton from "./upload-button";
 import PublishState from "../util/publish-state";
+import UploadForm from "./upload-form";
 import Message from "./message";
 import availableColorCodes from "../util/color-codes";
 
@@ -116,7 +117,8 @@ class DatasetSettings extends  React.Component {
       imageUploadStatus,
       imageUploadErrorMessage,
       imageUrl,
-      uploadedFilenameFromVre
+      uploadedFilenameFromVre,
+      format
     } = this.props;
 
     const finalVreName = newVreName ?
@@ -172,22 +174,16 @@ class DatasetSettings extends  React.Component {
           <input className="form-control" type="text" disabled={nameEditDisabled} placeholder="Enter dataset name" value={newVreName || ""} onChange={this.onChange.bind(this)} />
         </div>
 
-        <div className="container basic-margin">
-          <h4>Upload Excel file</h4>
-          {uploadError}
-          <UploadButton
-            classNames={["btn", "btn-primary"]}
-            uploadStatus={finalVreName === null ? "Please enter a title first..." : uploadButtonStatus}
-            vreName={vreId ? null : finalVreName}
-            vreId={vreId}
-            label={uploadButtonLabel}
-            float="left"
-            onUploadFileSelect={onUploadFileSelect}
-          />
-          <input type="text" className="form-control" disabled={true} value={uploadedFileName || uploadedFilenameFromVre} style={{maxWidth: "400px"}} />
-        </div>
-
-
+        <UploadForm
+          vreId={vreId}
+          format={format}
+          finalVreName={finalVreName}
+          uploadError={uploadError}
+          uploadButtonStatus={uploadButtonStatus}
+          uploadButtonLabel={uploadButtonLabel}
+          onUploadFileSelect={onUploadFileSelect}
+          uploadedFileName={uploadedFileName}
+          uploadedFilenameFromVre={uploadedFilenameFromVre} />
 
         <div className="container basic-margin">
           <h4>Description</h4>

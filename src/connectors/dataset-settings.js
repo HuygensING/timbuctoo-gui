@@ -1,5 +1,6 @@
 export default function(appState, routed) {
   const vreId = routed.params.vreId;
+  const format = routed.params.format;
   const vreData = vreId ? (appState.userdata.myVres[vreId] || {
     vreMetadata: {}
   }) : {
@@ -18,6 +19,7 @@ export default function(appState, routed) {
     uploadedFilenameFromVre: uploadedFilename,
     imageUploadStatus: appState.datasetSettings.imageUploadStatus,
     imageUploadErrorMessage: appState.datasetSettings.imageUploadErrorMessage,
-    imageUrl: image
+    imageUrl: image,
+    format: format || null
   }
 }
