@@ -23,9 +23,8 @@ class ExcelForm extends React.Component {
           vreId={vreId}
           label={uploadButtonLabel}
           float="left"
-          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           onUploadFileSelect={onUploadFileSelect}
-          format="excel"
+          format="dataperfect"
         />
         <input type="text" className="form-control" disabled={true} value={uploadedFileName || uploadedFilenameFromVre} style={{maxWidth: "400px"}} />
       </div>
