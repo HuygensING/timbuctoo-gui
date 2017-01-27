@@ -6,10 +6,12 @@ import { urls } from "../router";
 
 import CsvForm from "./upload-form/csv";
 import ExcelForm from "./upload-form/excel";
+import DataperfectForm from "./upload-form/dataperfect";
 
 const formatForms = {
   csv: (props) =>  <CsvForm {...props} />,
-  excel: (props) => <ExcelForm {...props} />
+  excel: (props) => <ExcelForm {...props} />,
+  dataperfect: (props) => <DataperfectForm {...props} />
 };
 
 class UploadForm extends React.Component {
@@ -21,10 +23,12 @@ class UploadForm extends React.Component {
 
     const tabUrls = vreId ? {
       excel: urls.editDataset(vreId),
-      csv: urls.editDatasetWithFormat(vreId, "csv")
+      csv: urls.editDatasetWithFormat(vreId, "csv"),
+      dataperfect: urls.editDatasetWithFormat(vreId, "dataperfect"),
     } : {
       excel: urls.newDataset(),
-      csv: urls.newDatasetWithFormat("csv")
+      csv: urls.newDatasetWithFormat("csv"),
+      dataperfect: urls.editDatasetWithFormat(vreId, "dataperfect"),
     };
 
     return (
@@ -40,6 +44,11 @@ class UploadForm extends React.Component {
           <li className={cx({active: activeTab === "csv"})}>
             <Link to={tabUrls.csv} style={{cursor: activeTab === "csv" ? "default" : "pointer"}}>
               CSV upload
+            </Link>
+          </li>
+          <li className={cx({active: activeTab === "dataperfect"})}>
+            <Link to={tabUrls.dataperfect} style={{cursor: activeTab === "dataperfect" ? "default" : "pointer"}}>
+              Dataperfect upload
             </Link>
           </li>
         </ul>

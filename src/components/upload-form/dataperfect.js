@@ -1,7 +1,7 @@
 import React from "react";
 import UploadButton from "../upload-button";
 
-class CsvForm extends React.Component {
+class ExcelForm extends React.Component {
 
   render() {
     const {
@@ -14,12 +14,8 @@ class CsvForm extends React.Component {
       uploadedFilenameFromVre
     } = this.props;
 
-
     return (
       <div>
-        <p>
-          Upload of multiple CSV files is supported.
-        </p>
         <UploadButton
           classNames={["btn", "btn-primary"]}
           uploadStatus={finalVreName === null ? "Please enter a title first..." : uploadButtonStatus}
@@ -27,10 +23,9 @@ class CsvForm extends React.Component {
           vreId={vreId}
           label={uploadButtonLabel}
           float="left"
-          accept="text/csv"
+          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           onUploadFileSelect={onUploadFileSelect}
-          format="csv"
-          multiple="multiple"
+          format="excel"
         />
         <input type="text" className="form-control" disabled={true} value={uploadedFileName || uploadedFilenameFromVre} style={{maxWidth: "400px"}} />
       </div>
@@ -38,4 +33,4 @@ class CsvForm extends React.Component {
   }
 }
 
-export default CsvForm;
+export default ExcelForm;
