@@ -3,9 +3,7 @@ import { selectCollection } from "./select-collection";
 import { fetchMyVres } from "./fetch-my-vres";
 
 
-const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, redirectTo }) => {
-
-  let file = files[0];
+const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, redirectTo, format, csvSettings }) => {
   let formData = new FormData();
   if (!vreId && vreName) {
     // Set a name on first upload
@@ -14,9 +12,23 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
     // This is a reupload
     formData.append("vreId", vreId);
   }
-  formData.append("file", file);
+  formData.append("uploadType", format);
 
-  dispatch({type: "START_UPLOAD", uploadedFileName: file.name});
+  if (csvSettings) {
+    for (let setting in csvSettings) {
+      if (csvSettings.hasOwnProperty(setting) && csvSettings[setting]) {
+        formData.append(setting, csvSettings[setting]);
+      }
+    }
+  }
+
+  let uploadedFileNames = [];
+  for (let i = 0; i < files.length; i++) {
+    formData.append("file", files.item(i));
+    uploadedFileNames.push(files.item(i).name);
+  }
+
+  dispatch({type: "START_UPLOAD", uploadedFileName: uploadedFileNames.join("; ")});
   dispatch(function (dispatch, getState) {
     var state = getState();
     var req = new XMLHttpRequest();
@@ -34,11 +46,11 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
         isRedirectedToSettings = true;
         dispatch(fetchMyVres(state.userdata.userId, (vreData) => {
           if (vreId) {
-            navigateTo(redirectTo || "editDataset", [vreId]);
+            navigateTo(redirectTo || "editDatasetWithFormat", [vreId, format]);
           } else if (vreName) {
             const vreIdFromLabel = Object.keys(vreData.mine)
               .map(key => vreData.mine[key]).find(vre => vre.label === vreName).name;
-            navigateTo(redirectTo || "editDataset", [vreIdFromLabel]);
+            navigateTo(redirectTo || "editDatasetWithFormat", [vreIdFromLabel, format]);
           }
         }));
       }
@@ -56,7 +68,7 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
       let location = req.getResponseHeader("location");
       xhr.get(location, {headers: {"Authorization": state.userdata.userId}}, function (err, resp, body) {
         const responseData = JSON.parse(body);
-        dispatch({type: "FINISH_UPLOAD", data: responseData, uploadedFileName: file.name});
+        dispatch({type: "FINISH_UPLOAD", data: responseData, uploadedFileName: uploadedFileNames});
         dispatch(fetchMyVres(state.userdata.userId, () => { }));
         xhr.get(process.env.server + "/v2.1/system/vres", (err, resp, body) => {
           dispatch({type: "SET_PUBLIC_VRES", payload: JSON.parse(body)});
