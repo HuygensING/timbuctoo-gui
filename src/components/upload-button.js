@@ -15,7 +15,8 @@ class UploadButton extends React.Component {
       vreId,
       float,
       accept,
-      format
+      format,
+      multiple
     } = this.props;
 
     return (
@@ -34,7 +35,8 @@ class UploadButton extends React.Component {
             })}
             accept={accept || "*"}
             style={{display: "none"}}
-            type="file" />
+            type="file"
+            multiple={multiple || false} />
         </label>
       </form>
     );

@@ -14,6 +14,7 @@ class CsvForm extends React.Component {
       uploadedFilenameFromVre
     } = this.props;
 
+
     return (
       <div>
         <UploadButton
@@ -26,6 +27,7 @@ class CsvForm extends React.Component {
           accept="text/csv"
           onUploadFileSelect={onUploadFileSelect}
           format="csv"
+          multiple="multiple"
         />
         <input type="text" className="form-control" disabled={true} value={uploadedFileName || uploadedFilenameFromVre} style={{maxWidth: "400px"}} />
       </div>

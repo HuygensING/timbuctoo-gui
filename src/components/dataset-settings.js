@@ -84,7 +84,9 @@ class DatasetSettings extends  React.Component {
   }
 
   componentDidMount() {
-    this.props.onClearFormSettingData();
+    if (!this.props.newVreName) {
+      this.props.onClearFormSettingData();
+    }
   }
 
   onChange(ev) {
@@ -171,7 +173,8 @@ class DatasetSettings extends  React.Component {
 
         <div className="container basic-margin">
           <h4>Title</h4>
-          <input className="form-control" type="text" disabled={nameEditDisabled} placeholder="Enter dataset name" value={newVreName || ""} onChange={this.onChange.bind(this)} />
+          <input className="form-control" type="text" disabled={nameEditDisabled}
+                 placeholder="Enter dataset name" value={newVreName || ""} onChange={this.onChange.bind(this)} />
         </div>
 
         <UploadForm

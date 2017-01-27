@@ -4,7 +4,6 @@ import { fetchMyVres } from "./fetch-my-vres";
 
 
 const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, redirectTo, format }) => {
-  let file = files[0];
   let formData = new FormData();
   if (!vreId && vreName) {
     // Set a name on first upload
@@ -13,9 +12,13 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
     // This is a reupload
     formData.append("vreId", vreId);
   }
-  formData.append("file", file);
+  let uploadedFileNames = [];
+  for (let i = 0; i < files.length; i++) {
+    formData.append("file", files.item(i));
+    uploadedFileNames.push(files.item(i).name);
+  }
 
-  dispatch({type: "START_UPLOAD", uploadedFileName: file.name});
+  dispatch({type: "START_UPLOAD", uploadedFileName: uploadedFileNames.join("; ")});
   dispatch(function (dispatch, getState) {
     var state = getState();
     var req = new XMLHttpRequest();
@@ -55,7 +58,7 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
       let location = req.getResponseHeader("location");
       xhr.get(location, {headers: {"Authorization": state.userdata.userId}}, function (err, resp, body) {
         const responseData = JSON.parse(body);
-        dispatch({type: "FINISH_UPLOAD", data: responseData, uploadedFileName: file.name});
+        dispatch({type: "FINISH_UPLOAD", data: responseData, uploadedFileName: uploadedFileNames});
         dispatch(fetchMyVres(state.userdata.userId, () => { }));
         xhr.get(process.env.server + "/v2.1/system/vres", (err, resp, body) => {
           dispatch({type: "SET_PUBLIC_VRES", payload: JSON.parse(body)});

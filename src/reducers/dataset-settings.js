@@ -23,6 +23,7 @@ export default function(state = initialState, action) {
         ...state,
         newVreName: action.newVreName.length > 0 ? action.newVreName : null
       };
+
     case "SET_PROVENANCE":
       return {
         ...state,
