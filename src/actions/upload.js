@@ -3,7 +3,7 @@ import { selectCollection } from "./select-collection";
 import { fetchMyVres } from "./fetch-my-vres";
 
 
-const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, redirectTo, format }) => {
+const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, redirectTo, format, csvSettings }) => {
   let formData = new FormData();
   if (!vreId && vreName) {
     // Set a name on first upload
@@ -12,6 +12,16 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
     // This is a reupload
     formData.append("vreId", vreId);
   }
+  formData.append("uploadType", format);
+
+  if (csvSettings) {
+    for (let setting in csvSettings) {
+      if (csvSettings.hasOwnProperty(setting) && csvSettings[setting]) {
+        formData.append(setting, csvSettings[setting]);
+      }
+    }
+  }
+
   let uploadedFileNames = [];
   for (let i = 0; i < files.length; i++) {
     formData.append("file", files.item(i));

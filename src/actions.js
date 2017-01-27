@@ -22,7 +22,6 @@ export default function actionsMaker(navigateTo, dispatch) {
     // loading import data
     onUploadFileSelect: onUploadFileSelect(navigateTo, dispatch),
 
-
     onClearFormSettingData: () => dispatch({type: "CLEAR_DATASET_SETTINGS"}),
     onSetNewVreName: (value) => dispatch({type: "SET_NEW_VRE_NAME", newVreName: value}),
     onSetNewDescription: (value) => dispatch({type: "SET_DESCRIPTION", description: value}),

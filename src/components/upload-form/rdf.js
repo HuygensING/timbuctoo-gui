@@ -1,7 +1,7 @@
 import React from "react";
 import UploadButton from "../upload-button";
 
-class ExcelForm extends React.Component {
+class CsvForm extends React.Component {
 
   render() {
     const {
@@ -9,10 +9,11 @@ class ExcelForm extends React.Component {
       vreId,
       finalVreName,
       uploadButtonLabel,
-      onUploadFileSelect,
+      onRdfUpload,
       uploadedFileName,
       uploadedFilenameFromVre
     } = this.props;
+
 
     return (
       <div>
@@ -23,9 +24,8 @@ class ExcelForm extends React.Component {
           vreId={vreId}
           label={uploadButtonLabel}
           float="left"
-          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-          onUploadFileSelect={onUploadFileSelect}
-          format="xlsx"
+          onUploadFileSelect={onRdfUpload}
+          format="rdf"
         />
         <input type="text" className="form-control" disabled={true} value={uploadedFileName || uploadedFilenameFromVre} style={{maxWidth: "400px"}} />
       </div>
@@ -33,4 +33,4 @@ class ExcelForm extends React.Component {
   }
 }
 
-export default ExcelForm;
+export default CsvForm;
