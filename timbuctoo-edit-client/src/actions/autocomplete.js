@@ -2,7 +2,7 @@ import server from "./server";
 
 export default function(path, query, done) {
 	let options = {
-		url: `${process.env.server}/v2.1/${path.replace(/^\/v[^/]+\//, "")}?query=${query}*`
+		url: `${process.env.TIMBUCTOO_URL}/v2.1/${path.replace(/^\/v[^/]+\//, "")}?query=${query}*`
 	};
 
 	let xhrDone = function(err, response, body) {

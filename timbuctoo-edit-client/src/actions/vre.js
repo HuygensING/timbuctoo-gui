@@ -9,7 +9,7 @@ const listVres = () => (dispatch) =>
 		headers: {
 			"Accept": "application/json"
 		},
-		url: `${process.env.server}/v2.1/system/vres`
+		url: `${process.env.TIMBUCTOO_URL}/v2.1/system/vres`
 	}, (err, resp) => {
 		dispatch({type: "LIST_VRES", list: JSON.parse(resp.body)});
 	}, null, "List VREs");
@@ -20,7 +20,7 @@ const setVre = (vreId, next = () => { }) => (dispatch) =>
 		headers: {
 			"Accept": "application/json"
 		},
-		url: `${process.env.server}/v2.1/metadata/${vreId}?withCollectionInfo=true`
+		url: `${process.env.TIMBUCTOO_URL}/v2.1/metadata/${vreId}?withCollectionInfo=true`
 	}, (err, resp) => {
 		if (resp.statusCode === 200) {
 			var body = JSON.parse(resp.body);

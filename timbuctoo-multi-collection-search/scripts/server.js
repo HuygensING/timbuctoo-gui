@@ -21,7 +21,7 @@ function onFilesChanged(event, file) {
 
 browserSync.watch(watchFiles, debounce(onFilesChanged, 300));
 
-var localSolr = process.env.SOLR || "http://resources.huygens.knaw.nl/repositorysolr/aggregated";
+var localSolr = process.env.SOLR_QUERY_URL;
 var solrOpts = url.parse(localSolr);
 solrOpts.route = "/repositorysolr/aggregated";
 

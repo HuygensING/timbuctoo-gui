@@ -48,5 +48,4 @@ browserify src/index.js \
 	--external xhr \
 	--standalone TimbuctooSearch \
 	--transform [ babelify ] \
-	--transform [ envify --NODE_ENV="${NODE_ENV}" --server="${SERVER}" ] \
 	--verbose

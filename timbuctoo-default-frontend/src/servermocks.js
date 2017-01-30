@@ -3,7 +3,7 @@ import PublishState from "./util/publish-state";
 
 export default function setupMocks(xhrmock, orig) {
   xhrmock
-    .get(process.env.server + "/v2.1/metadata/Admin", function (req, resp) {
+    .get(process.env.TIMBUCTOO_URL + "/v2.1/metadata/Admin", function (req, resp) {
       return resp
         .status(200)
         .body(`{
@@ -55,7 +55,7 @@ export default function setupMocks(xhrmock, orig) {
           ]
         }`);
     })
-    .get(process.env.server + "/v2.1/system/users/me/vres", function(req, resp) {
+    .get(process.env.TIMBUCTOO_URL + "/v2.1/system/users/me/vres", function(req, resp) {
       console.log("fetch-my-vres");
       return resp
         .status(200)
@@ -79,11 +79,11 @@ export default function setupMocks(xhrmock, orig) {
           }
         }`);
     })
-    .post(process.env.server + "/v2.1/bulk-upload", function (req, resp) {
+    .post(process.env.TIMBUCTOO_URL + "/v2.1/bulk-upload", function (req, resp) {
       console.log("bulk-upload");
       return resp
         .status(200)
-        .header("Location", process.env.server + "/v2.1/bulk-upload/thevrename");
+        .header("Location", process.env.TIMBUCTOO_URL + "/v2.1/bulk-upload/thevrename");
     })
     .post("<<The execute mapping url that the server provides>>", function (req, resp) {
       console.log("execute mapping with failures", req.body());
@@ -102,7 +102,7 @@ export default function setupMocks(xhrmock, orig) {
           success: true
         }));
     })
-    .get(process.env.server + "/v2.1/bulk-upload/thevrename", function (req, resp) {
+    .get(process.env.TIMBUCTOO_URL + "/v2.1/bulk-upload/thevrename", function (req, resp) {
       console.log("Get VRE information, saved mapping: ", localStorage.getItem("saved-mapping"));
       return resp
         .status(200)
@@ -127,7 +127,7 @@ export default function setupMocks(xhrmock, orig) {
           ]
         }));
     })
-    .delete(process.env.server + "/v2.1/bulk-upload/thevrename", function (req, resp) {
+    .delete(process.env.TIMBUCTOO_URL + "/v2.1/bulk-upload/thevrename", function (req, resp) {
       console.log("delete vre");
       return resp
         .status(403);
@@ -264,13 +264,13 @@ export default function setupMocks(xhrmock, orig) {
           "items": []
         }));
     })
-    .get(process.env.server + "/v2.1/javascript-globals", function(req, res) {
+    .get(process.env.TIMBUCTOO_URL + "/v2.1/javascript-globals", function(req, res) {
       console.log("get javascript globals");
       return res
         .status(200)
         .body('{"env":{"TIMBUCTOO_SEARCH_URL":"http://example.com/"}}')
     })
-    .get(process.env.server + "/v2.1/system/vres", function(req, res) {
+    .get(process.env.TIMBUCTOO_URL + "/v2.1/system/vres", function(req, res) {
       console.log("get public datasets");
       return res
         .status(200)

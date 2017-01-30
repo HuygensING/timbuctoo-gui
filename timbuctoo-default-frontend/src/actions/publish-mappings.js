@@ -72,7 +72,7 @@ const publishMappings = (navigateTo) => (dispatch, getState) => {
     if (parts[parts.length - 1] === "success") {
       dispatch({type: "PUBLISH_SUCCEEDED"});
       dispatch(fetchMyVres(userId, () => navigateTo("root")));
-      xhr.get(process.env.server + "/v2.1/system/vres", (err, resp, body) => {
+      xhr.get(process.env.TIMBUCTOO_URL + "/v2.1/system/vres", (err, resp, body) => {
         dispatch({type: "SET_PUBLIC_VRES", payload: JSON.parse(body)});
       });
     } else {

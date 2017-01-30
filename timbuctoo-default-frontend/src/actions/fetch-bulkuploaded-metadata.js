@@ -4,7 +4,7 @@ import { deserializeSavedRmlMapping } from "./predicate-object-mappings";
 import PublishState from "../util/publish-state";
 
 const fetchBulkUploadedMetadata = (vreId, navigateTo, onFetchError = () => {}) => (dispatch, getState)  => {
-  let location = `${process.env.server}/v2.1/bulk-upload/${vreId}`;
+  let location = `${process.env.TIMBUCTOO_URL}/v2.1/bulk-upload/${vreId}`;
   xhr.get(location, {headers: {"Authorization": getState().userdata.userId}}, function (err, resp, body) {
     if (resp.statusCode > 299 || resp.statusCode < 200) {
       return onFetchError();

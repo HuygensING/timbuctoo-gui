@@ -31,9 +31,9 @@ export function storeSearch() {
 }
 
 const urls = {
-  root: () => "/dataset-search",
+  root: () => "/",
   entity: (dataset, path) => dataset && path ?
-    `/dataset-search/${dataset}/${path}` : "/dataset-search/:dataset/:collectionName/:id"
+    `/${dataset}/${path}` : "/:dataset/:collectionName/:id"
 };
 
 export { urls };

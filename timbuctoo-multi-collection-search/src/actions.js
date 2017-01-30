@@ -10,7 +10,7 @@ const setPagination = (state) => (redispatch, getState) => {
   const timeStamp = new Date().getTime();
   redispatch({type: "CLEAR_PAGINATION"});
   xhr({
-    url: "/repositorysolr/aggregated",
+    url: process.env.SOLR_QUERY_URL + "/aggregated/select",
     method: "POST",
     data: newQuery,
     headers: {
@@ -36,7 +36,7 @@ export default function actionsMaker(navigateTo, dispatch) {
     onFetchEntity: (collectionName, id) => {
       dispatch((redispatch) => {
         redispatch({type: "START_ENTITY_FETCH"});
-        xhr(`${process.env.server}/v2.1/domain/${collectionName}/${id}`, (err, resp, body) => {
+        xhr(`${process.env.TIMBUCTOO_URL}/v2.1/domain/${collectionName}/${id}`, (err, resp, body) => {
 
 
           const entity = JSON.parse(body);
@@ -44,7 +44,7 @@ export default function actionsMaker(navigateTo, dispatch) {
             .filter(uri => uri !== null);
           if (uris.length > 0) {
             xhr({
-              url: "/repositorysolr/aggregated",
+              url: process.env.SOLR_QUERY_URL + "/aggregated/select",
               method: "POST",
               data: `q=${encodeURIComponent(buildRdfUriQuery(uris))}&fl=dataset_s&wt=json`,
               headers: {

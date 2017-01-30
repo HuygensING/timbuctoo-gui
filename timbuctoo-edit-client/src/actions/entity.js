@@ -82,7 +82,7 @@ const selectEntity = (domain, entityId, errorMessage = null, successMessage = nu
 			dispatch(selectDomain(domain));
 		}
 		dispatch({type: "BEFORE_FETCH_ENTITY"})
-		crud.fetchEntity(`${process.env.server}/v2.1/domain/${domain}/${entityId}`, (data) => {
+		crud.fetchEntity(`${process.env.TIMBUCTOO_URL}/v2.1/domain/${domain}/${entityId}`, (data) => {
 			dispatch({type: "RECEIVE_ENTITY", domain: domain, data: data, errorMessage: errorMessage});
 			if (successMessage !== null) {
 				dispatch({type: "SUCCESS_MESSAGE", message: successMessage});

@@ -22,9 +22,9 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
     var req = new XMLHttpRequest();
     if (vreId) {
       // This is a re-upload of the data
-      req.open('PUT', process.env.server + "/v2.1/bulk-upload", true);
+      req.open('PUT', process.env.TIMBUCTOO_URL + "/v2.1/bulk-upload", true);
     } else {
-      req.open('POST', process.env.server + "/v2.1/bulk-upload", true);
+      req.open('POST', process.env.TIMBUCTOO_URL + "/v2.1/bulk-upload", true);
     }
     req.setRequestHeader("Authorization", state.userdata.userId);
     var pos = 0;
@@ -58,7 +58,7 @@ const onUploadFileSelect = (navigateTo, dispatch) => (files, { vreName, vreId, r
         const responseData = JSON.parse(body);
         dispatch({type: "FINISH_UPLOAD", data: responseData, uploadedFileName: file.name});
         dispatch(fetchMyVres(state.userdata.userId, () => { }));
-        xhr.get(process.env.server + "/v2.1/system/vres", (err, resp, body) => {
+        xhr.get(process.env.TIMBUCTOO_URL + "/v2.1/system/vres", (err, resp, body) => {
           dispatch({type: "SET_PUBLIC_VRES", payload: JSON.parse(body)});
         });
         if (responseData.collections && responseData.collections.length) {
@@ -79,7 +79,7 @@ const uploadImage = (vreId, files) => (dispatch, getState) => {
 
   formData.append("file", file);
 
-  req.open('POST', `${process.env.server}/v2.1/bulk-upload/${vreId}/image`, true);
+  req.open('POST', `${process.env.TIMBUCTOO_URL}/v2.1/bulk-upload/${vreId}/image`, true);
   req.setRequestHeader("Authorization", userId);
   dispatch({type: "IMAGE_UPLOAD_STARTED"});
   req.onload = function() {
@@ -88,7 +88,7 @@ const uploadImage = (vreId, files) => (dispatch, getState) => {
     } else {
       dispatch({type: "IMAGE_UPLOAD_SUCCESS"});
       dispatch(fetchMyVres(userId, () => { }));
-      xhr.get(process.env.server + "/v2.1/system/vres", (err, resp, body) => {
+      xhr.get(process.env.TIMBUCTOO_URL + "/v2.1/system/vres", (err, resp, body) => {
         dispatch({type: "SET_PUBLIC_VRES", payload: JSON.parse(body)});
       });
     }
@@ -102,7 +102,7 @@ const uploadImage = (vreId, files) => (dispatch, getState) => {
 const saveDatasetSettings = (vreId, next = () => {}) => (dispatch, getState) => {
   const { datasetSettings, userdata: { userId } } = getState();
   xhr({
-    url: `${process.env.server}/v2.1/bulk-upload/${vreId}`,
+    url: `${process.env.TIMBUCTOO_URL}/v2.1/bulk-upload/${vreId}`,
     method: "PUT",
     headers: {
       "Content-type": "application/json",
@@ -116,7 +116,7 @@ const saveDatasetSettings = (vreId, next = () => {}) => (dispatch, getState) => 
     })
   }, (err, resp, body) => {
     dispatch(fetchMyVres(userId, () => { }));
-    xhr.get(process.env.server + "/v2.1/system/vres", (err, resp, body) => {
+    xhr.get(process.env.TIMBUCTOO_URL + "/v2.1/system/vres", (err, resp, body) => {
       dispatch({type: "SET_PUBLIC_VRES", payload: JSON.parse(body)});
     });
     next();

@@ -9,7 +9,7 @@ import xhr from "xhr";
 const setUser = (response) => {
 	// TODO: validate user session.
 	xhr({
-		url: `${process.env.server}/v2.1/system/users/me/vres`,
+		url: `${process.env.TIMBUCTOO_URL}/v2.1/system/users/me/vres`,
 		headers: {
 			'Authorization': response.token
 		}

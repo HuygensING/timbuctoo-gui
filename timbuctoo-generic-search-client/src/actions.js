@@ -9,7 +9,7 @@ export default function actionsMaker(navigateTo, dispatch) {
 		onFetchEntity: (collectionName, id) => {
 			dispatch((redispatch) => {
 				redispatch({type: "START_ENTITY_FETCH"});
-				xhr(`${process.env.SERVER}/v2.1/domain/${collectionName}/${id}`, (err, resp, body) => {
+				xhr(`${process.env.TIMBUCTOO_URL}/v2.1/domain/${collectionName}/${id}`, (err, resp, body) => {
 					redispatch({type: "RECEIVE_ENTITY", entity: JSON.parse(body)});
 				})
 				

@@ -1,7 +1,7 @@
 import xhr from "xhr";
 
 const fetchMyVres = (token, callback, redirectToRoot = () => {}) => (dispatch) => {
-  xhr(process.env.server + "/v2.1/system/users/me/vres", {
+  xhr(process.env.TIMBUCTOO_URL + "/v2.1/system/users/me/vres", {
     headers: {
       "Authorization": token
     }

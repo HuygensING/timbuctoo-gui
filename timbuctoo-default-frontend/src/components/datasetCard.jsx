@@ -86,7 +86,7 @@ function DataSetCard(props) {
       }
       {props.userId
         ? (<a className="card-dataset btn btn-default"
-              href={`${process.env.server}/static/edit-gui/?vreId=${props.vreId}&hsid=${props.userId}`} target="_blank">
+              href={`${process.env.TIMBUCTOO_EDIT_GUI_URL}/?vreId=${props.vreId}&hsid=${props.userId}`} target="_blank">
             <span className="glyphicon glyphicon-pencil" />{" "}
             Edit
           </a>)

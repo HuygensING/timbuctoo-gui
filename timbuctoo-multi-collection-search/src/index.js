@@ -39,9 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
       datasets: JSON.parse(body)
     });
 
-    xhr({uri: process.env.server + "/v2.1/metadata/Admin?withCollectionInfo=true"}, onReceiveMetadata);
+    xhr({uri: process.env.TIMBUCTOO_URL + "/v2.1/metadata/Admin?withCollectionInfo=true"}, onReceiveMetadata);
   };
 
-  xhr({uri: process.env.server + "/v2.1/system/vres"}, onReceiveDatasets);
+  xhr({uri: process.env.TIMBUCTOO_URL + "/v2.1/system/vres"}, onReceiveDatasets);
 
 });

@@ -5,7 +5,7 @@ const saveNewEntity = (domain, saveData, token, vreId, next, fail) =>
 		method: "POST",
 		headers: server.makeHeaders(token, vreId),
 		body: JSON.stringify(saveData),
-		url: `${process.env.server}/v2.1/domain/${domain}`
+		url: `${process.env.TIMBUCTOO_URL}/v2.1/domain/${domain}`
 	}, next, fail, `Create new ${domain}`);
 
 const updateEntity = (domain, saveData, token, vreId, next, fail) =>
@@ -13,14 +13,14 @@ const updateEntity = (domain, saveData, token, vreId, next, fail) =>
 		method: "PUT",
 		headers: server.makeHeaders(token, vreId),
 		body: JSON.stringify(saveData),
-		url: `${process.env.server}/v2.1/domain/${domain}/${saveData._id}`
+		url: `${process.env.TIMBUCTOO_URL}/v2.1/domain/${domain}/${saveData._id}`
 	}, next, fail, `Update ${domain}`);
 
 const deleteEntity = (domain, entityId, token, vreId, next, fail) =>
 	server.performXhr({
 		method: "DELETE",
 		headers: server.makeHeaders(token, vreId),
-		url: `${process.env.server}/v2.1/domain/${domain}/${entityId}`
+		url: `${process.env.TIMBUCTOO_URL}/v2.1/domain/${domain}/${entityId}`
 	}, next, fail, `Delete ${domain}`);
 
 const fetchEntity = (location, next, fail) =>
@@ -37,7 +37,7 @@ const fetchEntityList = (domain, start, rows, next) =>
 	server.performXhr({
 		method: "GET",
 		headers: {"Accept": "application/json"},
-		url: `${process.env.server}/v2.1/domain/${domain}?rows=${rows}&start=${start}`
+		url: `${process.env.TIMBUCTOO_URL}/v2.1/domain/${domain}?rows=${rows}&start=${start}`
 	}, (err, resp) => {
 		const data = JSON.parse(resp.body);
 		next(data);

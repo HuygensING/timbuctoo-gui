@@ -14,7 +14,7 @@ const checkIndex = (afterCheck) => (dispatch, getState) => {
 		.filter((collection) => !collection.unknown && !collection.relationCollection)
 		.map((collection) => collection.collectionName)[0];
 
-	xhr(`/solr/${collection}/select`, {
+	xhr(`${process.env.SOLR_QUERY_URL}/${collection}/select`, {
 		headers: {"Accept": "application/json"}
 	}, (err, resp) => {
 		if (resp.statusCode !== 200) {
@@ -49,7 +49,7 @@ const configureSearchClients = () => (dispatch, getState) => {
 		.filter((collection) => !collection.unknown && !collection.relationCollection)
 		.map((collection) => ({
 			client: new SolrClient({
-				url: `/solr/${collection.collectionName}/select`,
+				url: `${process.env.SOLR_QUERY_URL}/${collection.collectionName}/select`,
 				searchFields:
 					[{label: "Search", field: "displayName_t", type: "text"}].concat(
 						archetypes
@@ -89,7 +89,11 @@ const configureSearchClients = () => (dispatch, getState) => {
 const createIndexes = () => (dispatch, getState) => {
 	const { metadata: { vreId } } = getState();
 	dispatch({type: "INDEXES_PENDING"});
-	xhr(`/${vreId}`, {
+	xhr(`${process.env.INDEXER_URL}`, {
+		body: JSON.stringify({datasetName: vreId}),
+		headers: {
+        "Content-Type": "application/json"
+    },
 		method: "POST"
 	}, (err, resp) => {
 		if (resp.statusCode === 200) {

@@ -20,12 +20,9 @@ if (process.env.USE_MOCK === "true") {
   setupMocks(xhrmock, orig);
 }
 
-xhr.get(process.env.server + "/v2.1/javascript-globals", (err, res) => {
-  var globals = JSON.parse(res.body);
-  store.dispatch({type: "SET_SEARCH_URL", data: globals.env.TIMBUCTOO_SEARCH_URL});
-});
+store.dispatch({ type: "SET_SEARCH_URL", data: process.env.TIMBUCTOO_SEARCH_GUI_URL });
 
-xhr.get(process.env.server + "/v2.1/system/vres", (err, resp, body) => {
+xhr.get(process.env.TIMBUCTOO_URL + "/v2.1/system/vres", (err, resp, body) => {
   store.dispatch({type: "SET_PUBLIC_VRES", payload: JSON.parse(body)});
 });
 
@@ -34,7 +31,7 @@ const initialRender = () => ReactDOM.render(router, document.getElementById("app
 const initialize = (token = null) => {
   if (token) {
     xhr.get({
-      url: process.env.server + "/v2.1/system/users/me",
+      url: process.env.TIMBUCTOO_URL + "/v2.1/system/users/me",
       headers: {
         'Authorization': token
       }
@@ -48,12 +45,11 @@ const initialize = (token = null) => {
     });
   }
   initialRender();
-
 };
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  xhr(process.env.server + "/v2.1/metadata/Admin?withCollectionInfo=true", (err, resp) => {
+  xhr(process.env.TIMBUCTOO_URL + "/v2.1/metadata/Admin?withCollectionInfo=true", (err, resp) => {
 
     store.dispatch({type: "SET_ARCHETYPE_METADATA", data: JSON.parse(resp.body)});
     const token = getToken();
