@@ -118,6 +118,7 @@ class DatasetSettings extends  React.Component {
       returnToRoot,
       imageUploadStatus,
       imageUploadErrorMessage,
+      onDismissRsError,
       imageUrl,
       uploadedFilenameFromVre,
       format,
@@ -195,6 +196,7 @@ class DatasetSettings extends  React.Component {
           onRsDiscoveryChange={onRsDiscoveryChange}
           onRsDiscoverySubmit={onRsDiscoverySubmit}
           onRsDatasetSelect={onRsDatasetSelect}
+          onDismissRsError={onDismissRsError}
         />
 
         <div className="container basic-margin">

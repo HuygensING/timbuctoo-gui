@@ -1,4 +1,6 @@
 import xhr from "xhr";
+import {fetchMyVres} from "./fetch-my-vres";
+import {selectCollection} from "./select-collection";
 
 
 const submitRsDiscovery = (dispatch, getState)  => {
@@ -18,17 +20,55 @@ const submitRsDiscovery = (dispatch, getState)  => {
 const importRsDataset = (navigateTo, dispatch1) => (name, vreName) => {
 
   dispatch1((dispatch, getState) => {
-    const { resourceSync: { discovery: source }} = getState();
+    const { resourceSync: { discovery: source }, userdata: { userId }} = getState();
     const payLoad = {
       source: source,
       name: name,
       vreName: vreName
     };
 
-    dispatch({type: "START_UPLOAD", uploadedFileName: name, uploadStatus: "Importing dataset"});
+    dispatch({type: "START_RS_IMPORT", status: "Importing dataset " + name});
 
-    console.log(JSON.stringify(payLoad));
+    const req = new XMLHttpRequest();
+    req.open("POST", `${process.env.server}/v2.1/remote/rs/import`);
+    req.setRequestHeader("Authorization", userId);
+    req.setRequestHeader("Content-type", "application/json");
 
+    req.onreadystatechange = function() {
+      if (req.readyState != null && (req.readyState < 3 || req.status != 200)) {
+        return
+      }
+      var newPart = req.responseText.substr(pos);
+      pos = req.responseText.length;
+      newPart.split("\n").forEach((line) => {
+        dispatch({type: "RS_IMPORT_STATUS_UPDATE", data: line});
+      });
+    };
+
+    const afterUpload = () => {
+      dispatch(fetchMyVres(userId, () => { }));
+      xhr.get(process.env.server + "/v2.1/system/vres", (err, resp, body) => {
+        dispatch({type: "SET_PUBLIC_VRES", payload: JSON.parse(body)});
+      });
+    };
+
+    const onError = () => {
+      dispatch({type: "FINISH_RS_IMPORT", success: false});
+      afterUpload();
+    };
+
+    req.onerror = onError;
+
+    req.onload = function () {
+      if (this.status >= 300 || this.status < 200) {
+        onError();
+      } else {
+        dispatch({type: "FINISH_RS_IMPORT", success: true});
+        afterUpload();
+      }
+    };
+
+    req.send(JSON.stringify(payLoad));
   })
 
 };

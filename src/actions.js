@@ -30,6 +30,7 @@ export default function actionsMaker(navigateTo, dispatch) {
     onRsDiscoveryChange: (value) => dispatch({type: "SET_RS_DISCOVERY_URL", value: value}),
     onRsDiscoverySubmit: () => dispatch(submitRsDiscovery),
     onRsDatasetSelect: importRsDataset(navigateTo, dispatch),
+    onDismissRsError: () => dispatch({type: "DISMISS_RS_ERROR"}),
 
     onClearFormSettingData: () => dispatch({type: "CLEAR_DATASET_SETTINGS"}),
     onSetNewVreName: (value) => dispatch({type: "SET_NEW_VRE_NAME", newVreName: value}),

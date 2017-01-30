@@ -1,31 +1,40 @@
 import React from "react";
+import Message from "../message";
 
 class ResourceSyncForm extends React.Component {
 
   render() {
     const {
-      resourceSync: { discovery, setDetails, pending },
+      resourceSync: { discovery, setDetails, pending, status, failure },
       onRsDiscoveryChange,
       onRsDiscoverySubmit,
       onRsDatasetSelect,
+      onDismissRsError,
       finalVreName,
-      vreId,
-      uploadButtonStatus
+      vreId
     } = this.props;
 
     const vreName = vreId ? null : finalVreName;
 
     const disabled = finalVreName === null && !vreId;
 
-    return uploadButtonStatus ? (
+    const errorMessage = failure ? (
+        <Message dismissible={true} alertLevel="danger" onCloseMessage={onDismissRsError}>
+          Failed to import dataset
+        </Message>
+      ) : null;
+
+    return status ? (
       <div>
-        Importing dataset: {uploadButtonStatus}
+        {status}
       </div>
     ) : (
       <div>
         <p>
           Import dataset via resource sync discovery
         </p>
+        {errorMessage}
+
         <div className="input-group small-margin">
           <input type="text" placeholder="Enter discovery url"
                  onKeyPress={(ev) => ev.key === 'Enter' ? onRsDiscoverySubmit() : false}

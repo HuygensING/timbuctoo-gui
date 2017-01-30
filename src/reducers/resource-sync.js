@@ -1,7 +1,9 @@
 const initialState = {
   discovery: "",
   setDetails: [],
-  pending: false
+  pending: false,
+  status: null,
+  failure: false
 };
 
 
@@ -28,7 +30,24 @@ export default function(state=initialState, action) {
       return {
         ...state,
         pending: true
-      }
+      };
+    case "START_RS_IMPORT":
+      return {
+        ...state,
+        status: action.status
+      };
+    case "FINISH_RS_IMPORT":
+      return action.success ? {
+        ...state,
+        failure: false,
+        status: null
+      } : {
+        ...state,
+        failure: true,
+        status: null
+      };
+    case "DISMISS_RS_ERROR":
+      return {...state, failure: false};
   }
 
   return state;
