@@ -20,6 +20,7 @@ export default function(appState, routed) {
     imageUploadStatus: appState.datasetSettings.imageUploadStatus,
     imageUploadErrorMessage: appState.datasetSettings.imageUploadErrorMessage,
     imageUrl: image,
-    format: format || null
+    format: format || null,
+    resourceSync: appState.resourceSync
   }
 }

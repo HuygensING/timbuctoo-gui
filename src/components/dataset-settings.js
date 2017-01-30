@@ -120,7 +120,10 @@ class DatasetSettings extends  React.Component {
       imageUploadErrorMessage,
       imageUrl,
       uploadedFilenameFromVre,
-      format
+      format,
+      resourceSync,
+      onRsDiscoveryChange,
+      onRsDiscoverySubmit
     } = this.props;
 
     const finalVreName = newVreName ?
@@ -186,7 +189,11 @@ class DatasetSettings extends  React.Component {
           uploadButtonLabel={uploadButtonLabel}
           onUploadFileSelect={onUploadFileSelect}
           uploadedFileName={uploadedFileName}
-          uploadedFilenameFromVre={uploadedFilenameFromVre} />
+          uploadedFilenameFromVre={uploadedFilenameFromVre}
+          resourceSync={resourceSync}
+          onRsDiscoveryChange={onRsDiscoveryChange}
+          onRsDiscoverySubmit={onRsDiscoverySubmit}
+        />
 
         <div className="container basic-margin">
           <h4>Description</h4>

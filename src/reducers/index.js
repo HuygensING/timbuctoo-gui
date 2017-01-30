@@ -12,6 +12,7 @@ import predicateObjectMappings from "./predicate-object-mappings";
 import customProperties from "./custom-properties";
 import previewRml from "./preview-rml";
 import datasetSettings from "./dataset-settings";
+import resourceSync from "./resource-sync";
 
 export default combineReducers({
   messages: messages,
@@ -25,5 +26,6 @@ export default combineReducers({
   predicateObjectMappings: predicateObjectMappings,
   customProperties: customProperties,
   previewRml: previewRml,
-  datasetSettings: datasetSettings
+  datasetSettings: datasetSettings,
+  resourceSync: resourceSync
 });

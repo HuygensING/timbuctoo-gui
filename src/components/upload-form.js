@@ -7,13 +7,13 @@ import { urls } from "../router";
 import CsvForm from "./upload-form/csv";
 import ExcelForm from "./upload-form/excel";
 import DataperfectForm from "./upload-form/dataperfect";
-import RdfForm from "./upload-form/rdf";
+import ResourceSyncForm from "./upload-form/resource-sync";
 
 const formatForms = {
   csv: (props) =>  <CsvForm {...props} />,
   xlsx: (props) => <ExcelForm {...props} />,
   dataperfect: (props) => <DataperfectForm {...props} />,
-  rdf: (props) => <RdfForm {...props} />
+  rs: (props) => <ResourceSyncForm {...props} />
 };
 
 class UploadForm extends React.Component {
@@ -27,12 +27,12 @@ class UploadForm extends React.Component {
       xlsx: urls.editDataset(vreId),
       csv: urls.editDatasetWithFormat(vreId, "csv"),
       dataperfect: urls.editDatasetWithFormat(vreId, "dataperfect"),
-      rdf: urls.editDatasetWithFormat(vreId, "rdf"),
+      rs: urls.editDatasetWithFormat(vreId, "rs"),
     } : {
       xlsx: urls.newDataset(),
       csv: urls.newDatasetWithFormat("csv"),
       dataperfect: urls.newDatasetWithFormat("dataperfect"),
-      rdf: urls.newDatasetWithFormat("rdf"),
+      rs: urls.newDatasetWithFormat("rs"),
     };
 
     return (
@@ -55,11 +55,11 @@ class UploadForm extends React.Component {
               Dataperfect upload
             </Link>
           </li>
-{/*          <li className={cx({active: activeTab === "rdf"})}>
-            <Link to={tabUrls.rdf} style={{cursor: activeTab === "rdf" ? "default" : "pointer"}}>
-              Rdf import
+          <li className={cx({active: activeTab === "rs"})}>
+            <Link to={tabUrls.rs} style={{cursor: activeTab === "rs" ? "default" : "pointer"}}>
+              Remote repository
             </Link>
-          </li>*/}
+          </li>
         </ul>
         <div style={{border: "1px solid #ddd", borderTop: "none", padding: "1em"}}>
           {uploadError}
