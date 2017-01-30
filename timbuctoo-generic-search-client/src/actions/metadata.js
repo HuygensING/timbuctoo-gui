@@ -6,7 +6,7 @@ const setArchetypes = (afterInit) => (dispatch) =>
 		headers: {
 			"Accept": "application/json"
 		},
-		url: `${globals.env.SERVER}/v2.1/metadata/Admin?withCollectionInfo=true`
+		url: `${process.env.SERVER}/v2.1/metadata/Admin?withCollectionInfo=true`
 	}, (err, resp) => {
 		if (resp.statusCode === 200) {
 			var collectionMetadata = JSON.parse(resp.body);
@@ -22,7 +22,7 @@ const setVre = (vreId, afterInit) => (dispatch) =>
 		headers: {
 			"Accept": "application/json"
 		},
-		url: `${globals.env.SERVER}/v2.1/metadata/${vreId}?withCollectionInfo=true`
+		url: `${process.env.SERVER}/v2.1/metadata/${vreId}?withCollectionInfo=true`
 	}, (err, resp) => {
 		if (resp.statusCode === 200) {
 			var collectionMetadata = JSON.parse(resp.body);
