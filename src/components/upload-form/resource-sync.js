@@ -11,6 +11,7 @@ class ResourceSyncForm extends React.Component {
       onRsDatasetSelect,
       onDismissRsError,
       finalVreName,
+      uploadButtonStatus,
       vreId
     } = this.props;
 
@@ -24,9 +25,9 @@ class ResourceSyncForm extends React.Component {
         </Message>
       ) : null;
 
-    return status ? (
+    return status || uploadButtonStatus ? (
       <div>
-        {status}
+        {status || uploadButtonStatus}
       </div>
     ) : (
       <div>
@@ -54,7 +55,7 @@ class ResourceSyncForm extends React.Component {
               <li key={i} style={{marginBottom: "4px"}}>
                 <button className="btn btn-default"
                         disabled={disabled}
-                        onClick={() => onRsDatasetSelect(detail.name, vreId || vreName) }>
+                        onClick={() => onRsDatasetSelect(detail.name, {vreId: vreId, vreName: vreName}) }>
                   Import {disabled ? "(please enter a dataset name first)" : null}
                 </button>{" "}
                 {detail.name}

@@ -17,14 +17,14 @@ const submitRsDiscovery = (dispatch, getState)  => {
 
 };
 
-const importRsDataset = (navigateTo, dispatch1) => (name, vreName) => {
+const importRsDataset = (navigateTo, dispatch1) => (name, {vreId, vreName}) => {
 
   dispatch1((dispatch, getState) => {
     const { resourceSync: { discovery: source }, userdata: { userId }} = getState();
     const payLoad = {
       source: source,
       name: name,
-      vreName: vreName
+      vreName: vreId || vreName
     };
 
     dispatch({type: "START_RS_IMPORT", status: "Importing dataset " + name});
@@ -33,8 +33,24 @@ const importRsDataset = (navigateTo, dispatch1) => (name, vreName) => {
     req.open("POST", `${process.env.server}/v2.1/remote/rs/import`);
     req.setRequestHeader("Authorization", userId);
     req.setRequestHeader("Content-type", "application/json");
+    var isRedirectedToSettings = false;
 
     req.onreadystatechange = function() {
+      if (!isRedirectedToSettings) {
+        isRedirectedToSettings = true;
+        dispatch(fetchMyVres(userId, (vreData) => {
+          if (vreId) {
+            navigateTo("editDatasetWithFormat", [vreId, "rs"]);
+          } else if (vreName) {
+            const vreFromLabel = Object.keys(vreData.mine)
+              .map(key => vreData.mine[key]).find(vre => vre.label === vreName);
+            if (vreFromLabel) {
+              navigateTo("editDatasetWithFormat", [vreFromLabel.name, "rs"]);
+            }
+          }
+        }));
+      }
+
       if (req.readyState != null && (req.readyState < 3 || req.status != 200)) {
         return
       }
