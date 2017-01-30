@@ -12,7 +12,7 @@ const initialState = {
 export default function(state=initialState, action) {
   switch (action.type) {
     case "START_UPLOAD":
-      return {...initialState, uploadStatus: "transfering file", uploadedFileName: action.uploadedFileName};
+      return {...initialState, uploadStatus: action.uploadStatus || "transferring file", uploadedFileName: action.uploadedFileName};
     case "UPLOAD_STATUS_UPDATE":
       if (action.data) {
         return {...state,

@@ -9,7 +9,8 @@ import {
 } from "./actions/predicate-object-mappings";
 
 import {
-  submitRsDiscovery
+  submitRsDiscovery,
+  importRsDataset
 } from "./actions/resource-sync";
 
 import { publishMappings, saveMappingState, saveNewMappingState } from "./actions/publish-mappings";
@@ -28,6 +29,7 @@ export default function actionsMaker(navigateTo, dispatch) {
 
     onRsDiscoveryChange: (value) => dispatch({type: "SET_RS_DISCOVERY_URL", value: value}),
     onRsDiscoverySubmit: () => dispatch(submitRsDiscovery),
+    onRsDatasetSelect: importRsDataset(navigateTo, dispatch),
 
     onClearFormSettingData: () => dispatch({type: "CLEAR_DATASET_SETTINGS"}),
     onSetNewVreName: (value) => dispatch({type: "SET_NEW_VRE_NAME", newVreName: value}),

@@ -123,7 +123,8 @@ class DatasetSettings extends  React.Component {
       format,
       resourceSync,
       onRsDiscoveryChange,
-      onRsDiscoverySubmit
+      onRsDiscoverySubmit,
+      onRsDatasetSelect
     } = this.props;
 
     const finalVreName = newVreName ?
@@ -193,6 +194,7 @@ class DatasetSettings extends  React.Component {
           resourceSync={resourceSync}
           onRsDiscoveryChange={onRsDiscoveryChange}
           onRsDiscoverySubmit={onRsDiscoverySubmit}
+          onRsDatasetSelect={onRsDatasetSelect}
         />
 
         <div className="container basic-margin">
