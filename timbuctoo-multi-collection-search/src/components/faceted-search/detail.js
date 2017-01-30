@@ -73,7 +73,7 @@ class Detail extends React.Component {
               {entity["@relations"].hasBirthPlace ? entity["@relations"].hasBirthPlace[0].displayName : null }
             </div>
             <div className="col-xs-2 text-center">
-              <img id="born-died" src="/dataset-search/images/lived-center.svg" />
+              <img id="born-died" src="./images/lived-center.svg" />
             </div>
             <div className="col-xs-5 text-left">
               {entity["deathDate"]}<br />
