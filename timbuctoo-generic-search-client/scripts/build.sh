@@ -22,13 +22,12 @@ mkdir -p "build/${NODE_ENV}/fonts"
 mkdir -p "build/${NODE_ENV}/images"
 
 cp -R src/index.html "build/${NODE_ENV}/index.html"
-cp src/static/css/* "build/${NODE_ENV}/css"
-cp src/static/fonts/* "build/${NODE_ENV}/fonts"
-cp src/static/images/* "build/${NODE_ENV}/images"
+cp static/css/* "build/${NODE_ENV}/css"
+cp static/fonts/* "build/${NODE_ENV}/fonts"
+cp static/images/* "build/${NODE_ENV}/images"
 
 browserify \
-	--transform [ envify --NODE_ENV="${NODE_ENV}" ] \
-	--require classnames
+	--require classnames \
 	--require react \
 	--require react-dom \
 	--require react-router \
