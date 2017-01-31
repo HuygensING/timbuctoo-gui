@@ -32,6 +32,7 @@ browserify \
 	--require react-dom \
 	--require react-router \
 	--require react-redux \
+	--require redux \
 	--require redux-thunk \
 	--require xhr > "build/${NODE_ENV}/js/react-libs.js"
 
