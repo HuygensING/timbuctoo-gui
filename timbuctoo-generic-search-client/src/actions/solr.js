@@ -5,9 +5,9 @@ import { SolrClient } from "solr-faceted-search-react";
 
 let searchClients = [];
 
-const getSearchClients = () => searchClients;
+export const getSearchClients = () => searchClients;
 
-const checkIndex = (afterCheck) => (dispatch, getState) => {
+export const checkIndex = (afterCheck) => (dispatch, getState) => {
 	const { metadata: {collections} } = getState();
 	const collection = Object.keys(collections)
 		.map((collectionName) => collections[collectionName] )
@@ -86,7 +86,7 @@ const configureSearchClients = () => (dispatch, getState) => {
 	dispatch({type: "SET_INDEX_PRESENT", present: true});
 };
 
-const createIndexes = () => (dispatch, getState) => {
+export const createIndexes = () => (dispatch, getState) => {
 	const { metadata: { vreId } } = getState();
 	dispatch({type: "INDEXES_PENDING"});
 	xhr(`${process.env.INDEXER_URL}`, {
@@ -103,5 +103,3 @@ const createIndexes = () => (dispatch, getState) => {
 		}
 	})
 };
-
-export default { checkIndex, createIndexes, getSearchClients }
