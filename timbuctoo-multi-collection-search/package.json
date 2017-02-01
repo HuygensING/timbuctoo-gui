@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "scripts/server.js",
-    "watch": "scripts/build.sh --watch",
-    "build": "scripts/build.sh",
-    "build:docker": "NODE_ENV=production SERVER=/timbuctoo scripts/build.sh"
+    "start": "scripts/server.js"
   },
   "dependencies": {
     "classnames": "^2.2.5",

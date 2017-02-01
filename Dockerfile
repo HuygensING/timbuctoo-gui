@@ -1,5 +1,6 @@
 FROM huygensing/timbuctoo-gui:buildbase
 
+EXPOSE 80
 WORKDIR /sources
 ENV NODE_ENV=production
 ENV BUILD_TARGET=production
@@ -9,38 +10,32 @@ ENV SOLR_QUERY_URL='http://SOLR_URL'
 ENV INDEXER_URL='http://INDEXER_URL'
 ENV OWN_HOST_URL='http://localhost:8080'
 
-ENV DEFAULT_FRONTEND_FOLDER='upload'
+ENV DEFAULT_FRONTEND_FOLDER='overview'
 ENV EDIT_CLIENT_FOLDER='edit-gui'
 ENV SEARCH_CLIENT_FOLDER='search'
 ENV SEARCH_ALL_FOLDER='searchAll'
 
+COPY container-assets/build.sh /build.sh
+
 COPY timbuctoo-default-frontend /sources/timbuctoo-default-frontend
 WORKDIR /sources/timbuctoo-default-frontend
-RUN npm install && npm install --only=dev
-RUN ./scripts/build.sh
-RUN mkdir -p /usr/share/nginx/html/$DEFAULT_FRONTEND_FOLDER && cp -r build/production/* /usr/share/nginx/html/$DEFAULT_FRONTEND_FOLDER
+RUN /build.sh $DEFAULT_FRONTEND_FOLDER timbuctoo-default-frontend
 
 COPY timbuctoo-edit-client /sources/timbuctoo-edit-client
 WORKDIR /sources/timbuctoo-edit-client
-RUN npm install && npm install --only=dev
-RUN npm run timbuild
-RUN mkdir -p /usr/share/nginx/html/$EDIT_CLIENT_FOLDER && cp -r build/production/* /usr/share/nginx/html/$EDIT_CLIENT_FOLDER
+RUN /build.sh $EDIT_CLIENT_FOLDER timbuctoo-edit-client
 
 COPY timbuctoo-generic-search-client /sources/timbuctoo-generic-search-client
 WORKDIR /sources/timbuctoo-generic-search-client
-RUN npm install && npm install --only=dev
-RUN ./scripts/build.sh
-RUN mkdir -p /usr/share/nginx/html/$SEARCH_CLIENT_FOLDER && cp -r build/production/* /usr/share/nginx/html/$SEARCH_CLIENT_FOLDER
+RUN /build.sh $SEARCH_CLIENT_FOLDER timbuctoo-generic-search-client
 
 COPY timbuctoo-multi-collection-search /sources/timbuctoo-multi-collection-search
 WORKDIR /sources/timbuctoo-multi-collection-search
-RUN npm install && npm install --only=dev
-RUN npm run build:docker
-RUN mkdir -p /usr/share/nginx/html/$SEARCH_ALL_FOLDER && cp -r build/production/* /usr/share/nginx/html/$SEARCH_ALL_FOLDER
+RUN /build.sh $SEARCH_ALL_FOLDER timbuctoo-multi-collection-search
 
-COPY launch.sh /launch.sh
-COPY call-envify.sh /call-envify.sh
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+COPY container-assets/launch.sh /launch.sh
+COPY container-assets/call-envify.sh /call-envify.sh
+COPY container-assets/nginx.conf /etc/nginx/nginx.conf
+COPY container-assets/nginx.vh.default.conf /etc/nginx/conf.d/default.conf
 
 CMD ["/launch.sh"]

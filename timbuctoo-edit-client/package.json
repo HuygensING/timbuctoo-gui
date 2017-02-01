@@ -10,10 +10,7 @@
     "url": ""
   },
   "scripts": {
-    "start": "scripts/server.js",
-    "build": "scripts/build.sh",
-    "timbuild": "server='' scripts/build.sh",
-    "watch": "scripts/build.sh --watch"
+    "start": "scripts/server.js"
   },
   "dependencies": {
     "classnames": "^2.2.3",
