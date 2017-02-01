@@ -3,7 +3,7 @@ import Search from "./components/faceted-search/faceted-search";
 import Detail from "./components/faceted-search/detail";
 import actions from "./actions";
 import {Provider, connect} from "react-redux";
-import {Redirect, Router, Route, browserHistory} from "react-router";
+import {Redirect, Router, Route, hashHistory} from "react-router";
 import store from "./store";
 
 
@@ -26,7 +26,7 @@ export function serializeSearch() {
 export function storeSearch() {
   const serialized = `${location.pathname}?#q=${serializeSearch()}`;
   if (location.pathname + "#" + location.hash !== serialized) {
-    browserHistory.replace(`${location.pathname}#q=${serializeSearch()}`);
+    hashHistory.replace(`${location.pathname}#q=${serializeSearch()}`);
   }
 }
 
@@ -39,7 +39,7 @@ const urls = {
 export { urls };
 
 export function navigateTo(key, args) {
-  browserHistory.push(urls[key].apply(null, args));
+  hashHistory.push(urls[key].apply(null, args));
 }
 
 // Connector functions
@@ -67,8 +67,7 @@ const connectDetailComponent = connect(
 // Actual routes
 export const routes = (
   <Provider store={store}>
-    <Router history={browserHistory}>
-      <Redirect from="/" to="/dataset-search" />
+    <Router history={hashHistory}>
       <Route path={`${urls.root()}`} component={connectAppComponent(Search)}>
       </Route>
       <Route path={urls.entity()} component={connectDetailComponent(Detail)}>
