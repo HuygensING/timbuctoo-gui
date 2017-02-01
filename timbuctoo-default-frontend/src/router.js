@@ -32,6 +32,16 @@ var urls = {
       ? `/dataset-settings/${vreId}`
       : "/dataset-settings/:vreId";
   },
+  editDatasetWithFormat(vreId, format) {
+    return vreId && format
+      ? `/dataset-settings/${vreId}/${format}`
+      : "/dataset-settings/:vreId/:format"
+  },
+  newDatasetWithFormat(format) {
+    return format
+      ? `/dataset-settings/new/${format}`
+      : "/dataset-settings/new/:format";
+  },
   mapData(vreId) {
     return vreId
       ? `/mapdata/${vreId}`
@@ -65,9 +75,13 @@ export default (
       <Route path="/" component={connectComponent(pageConnector)(Page)}>
         <IndexRoute component={connectComponent(collectionOverviewConnector)(CollectionOverview)} />
         <Route onEnter={filterAuthorized("/")}
+               path={urls.newDataset()} component={connectComponent(datasetSettingsConnector)(DatasetSettings)} />
+        <Route onEnter={filterAuthorized("/")}
+               path={urls.newDatasetWithFormat()} component={connectComponent(datasetSettingsConnector)(DatasetSettings)} />
+        <Route onEnter={filterAuthorized("/")}
                path={urls.editDataset()} component={connectComponent(datasetSettingsConnector)(DatasetSettings)} />
         <Route onEnter={filterAuthorized("/")}
-               path={urls.newDataset()} component={connectComponent(datasetSettingsConnector)(DatasetSettings)} />
+               path={urls.editDatasetWithFormat()} component={connectComponent(datasetSettingsConnector)(DatasetSettings)} />
         <Route onEnter={filterAuthorized("/")}
                path={urls.mapArchetypes()} component={connectComponent(connectArchetypeConnector)(ConnectToArchetype)} />
         <Route onEnter={filterAuthorized("/")}

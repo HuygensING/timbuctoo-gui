@@ -4,11 +4,25 @@ import cx from "classnames";
 class UploadButton extends React.Component {
 
   render() {
-    const { classNames, redirectPath, uploadStatus, onUploadFileSelect, glyphicon, label, vreName, vreId, float, accept } = this.props;
+    const {
+      classNames,
+      redirectPath,
+      uploadStatus,
+      onUploadFileSelect,
+      glyphicon,
+      label,
+      vreName,
+      vreId,
+      float,
+      accept,
+      format,
+      multiple
+    } = this.props;
+
     return (
       <form style={{display: "inline-block", float: float || "right"}}>
         <label className={cx(...classNames, {disabled: !!uploadStatus})}>
-          <span className={glyphicon}></span>
+          <span className={glyphicon} />
           {" "}
           {uploadStatus || label}
           <input
@@ -16,11 +30,13 @@ class UploadButton extends React.Component {
             onChange={e => onUploadFileSelect(e.target.files, {
               vreName: vreName,
               vreId: vreId,
-              redirectTo: redirectPath || null
+              redirectTo: redirectPath || null,
+              format: format || null
             })}
             accept={accept || "*"}
             style={{display: "none"}}
-            type="file" />
+            type="file"
+            multiple={multiple || false} />
         </label>
       </form>
     );

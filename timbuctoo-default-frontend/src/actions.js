@@ -8,6 +8,11 @@ import {
   removeCustomProperty,
 } from "./actions/predicate-object-mappings";
 
+import {
+  submitRsDiscovery,
+  importRsDataset
+} from "./actions/resource-sync";
+
 import { publishMappings, saveMappingState, saveNewMappingState } from "./actions/publish-mappings";
 
 import { deleteVre } from "./actions/delete-vre";
@@ -22,6 +27,10 @@ export default function actionsMaker(navigateTo, dispatch) {
     // loading import data
     onUploadFileSelect: onUploadFileSelect(navigateTo, dispatch),
 
+    onRsDiscoveryChange: (value) => dispatch({type: "SET_RS_DISCOVERY_URL", value: value}),
+    onRsDiscoverySubmit: () => dispatch(submitRsDiscovery),
+    onRsDatasetSelect: importRsDataset(navigateTo, dispatch),
+    onDismissRsError: () => dispatch({type: "DISMISS_RS_ERROR"}),
 
     onClearFormSettingData: () => dispatch({type: "CLEAR_DATASET_SETTINGS"}),
     onSetNewVreName: (value) => dispatch({type: "SET_NEW_VRE_NAME", newVreName: value}),

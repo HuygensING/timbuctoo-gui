@@ -2,7 +2,7 @@ import React from 'react';
 import DataSetCard from './datasetCard.jsx';
 
 export default function(props) {
-  const { vres, caption, userId, searchGuiUrl, mine, onContinueMapping, onDeleteVreClick, redirectTo } = props;
+  const { vres, caption, userId, searchGuiUrl, mine, onContinueMapping, onDeleteVreClick, redirectTo, height } = props;
 
   return (
     <div className="container">
@@ -12,7 +12,7 @@ export default function(props) {
       </div>
       <div className="big-margin">
         { Object.keys(vres).filter((vre) => !vres[vre].deletePending).map((vre) => (
-          <DataSetCard key={vre} mine={mine} published={vres[vre].published}
+          <DataSetCard key={vre} mine={mine} published={vres[vre].published} height={height}
                        publishState={vres[vre].publishState}
                        vreMetadata={vres[vre].vreMetadata}
                        searchGuiUrl={searchGuiUrl}
