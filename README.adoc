@@ -7,3 +7,10 @@ This project contains a few javascript applications that allow you to do some se
  * A multicollection search client. Which is similar to the previous one, but instead of searching one dataset, you search through all of them at once
  * An upload GUI and start page that provides an entry point to the other GUI's and allows you to upload data into timbuctoo
 
+= build
+
+build the dockerfile
+
+= develop
+
+build the dockerfile and then run ./debugrun.sh to run a version that has the src dirs mounted. Changing a file in the src dirs will trigger a rebuild inside the docker container.

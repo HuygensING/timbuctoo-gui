@@ -34,6 +34,7 @@ WORKDIR /sources/timbuctoo-multi-collection-search
 RUN /build.sh $SEARCH_ALL_FOLDER timbuctoo-multi-collection-search
 
 COPY container-assets/launch.sh /launch.sh
+COPY container-assets/develop.sh /develop.sh
 COPY container-assets/call-envify.sh /call-envify.sh
 COPY container-assets/nginx.conf /etc/nginx/nginx.conf
 COPY container-assets/nginx.vh.default.conf /etc/nginx/conf.d/default.conf

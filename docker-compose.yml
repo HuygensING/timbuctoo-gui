@@ -1,0 +1,48 @@
+version: '2'
+
+services:
+  timbuctoo:
+    image: huygensing/timbuctoo
+    environment:
+      BASE_URI: http://localhost:8080
+      TIMBUCTOO_SEARCH_URL: "http://example.com"
+    ports:
+      - "8080:80"
+  indexer:
+    image: huygensing/timbuctoo-faceted-search-indexer
+    ports:
+      - "8083:80"
+    environment: 
+      - SOLR_URL=http://solr:8983/solr
+  solr:
+    image: solr
+    command: bash -c "sed -i 's|</web-app>|<filter> <filter-name>cross-origin</filter-name> <filter-class>org.eclipse.jetty.servlets.CrossOriginFilter</filter-class> <init-param> <param-name>chainPreflight</param-name> <param-value>false</param-value> </init-param> </filter> <filter-mapping> <filter-name>cross-origin</filter-name> <url-pattern>/*</url-pattern> </filter-mapping></web-app>|' /opt/solr/server/etc/webdefault.xml && exec solr-foreground"
+    ports:
+      - "8081:8983"
+  # indexer:
+  #   image: huygensing/timbuctoo-faceted-search-indexer
+  #   environment:
+  #     - TIMBUCTOO_URL=http://localhost:8080
+  #     - SOLR_QUERY_URL=http://localhost:8081
+  #   ports:
+  #     - "8083:80"
+  timbuctoo-gui:
+    image: huygensing/timbuctoo-gui
+    build: .
+    command: /develop.sh #don't launch static file host, but instead run a script that will rebuild on file change
+    environment:
+      - TIMBUCTOO_URL=http://localhost:8080
+      - SOLR_QUERY_URL=http://localhost:8081/solr
+      - OWN_HOST_URL=http://localhost:8082
+      - INDEXER_URL=http://localhost:8083/trigger
+    ports:
+      - "8082:80"
+    volumes: 
+      - ./timbuctoo-default-frontend/src:/sources/timbuctoo-default-frontend/src
+      - ./timbuctoo-default-frontend/.babelrc:/sources/timbuctoo-default-frontend/.babelrc
+      - ./timbuctoo-edit-client/src:/sources/timbuctoo-edit-client/src
+      - ./timbuctoo-edit-client/.babelrc:/sources/timbuctoo-edit-client/.babelrc
+      - ./timbuctoo-generic-search-client/src:/sources/timbuctoo-generic-search-client/src
+      - ./timbuctoo-generic-search-client/.babelrc:/sources/timbuctoo-generic-search-client/.babelrc
+      - ./timbuctoo-multi-collection-search/src:/sources/timbuctoo-multi-collection-search/src
+      - ./timbuctoo-multi-collection-search/.babelrc:/sources/timbuctoo-multi-collection-search/.babelrc
