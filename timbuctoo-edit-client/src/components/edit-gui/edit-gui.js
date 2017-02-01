@@ -54,8 +54,9 @@ class EditGui extends React.Component {
 				You are not logged in, your session has expired, or you are not allowed to edit this dataset
 			</Message>
 		);
+
 		return (
-			<Page>
+			<Page username={this.props.user && this.props.user.userData && this.props.user.userData.displayName ? this.props.user.userData.displayName : ""}>
 				<div className="container" style={{textAlign: "right"}}>
 					This edit interface is machine-generated based on the data-model. <a href="https://github.com/huygensing/timbuctoo/issues/new" target="_blank">Suggestions</a> for improvement are very welcome!
 				</div>

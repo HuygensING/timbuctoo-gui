@@ -31,11 +31,16 @@ const addFieldsToEntity = (fields) => (dispatch) => {
 	})
 };
 
-const fetchEntityList = (domain, next = () => {}) => (dispatch, getState) => {
+const fetchEntityList = (domain, next = () => {}) => (dispatch) => {
 	dispatch({type: "SET_PAGINATION_START", start: 0});
-	crud.fetchEntityList(domain, 0, getState().quickSearch.rows, (data) => {
-		dispatch({type: "RECEIVE_ENTITY_LIST", data: data});
-		next(data);
+
+	autocomplete(`domain/${domain}/autocomplete`, "", (data) => {
+		const transformedData = data.map((d) => ({
+			_id: d.key.replace(/.*\//, ""),
+			"@displayName": d.value
+		}));
+		dispatch({type: "RECEIVE_ENTITY_LIST", data: transformedData});
+		next(transformedData);
 	});
 };
 
@@ -53,18 +58,15 @@ const paginateRight = () => (dispatch, getState) => {
 
 const sendQuickSearch = () => (dispatch, getState) => {
 	const { quickSearch, entity, vre } = getState();
-	if (quickSearch.query.length) {
-		dispatch({type: "SET_PAGINATION_START", start: 0});
-		const callback = (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data.map((d) => (
-			{
-				_id: d.key.replace(/.*\//, ""),
-				"@displayName": d.value
-			}
-		))});
-		autocomplete(`domain/${entity.domain}/autocomplete`, quickSearch.query, callback);
-	} else {
-		dispatch(fetchEntityList(entity.domain));
-	}
+	dispatch({type: "SET_PAGINATION_START", start: 0});
+	const callback = (data) => dispatch({type: "RECEIVE_ENTITY_LIST", data: data.map((d) => (
+		{
+			_id: d.key.replace(/.*\//, ""),
+			"@displayName": d.value
+		}
+	))});
+	autocomplete(`domain/${entity.domain}/autocomplete`, quickSearch.query, callback);
+
 };
 
 const selectDomain = (domain) => (dispatch) => {
