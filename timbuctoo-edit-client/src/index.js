@@ -27,7 +27,7 @@ const setUser = (user) => {
 		});
 
 		xhr({
-			url: `${process.env.server}/v2.1/system/users/me`,
+			url: `${process.env.TIMBUCTOO_URL}/v2.1/system/users/me`,
 			headers: {
 				'Authorization': user.token
 			}

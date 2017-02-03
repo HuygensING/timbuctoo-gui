@@ -7,7 +7,7 @@ const submitRsDiscovery = (dispatch, getState)  => {
   const { resourceSync: { discovery }} = getState();
 
   dispatch({type: "RS_PENDING"});
-  xhr(`${process.env.server}/v2.1/remote/rs/discover/listgraphs/${encodeURIComponent(discovery)}`, (err, resp, body) => {
+  xhr(`${process.env.TIMBUCTOO_URL}/v2.1/remote/rs/discover/listgraphs/${encodeURIComponent(discovery)}`, (err, resp, body) => {
     if (resp.statusCode !== 200) {
       dispatch({type: "RECEIVE_RS_ERROR"});
     } else {
@@ -30,7 +30,7 @@ const importRsDataset = (navigateTo, dispatch1) => (name, {vreId, vreName}) => {
     dispatch({type: "START_RS_IMPORT", status: "Importing dataset " + name});
 
     const req = new XMLHttpRequest();
-    req.open("POST", `${process.env.server}/v2.1/remote/rs/import`);
+    req.open("POST", `${process.env.TIMBUCTOO_URL}/v2.1/remote/rs/import`);
     req.setRequestHeader("Authorization", userId);
     req.setRequestHeader("Content-type", "application/json");
     var isRedirectedToSettings = false;
@@ -63,7 +63,7 @@ const importRsDataset = (navigateTo, dispatch1) => (name, {vreId, vreName}) => {
 
     const afterUpload = () => {
       dispatch(fetchMyVres(userId, () => { }));
-      xhr.get(process.env.server + "/v2.1/system/vres", (err, resp, body) => {
+      xhr.get(process.env.TIMBUCTOO_URL + "/v2.1/system/vres", (err, resp, body) => {
         dispatch({type: "SET_PUBLIC_VRES", payload: JSON.parse(body)});
       });
     };
