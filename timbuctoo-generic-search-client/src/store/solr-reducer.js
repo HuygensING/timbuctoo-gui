@@ -1,4 +1,5 @@
 let initialState = {
+	statusPending: true,
 	indexPresent: false,
 	indexesPending: false,
 	searchStates: {},
@@ -13,12 +14,14 @@ export default function(state=initialState, action) {
 			return {
 				...state,
 				indexPresent: action.present,
-				indexesPending: false
+				indexesPending: false,
+				statusPending: false
 			};
 		case "INDEXES_PENDING":
 			var newState = {
 				...state,
 				indexesPending: true,
+				statusPending: false
 			};
 			if (action.errorMessage) {
 				newState.message = action.errorMessage

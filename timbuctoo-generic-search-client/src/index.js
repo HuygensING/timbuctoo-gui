@@ -19,6 +19,7 @@ function getVreId() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+	ReactDOM.render(router, document.getElementById("app"))
 	const afterInit = () => ReactDOM.render(router, document.getElementById("app"));
 	const checkForIndex = () => store.dispatch(checkIndex(afterInit));
 	store.dispatch(setVre(getVreId(), checkForIndex));

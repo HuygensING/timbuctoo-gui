@@ -14,13 +14,13 @@ export function checkIndex(afterCheck) {
 			.map((collectionName) => collections[collectionName] )
 			.filter((collection) => !collection.unknown && !collection.relationCollection)
 			.map((collection) => collection.collectionName)[0];
-		xhr(`${process.env.INDEXER_URL}/status/${vreId}`, {//FIXME REPLACE WITH ENV
+		xhr(`${process.env.INDEXER_URL}/status/${vreId}`, {
 			headers: {"Accept": "application/json"}
 		}, (err, resp) => {
 			if (resp.statusCode !== 200) {
 				dispatch({type: "SET_INDEX_PRESENT", present: false})
 				dispatch({type: "INDEXES_PENDING", errorMessage: "Communication with the server failed"});
-				window.setTimeout(() => dispatch(checkIndex(afterCheck)), 1000);
+				window.setTimeout(() => dispatch(checkIndex(function () {})), 1000);
 			} else {
 				const result = JSON.parse(resp.body)
 				if (result.ready){
@@ -29,9 +29,10 @@ export function checkIndex(afterCheck) {
 					if (result.updating) {
 						dispatch({type: "SET_INDEX_PRESENT", present: false})
 						dispatch({type: "INDEXES_PENDING", data: result});
-						window.setTimeout(() => dispatch(checkIndex(afterCheck)), 1000);
+						window.setTimeout(() => dispatch(checkIndex(function () {})), 1000);
 					} else {
 						dispatch({type: "SET_INDEX_PRESENT", present: false})
+						window.setTimeout(() => dispatch(checkIndex(function () {})), 1000);
 					}
 				}
 			}
@@ -109,11 +110,8 @@ export const createIndexes = () => (dispatch, getState) => {
         "Content-Type": "application/json"
     },
 		method: "POST"
-	}, (err, resp) => {
-		if (resp.statusCode === 200) {
-			dispatch(configureSearchClients());
-		} else {
-			dispatch({type: "INDEXES_FAILED"});
-		}
+	}, function () {
+		dispatch(checkIndex(function () {}));
 	})
+	window.setTimeout(() => dispatch(checkIndex(function () {})), 3000);
 };

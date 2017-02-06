@@ -12,7 +12,7 @@ class App extends React.Component {
 
 	render() {
 		const { metadata: {collections}, solr, onCreateIndexes, metadata: { vreId } } = this.props;
-		const { solr: { activeClient, message, currentCollection, indexesPending } } = this.props;
+		const { solr: { activeClient, message, currentCollection, indexesPending, statusPending } } = this.props;
 
 		const searchClients = getSearchClients();
 
@@ -42,7 +42,9 @@ class App extends React.Component {
 		} : null;
 
 		var pendingMessage = ""
-		if (indexesPending) {
+		if (statusPending) {
+			pendingMessage = "Waiting for status"
+		} else if (indexesPending) {
 			var collectionCaption;
 
 			if (currentCollection in collections) {
@@ -65,7 +67,7 @@ class App extends React.Component {
 					<div className="col-md-6">
 						<button className="btn btn-success"
 								onClick={onCreateIndexes}
-								disabled={indexesPending}>
+								disabled={indexesPending || statusPending}>
 							{pendingMessage}
 						</button>
 					</div>
