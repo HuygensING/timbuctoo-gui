@@ -2,7 +2,9 @@ let initialState = {
 	indexPresent: false,
 	indexesPending: false,
 	searchStates: {},
-	activeClient: null
+	activeClient: null,
+	message: "",
+	currentCollection: ""
 };
 
 export default function(state=initialState, action) {
@@ -14,10 +16,31 @@ export default function(state=initialState, action) {
 				indexesPending: false
 			};
 		case "INDEXES_PENDING":
-			return {
+			var newState = {
 				...state,
-				indexesPending: true
+				indexesPending: true,
 			};
+			if (action.errorMessage) {
+				newState.message = action.errorMessage
+			} else if (action.data) {
+				newState.currentCollection = ""
+				newState.message = "No dataset started..."
+				for (var key in action.data) {
+					if (typeof action.data[key] == "object" ) {
+						if (action.data[key].finished) {
+							newState.currentCollection = key
+							newState.message = " complete"
+						} else {
+							newState.currentCollection = key
+							newState.message = action.data[key].count
+							break;
+						}
+					}
+				}
+			} else {
+				newState.message = "";
+			}
+			return newState;
 
 		case "SET_SEARCH_STATE":
 			return {

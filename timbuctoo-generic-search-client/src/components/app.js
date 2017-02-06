@@ -11,8 +11,8 @@ class App extends React.Component {
 	}
 
 	render() {
-		const { solr, onCreateIndexes, metadata: { vreId } } = this.props;
-		const { solr: { activeClient } } = this.props;
+		const { metadata: {collections}, solr, onCreateIndexes, metadata: { vreId } } = this.props;
+		const { solr: { activeClient, message, currentCollection, indexesPending } } = this.props;
 
 		const searchClients = getSearchClients();
 
@@ -41,6 +41,19 @@ class App extends React.Component {
 			vreId: vreId
 		} : null;
 
+		var pendingMessage = ""
+		if (indexesPending) {
+			var collectionCaption;
+
+			if (currentCollection in collections) {
+				collectionCaption = collections[currentCollection].collectionLabel
+			} else {
+				collectionCaption = currentCollection;
+			}
+			pendingMessage = "Creating search index: " + collectionCaption + " " + message
+		} else {
+			pendingMessage = "Create search index"
+		}
 		return solr.indexPresent ? (
 			<FacetedSearch {...facetedSearchProps} />
 		) : (
@@ -52,8 +65,8 @@ class App extends React.Component {
 					<div className="col-md-6">
 						<button className="btn btn-success"
 								onClick={onCreateIndexes}
-								disabled={solr.indexesPending}>
-							{solr.indexesPending ? "Creating search index, please wait" : "Create search index"}
+								disabled={indexesPending}>
+							{pendingMessage}
 						</button>
 					</div>
 				</div>

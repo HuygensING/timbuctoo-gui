@@ -34,7 +34,7 @@ services:
       - TIMBUCTOO_URL=http://localhost:8080
       - SOLR_QUERY_URL=http://localhost:8081/solr
       - OWN_HOST_URL=http://localhost:8082
-      - INDEXER_URL=http://localhost:8083/trigger
+      - INDEXER_URL=http://localhost:8083
     ports:
       - "8082:80"
     volumes: 

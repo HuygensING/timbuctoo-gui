@@ -7,24 +7,38 @@ let searchClients = [];
 
 export const getSearchClients = () => searchClients;
 
-export const checkIndex = (afterCheck) => (dispatch, getState) => {
-	const { metadata: {collections} } = getState();
-	const collection = Object.keys(collections)
-		.map((collectionName) => collections[collectionName] )
-		.filter((collection) => !collection.unknown && !collection.relationCollection)
-		.map((collection) => collection.collectionName)[0];
-
-	xhr(`${process.env.SOLR_QUERY_URL}/${collection}/select`, {
-		headers: {"Accept": "application/json"}
-	}, (err, resp) => {
-		if (resp.statusCode !== 200) {
-			dispatch({type: "SET_INDEX_PRESENT", present: false})
-		} else {
-			dispatch(configureSearchClients());
-		}
-		afterCheck();
-	})
-};
+export function checkIndex(afterCheck) { 
+	return function (dispatch, getState) {
+		const { metadata: {collections, vreId} } = getState();
+		const collection = Object.keys(collections)
+			.map((collectionName) => collections[collectionName] )
+			.filter((collection) => !collection.unknown && !collection.relationCollection)
+			.map((collection) => collection.collectionName)[0];
+		xhr(`${process.env.INDEXER_URL}/status/${vreId}`, {//FIXME REPLACE WITH ENV
+			headers: {"Accept": "application/json"}
+		}, (err, resp) => {
+			if (resp.statusCode !== 200) {
+				dispatch({type: "SET_INDEX_PRESENT", present: false})
+				dispatch({type: "INDEXES_PENDING", errorMessage: "Communication with the server failed"});
+				window.setTimeout(() => dispatch(checkIndex(afterCheck)), 1000);
+			} else {
+				const result = JSON.parse(resp.body)
+				if (result.ready){
+					dispatch(configureSearchClients());
+				} else {
+					if (result.updating) {
+						dispatch({type: "SET_INDEX_PRESENT", present: false})
+						dispatch({type: "INDEXES_PENDING", data: result});
+						window.setTimeout(() => dispatch(checkIndex(afterCheck)), 1000);
+					} else {
+						dispatch({type: "SET_INDEX_PRESENT", present: false})
+					}
+				}
+			}
+			afterCheck();
+		})
+	};
+}
 
 const getPropSuffix = (archetypeType) =>
 	archetypeType === "datable" ? "i" :
@@ -89,7 +103,7 @@ const configureSearchClients = () => (dispatch, getState) => {
 export const createIndexes = () => (dispatch, getState) => {
 	const { metadata: { vreId } } = getState();
 	dispatch({type: "INDEXES_PENDING"});
-	xhr(`${process.env.INDEXER_URL}`, {
+	xhr(`${process.env.INDEXER_URL}/trigger`, {
 		body: JSON.stringify({datasetName: vreId}),
 		headers: {
         "Content-Type": "application/json"
