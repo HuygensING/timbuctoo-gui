@@ -6,7 +6,7 @@ export TIMBUCTOO_GUI_URL="$OWN_HOST_URL/$DEFAULT_FRONTEND_FOLDER"
 
 find /usr/share/nginx/html/ -name 'index.js' -exec /call-envify.sh "$envify" '{}' \;
 
-echo "READY" /usr/share/nginx/html/is-ready.txt
+echo "READY" > /usr/share/nginx/html/is-ready.txt
 
 echo "Launching nginx"
 exec nginx -g "daemon off;"
