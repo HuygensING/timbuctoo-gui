@@ -4,6 +4,10 @@ if [ -z "$OWN_HOST_URL" ]; then
   exit 1
 fi
 
+sed -i "s|%PREFIXPATH%|${PREFIXPATH:-/}|" /etc/nginx/conf.d/default.conf
+
+cat /etc/nginx/conf.d/default.conf
+
 nginx -g "daemon off;" &
 nginxpid=$!
 
