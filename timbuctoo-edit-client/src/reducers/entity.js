@@ -11,7 +11,6 @@ let initialState = {
 
 export default function(state=initialState, action) {
 	switch (action.type) {
-
 		case "BEFORE_FETCH_ENTITY":
 			return {...state, ...{
 				data: {
@@ -45,6 +44,11 @@ export default function(state=initialState, action) {
 			return initialState;
 		}
 
+		case "CONNECTION_ERROR":
+		return{
+			...state,
+			errorMessage: action.errorMessage
+		}
 	}
 
 	return state;

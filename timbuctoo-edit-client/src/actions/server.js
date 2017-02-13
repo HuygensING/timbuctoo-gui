@@ -6,9 +6,12 @@ export default {
 		store.dispatch({type: "REQUEST_MESSAGE", message: `${operation}: ${options.method || "GET"} ${options.url}`});
 		xhr(options, (err, resp, body) => {
 			if(resp.statusCode >= 400) {
-				store.dispatch({type: "ERROR_MESSAGE", message: `${operation} failed with cause: ${resp.body}`});
+				store.dispatch({type: "ERROR_MESSAGE", message: `${operation} failed.`});
 				reject(err, resp, body);
-			} else {
+			} else if(resp.statusCode == 0 && err != 'null'){
+				store.dispatch({type: "ERROR_MESSAGE", message: `${operation} failed.`});
+				reject(err, resp, body);
+			} else{
 				accept(err, resp, body);
 			}
 		});
