@@ -19,13 +19,13 @@ services:
     command: bash -c "sed -i 's|</web-app>|<filter> <filter-name>cross-origin</filter-name> <filter-class>org.eclipse.jetty.servlets.CrossOriginFilter</filter-class> <init-param> <param-name>chainPreflight</param-name> <param-value>false</param-value> </init-param> </filter> <filter-mapping> <filter-name>cross-origin</filter-name> <url-pattern>/*</url-pattern> </filter-mapping></web-app>|' /opt/solr/server/etc/webdefault.xml && exec solr-foreground"
     ports:
       - "8081:8983"
-  # indexer:
-  #   image: huygensing/timbuctoo-faceted-search-indexer
-  #   environment:
-  #     - TIMBUCTOO_URL=http://localhost:8080
-  #     - SOLR_QUERY_URL=http://localhost:8081
-  #   ports:
-  #     - "8083:80"
+  indexer:
+    image: huygensing/timbuctoo-faceted-search-indexer
+    environment:
+      - TIMBUCTOO_SCRAPE_URL=http://localhost:8080
+      - SOLR_URL=http://localhost:8081
+    ports:
+      - "8083:80"
   timbuctoo-gui:
     image: huygensing/timbuctoo-gui
     build: .
