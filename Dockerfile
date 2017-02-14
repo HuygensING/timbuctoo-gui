@@ -14,6 +14,7 @@ ENV DEFAULT_FRONTEND_FOLDER='overview'
 ENV EDIT_CLIENT_FOLDER='edit-gui'
 ENV SEARCH_CLIENT_FOLDER='search'
 ENV SEARCH_ALL_FOLDER='searchAll'
+ENV BROWSER_FOLDER='lod-browser'
 
 COPY container-assets/build.sh /build.sh
 
@@ -32,6 +33,10 @@ RUN /build.sh $SEARCH_CLIENT_FOLDER timbuctoo-generic-search-client
 COPY timbuctoo-multi-collection-search /sources/timbuctoo-multi-collection-search
 WORKDIR /sources/timbuctoo-multi-collection-search
 RUN /build.sh $SEARCH_ALL_FOLDER timbuctoo-multi-collection-search
+
+COPY timbuctoo-browser-app /sources/timbuctoo-browser-app
+WORKDIR /sources/timbuctoo-browser-app
+RUN /build.sh $BROWSER_FOLDER timbuctoo-browser-app
 
 COPY container-assets/set-js-envs /set-js-envs
 COPY container-assets/launch.sh /launch.sh

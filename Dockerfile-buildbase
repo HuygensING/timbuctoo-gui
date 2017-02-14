@@ -183,3 +183,7 @@ RUN npm install
 WORKDIR /sources/timbuctoo-multi-collection-search
 COPY timbuctoo-multi-collection-search/package.json package.json
 RUN npm install
+
+WORKDIR /sources/timbuctoo-browser-app
+COPY timbuctoo-browser-app/package.json package.json
+RUN npm install

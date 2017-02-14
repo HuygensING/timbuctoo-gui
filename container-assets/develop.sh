@@ -17,5 +17,6 @@ nginxpid=$!
 /build.sh $DEFAULT_FRONTEND_FOLDER timbuctoo-default-frontend --watch &
 /build.sh $SEARCH_CLIENT_FOLDER timbuctoo-generic-search-client --watch &
 /build.sh $SEARCH_ALL_FOLDER timbuctoo-multi-collection-search --watch &
+/build.sh $BROWSER_FOLDER timbuctoo-browser-app --watch &
 
 wait $nginxpid
