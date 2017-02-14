@@ -11,13 +11,7 @@ cat /etc/nginx/conf.d/default.conf
 nginx -g "daemon off;" &
 nginxpid=$!
 
-export TIMBUCTOO_SEARCH_GUI_URL="$OWN_HOST_URL/$SEARCH_CLIENT_FOLDER/"
-export TIMBUCTOO_SEARCH_ALL_GUI_URL="$OWN_HOST_URL/$SEARCH_ALL_FOLDER"
-export TIMBUCTOO_EDIT_GUI_URL="$OWN_HOST_URL/$EDIT_CLIENT_FOLDER"
-export TIMBUCTOO_GUI_URL="$OWN_HOST_URL/$DEFAULT_FRONTEND_FOLDER"
-
-echo "environment: "
-env | sort
+. /set-js-envs
 
 /build.sh $EDIT_CLIENT_FOLDER timbuctoo-edit-client --watch &
 /build.sh $DEFAULT_FRONTEND_FOLDER timbuctoo-default-frontend --watch &

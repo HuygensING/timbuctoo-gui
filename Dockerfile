@@ -33,6 +33,7 @@ COPY timbuctoo-multi-collection-search /sources/timbuctoo-multi-collection-searc
 WORKDIR /sources/timbuctoo-multi-collection-search
 RUN /build.sh $SEARCH_ALL_FOLDER timbuctoo-multi-collection-search
 
+COPY container-assets/set-js-envs /set-js-envs
 COPY container-assets/launch.sh /launch.sh
 COPY container-assets/develop.sh /develop.sh
 COPY container-assets/call-envify.sh /call-envify.sh
