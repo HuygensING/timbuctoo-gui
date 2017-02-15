@@ -19,4 +19,6 @@ nginxpid=$!
 /build.sh $SEARCH_ALL_FOLDER timbuctoo-multi-collection-search --watch &
 /build.sh $BROWSER_FOLDER timbuctoo-browser-app --watch &
 
+echo "READY" > /usr/share/nginx/html/is-ready.txt
+
 wait $nginxpid
