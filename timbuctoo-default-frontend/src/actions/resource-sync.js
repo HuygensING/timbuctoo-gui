@@ -35,20 +35,11 @@ const importRsDataset = (navigateTo, dispatch1) => (name, {vreId, vreName}) => {
     req.setRequestHeader("Content-type", "application/json");
     var isRedirectedToSettings = false;
 
+    var pos = 0;
     req.onreadystatechange = function() {
       if (!isRedirectedToSettings) {
         isRedirectedToSettings = true;
-        dispatch(fetchMyVres(userId, (vreData) => {
-          if (vreId) {
-            navigateTo("editDatasetWithFormat", [vreId, "rs"]);
-          } else if (vreName) {
-            const vreFromLabel = Object.keys(vreData.mine)
-              .map(key => vreData.mine[key]).find(vre => vre.label === vreName);
-            if (vreFromLabel) {
-              navigateTo("editDatasetWithFormat", [vreFromLabel.name, "rs"]);
-            }
-          }
-        }));
+        navigateTo("editDatasetWithFormat", [req.getResponseHeader("VRE_ID"), "rs"]);
       }
 
       if (req.readyState != null && (req.readyState < 3 || req.status != 200)) {
