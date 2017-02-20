@@ -72,19 +72,21 @@ class ConnectToArchetype extends React.Component {
         </div>
 
         <div className="container basic-margin">
-          <div className="row">
-            <div className="col-md-2 hi-light-grey">Your excel sheet</div>
+          <div className="row" >
+            <div className="col-md-3 hi-light-grey">Your excel sheet</div>
             <div className="col-md-8 hi-light-grey">Connect to a Timbuctoo Archetype</div>
           </div>
           {collections.map((sheet) => (
-            <div className="row" key={sheet.name}>
-              <div className="col-md-2" style={{minHeight: 36 }}>
+            <div className="row" key={sheet.name} >
+              <div className="col-md-3" style={{minHeight: 36}} >
+                <div style={{padding:7,display: 'block'}}>
                 <a className="from-excel" style={{cursor: "pointer"}}
                    onClick={() => sheet.name === activeCollection ? false : onSelectCollection(sheet.name)}>
                   <img src="images/icon-excel.svg" alt=""/> {sheet.name} {sheet.name === activeCollection ? "*" : ""}
                 </a>
+                </div>
               </div>
-              <div className="col-md-8">
+              <div className="col-md-8" >
                 <SelectField
                   onChange={(value) => onMapCollectionArchetype(sheet.name, value)}
                   onClear={() => onMapCollectionArchetype(sheet.name, null) }
