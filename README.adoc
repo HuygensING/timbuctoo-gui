@@ -13,4 +13,4 @@ build the dockerfile
 
 = develop
 
-build the dockerfile and then run ./debugrun.sh to run a version that has the src dirs mounted. Changing a file in the src dirs will trigger a rebuild inside the docker container.
+run `docker-compose up -d` to run all the services. It will also run a watcher process inside the timbuctoo-gui container so that any changes you make in the files in this repo will be automatically rebuilt on the container (you still need to manually refresh your browser though)
