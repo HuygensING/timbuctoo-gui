@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react'
 import PropValueIntermezzo from './PropValueIntermezzo'
 
 const PropValueList = ({ propValues , onValueClick, expandClick, extraLinkClick}) => {
-	
 	return(
 	
 	<div className='container-fluid' id='form-result'>

@@ -20,6 +20,7 @@ export function navigateTo(key, args) {
 function makeViewModel(state) {
 	return {
  		data: state.sample.data,
+		url: state.sample.url,
 		uploadDatajs: state.sample.uploadDatajs,
 		propertyList: state.sample.propertyList,
 		errorText: state.sample.errorText,

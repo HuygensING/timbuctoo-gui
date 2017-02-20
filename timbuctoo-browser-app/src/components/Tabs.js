@@ -23,6 +23,7 @@ class ProvTabs extends React.Component {
             //...otherStateUpdates
         });
     }
+
     render() {
         return (
             <div>
@@ -104,7 +105,8 @@ class ProvTabs extends React.Component {
 
                         </Tabs>
                     </div>
-                }
+                
+            }
             </div>)
     }
 }

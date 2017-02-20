@@ -1,9 +1,21 @@
-const initialState = {};
+const initialState = {
+	isFetching: false,
+	url: '',
+	errorText: false
+};
 
 export default function (state = initialState, action) {
 	
 	switch (action.type) {
 		
+		case "GET_URL":
+
+			return{
+				...state,
+				url: action.url,
+				data: action.data,
+				isFetching: true
+			}
 		case "RECEIVE_URL":
 			return {
 				...state,
@@ -11,10 +23,11 @@ export default function (state = initialState, action) {
 				isFetching: false
 			};
 
-		case "NO_DATA":
+		case "INVALID_URL":
+			console.log('error')
 			return {
 				...state,
-				data: action.data,
+				errorText: true,
 				isFetching: false
 			}
 

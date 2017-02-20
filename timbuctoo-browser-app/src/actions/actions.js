@@ -11,45 +11,42 @@ const timeout = 5000 // 5000 ms timeout
 const fetcher = new $rdf.Fetcher(store, timeout)
 const uploadedSources = new Array
 const Labels = new Map();
-var primary_data = new Array();
+
 
 
 function fix_url(url) {
-	// http://data.bnf.fr/ark:/12148/cb119854851#foaf:Person
-	// http://data.bnf.fr/11898585/dante_alighieri/rdf.xml
+	// var url_fixed = "/proxy?url="+ encodeURIComponent(url);
 	var url_fixed = url;
 	var entityURL = url;
 
 	if (url.indexOf('http://viaf') == 0) {
-		url_fixed = url + '/rdf.xml'
+		url_fixed = "/proxy?url="+ encodeURIComponent(url + '/rdf.xml')
+		//url_fixed = url + '/rdf.xml'
 	}
 	if (url.indexOf('http://dbpedia.org/page') == 0) {
-		url_fixed = url_fixed.replace('page', 'resource')
-		var entityURL = url_fixed
+		url_fixed = "/proxy?url="+ encodeURIComponent(url_fixed.replace('page', 'resource'))
+		//url_fixed = url_fixed.replace('page', 'resource')
+		entityURL = url_fixed
 	}
 
-	// https://www.wikidata.org/wiki/Q1067
 	if (url.indexOf('https://www.wikidata.org') == 0 || url.indexOf('http://www.wikidata.org') == 0) {
 		var splittedURL = url.split('/')
 		var entityID = splittedURL[splittedURL.length - 1]
-		var url_fixed = 'https://www.wikidata.org/wiki/Special:EntityData/' + entityID + '.rdf'
+		var url_fixed = "/proxy?url="+ encodeURIComponent('https://www.wikidata.org/wiki/Special:EntityData/' + entityID + '.rdf')
+		//url_fixed = 'https://www.wikidata.org/wiki/Special:EntityData/' + entityID + '.rdf'
 		var entityURL = 'http://www.wikidata.org/entity/' + entityID
 	}
 
 	if (url.indexOf('http://d-nb.info/gnd/') == 0) {
-		url_fixed = url + '/about/lds'
+		url_fixed = "/proxy?url="+ encodeURIComponent(url + '/about/lds')
+		//url_fixed = url + '/about/lds'
 	}
 
 	if (url.indexOf('http://id.loc.gov/') == 0) {
-		url_fixed = url + '.rdf'
+		url_fixed = "/proxy?url="+ encodeURIComponent(url + '.rdf')
+		//url_fixed = url + '.rdf'
 	}
 
-	// if(url.indexOf('http://data.bnf.fr/')==0){
-	// 	var splittedURL = url.split('/')
-	// 	var entityID = splittedURL[splittedURL.length-1].replace('cb','').replace('#foaf:Person','')
-	// 	entityID = entityID.substring(0, entityID.length-1)
-	// 	url_fixed = 'http://data.bnf.fr/'+entityID+'/'
-	// }
 	return ([url_fixed, entityURL])
 }
 
@@ -172,18 +169,16 @@ function uniqueArrayObjects(array2sort) {
 	var result = new Array()
 	for (var i = 0; i < array2sort.length; i++) {
 		if (typeof array2sort[i].lang != 'undefined') {
-			if (array2sort[i].lang.indexOf('en') == 0) {
+			if (array2sort[i].lang.indexOf('en') != -1) {
 				if (result.indexOf(array2sort[i].value) == -1) {
-					result.push(array2sort[i].value)
+					result.splice(0,0,array2sort[i].value)
 				}
 			} else {
 				if (result.indexOf(array2sort[i].value) == -1) {
 					result.push(array2sort[i].value)
-					break
 				}
 			}
 		} else {
-
 			if (result.indexOf(array2sort[i].value) == -1) {
 				result.push(array2sort[i].value)
 			}
@@ -210,99 +205,108 @@ function getData(subject, property, objects, prov, primary_data) {
 export default function (navigateTo, dispatch) {
 	return {
 
-		onSampleClick: function () {
+		
+		onSampleClick: function (input) {
+
 			dispatch({
 				type: "LOADING",
 			})
+			
+			if(typeof input[0] !='string'){
+				var input_url = new Array
+				input_url.push(document.getElementById('input_url').value)
+			}else if(typeof input =='string'){
+				var input_url = new Array
+				input_url.push(input)
+			}else if(typeof input =='object'){
+				var input_url = input
+			}
+			var primary_data = new Array();
 
-			var url = document.getElementById('input_url').value;
-			url = fix_url(url)
-			var entityURL = url[1]
-			var url_complete = url[0]
-			console.log(url_complete)
+			input_url.forEach(function(listItem, url_index){
+				var url = fix_url(input_url[url_index])
+				var entityURL = url[1]
+				var url_complete = url[0]
+				
+				fetcher.nowOrWhenFetched(url_complete, function (ok, body, xhr) {
+					if (!ok) {
+						console.log("Oops, something happened and couldn't fetch data");
+						dispatch({
+							type: "INVALID_URL"
+						})
+					} else {
 
-			fetcher.nowOrWhenFetched(url_complete, function (ok, body, xhr) {
-				if (!ok) {
-					console.log("Oops, something happened and couldn't fetch data");
-					dispatch({
-						type: "NO_DATA",
-						data: "The url you typed is not a valid RDF resource. Please try again."
-					})
-				} else {
-					var labels_data = store.statementsMatching(undefined, $rdf.sym('http://www.w3.org/2000/01/rdf-schema#label'), undefined)
+						var labels_data = store.statementsMatching(undefined, $rdf.sym('http://www.w3.org/2000/01/rdf-schema#label'), undefined)
 
-					for (var i = 0; i < labels_data.length; i++) {
-						if (labels_data[i].object.lang) {
-							if (labels_data[i].object.lang == 'en') {
+						for (var i = 0; i < labels_data.length; i++) {
+							if (labels_data[i].object.lang) {
+								if (labels_data[i].object.lang == 'en') {
+									var sub = labels_data[i].subject.value
+									var obj = labels_data[i].object.value
+									Labels[sub] = obj
+								}
+							} else {
 								var sub = labels_data[i].subject.value
 								var obj = labels_data[i].object.value
 								Labels[sub] = obj
 							}
-						} else {
-							var sub = labels_data[i].subject.value
-							var obj = labels_data[i].object.value
-							Labels[sub] = obj
 						}
-					}
-					var s = $rdf.sym(entityURL)
-					var prop = store.each(s, undefined)
-					var unique_prop = uniqueArray(prop)
-					var prov = extractSource(entityURL)
+						var s = $rdf.sym(entityURL)
+						var prop = store.each(s, undefined)
+						var unique_prop = uniqueArray(prop)
+						var prov = extractSource(entityURL)
 
-
-					for (var i = 0; i < unique_prop.length; i++) {
-						var prop = unique_prop[i];
-						var objects = store.each(s, $rdf.sym(prop), undefined);
-						primary_data = getData(url, prop, objects, prov, primary_data)
-					}
-
-
-					//look for DBpedia url
-					if (url_complete.indexOf('dbpedia') == -1) { //check whether the current url is not a dbpedia one
-						for (var i = 0; i < primary_data['Other sources']['sameAs'].list.length; i++) {
-							if (primary_data['Other sources']['sameAs'].list[i].object.indexOf('http://dbpedia') == 0) {
-								var Dbpedia_sameAs = primary_data['Other sources']['sameAs'].list[i].object
-								break //when found stop searching
-							}
+						for (var i = 0; i < unique_prop.length; i++) {
+							var prop = unique_prop[i];
+							var objects = store.each(s, $rdf.sym(prop), undefined);
+							primary_data = getData(url, prop, objects, prov, primary_data)
 						}
-					}
 
-					if (typeof (Dbpedia_sameAs) != 'undefined') {
-						
-							fetcher.nowOrWhenFetched(Dbpedia_sameAs, function (ok, body, xhr) {
-								if (!ok) {
-									console.log("Oops, something happened and couldn't fetch data");
-									primary_data = removeUploadedSource(primary_data)
-									dispatch({
-										type: "RECEIVE_URL",
-										data: primary_data
-									})
-								} else {
-									var s = $rdf.sym(Dbpedia_sameAs)
-									var props = store.each(s, undefined)
-									var unique_prop = uniqueArray(props)
-									var prov = extractSource(Dbpedia_sameAs)
-									for (var i = 0; i < unique_prop.length; i++) {
-										var prop = unique_prop[i];
-										var objects = store.each(s, $rdf.sym(prop), undefined);
-										primary_data = getData(Dbpedia_sameAs, prop, objects, prov, primary_data)
-									}
-									primary_data = removeUploadedSource(primary_data)
-									dispatch({
-										type: "RECEIVE_URL",
-										data: primary_data
-									})
+						if (input_url.length == 1 && url_complete.indexOf('dbpedia') == -1) {
+							//look for DBpedia url
+							for (var i = 0; i < primary_data['Other sources']['sameAs'].list.length; i++) {
+								if (primary_data['Other sources']['sameAs'].list[i].object.indexOf('http://dbpedia') == 0) {
+									var Dbpedia_sameAs = primary_data['Other sources']['sameAs'].list[i].object
+									break //when found stop searching
 								}
+							}
+							if (typeof (Dbpedia_sameAs) != 'undefined') {
+
+								fetcher.nowOrWhenFetched(Dbpedia_sameAs, function (ok, body, xhr) {
+									if (!ok) {
+										console.log("Oops, something happened and couldn't fetch data");
+										primary_data = removeUploadedSource(primary_data)
+										dispatch({
+											type: "RECEIVE_URL",
+											data: primary_data
+										})
+									} else {
+										var s = $rdf.sym(Dbpedia_sameAs)
+										var props = store.each(s, undefined)
+										var unique_prop = uniqueArray(props)
+										var prov = extractSource(Dbpedia_sameAs)
+										for (var i = 0; i < unique_prop.length; i++) {
+											var prop = unique_prop[i];
+											var objects = store.each(s, $rdf.sym(prop), undefined);
+											primary_data = getData(Dbpedia_sameAs, prop, objects, prov, primary_data)
+										}
+										primary_data = removeUploadedSource(primary_data)
+										dispatch({
+											type: "RECEIVE_URL",
+											data: primary_data
+										})
+									}
+								})
+							}
+						} else {
+							primary_data = removeUploadedSource(primary_data)
+							dispatch({
+								type: "RECEIVE_URL",
+								data: primary_data
 							})
-					
-					}else{
-						primary_data = removeUploadedSource(primary_data)
-						dispatch({
-							type: "RECEIVE_URL",
-							data: primary_data
-						})
+						}
 					}
-				}
+				})
 			})
 		},
 
