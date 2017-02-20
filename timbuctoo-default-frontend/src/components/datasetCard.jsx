@@ -71,7 +71,7 @@ function DataSetCard(props) {
       <a className="card-dataset btn btn-default explore"
          title={props.caption}
          style={{...imageStyle, backgroundColor: colorCode ? `#${colorCode}` : "#e6e6e6" }}
-         href={`${searchUrl}?vreId=${props.vreId}`} target="_blank">
+         href={`${searchUrl}?vreId=${props.vreId}`}>
         <strong  style={{display: "inline-block", overflow: "hidden", width: "90%", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
             {props.caption.replace(/^[^_]+_+/, "")}
         </strong>
@@ -86,7 +86,7 @@ function DataSetCard(props) {
       }
       {props.userId
         ? (<a className="card-dataset btn btn-default"
-              href={`${process.env.TIMBUCTOO_EDIT_GUI_URL}/?vreId=${props.vreId}&hsid=${props.userId}`} target="_blank">
+              href={`${process.env.TIMBUCTOO_EDIT_GUI_URL}/?vreId=${props.vreId}&hsid=${props.userId}`}>
             <span className="glyphicon glyphicon-pencil" />{" "}
             Edit
           </a>)

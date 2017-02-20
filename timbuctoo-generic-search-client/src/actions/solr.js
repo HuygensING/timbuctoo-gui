@@ -66,7 +66,7 @@ const configureSearchClients = () => (dispatch, getState) => {
 			client: new SolrClient({
 				url: `${process.env.SOLR_QUERY_URL}/${collection.collectionName}/select`,
 				searchFields:
-					[{label: "Search", field: "displayName_t", type: "text"}].concat(
+					[{label: "Search all fields", field: "displayName_t", type: "text"}].concat(
 						archetypes
 						.find((archetype) => archetype.archetypeName === collection.archetypeName).properties
 						.filter((prop) => collection.properties.map((prop1) => prop1.name).indexOf(prop.name) > -1)

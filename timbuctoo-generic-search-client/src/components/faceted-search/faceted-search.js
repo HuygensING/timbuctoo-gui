@@ -29,18 +29,20 @@ class FacetedSearch extends React.Component {
                   ))}
                 </SelectField>
               </div>
-              <SearchFields fields={activeCollection.query.searchFields}query={activeCollection.query}
+              <SearchFields fields={activeCollection.query.searchFields}
+                            query={activeCollection.query}
                             truncateFacetListsAt={truncateFacetListsAt}
                             onSetCollapse={onSetCollapse}
                             onFacetSortChange={onFacetSortChange}
-                            results={activeCollection.results} onSearchFieldChange={onSearchFieldChange} />
+                            results={activeCollection.results} 
+                            onSearchFieldChange={onSearchFieldChange} />
             </div>
 
             <div className=".hidden-sm col-md-1" />
 
             <div className="col-sm-8 col-md-8">
               <SortMenu onChange={onSortFieldChange} sortFields={activeCollection.query.sortFields} />
-              <button className="btn btn-default pull-right" style={{position: "relative", zIndex: "100"}} onClick={onCsvExport}>Download excel</button>
+              <button className="btn btn-default pull-right" style={{position: "relative", zIndex: "100"}} onClick={onCsvExport}>Download CSV</button>
               <div className="basic-margin">
                 <strong>Found {activeCollection.results.numFound} {activeCollection.results.numFound === 1
                   ? activeCollection.label.replace(/s$/, "")

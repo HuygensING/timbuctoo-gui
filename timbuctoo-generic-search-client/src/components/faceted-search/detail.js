@@ -55,11 +55,11 @@ class Detail extends React.Component {
       </ul>)
     }
     return null;
-  }
-
+  } 
+  
   render() {
     const { entity, collectionMetadata, vreId, nextId, prevId, metadata} = this.props;
-
+    
     if (!entity._id) { return <Page />; }
 
     const archetypeFields = getArchetypeFields(entity["@variationRefs"], metadata);
@@ -84,12 +84,12 @@ class Detail extends React.Component {
       </div>
     ) : null;
 
-    
+    console.log(entity)
     return (
       <Page>
         <div className="container basic-margin">
           <div className="row">
-            <div className="col-xs-12 text-center">
+            <div className="col-xs-10 text-center">
               <span className="img-portrait img-circle" style={{
                   display: "inline-block", width: "150px", backgroundColor: "#aaa",
                   paddingTop: "40px", fontSize: "3em", color: "#666"
@@ -97,6 +97,9 @@ class Detail extends React.Component {
                   {entity["@displayName"] ? entity["@displayName"].charAt(0) : "?"}
               </span>
               <h1>{entity["@displayName"]}</h1>
+            </div>
+            <div className="col-xs-2 text-right">
+              <a href={`${process.env.TIMBUCTOO_BROWSER_URL}?url=`+entity["^rdfUri"]+"&url="+entity["^rdfUri"]} className="btn btn-default">LOD browser</a>
             </div>
           </div>
           {birthDeathBlock}
@@ -106,10 +109,11 @@ class Detail extends React.Component {
             .sort((a, b) => archetypeFields.indexOf(a) > archetypeFields.indexOf(b) ? -1 : 1)
             .map((property) => (
               <div key={property} className="row small-margin">
-                <div className="col-xs-6 text-right hi-light-grey" style={{fontWeight: archetypeFields.indexOf(property) > -1 ? "bold" : "normal"}}>
+                <div className="col-xs-5 text-right hi-light-grey" style={{fontWeight: archetypeFields.indexOf(property) > -1 ? "bold" : "normal"}}>
                   {camel2label(property)}
                 </div>
-                <div className="col-xs-6">
+                <div className="col-xs-5">
+                  
                   {this.renderProp(entity[property])}
                 </div>
               </div>
@@ -119,15 +123,15 @@ class Detail extends React.Component {
             .filter((property) => !property.match(/^inverse:/))
             .map((property) => (
               <div key={property} className="row small-margin">
-                <div className="col-xs-6 text-right hi-light-grey">
+                <div className="col-xs-5 text-right hi-light-grey">
                   {camel2label(property)}
                 </div>
-                <div className="col-xs-6">
+                <div className="col-xs-5">
                   <ul style={{padding: "0", margin: "0", listStyle: "none", maxHeight: "200px", overflowY: "auto"}}>
                     {entity["@relations"][property]
                       .map((rel) => (
                         <li key={rel.path}>
-                            {rel.displayName || "<no display name found>"}
+                            {<a href={'http://localhost:8082/search/'+rel.path.replace("domain","?vreId=DUMMY_bia#")}>{rel.displayName} </a>|| "<no display name found>"}
                         </li>
                       ))
                     }
@@ -139,22 +143,22 @@ class Detail extends React.Component {
         <div className="hi-light-grey-bg">
           <div className="container big-margin">
             <div className="row small-margin">
-              <div className="col-xs-12 text-center">
+              <div className="col-xs-10 text-center">
                 <h4>Provenance</h4>
               </div>
               <div className="row small-margin">
-                <div className="col-xs-6 text-right hi-light-grey">
+                <div className="col-xs-5 text-right hi-light-grey">
                   Modified {ts2date(entity["^modified"].timeStamp)}
                 </div>
-                <div className="col-xs-6">
+                <div className="col-xs-5">
                   {entity["^modified"].username || entity["^modified"].userId}
                 </div>
               </div>
               <div className="row small-margin">
-                <div className="col-xs-6 text-right hi-light-grey">
+                <div className="col-xs-5 text-right hi-light-grey">
                   Created {ts2date(entity["^created"].timeStamp)}
                 </div>
-                <div className="col-xs-6">
+                <div className="col-xs-5">
                   {entity["^created"].username || entity["^created"].userId}
                 </div>
               </div>

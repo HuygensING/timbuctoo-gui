@@ -31,6 +31,9 @@ class TextSearch extends React.Component {
     this.props.onChange(this.props.field, this.state.value);
   }
 
+  handleBlur() {
+    this.props.onChange(this.props.field, this.state.value);
+  }
   render() {
     const { label } = this.props;
 
@@ -41,6 +44,7 @@ class TextSearch extends React.Component {
                  placeholder={label || ""}
                  onChange={this.handleInputChange.bind(this)}
                  onKeyDown={this.handleInputKeyDown.bind(this)}
+                 onBlur={this.handleBlur.bind(this)}
                  value={this.state.value || ""} />
 
           <span className="input-group-btn">

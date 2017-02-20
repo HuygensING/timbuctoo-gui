@@ -20,7 +20,7 @@ export default function(state=initialState, action) {
 				...state,
 				archetypeCollections: action.collections || null,
 			};
-
+		
 		default:
 			return state;
 	}
