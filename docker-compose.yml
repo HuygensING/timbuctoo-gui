@@ -43,3 +43,7 @@ services:
       - ./timbuctoo-generic-search-client/.babelrc:/sources/timbuctoo-generic-search-client/.babelrc
       - ./timbuctoo-multi-collection-search/src:/sources/timbuctoo-multi-collection-search/src
       - ./timbuctoo-multi-collection-search/.babelrc:/sources/timbuctoo-multi-collection-search/.babelrc
+  # echo-headers: (for debugging nginx proxy)
+  #   image: brndnmtthws/nginx-echo-headers
+  #   ports: 
+  #     - "8085:8080"
