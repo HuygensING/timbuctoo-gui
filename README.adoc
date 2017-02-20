@@ -13,4 +13,4 @@ build the dockerfile
 
 = develop
 
-run `docker-compose up -d` to run all the services. It will also run a watcher process inside the timbuctoo-gui container so that any changes you make in the files in this repo will be automatically rebuilt on the container (you still need to manually refresh your browser though)
+run `docker-compose build && docker-compose up -d` to run all the services. It will also run a watcher process inside the timbuctoo-gui container so that any changes you make in the files in this repo will be automatically rebuilt on the container (you still need to manually refresh your browser though)
