@@ -83,8 +83,8 @@ class Detail extends React.Component {
         </div>
       </div>
     ) : null;
-
-   
+    console.log(entity)
+  
     return (
       <Page>
         <div className="container basic-margin">
@@ -99,7 +99,7 @@ class Detail extends React.Component {
               <h1>{entity["@displayName"]}</h1>
             </div>
             <div className="col-xs-2 text-right">
-              <a href={`${process.env.TIMBUCTOO_BROWSER_URL}?url=`+entity["^rdfUri"]+"&url="+entity["^rdfUri"]} className="btn btn-default">LOD browser</a>
+              <a href={`${process.env.TIMBUCTOO_BROWSER_URL}#/?url=`+entity["^rdfUri"]+"&url="+entity["^rdfUri"]} className="btn btn-default">LOD browser</a>
             </div>
           </div>
           {birthDeathBlock}
@@ -147,22 +147,13 @@ class Detail extends React.Component {
                 <h4>Provenance</h4>
               </div>
               <div className="row small-margin">
-                <div className="col-xs-5 text-right hi-light-grey">
-                  Modified {ts2date(entity["^modified"].timeStamp)}
-                </div>
-                <div className="col-xs-5">
-                  {entity["^modified"].username || entity["^modified"].userId}
+                <div className="col-xs-10 text-center hi-light-grey">
+                  Modified on {ts2date(entity["^modified"].timeStamp)} by user {entity["^modified"].username || entity["^modified"].userId}
                 </div>
               </div>
-              <div className="row small-margin">
-                <div className="col-xs-5 text-right hi-light-grey">
-                  Created {ts2date(entity["^created"].timeStamp)}
-                </div>
-                <div className="col-xs-5">
-                  {entity["^created"].username || entity["^created"].userId}
-                </div>
+              <div className="col-xs-10 text-center">Timbuctoo documents full data provenance.</div>
+              <div className="col-xs-10 text-center">Future releases will include a more detailed view of this provenance information.</div>     
               </div>
-            </div>
           </div>
         </div>
         <div type="footer-body">
