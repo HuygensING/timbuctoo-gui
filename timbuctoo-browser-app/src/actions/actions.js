@@ -15,8 +15,8 @@ const Labels = new Map();
 
 
 function fix_url(url) {
-	// var url_fixed = "/proxy?url="+ encodeURIComponent(url);
-	var url_fixed = url;
+	var url_fixed = "/proxy?url="+ encodeURIComponent(url);
+	// var url_fixed = url;
 	var entityURL = url;
 
 	if (url.indexOf('http://viaf') == 0) {
