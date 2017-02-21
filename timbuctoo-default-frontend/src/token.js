@@ -7,8 +7,12 @@ export default function() {
     if(key === 'hsid') {
       localStorage.setItem("token", value);
       location.href = window.location.href.replace("hsid=" + value, "");
+      // localStorage.setItem("token", JSON.stringify({user: value, token: value}));
+			// location.href = window.location.href.replace("hsid=" + value, "");
       return undefined;
     }
   }
-  return localStorage.getItem("token") || null;
+  
+    return localStorage.getItem("token");
+  
 }

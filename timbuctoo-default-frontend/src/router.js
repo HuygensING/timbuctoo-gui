@@ -31,6 +31,7 @@ var urls = {
     return vreId
       ? `/dataset-settings/${vreId}`
       : "/dataset-settings/:vreId";
+      
   },
   editDatasetWithFormat(vreId, format) {
     return vreId && format

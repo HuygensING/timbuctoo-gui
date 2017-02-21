@@ -12,12 +12,15 @@ const setUser = (user) => {
 		xhr({
 			url: `${process.env.TIMBUCTOO_URL}/v2.1/system/users/me/vres`,
 			headers: {
-				'Authorization': user.token
+				// 'Authorization': user.token
+				'Authorization': user
 			}
 		}, (err, resp) => {
+			
 			if (err || resp.statusCode >= 300) {
 				store.dispatch({type: "SESSION_EXPIRED"});
 			} else {
+				
 				const data = JSON.parse(resp.body);
 				if (!data.mine || Object.keys(data.mine).indexOf(getVreId()) < 0) {
 					store.dispatch({type: "ERROR_MESSAGE", message: "You are not allowed to edit this vre"});
@@ -29,7 +32,8 @@ const setUser = (user) => {
 		xhr({
 			url: `${process.env.TIMBUCTOO_URL}/v2.1/system/users/me`,
 			headers: {
-				'Authorization': user.token
+				// 'Authorization': user.token
+				'Authorization': user
 			}
 		}, (err, resp) => {
 			try {
@@ -40,7 +44,7 @@ const setUser = (user) => {
 			}
 		});
 	}
-
+	
 	return {
 		type: "SET_USER",
 		user: user
@@ -75,12 +79,14 @@ document.addEventListener("DOMContentLoaded", () => {
 		for(let i in params) {
 			let [key, value] = params[i].split("=");
 			if(key === "hsid") {
-				localStorage.setItem("token", JSON.stringify({user: value, token: value}));
-				location.href = window.location.href.replace("hsid=" + value, "");
-				return;
+				localStorage.setItem("token", value);
+      			location.href = window.location.href.replace("hsid=" + value, "");
+				// localStorage.setItem("token", JSON.stringify({user: value, token: value}));
+				// location.href = window.location.href.replace("hsid=" + value, "");
+				
 			}
 		}
-		return JSON.parse(localStorage.getItem("token") || "null");
+		return localStorage.getItem("token") || undefined;
 	}
 
 	store.dispatch(setVre(getVreId(), initRouter));
