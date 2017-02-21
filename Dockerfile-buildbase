@@ -48,8 +48,26 @@ RUN adduser -D -u 1000 node \
 #from https://github.com/nginxinc/docker-nginx/blob/3e8a6ee0603bf6c9cd8846c5fa43e96b13b0f44b/mainline/alpine/Dockerfile
 
 ENV NGINX_VERSION 1.11.8
+ENV NGINX_SET_MISC_MODULE_VERSION 0.31
+ENV NGINX_DEVEL_KIT_VERSION 0.3.0
 
 RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
+	&& addgroup -S nginx \
+	&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
+	&& apk add --no-cache --virtual .build-deps \
+		gcc \
+		libc-dev \
+		make \
+		openssl-dev \
+		pcre-dev \
+		zlib-dev \
+		linux-headers \
+		curl \
+		gnupg \
+		libxslt-dev \
+		gd-dev \
+		geoip-dev \
+		perl-dev \
 	&& CONFIG="\
 		--prefix=/etc/nginx \
 		--sbin-path=/usr/sbin/nginx \
@@ -95,23 +113,16 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 		--with-compat \
 		--with-file-aio \
 		--with-http_v2_module \
-	" \
-	&& addgroup -S nginx \
-	&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
-	&& apk add --no-cache --virtual .build-deps \
-		gcc \
-		libc-dev \
-		make \
-		openssl-dev \
-		pcre-dev \
-		zlib-dev \
-		linux-headers \
-		curl \
-		gnupg \
-		libxslt-dev \
-		gd-dev \
-		geoip-dev \
-		perl-dev \
+		--add-module=/usr/src/ngx_devel_kit-$NGINX_DEVEL_KIT_VERSION \
+		--add-module=/usr/src/set-misc-nginx-module-$NGINX_SET_MISC_MODULE_VERSION \
+ 	" \
+	&& mkdir -p /usr/src \
+	&& curl -fSL "https://github.com/simpl/ngx_devel_kit/archive/v$NGINX_DEVEL_KIT_VERSION.tar.gz" -o ngx_devel_kit.tar.gz \
+	&& tar -zxf ngx_devel_kit.tar.gz -C /usr/src \
+	&& rm ngx_devel_kit.tar.gz \
+	&& curl -fSL "https://github.com/openresty/set-misc-nginx-module/archive/v$NGINX_SET_MISC_MODULE_VERSION.tar.gz" -o set-misc-nginx-module.tar.gz \
+	&& tar -zxf set-misc-nginx-module.tar.gz -C /usr/src \
+	&& rm set-misc-nginx-module.tar.gz \
 	&& curl -fSL http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \
 	&& curl -fSL http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz.asc  -o nginx.tar.gz.asc \
 	&& export GNUPGHOME="$(mktemp -d)" \
