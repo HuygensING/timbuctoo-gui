@@ -39,7 +39,7 @@ function fix_url(url) {
 		url_fixed = url;
 
 	}
-	url_fixed = "/proxy?url="+ encodeURIComponent(url_fixed);
+	url_fixed = process.env.TIMBUCTOO_PROXY_URL + "?url="+ encodeURIComponent(url_fixed);
 	return ([url_fixed, entityURL])
 }
 
