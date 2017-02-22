@@ -44,7 +44,7 @@ services:
       - ./timbuctoo-multi-collection-search/src:/sources/timbuctoo-multi-collection-search/src
       - ./timbuctoo-multi-collection-search/.babelrc:/sources/timbuctoo-multi-collection-search/.babelrc
       - ./timbuctoo-browser-app/src:/sources/timbuctoo-browser-app/src
-  # echo-headers: (for debugging nginx proxy)
+  # echo-headers: (for debugging nginx proxy, to use this you also want to enable docker dns in nginx.vh.default.conf)
   #   image: brndnmtthws/nginx-echo-headers
   #   ports: 
   #     - "8085:8080"

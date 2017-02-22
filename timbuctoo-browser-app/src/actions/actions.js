@@ -15,38 +15,31 @@ const Labels = new Map();
 
 
 function fix_url(url) {
-	var url_fixed = "/proxy?url="+ encodeURIComponent(url);
-	// var url_fixed = url;
 	var entityURL = url;
+	var url_fixed;
 
 	if (url.indexOf('http://viaf') == 0) {
-		url_fixed = "/proxy?url="+ encodeURIComponent(url + '/rdf.xml')
-		// url_fixed = url + '/rdf.xml'
-	}
-	if (url.indexOf('http://dbpedia.org/page') == 0) {
-		url_fixed = "/proxy?url="+ encodeURIComponent(url_fixed.replace('page', 'resource'))
-		// url_fixed = url_fixed.replace('page', 'resource')
-		entityURL = url_fixed
-	}
 
-	if (url.indexOf('https://www.wikidata.org') == 0 || url.indexOf('http://www.wikidata.org') == 0) {
+		url_fixed = url + '/rdf.xml'
+	} else if (url.indexOf('http://dbpedia.org/page') == 0) {
+		url_fixed = url_fixed.replace('page', 'resource')
+
+		entityURL = url_fixed
+	} else if (url.indexOf('https://www.wikidata.org') == 0 || url.indexOf('http://www.wikidata.org') == 0) {
 		var splittedURL = url.split('/')
 		var entityID = splittedURL[splittedURL.length - 1]
-		var url_fixed = "/proxy?url="+ encodeURIComponent('https://www.wikidata.org/wiki/Special:EntityData/' + entityID + '.rdf')
-		// url_fixed = 'https://www.wikidata.org/wiki/Special:EntityData/' + entityID + '.rdf'
-		var entityURL = 'http://www.wikidata.org/entity/' + entityID
-	}
 
-	if (url.indexOf('http://d-nb.info/gnd/') == 0) {
-		url_fixed = "/proxy?url="+ encodeURIComponent(url + '/about/lds')
-		// url_fixed = url + '/about/lds'
-	}
+		url_fixed = 'https://www.wikidata.org/wiki/Special:EntityData/' + entityID + '.rdf'
+		entityURL = 'http://www.wikidata.org/entity/' + entityID
+	} else if (url.indexOf('http://d-nb.info/gnd/') == 0) {
+		url_fixed = url + '/about/lds'
+	} else if (url.indexOf('http://id.loc.gov/') == 0) {
+		url_fixed = url + '.rdf'
+	} else {
+		url_fixed = url;
 
-	if (url.indexOf('http://id.loc.gov/') == 0) {
-		url_fixed = "/proxy?url="+ encodeURIComponent(url + '.rdf')
-		// url_fixed = url + '.rdf'
 	}
-
+	url_fixed = "/proxy?url="+ encodeURIComponent(url_fixed);
 	return ([url_fixed, entityURL])
 }
 
