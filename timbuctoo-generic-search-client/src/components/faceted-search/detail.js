@@ -143,16 +143,13 @@ class Detail extends React.Component {
         <div className="hi-light-grey-bg">
           <div className="container big-margin">
             <div className="row small-margin">
-              <div className="col-xs-10 text-center">
-                <h4>Provenance</h4>
-              </div>
               <div className="row small-margin">
                 <div className="col-xs-10 text-center hi-light-grey">
                   Modified on {ts2date(entity["^modified"].timeStamp)} by user {entity["^modified"].username || entity["^modified"].userId}
                 </div>
               </div>
-              <div className="col-xs-10 text-center">Timbuctoo documents full data provenance.</div>
-              <div className="col-xs-10 text-center">Future releases will include a more detailed view of this provenance information.</div>     
+              <div className="col-xs-10 text-center"><em>Timbuctoo documents full data provenance.</em></div>
+              <div className="col-xs-10 text-center"><em>Future releases will include a more detailed view of this provenance information.</em></div>     
               </div>
           </div>
         </div>

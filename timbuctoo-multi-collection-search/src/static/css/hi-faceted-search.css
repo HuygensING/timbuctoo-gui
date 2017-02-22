@@ -1,7 +1,4 @@
 
-.pagination > li {
-	cursor: pointer
-}
 
 a {
 			cursor: pointer;
@@ -28,8 +25,8 @@ a {
 			user-drag: none;
 			cursor: pointer;
 			width: 100%;
-			stroke: #d5e6f1;
-			fill: #d5e6f1;
+			stroke: #f1ebe6;
+			fill: #f1ebe6;
 		}
 
 		.facet-range-slider .range-line {
@@ -42,12 +39,12 @@ a {
 
 		.facet-range-slider .range-line circle.hovering,
 		.facet-range-slider .range-line circle:hover {
-			fill: #2e82bb;
+			fill: #bda47e;
 		}
 
 		.facet-range-slider .range-line path.hovering,
 		.facet-range-slider .range-line path:hover {
-			stroke: #2e82bb;
+			stroke: #bda47e;
 		}
 
 		.current-query label,
@@ -90,11 +87,14 @@ a {
 		/* new Bas */
 		
 		.facet-item {
+			text-transform:lowercase;
 			margin-bottom:.3em;
 			}
 		
-
-
+		.facet-item:first-letter {
+    		text-transform: uppercase;
+}
+		
 		.facet-item-amount {
 			display:inline-block;
 			float:right;
