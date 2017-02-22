@@ -11,10 +11,9 @@ class App extends React.Component {
 	// 	window.scrollTo(0, 0)
 	// }
 	render() {
-		console.log(this.props.location)
 		return (
 				this.props.uploadDatajs ? 
-					<div>
+					<div className="page">
 						<div className="basic-margin hi-Green container-fluid">
 							<nav className="navbar ">
 							<div className="container">
@@ -37,7 +36,7 @@ class App extends React.Component {
 					</div>
 					:
 				this.props.data ?
-					<div>
+					<div className="page"> 
 						<div className="basic-margin hi-Green container-fluid">
 							<nav className="navbar ">
 							<div className="container">
@@ -63,7 +62,7 @@ class App extends React.Component {
 							<UrlForm value={this.props.location.query.url} onSampleClick={this.props.onSampleClick} skip={true} isFetching={this.props.isFetching} errorText={this.props.errorText} closeErrorDiv={this.props.closeErrorDiv}></UrlForm>
 						</div>
 						:
-						<div>
+						<div className="page">
 							<div className="basic-margin hi-Green container-fluid">
 								<nav className="navbar ">
 								<div className="container">

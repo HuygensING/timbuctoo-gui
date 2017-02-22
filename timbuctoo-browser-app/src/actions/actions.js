@@ -21,11 +21,11 @@ function fix_url(url) {
 
 	if (url.indexOf('http://viaf') == 0) {
 		url_fixed = "/proxy?url="+ encodeURIComponent(url + '/rdf.xml')
-		//url_fixed = url + '/rdf.xml'
+		// url_fixed = url + '/rdf.xml'
 	}
 	if (url.indexOf('http://dbpedia.org/page') == 0) {
 		url_fixed = "/proxy?url="+ encodeURIComponent(url_fixed.replace('page', 'resource'))
-		//url_fixed = url_fixed.replace('page', 'resource')
+		// url_fixed = url_fixed.replace('page', 'resource')
 		entityURL = url_fixed
 	}
 
@@ -33,18 +33,18 @@ function fix_url(url) {
 		var splittedURL = url.split('/')
 		var entityID = splittedURL[splittedURL.length - 1]
 		var url_fixed = "/proxy?url="+ encodeURIComponent('https://www.wikidata.org/wiki/Special:EntityData/' + entityID + '.rdf')
-		//url_fixed = 'https://www.wikidata.org/wiki/Special:EntityData/' + entityID + '.rdf'
+		// url_fixed = 'https://www.wikidata.org/wiki/Special:EntityData/' + entityID + '.rdf'
 		var entityURL = 'http://www.wikidata.org/entity/' + entityID
 	}
 
 	if (url.indexOf('http://d-nb.info/gnd/') == 0) {
 		url_fixed = "/proxy?url="+ encodeURIComponent(url + '/about/lds')
-		//url_fixed = url + '/about/lds'
+		// url_fixed = url + '/about/lds'
 	}
 
 	if (url.indexOf('http://id.loc.gov/') == 0) {
 		url_fixed = "/proxy?url="+ encodeURIComponent(url + '.rdf')
-		//url_fixed = url + '.rdf'
+		// url_fixed = url + '.rdf'
 	}
 
 	return ([url_fixed, entityURL])
@@ -226,7 +226,7 @@ export default function (navigateTo, dispatch) {
 			input_url.forEach(function(listItem, url_index){
 				var url = fix_url(input_url[url_index])
 				var entityURL = url[1]
-				var url_complete = url[0]
+				var url_complete = decodeURIComponent(url[0])
 				
 				fetcher.nowOrWhenFetched(url_complete, function (ok, body, xhr) {
 					if (!ok) {
