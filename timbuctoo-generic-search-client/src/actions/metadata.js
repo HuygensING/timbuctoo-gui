@@ -32,24 +32,4 @@ const setVre = (vreId, afterInit) => (dispatch) =>
 	});
 
 
-const onLODClick = () => (dispatch) =>
-	dispatch({
-				type: "OPEN_BROWSER_APP"
-			})
-	// xhr({
-	// 	method: "GET",
-	// 	headers: {
-	// 		"Accept": "application/json"
-	// 	},
-	// 	url: `${process.env.TIMBUCTOO_URL}/v2.1/domain/${collectionName}/${id}`
-	// }, (err, resp) => {
-	// 	if (resp.statusCode === 200) {
-	// 		var collectionMetadata = JSON.parse(resp.body);
-	// 		console.log(resp.body)
-	// 		dispatch({
-	// 			type: 'OPEN_BROWSER_APP'
-	// 		})
-	// 	}
-	// })
-
-export { setVre, onLODClick };
+export { setVre };

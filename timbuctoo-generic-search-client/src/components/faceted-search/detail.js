@@ -148,8 +148,8 @@ class Detail extends React.Component {
                   Modified on {ts2date(entity["^modified"].timeStamp)} by user {entity["^modified"].username || entity["^modified"].userId}
                 </div>
               </div>
-              <div className="col-xs-10 text-center"><em>Timbuctoo documents full data provenance.</em></div>
-              <div className="col-xs-10 text-center"><em>Future releases will include a more detailed view of this provenance information.</em></div>     
+              <div className="col-xs-10 text-center"><small><em>Timbuctoo documents full data provenance.</em></small></div>
+              <div className="col-xs-10 text-center"><small><em>Future releases will include a more detailed view of this provenance information.</em></small></div>     
               </div>
           </div>
         </div>
