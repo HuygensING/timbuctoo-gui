@@ -255,49 +255,49 @@ export default function (navigateTo, dispatch) {
 							primary_data = getData(url, prop, objects, prov, primary_data)
 						}
 
-						if (input_url.length == 1 && url_complete.indexOf('dbpedia') == -1) {
-							//look for DBpedia url
-							for (var i = 0; i < primary_data['Other sources']['sameAs'].list.length; i++) {
-								if (primary_data['Other sources']['sameAs'].list[i].object.indexOf('http://dbpedia') == 0) {
-									var Dbpedia_sameAs = primary_data['Other sources']['sameAs'].list[i].object
-									break //when found stop searching
-								}
-							}
-							if (typeof (Dbpedia_sameAs) != 'undefined') {
-
-								fetcher.nowOrWhenFetched(Dbpedia_sameAs, function (ok, body, xhr) {
-									if (!ok) {
-										console.log("Oops, something happened and couldn't fetch data");
-										primary_data = removeUploadedSource(primary_data)
-										dispatch({
-											type: "RECEIVE_URL",
-											data: primary_data
-										})
-									} else {
-										var s = $rdf.sym(Dbpedia_sameAs)
-										var props = store.each(s, undefined)
-										var unique_prop = uniqueArray(props)
-										var prov = extractSource(Dbpedia_sameAs)
-										for (var i = 0; i < unique_prop.length; i++) {
-											var prop = unique_prop[i];
-											var objects = store.each(s, $rdf.sym(prop), undefined);
-											primary_data = getData(Dbpedia_sameAs, prop, objects, prov, primary_data)
-										}
-										primary_data = removeUploadedSource(primary_data)
-										dispatch({
-											type: "RECEIVE_URL",
-											data: primary_data
-										})
-									}
-								})
-							}
-						} else {
+						// if (input_url.length == 1 && url_complete.indexOf('dbpedia') == -1) {
+						// 	//look for DBpedia url
+						// 	for (var i = 0; i < primary_data['Other sources']['sameAs'].list.length; i++) {
+						// 		if (primary_data['Other sources']['sameAs'].list[i].object.indexOf('http://dbpedia') == 0) {
+						// 			var Dbpedia_sameAs = primary_data['Other sources']['sameAs'].list[i].object
+						// 			break //when found stop searching
+						// 		}
+						// 	}
+						// 	if (typeof (Dbpedia_sameAs) != 'undefined') {
+						// 		var escaped_Dbpedia_sameAs = process.env.TIMBUCTOO_PROXY_URL + "?url="+ encodeURIComponent(Dbpedia_sameAs);
+						// 		fetcher.nowOrWhenFetched(escaped_Dbpedia_sameAs, function (ok, body, xhr) {
+						// 			if (!ok) {
+						// 				console.log("Oops, something happened and couldn't fetch data");
+						// 				primary_data = removeUploadedSource(primary_data)
+						// 				dispatch({
+						// 					type: "RECEIVE_URL",
+						// 					data: primary_data
+						// 				})
+						// 			} else {
+						// 				var s = $rdf.sym(Dbpedia_sameAs)
+						// 				var props = store.each(s, undefined)
+						// 				var unique_prop = uniqueArray(props)
+						// 				var prov = extractSource(Dbpedia_sameAs)
+						// 				for (var i = 0; i < unique_prop.length; i++) {
+						// 					var prop = unique_prop[i];
+						// 					var objects = store.each(s, $rdf.sym(prop), undefined);
+						// 					primary_data = getData(Dbpedia_sameAs, prop, objects, prov, primary_data)
+						// 				}
+						// 				primary_data = removeUploadedSource(primary_data)
+						// 				dispatch({
+						// 					type: "RECEIVE_URL",
+						// 					data: primary_data
+						// 				})
+						// 			}
+						// 		})
+						// 	}
+						// } else {
 							primary_data = removeUploadedSource(primary_data)
 							dispatch({
 								type: "RECEIVE_URL",
 								data: primary_data
 							})
-						}
+						// }
 					}
 				})
 			})
