@@ -6,8 +6,8 @@ fi
 
 sed -i "s|%PREFIXPATH%|${PREFIXPATH:-/}|" /etc/nginx/conf.d/default.conf
 
-cat /etc/nginx/conf.d/default.conf
-
+#http://veithen.github.io/2014/11/16/sigterm-propagation.html
+trap 'kill -TERM $nginxpid' TERM INT
 nginx -g "daemon off;" &
 nginxpid=$!
 
