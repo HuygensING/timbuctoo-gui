@@ -49,7 +49,11 @@ const getNameSpaceFor = (predicate) =>
 const getDataTypeFor = (propertyType) =>
   typeof dataTypes[propertyType] === "undefined" ? undefined : dataTypes[propertyType];
 
-const makeMapName = (vre, localName) => `http://timbuctoo.huygens.knaw.nl/mapping/${vre}/${localName}`;
+const makeMapName = (vre, localName) => `${process.env.TIMBUCTOO_URL}/mapping/${vre}/${localName}`;
+
+function makeSubjectUrl(vre, localName) {
+  return `${process.env.TIMBUCTOO_URL}/v2.1/domain/${vre}${localName}/{tim_id}`;
+}
 
 const mapBasicProperty = (predicateObjectMap) => ({
   "objectMap": {
@@ -92,7 +96,7 @@ const mapCollection = (vre, archetypeName, collectionName, predicateObjectMaps) 
     }
   },
   "subjectMap": {
-    "template": `${makeMapName(vre, collectionName)}/{tim_id}`
+    "template": `${makeSubjectUrl(vre, collectionName)}`
   },
   "predicateObjectMap": [
     {"object": makeMapName(vre, collectionName), "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"}
