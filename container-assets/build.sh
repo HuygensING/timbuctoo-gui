@@ -2,6 +2,8 @@
 
 cd /sources/$2
 
+export NODE_PATH="/sources/"
+
 #add node_modules installed commands to path
 curdir=`pwd`
 while [ -n "$curdir" -a "$curdir" != '/' ]; do

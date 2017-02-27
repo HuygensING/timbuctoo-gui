@@ -202,3 +202,7 @@ RUN npm install
 WORKDIR /sources/timbuctoo-browser-app
 COPY timbuctoo-browser-app/package.json package.json
 RUN npm install
+
+WORKDIR /sources/solr-faceted-search-react
+COPY solr-faceted-search-react/package.json package.json
+RUN npm install

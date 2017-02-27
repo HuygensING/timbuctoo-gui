@@ -1,4 +1,4 @@
-import { SolrClient } from "solr-faceted-search-react";
+import { SolrClient } from "solr-faceted-search-react/src";
 import { setPagination } from "./actions";
 
 import store from "./store";

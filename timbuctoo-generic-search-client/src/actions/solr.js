@@ -1,6 +1,6 @@
 import xhr from "xhr";
 
-import { SolrClient } from "solr-faceted-search-react";
+import { SolrClient } from "solr-faceted-search-react/src";
 
 
 let searchClients = [];

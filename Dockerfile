@@ -26,6 +26,9 @@ COPY timbuctoo-edit-client /sources/timbuctoo-edit-client
 WORKDIR /sources/timbuctoo-edit-client
 RUN /build.sh $EDIT_CLIENT_FOLDER timbuctoo-edit-client
 
+COPY solr-faceted-search-react /sources/solr-faceted-search-react
+WORKDIR /sources/solr-faceted-search-react
+
 COPY timbuctoo-generic-search-client /sources/timbuctoo-generic-search-client
 WORKDIR /sources/timbuctoo-generic-search-client
 RUN /build.sh $SEARCH_CLIENT_FOLDER timbuctoo-generic-search-client
