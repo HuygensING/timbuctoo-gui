@@ -46,25 +46,27 @@ const rmlTemplate =  {
 const getNameSpaceFor = (predicate) =>
   typeof nameSpaces[predicate]  === "undefined" ? defaultNamespace : nameSpaces[predicate];
 
-const getDataTypeFor = (propertyType) =>
-  typeof dataTypes[propertyType] === "undefined" ? undefined : dataTypes[propertyType];
-
 const makeMapName = (vre, localName) => `${process.env.TIMBUCTOO_URL}/mapping/${vre}/${localName}`;
 
 function makeSubjectUrl(vre, localName) {
   return `${process.env.TIMBUCTOO_URL}/v2.1/domain/${vre}${localName}/{tim_id}`;
 }
 
-const mapBasicProperty = (predicateObjectMap) => ({
-  "objectMap": {
-    "column": predicateObjectMap.objectMap.column,
-    "termType": predicateObjectMap.propertyType === "sameAs" ? "http://www.w3.org/ns/r2rml#IRI" : undefined,
-    "datatype": predicateObjectMap.propertyType === "sameAs" ? undefined : {
-      "@id": getDataTypeFor(predicateObjectMap.propertyType)
-    }
-  },
-  "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
-});
+function mapBasicProperty(predicateObjectMap) {
+  var result = {
+    "objectMap": {
+      "column": predicateObjectMap.objectMap.column,
+      "termType": predicateObjectMap.propertyType === "sameAs" ? "http://www.w3.org/ns/r2rml#IRI" : undefined,
+    },
+    "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
+  };
+  if (dataTypes[predicateObjectMap.propertyType]) {
+    result["datatype"] = {
+      "@id": dataTypes[predicateObjectMap.propertyType]
+    };
+  }
+  return result;
+};
 
 const mapRelationProperty = (vre, predicateObjectMap) => ({
   "objectMap": {
