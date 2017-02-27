@@ -179,6 +179,10 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log
 
 #prepare dependencies
+WORKDIR /sources/
+COPY package.json package.json
+RUN npm install
+
 WORKDIR /sources/timbuctoo-default-frontend
 COPY timbuctoo-default-frontend/package.json package.json
 RUN npm install

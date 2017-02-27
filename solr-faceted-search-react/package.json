@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "xhr": "^2.2.0"
+    "xhr": "^2.2.2"
   },
   "devDependencies": {
     "@types/react": "^0.14.30",
