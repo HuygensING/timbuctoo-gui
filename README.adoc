@@ -9,8 +9,18 @@ This project contains a few javascript applications that allow you to do some se
 
 = build
 
-build the dockerfile
+There should be an image called *huygensing/timbuctoo-gui:buildbase* on dockerhub.
+This image contains everything to rebuild the gui files (including all dependencies).
+
+To regenerate this image you run `docker build -t huygensing/timbuctoo-gui:buildbase -f Dockerfile.buildbase .`
+
+To build a container with the runtime you run `docker build -t huygensing/timbuctoo-gui .`.
+This container will expose a webserver on port 80 that hosts the html and js files.
+You can set the environment variables listed in the Dockerfile to specify the urls that the gui uses.
+
 
 = develop
 
-run `docker-compose build && docker-compose up -d` to run all the services. It will also run a watcher process inside the timbuctoo-gui container so that any changes you make in the files in this repo will be automatically rebuilt on the container (you still need to manually refresh your browser though)
+run `docker-compose up -d` to run all the services. 
+This will also run a watcher process inside the timbuctoo-gui container so that any changes you make in the files in this repo will be automatically rebuilt on the container.
+We don't run browsersync so you still need to manually refresh your browser.

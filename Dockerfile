@@ -1,23 +1,5 @@
 FROM huygensing/timbuctoo-gui:buildbase
 
-EXPOSE 80
-WORKDIR /sources
-ENV NODE_ENV=production
-ENV BUILD_TARGET=production
-
-ENV TIMBUCTOO_URL='http://TIMBUCTOO_URL'
-ENV SOLR_QUERY_URL='http://SOLR_URL'
-ENV INDEXER_URL='http://INDEXER_URL'
-ENV OWN_HOST_URL='http://localhost:8080'
-
-ENV DEFAULT_FRONTEND_FOLDER='overview'
-ENV EDIT_CLIENT_FOLDER='edit-gui'
-ENV SEARCH_CLIENT_FOLDER='search'
-ENV SEARCH_ALL_FOLDER='searchAll'
-ENV BROWSER_FOLDER='lod-browser'
-
-COPY container-assets/build.sh /build.sh
-
 COPY timbuctoo-default-frontend /sources/timbuctoo-default-frontend
 WORKDIR /sources/timbuctoo-default-frontend
 RUN /build.sh $DEFAULT_FRONTEND_FOLDER timbuctoo-default-frontend
@@ -41,12 +23,9 @@ COPY timbuctoo-browser-app /sources/timbuctoo-browser-app
 WORKDIR /sources/timbuctoo-browser-app
 RUN /build.sh $BROWSER_FOLDER timbuctoo-browser-app
 
-COPY container-assets/set-js-envs /set-js-envs
-COPY container-assets/launch.sh /launch.sh
-COPY container-assets/develop.sh /develop.sh
-COPY container-assets/call-envify.sh /call-envify.sh
-COPY container-assets/nginx.conf /etc/nginx/nginx.conf
 COPY container-assets/nginx.vh.default.conf /etc/nginx/conf.d/default.conf
-COPY container-assets/index.html /usr/share/nginx/html/index.html
+COPY container-assets/call-envify.sh /call-envify.sh
+COPY container-assets/launch.sh /launch.sh
+COPY container-assets/set-js-envs /set-js-envs
 
 CMD ["/launch.sh"]
