@@ -12,7 +12,7 @@ const nameSpaces = {
 };
 
 const dataTypes = {
-  datable: "http://timbuctoo.huygens.knaw.nl/types/datable",
+  datable: "http://timbuctoo.huygens.knaw.nl/datatypes/datable",
   text: "https://www.w3.org/TR/2001/REC-xmlschema-2-20010502/#string",
   names: "https://www.w3.org/TR/2001/REC-xmlschema-2-20010502/#string"
 };
