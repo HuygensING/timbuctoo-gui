@@ -49,7 +49,7 @@ const getNameSpaceFor = (predicate) =>
 const makeMapName = (vre, localName) => `${process.env.TIMBUCTOO_URL}/mapping/${vre}/${localName}`;
 
 function makeSubjectUrl(vre, localName) {
-  return `${process.env.TIMBUCTOO_URL}/v2.1/domain/${vre}${localName}/{tim_id}`;
+  return `${process.env.TIMBUCTOO_URL}/v2.1/domain/${vre}${localName}s/{tim_id}`;
 }
 
 function mapBasicProperty(predicateObjectMap) {
