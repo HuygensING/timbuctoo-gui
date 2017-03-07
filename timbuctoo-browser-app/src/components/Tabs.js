@@ -17,7 +17,6 @@ class ProvTabs extends React.Component {
     }
 
     handleSelected(index, last) {
-        console.log('Selected tab: ' + index + ', Last tab: ' + last);
         this.setState({
             selectedIndex: index
             //...otherStateUpdates
