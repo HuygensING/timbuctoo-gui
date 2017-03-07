@@ -24,6 +24,9 @@ services:
       - "8083:80"
   timbuctoo-gui:
     image: huygensing/timbuctoo-gui:buildbase
+    build: 
+      dockerfile: Dockerfile.buildbase
+      context: .
     environment:
       - TIMBUCTOO_URL=http://localhost:8080
       - SOLR_QUERY_URL=http://localhost:8081/solr
