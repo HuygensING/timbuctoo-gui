@@ -27,7 +27,7 @@ const getMappingState = (publishState, uploadStatus) => {
         editPlaceholder: "Please upload a dataset first...",
         uploadButtonStatus: uploadStatus || null,
         statusMessage: "Upload failed, please try again.",
-        title: "Create a new dataset",
+        title: "Dataset information",
         uploadButtonLabel: "Upload a new file"
       };
     case PublishState.UPLOADING:
@@ -68,8 +68,8 @@ const getMappingState = (publishState, uploadStatus) => {
     editDisabled: true,
     editPlaceholder: "Please upload a dataset first...",
     uploadButtonStatus: uploadStatus || null,
-    statusMessage: "To create e new dataset, please enter some basic information about your project",
-    title: "Create a new dataset",
+    statusMessage: "Please enter some basic information about your data",
+    title: "Dataset information",
     uploadButtonLabel: "Browse..."
   }
 };
@@ -161,7 +161,9 @@ class DatasetSettings extends  React.Component {
       backgroundSize: "125% auto",
       color: "white",
     } : {};
-
+{/*<div className="col-md-3 alert alert-info alert-dismissible" role="alert">
+            <span className="glyphicon glyphicon-play-circle"/> Watch a 3 min video to create a new dataset.
+          </div>*/}
     return (
       <div>
         <div className="container basic-margin">
@@ -171,9 +173,7 @@ class DatasetSettings extends  React.Component {
           <div className="col-md-9">
             {statusMessage}
           </div>
-          <div className="col-md-3 alert alert-info alert-dismissible" role="alert">
-            <span className="glyphicon glyphicon-play-circle"/> Watch a 3 min video to create a new dataset.
-          </div>
+          
         </div>
 
         <div className="container basic-margin">
@@ -251,14 +251,25 @@ class DatasetSettings extends  React.Component {
             </div>
           </div>
         </div>
-
-        <div className="container basic-margin">
-          <button className="btn btn-default pull-right" disabled={continueDisabled} onClick={() => onSaveVreSettings(vreId, () => onContinueMapping(vreId))}>
+        
+        <div className="container basic-margin" >
+          <button className="btn btn-default pull-right"  disabled={editDisabled}  onClick={() => onSaveVreSettings(vreId, () => onContinueMapping(vreId))}>
             Save settings and continue to mapping
           </button>
-          <button className="btn btn-default pull-right" style={{marginRight: "4px"}} disabled={editDisabled} onClick={() => onSaveVreSettings(vreId, returnToRoot)}>
+          <button className="btn btn-default pull-right" style={{marginRight: "4px"}}  disabled={editDisabled}  onClick={() => onSaveVreSettings(vreId, returnToRoot)}>
             Save settings
           </button>
+        </div>
+         <div className="container basic-margin">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
         </div>
 
 
