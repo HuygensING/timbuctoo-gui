@@ -19,7 +19,6 @@ function fix_url(url) {
 	var url_fixed;
 
 	if (url.indexOf('http://viaf') == 0) {
-
 		url_fixed = url + '/rdf.xml'
 	} else if (url.indexOf('http://dbpedia.org/page') == 0) {
 		url_fixed = url_fixed.replace('page', 'resource')
@@ -39,7 +38,9 @@ function fix_url(url) {
 		url_fixed = url;
 
 	}
-	url_fixed = process.env.TIMBUCTOO_PROXY_URL + "?url="+ encodeURIComponent(url_fixed);
+	if (url.indexOf("http://localhost:") !== 0) {
+		url_fixed = process.env.TIMBUCTOO_PROXY_URL + "?url="+ encodeURIComponent(url_fixed);
+	}
 	return ([url_fixed, entityURL])
 }
 
