@@ -66,15 +66,15 @@ class ConnectToArchetype extends React.Component {
       <div>
         {rmlPreviewBlock}
         <div className="container basic-margin">
-          <h2 className="small-margin">Upload and connect your dataset</h2>
+          <h2 className="small-margin">Connect your data — Step 1</h2>
           {fileIsUploadedMessage}
           <p>We found {collections.length} collections in the file. Connect the tabs to the Timbuctoo Archetypes.</p>
         </div>
 
         <div className="container basic-margin">
           <div className="row" >
-            <div className="col-md-3 hi-light-grey">Your excel sheet</div>
-            <div className="col-md-8 hi-light-grey">Connect to a Timbuctoo Archetype</div>
+            <div className="col-md-3 hi-light-grey">Your Excel sheet</div>
+            <div className="col-md-8 hi-light-grey">Specify type of data</div>
           </div>
           {collections.map((sheet) => (
             <div className="row" key={sheet.name} >

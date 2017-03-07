@@ -36,8 +36,8 @@ class AddProperty extends React.Component {
               onChange={(value) => this.setState({newType: value, newName: newName})}
               onClear={() => this.setState({newType: null})}>
               <span type="placeholder">Choose a type...</span>
-              <span value="text">Text</span>
-              <span value="datable">Datable</span>
+              <span value="text">Text format</span>
+              <span value="datable">Datable format</span>
             </SelectField>
           </span>
         </div>
@@ -45,7 +45,7 @@ class AddProperty extends React.Component {
           <input className="form-control"
                   onChange={(ev) => this.setState({newName: ev.target.value})}
                   onKeyPress={(ev) => ev.key === "Enter" ? this.onEnter(newName, newType) : false}
-                  placeholder="Property name"
+                  placeholder="Enter name"
                   value={newName} />
         </div>
 

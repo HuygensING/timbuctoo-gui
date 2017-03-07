@@ -14,9 +14,9 @@ function FirstUpload(props) {
         {userId ? props.children : (
           <form action="https://secure.huygens.knaw.nl/saml2/login" method="POST">
             <input name="hsurl"  type="hidden" value={window.location.href} />
-            <p>Most university accounts will work.</p>
+            <p>Login required with the user account of your home institution.</p>
             <button className="btn btn-primary btn-lg" type="submit">
-              <span className="glyphicon glyphicon-log-in" /> Log in to upload
+              <span className="glyphicon glyphicon-log-in" /> Log in
             </button>
           </form>) }
       </div>

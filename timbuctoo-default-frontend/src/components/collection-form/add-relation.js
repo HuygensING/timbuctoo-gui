@@ -16,6 +16,7 @@ class AddRelation extends React.Component {
 
 
   render() {
+    
     const { newRelation, selectedSourceColumn, selectedTargetColumn } = this.state;
     const { onAddCustomProperty, archetypeFields, availableArchetypes, columns, availableCollectionColumnsPerArchetype } = this.props;
 

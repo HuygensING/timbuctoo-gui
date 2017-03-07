@@ -6,7 +6,7 @@ const FOOTER_HEIGHT = 81;
 
 function Page(props) {
   return (
-    <div className="page">
+    <div className="page" style={{paddingBottom:'50px'}}>
       <div className="basic-margin hi-Green container-fluid">
         <nav className="navbar ">
           <div className="container">

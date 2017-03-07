@@ -95,7 +95,7 @@ class ConnectData extends React.Component {
           .reduce((accu, elem) => accu === null ? [elem] : [...accu, ' and ', elem], null)
         } from <em>{uploadedFilename}</em> {tabs.length === 1 ? "is" : "are" } connected to the Timbuctoo Archetypes.
         {" "}
-        <Link to={urls.mapArchetypes(vre)}>Map again</Link>
+        <Link to={urls.mapArchetypes(vre)}>Change</Link>
       </Message> : null;
 
 
@@ -103,10 +103,10 @@ class ConnectData extends React.Component {
       <div>
         {rmlPreviewBlock}
         <div className="container basic-margin">
-          <h2 className="small-margin">Upload and connect your dataset</h2>
+          <h2 className="small-margin">Connect your data — Step 2</h2>
           {collectionsAreConnectedMessage}
           {publishFailedMessage}
-          <p>Connect the excel columns to the properties of the Archetypes</p>
+          <p>Please specify for all relevant columns the type of data they contain</p>
         </div>
         <CollectionTabs collectionTabs={tabs} onSelectCollection={onSelectCollection} />
         <CollectionForm key={activeCollection}
