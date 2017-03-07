@@ -23,7 +23,6 @@ export default function (state = initialState, action) {
 			};
 
 		case "INVALID_URL":
-			console.log('error')
 			return {
 				...state,
 				errorText: true,
@@ -150,7 +149,7 @@ export default function (state = initialState, action) {
 					}
 				}
 			}
-			console.log(triples2load)
+			// console.log(triples2load)
 			// var jsonLDMAP = '['
 			// var subjects = Object.keys(triples2load)
 			// for (var keySub in triples2load){

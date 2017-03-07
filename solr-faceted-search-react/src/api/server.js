@@ -29,29 +29,37 @@ server.submitQuery = (query, callback) => {
 };
 
 server.fetchCsv = (query, callback) => {
-	
-	server.performXhr({
-		url: query.url,
-		data: solrQuery({...query, rows: MAX_INT}, {
+	return(window.open(query.url +'?' +solrQuery({...query, rows: MAX_INT}, {
 			wt: "csv",
 			"csv.mv.separator": "|",
 			"csv.separator": ";"
-		}),
-		method: "POST",
-		headers: {
-			"Content-type": "application/x-www-form-urlencoded"
-		}
+		})), "_blank")
+	// server.performXhr({
+	// 	url: query.url,
+	// 	data: solrQuery({...query, rows: MAX_INT}, {
+	// 		wt: "csv",
+	// 		"csv.mv.separator": "|",
+	// 		"csv.separator": ";"
+	// 	}),
+	// 	method: "POST",
+	// 	headers: {
+	// 		"Content-type": "application/x-www-form-urlencoded"
+	// 	}
 		
-	}, (err, resp) => {
+	// }, (err, resp) => {
 		
-		if (resp.statusCode >= 200 && resp.statusCode < 300) {
+	// 	if (resp.statusCode >= 200 && resp.statusCode < 300) {
+	// 		// callback(resp.body);
 			
-			callback(resp.body);
-		} else {
-			console.log("Server error: ", resp.statusCode);
-		}
-	});
-	console.log(query.url)
+	// 		callback(window.open(query.url +'?' +solrQuery({...query, rows: MAX_INT}, {
+	// 		wt: "csv",
+	// 		"csv.mv.separator": "|",
+	// 		"csv.separator": ";"
+	// 	})), "_blank");
+	// 	} else {
+	// 		console.log("Server error: ", resp.statusCode);
+	// 	}
+	// });
 };
 
 export default server;

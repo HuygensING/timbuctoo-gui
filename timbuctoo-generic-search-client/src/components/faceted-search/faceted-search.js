@@ -9,15 +9,11 @@ import { urls } from "../../router";
 import { Link } from "react-router";
 
 class FacetedSearch extends React.Component {
-  // componentDidMount(){
-  //   onCsvExport();
-  // }  
   render() {
     const { collections, truncateFacetListsAt, vreId} = this.props;
     const { onCollectionSelect, onSearchFieldChange, onNewSearch, onCsvExport,
       onPageChange, onSortFieldChange, onSetCollapse, onFacetSortChange } = this.props;
     const activeCollection = collections.find((collection) => collection.selected);
-    console.log(onCsvExport())
     return (
       <Page>
         <div className="container big-margin">
@@ -45,7 +41,10 @@ class FacetedSearch extends React.Component {
 
             <div className="col-sm-8 col-md-8">
               <SortMenu onChange={onSortFieldChange} sortFields={activeCollection.query.sortFields} />
-              <button className="btn btn-default pull-right" style={{position: "relative", zIndex: "100"}} onClick={onCsvExport}>Download CSV</button>
+
+		
+			
+              <button className="btn btn-default pull-right" style={{position: "relative", zIndex: "100", targetNew: "tab"}} onClick={onCsvExport}>Download CSV</button>
               <div className="basic-margin">
                 <strong>Found {activeCollection.results.numFound} {activeCollection.results.numFound === 1
                   ? activeCollection.label.replace(/s$/, "")

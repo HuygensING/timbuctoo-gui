@@ -90,20 +90,20 @@ class SolrClient {
 
 	fetchCsv() {
 		server.fetchCsv(this.state.query, (data) =>  {
-			// alert(data)
-			// myWindow = window.open("data:text/html," + encodeURIComponent(data),
-            //            "_blank", "width=200,height=100");
-			// myWindow.focus();
-			var element = document.createElement("a");
-			element.setAttribute("href", "data:application/csv;charset=utf-8," + encodeURIComponent(data));
-			element.setAttribute("download", "export.csv");
+			return(data)
+			
+			
+			// var element = document.createElement("a");
+			// // element.setAttribute("href", "data:application/csv;charset=utf-8," + encodeURIComponent(data));
+			// element.setAttribute("href", encodeURIComponent(data));
+			// element.setAttribute("target","_blank")
+			// // // element.setAttribute("download", "export.csv");
 
-			element.style.display = "none";
-			document.body.appendChild(element);
+			// element.style.display = "none";
+			// document.body.appendChild(element);
 
-			element.click();
-
-			document.body.removeChild(element);
+			// element.click();
+			// document.body.removeChild(element);
 		});
 	}
 
