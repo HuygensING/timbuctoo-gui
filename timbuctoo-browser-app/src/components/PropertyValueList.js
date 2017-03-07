@@ -11,8 +11,8 @@ const PropValueList = ({ propValues , onValueClick, expandClick, extraLinkClick}
 			<div className='col-md-2'><h2>Provenance</h2></div>
 			<div className='col-md-1'><h2></h2></div>
 		</div>		
-			
-		{Object.values(propValues).map ((propValue, idx) => 
+		
+		{propValues ? Object.values(propValues).map ((propValue, idx) => 
 			(<PropValueIntermezzo 
 				key = {idx}
 				propertyList = {propValue.list}
@@ -21,7 +21,7 @@ const PropValueList = ({ propValues , onValueClick, expandClick, extraLinkClick}
 				expandClick = {expandClick}
 				extraLinkClick = {extraLinkClick}
 			/>)
-		)}
+		) : undefined}
 	</div>	
 	
 )};

@@ -3,15 +3,15 @@ import PropValue from './PropValue'
 
 const PropValueIntermezzo = ({propertyList, isExpanded, onValueClick, expandClick, extraLinkClick}) => { 
     
-    if (!(propertyList)) {
-        return null;
+    if (!propertyList || !propertyList[0]) {
+        return <div className='row-fluid text-left'></div>;
     }
    
     return (
         <div className='row-fluid text-left'>
             <PropValue
                 {...propertyList[0]}
-
+                
                 hasExpandButton={propertyList[0].property ==='sameAs' ? false : propertyList.length>1}
                 button_type={isExpanded ? "glyphicon glyphicon-minus" : "glyphicon glyphicon-plus"}
                 hasLink_button={propertyList[0].hasLink ? "glyphicon glyphicon-open" : null}

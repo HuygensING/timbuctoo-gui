@@ -19,7 +19,6 @@ function fix_url(url) {
 	var url_fixed;
 
 	if (url.indexOf('http://viaf') == 0) {
-
 		url_fixed = url + '/rdf.xml'
 	} else if (url.indexOf('http://dbpedia.org/page') == 0) {
 		url_fixed = url_fixed.replace('page', 'resource')
@@ -39,7 +38,9 @@ function fix_url(url) {
 		url_fixed = url;
 
 	}
-	url_fixed = process.env.TIMBUCTOO_PROXY_URL + "?url="+ encodeURIComponent(url_fixed);
+	if (url.indexOf("http://localhost:") !== 0) {
+		url_fixed = process.env.TIMBUCTOO_PROXY_URL + "?url="+ encodeURIComponent(url_fixed);
+	}
 	return ([url_fixed, entityURL])
 }
 
@@ -195,113 +196,109 @@ function getData(subject, property, objects, prov, primary_data) {
 
 
 
-export default function (navigateTo, dispatch) {
-	return {
+export function getRdfFromUrl(input, dispatch) {
+	dispatch({
+		type: "LOADING",
+	})
+	
+	if(!input || typeof input[0] != 'string'){
+		var input_url = [document.getElementById('input_url').value]
+	}else if(typeof input == 'string'){
+		var input_url = [input];
+	}else if(typeof input == 'object'){
+		var input_url = input
+	}
+	var primary_data = [];
 
-		
-		onSampleClick: function (input) {
+	input_url
+		.map(fix_url)
+		.forEach(function([url_complete, entityURL]){
+			fetcher.nowOrWhenFetched(url_complete, function (ok, body, xhr) {
+				if (!ok) {
+					console.log("Oops, something happened and couldn't fetch data");
+					dispatch({
+						type: "INVALID_URL"
+					})
+				} else {
 
-			dispatch({
-				type: "LOADING",
-			})
-			
-			if(typeof input[0] !='string'){
-				var input_url = new Array
-				input_url.push(document.getElementById('input_url').value)
-			}else if(typeof input =='string'){
-				var input_url = new Array
-				input_url.push(input)
-			}else if(typeof input =='object'){
-				var input_url = input
-			}
-			var primary_data = new Array();
+					var labels_data = store.statementsMatching(undefined, $rdf.sym('http://www.w3.org/2000/01/rdf-schema#label'), undefined)
 
-			input_url.forEach(function(listItem, url_index){
-				var url = fix_url(input_url[url_index])
-				var entityURL = url[1]
-				var url_complete = decodeURIComponent(url[0])
-				
-				fetcher.nowOrWhenFetched(url_complete, function (ok, body, xhr) {
-					if (!ok) {
-						console.log("Oops, something happened and couldn't fetch data");
-						dispatch({
-							type: "INVALID_URL"
-						})
-					} else {
-
-						var labels_data = store.statementsMatching(undefined, $rdf.sym('http://www.w3.org/2000/01/rdf-schema#label'), undefined)
-
-						for (var i = 0; i < labels_data.length; i++) {
-							if (labels_data[i].object.lang) {
-								if (labels_data[i].object.lang == 'en') {
-									var sub = labels_data[i].subject.value
-									var obj = labels_data[i].object.value
-									Labels[sub] = obj
-								}
-							} else {
+					for (var i = 0; i < labels_data.length; i++) {
+						if (labels_data[i].object.lang) {
+							if (labels_data[i].object.lang == 'en') {
 								var sub = labels_data[i].subject.value
 								var obj = labels_data[i].object.value
 								Labels[sub] = obj
 							}
+						} else {
+							var sub = labels_data[i].subject.value
+							var obj = labels_data[i].object.value
+							Labels[sub] = obj
 						}
-						var s = $rdf.sym(entityURL)
-						var prop = store.each(s, undefined)
-						var unique_prop = uniqueArray(prop)
-						var prov = extractSource(entityURL)
-
-						for (var i = 0; i < unique_prop.length; i++) {
-							var prop = unique_prop[i];
-							var objects = store.each(s, $rdf.sym(prop), undefined);
-							primary_data = getData(url, prop, objects, prov, primary_data)
-						}
-
-						// if (input_url.length == 1 && url_complete.indexOf('dbpedia') == -1) {
-						// 	//look for DBpedia url
-						// 	for (var i = 0; i < primary_data['Other sources']['sameAs'].list.length; i++) {
-						// 		if (primary_data['Other sources']['sameAs'].list[i].object.indexOf('http://dbpedia') == 0) {
-						// 			var Dbpedia_sameAs = primary_data['Other sources']['sameAs'].list[i].object
-						// 			break //when found stop searching
-						// 		}
-						// 	}
-						// 	if (typeof (Dbpedia_sameAs) != 'undefined') {
-						// 		var escaped_Dbpedia_sameAs = process.env.TIMBUCTOO_PROXY_URL + "?url="+ encodeURIComponent(Dbpedia_sameAs);
-						// 		fetcher.nowOrWhenFetched(escaped_Dbpedia_sameAs, function (ok, body, xhr) {
-						// 			if (!ok) {
-						// 				console.log("Oops, something happened and couldn't fetch data");
-						// 				primary_data = removeUploadedSource(primary_data)
-						// 				dispatch({
-						// 					type: "RECEIVE_URL",
-						// 					data: primary_data
-						// 				})
-						// 			} else {
-						// 				var s = $rdf.sym(Dbpedia_sameAs)
-						// 				var props = store.each(s, undefined)
-						// 				var unique_prop = uniqueArray(props)
-						// 				var prov = extractSource(Dbpedia_sameAs)
-						// 				for (var i = 0; i < unique_prop.length; i++) {
-						// 					var prop = unique_prop[i];
-						// 					var objects = store.each(s, $rdf.sym(prop), undefined);
-						// 					primary_data = getData(Dbpedia_sameAs, prop, objects, prov, primary_data)
-						// 				}
-						// 				primary_data = removeUploadedSource(primary_data)
-						// 				dispatch({
-						// 					type: "RECEIVE_URL",
-						// 					data: primary_data
-						// 				})
-						// 			}
-						// 		})
-						// 	}
-						// } else {
-							primary_data = removeUploadedSource(primary_data)
-							dispatch({
-								type: "RECEIVE_URL",
-								data: primary_data
-							})
-						// }
 					}
-				})
+					var s = $rdf.sym(entityURL)
+					var prop = store.each(s, undefined)
+					var unique_prop = uniqueArray(prop)
+					var prov = extractSource(entityURL)
+
+					for (var i = 0; i < unique_prop.length; i++) {
+						var prop = unique_prop[i];
+						var objects = store.each(s, $rdf.sym(prop), undefined);
+						primary_data = getData([url_complete, entityURL], prop, objects, prov, primary_data)
+					}
+
+					// if (input_url.length == 1 && url_complete.indexOf('dbpedia') == -1) {
+					// 	//look for DBpedia url
+					// 	for (var i = 0; i < primary_data['Other sources']['sameAs'].list.length; i++) {
+					// 		if (primary_data['Other sources']['sameAs'].list[i].object.indexOf('http://dbpedia') == 0) {
+					// 			var Dbpedia_sameAs = primary_data['Other sources']['sameAs'].list[i].object
+					// 			break //when found stop searching
+					// 		}
+					// 	}
+					// 	if (typeof (Dbpedia_sameAs) != 'undefined') {
+					// 		var escaped_Dbpedia_sameAs = process.env.TIMBUCTOO_PROXY_URL + "?url="+ encodeURIComponent(Dbpedia_sameAs);
+					// 		fetcher.nowOrWhenFetched(escaped_Dbpedia_sameAs, function (ok, body, xhr) {
+					// 			if (!ok) {
+					// 				console.log("Oops, something happened and couldn't fetch data");
+					// 				primary_data = removeUploadedSource(primary_data)
+					// 				dispatch({
+					// 					type: "RECEIVE_URL",
+					// 					data: primary_data
+					// 				})
+					// 			} else {
+					// 				var s = $rdf.sym(Dbpedia_sameAs)
+					// 				var props = store.each(s, undefined)
+					// 				var unique_prop = uniqueArray(props)
+					// 				var prov = extractSource(Dbpedia_sameAs)
+					// 				for (var i = 0; i < unique_prop.length; i++) {
+					// 					var prop = unique_prop[i];
+					// 					var objects = store.each(s, $rdf.sym(prop), undefined);
+					// 					primary_data = getData(Dbpedia_sameAs, prop, objects, prov, primary_data)
+					// 				}
+					// 				primary_data = removeUploadedSource(primary_data)
+					// 				dispatch({
+					// 					type: "RECEIVE_URL",
+					// 					data: primary_data
+					// 				})
+					// 			}
+					// 		})
+					// 	}
+					// } else {
+						primary_data = removeUploadedSource(primary_data)
+						dispatch({
+							type: "RECEIVE_URL",
+							data: primary_data
+						})
+					// }
+				}
 			})
-		},
+	})
+}
+
+export default function (navigateTo, dispatch) {
+	return {
+
+		onSampleClick: input => getRdfFromUrl(input, dispatch),
 
 		onValueClick: function (property, id, provenance) {
 			dispatch({

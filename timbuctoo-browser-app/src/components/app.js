@@ -57,11 +57,6 @@ class App extends React.Component {
 						</div>
 					</div>
 					:
-					this.props.location.query.url ?
-						<div className="small-margin container">
-							<UrlForm value={this.props.location.query.url} onSampleClick={this.props.onSampleClick} skip={true} isFetching={this.props.isFetching} errorText={this.props.errorText} closeErrorDiv={this.props.closeErrorDiv}></UrlForm>
-						</div>
-						:
 						<div className="page">
 							<div className="basic-margin hi-Green container-fluid">
 								<nav className="navbar ">
@@ -76,7 +71,7 @@ class App extends React.Component {
 								</nav>
 							</div>
 							<div className="small-margin container">
-								<UrlForm value={""} onSampleClick={this.props.onSampleClick} skip={false} isFetching={this.props.isFetching} errorText={this.props.errorText} closeErrorDiv={this.props.closeErrorDiv}></UrlForm>
+								<UrlForm value={""} onSampleClick={this.props.onSampleClick} isFetching={this.props.isFetching} errorText={this.props.errorText} closeErrorDiv={this.props.closeErrorDiv}></UrlForm>
 							</div>
 						</div>
 			
