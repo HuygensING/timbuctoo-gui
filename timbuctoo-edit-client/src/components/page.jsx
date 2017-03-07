@@ -7,7 +7,7 @@ function Page(props) {
   const footers = React.Children.toArray(props.children).filter((child) => child.props.type === "footer-body");
 
   return (
-    <div className="page">
+    <div className="page" style={{paddingBottom:'50px'}}>
       <div className="basic-margin hi-Green container-fluid">
         <nav className="navbar ">
           <div className="container">

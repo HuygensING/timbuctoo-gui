@@ -115,7 +115,7 @@ class EntityForm extends React.Component {
 					})
         )}
 
-        <div className="basic-margin add-field-form">
+        <div className="basic-margin add-field-form" >
           <h4>Add fields</h4>
           <input className="form-control" value={addFieldFilter} placeholder="Filter..."
                  onChange={this.onFilterChange.bind(this)}

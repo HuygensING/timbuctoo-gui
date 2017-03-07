@@ -13,7 +13,7 @@ class App extends React.Component {
 	render() {
 		return (
 				this.props.uploadDatajs ? 
-					<div className="page">
+					<div className="page" style={{paddingBottom:'50px'}}>
 						<div className="basic-margin hi-Green container-fluid">
 							<nav className="navbar ">
 							<div className="container">
@@ -36,7 +36,7 @@ class App extends React.Component {
 					</div>
 					:
 				this.props.data ?
-					<div className="page"> 
+					<div className="page" style={{paddingBottom:'50px'}}> 
 						<div className="basic-margin hi-Green container-fluid">
 							<nav className="navbar ">
 							<div className="container">
@@ -57,7 +57,9 @@ class App extends React.Component {
 						</div>
 					</div>
 					:
+
 						<div className="page">
+
 							<div className="basic-margin hi-Green container-fluid">
 								<nav className="navbar ">
 								<div className="container">

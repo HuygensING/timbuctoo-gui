@@ -29,6 +29,7 @@ server.submitQuery = (query, callback) => {
 };
 
 server.fetchCsv = (query, callback) => {
+	
 	server.performXhr({
 		url: query.url,
 		data: solrQuery({...query, rows: MAX_INT}, {
@@ -40,13 +41,17 @@ server.fetchCsv = (query, callback) => {
 		headers: {
 			"Content-type": "application/x-www-form-urlencoded"
 		}
+		
 	}, (err, resp) => {
+		
 		if (resp.statusCode >= 200 && resp.statusCode < 300) {
+			
 			callback(resp.body);
 		} else {
 			console.log("Server error: ", resp.statusCode);
 		}
 	});
+	console.log(query.url)
 };
 
 export default server;

@@ -9,12 +9,15 @@ import { urls } from "../../router";
 import { Link } from "react-router";
 
 class FacetedSearch extends React.Component {
+  // componentDidMount(){
+  //   onCsvExport();
+  // }  
   render() {
     const { collections, truncateFacetListsAt, vreId} = this.props;
     const { onCollectionSelect, onSearchFieldChange, onNewSearch, onCsvExport,
       onPageChange, onSortFieldChange, onSetCollapse, onFacetSortChange } = this.props;
     const activeCollection = collections.find((collection) => collection.selected);
-
+    console.log(onCsvExport())
     return (
       <Page>
         <div className="container big-margin">

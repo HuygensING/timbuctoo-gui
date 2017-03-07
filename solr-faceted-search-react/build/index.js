@@ -648,6 +648,7 @@ var SolrClient = function () {
 		value: function fetchCsv() {
 			_server2.default.fetchCsv(this.state.query, function (data) {
 				var element = document.createElement("a");
+				// console.log(encodeURIComponent(data))
 				element.setAttribute("href", "data:application/csv;charset=utf-8," + encodeURIComponent(data));
 				element.setAttribute("download", "export.csv");
 

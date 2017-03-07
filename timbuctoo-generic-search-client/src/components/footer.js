@@ -15,7 +15,7 @@ function Footer(props) {
 
   const footerBody = React.Children.count(props.children) > 0 ?
     React.Children.map(props.children, (child, i) => (
-      <div className="white-bar">
+      <div className="white-bar" >
         <div className="container">
           {i === React.Children.count(props.children) - 1
             ? (<div className="row">{hiLogo}<div className="col-sm-10 col-md-10 text-center">{child}</div>{clariahLogo}</div>)

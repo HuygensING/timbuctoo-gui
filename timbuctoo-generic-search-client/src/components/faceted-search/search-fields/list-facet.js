@@ -47,7 +47,7 @@ class ListFacet extends React.Component {
       <a onClick={() => this.setState({truncateFacetListsAt: -1})}>
         Show all {facetValues.length} items
       </a> : null;
-
+      
     return (
       <div className="facet basic-facet">
          <span onClick={this.toggleExpand.bind(this)} style={{cursor: "pointer"}}

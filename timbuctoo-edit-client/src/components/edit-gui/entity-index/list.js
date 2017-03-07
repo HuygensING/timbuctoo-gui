@@ -6,7 +6,7 @@ export default function(props) {
   const { start, list, domain, selectedId, entityPending } = props;
 
   return (
-    <div className="result-list result-list-edit">
+    <div className="result-list result-list-edit" >
       <ol start={start + 1} style={{counterReset: `step-counter ${start}`}}>
         {list.map((entry, i) => (
           <li key={`${i}-${entry._id}`}>
