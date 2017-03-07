@@ -46,6 +46,7 @@ hashHistory.listen(function({query}) {
 		if (!(newUrls instanceof Array)) {
 			newUrls = [newUrls];
 		}
+		newUrls = newUrls.map(decodeURIComponent);
 		if (Object.keys(curUrls).length != newUrls.length || !newUrls.every(url => curUrls.hasOwnProperty(url))) {
 			curUrls = newUrls.reduce(function (agg, cur) { agg[cur] = true; return agg}, {});
 			getRdfFromUrl(newUrls, store.dispatch.bind(store));
