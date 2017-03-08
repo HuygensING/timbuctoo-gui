@@ -4,7 +4,6 @@ import {setVre} from "./actions/metadata";
 import {checkIndex} from "./actions/solr";
 import router from "./router";
 
-
 function getVreId() {
 	let path = window.location.search.substr(1);
 	let params = path.split("&");
@@ -17,10 +16,11 @@ function getVreId() {
 	}
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
-	ReactDOM.render(router, document.getElementById("app"))
-	const afterInit = () => ReactDOM.render(router, document.getElementById("app"));
-	const checkForIndex = () => store.dispatch(checkIndex(afterInit));
-	store.dispatch(setVre(getVreId(), checkForIndex));
+	store.dispatch(setVre(getVreId(), function checkForIndex() {
+		store.dispatch(checkIndex(function afterInit() {
+			//you should render when all solr info has been retrieved
+			ReactDOM.render(router, document.getElementById("app"));
+		}))
+	}));
 });
