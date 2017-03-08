@@ -36,8 +36,9 @@ function fix_url(url) {
 		url_fixed = url + '.rdf'
 	} else {
 		url_fixed = url;
-
 	}
+
+	url_fixed = process.env.TIMBUCTOO_PROXY_URL + "?url="+ encodeURIComponent(url_fixed);
 	return ([url_fixed, entityURL])
 }
 
