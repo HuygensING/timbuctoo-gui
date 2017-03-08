@@ -38,9 +38,6 @@ function fix_url(url) {
 		url_fixed = url;
 
 	}
-	if (url.indexOf("http://localhost:") !== 0) {
-		url_fixed = process.env.TIMBUCTOO_PROXY_URL + "?url="+ encodeURIComponent(url_fixed);
-	}
 	return ([url_fixed, entityURL])
 }
 

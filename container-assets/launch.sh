@@ -10,4 +10,5 @@ cat /etc/nginx/conf.d/default.conf
 echo "READY" > /usr/share/nginx/html/is-ready.txt
 
 echo "Launching nginx"
+node /proxy.js &
 exec nginx -g "daemon off;"
