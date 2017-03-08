@@ -98,7 +98,7 @@ class Detail extends React.Component {
               <h1>{entity["@displayName"]}</h1>
             </div>
             <div className="col-xs-2 text-right">
-              <a href={`${process.env.TIMBUCTOO_BROWSER_URL}#/?url=`+encodeURIComponent(entity["^rdfUri"])+(entity["^rdfAlternatives"] || []).map( x => "&url=" + encodeURIComponent(x))} className="btn btn-default">LOD browser</a>
+              <a href={`${process.env.TIMBUCTOO_BROWSER_URL}#/?url=`+encodeURIComponent(entity["^rdfUri"])} className="btn btn-default">LOD browser</a>
             </div>
           </div>
           {birthDeathBlock}
