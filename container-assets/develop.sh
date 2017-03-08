@@ -13,7 +13,7 @@ nginxpid=$!
 
 . /set-js-envs
 
-export TIMBUCTOO_PROXY_BRIDGE_IP=$(/sbin/ip route|awk '/default/ { print $3 }')
+export TIMBUCTOO_PROXY_BRIDGE_IP=$(/sbin/ip route | awk '/default/ { print $3 }')
 node /proxy.js &
 
 /build.sh $EDIT_CLIENT_FOLDER timbuctoo-edit-client --watch &
@@ -21,7 +21,6 @@ node /proxy.js &
 /build.sh $SEARCH_CLIENT_FOLDER timbuctoo-generic-search-client --watch &
 /build.sh $SEARCH_ALL_FOLDER timbuctoo-multi-collection-search --watch &
 /build.sh $BROWSER_FOLDER timbuctoo-browser-app --watch &
-
 
 echo "READY" > /usr/share/nginx/html/is-ready.txt
 

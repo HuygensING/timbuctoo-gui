@@ -227,6 +227,7 @@ ENV BROWSER_FOLDER='lod-browser'
 #the develop command will only execute successfully if you mount the source volumes while running this container
 CMD ["/develop.sh"]
 
+COPY container-assets/whitelabel /whitelabelfiles
 COPY container-assets/index.html /usr/share/nginx/html/index.html
 COPY container-assets/build.sh /build.sh
 COPY container-assets/proxy.js /proxy.js

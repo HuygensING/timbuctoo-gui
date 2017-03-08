@@ -25,6 +25,9 @@ fi
 
 mkdir -p "/usr/share/nginx/html/$1/js"
 cp -R src/static/* "/usr/share/nginx/html/$1/"
+if [ -n "$WHITE_LABEL" -a "$3" = "--watch" ]; then
+	  cp -r /whitelabelfiles/$WHITE_LABEL/* "/usr/share/nginx/html/$1/"
+fi
 
 browserify \
 	--transform [ envify ] \
