@@ -1,10 +1,14 @@
 import React from 'react';
 import DatasetCards from "./dataset-cards";
 import Footer from "./footer";
+// var Smooch = require('smooch');
+// import Smooch from 'smooch';
+
 
 const FOOTER_HEIGHT = 81;
 
 function Page(props) {
+{Smooch.init({appToken: 'eyug9ynod68e7zyskizldb06m'})}
   return (
     <div className="page" style={{paddingBottom:'50px'}}>
       <div className="basic-margin hi-Green container-fluid">
@@ -26,6 +30,7 @@ function Page(props) {
             <DatasetCards caption="Explore all datasets" vres={props.vres} searchGuiUrl={props.searchGuiUrl} onDeleteVreClick={props.onDeleteVreClick} height="120px" />
           </div>) : null}
       </div>
+      
       <Footer>
         <div>
           This is an initial release of Timbuctoo. <a href="https://github.com/huygensing/timbuctoo/issues/new" target="_blank">Suggestions</a> for improvement are very welcome!
