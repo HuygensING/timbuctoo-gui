@@ -26,6 +26,7 @@ class AddProperty extends React.Component {
 
     return (
       <div className="row small-margin">
+        <hr/>
         <div className="col-sm-2 pad-6-12">
           <strong>Add a new property</strong>
         </div>
