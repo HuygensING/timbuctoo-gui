@@ -15,11 +15,11 @@ class NamesForm extends React.Component {
   render() {
     const { columns, predicateObjectMappings, onColumnSelect, onClearColumn } = this.props;
 
-    const formRows = ["Given name(s) or initial(s)", "Family name(s)", "Family name prefix(es) (e.g. ‘de’, ‘van der’, certain noble titles)", "Name suffix(es) (e.g. ‘jr.’, ‘sr.’, ‘Ph.D’)", "Name prefix(es) (e.g. ‘dr.’, ‘prof.’, royal and certain noble titles)","Patronym", "Pseudonym"]
+    const formRows = ["forename", "surname", "nameLink", "genName", "roleName"]
       .map((predicate) => (
         <div key={predicate} className="row">
-          <span style={{display: "inline-block", paddingLeft: "12px", width: "450px"}}>
-            {predicate}
+          <span style={{display: "inline-block", paddingLeft: "12px", width: "92px"}}>
+            {camel2label(predicate)}
           </span>
           <ColumnSelect columns={columns}
                         selectedColumn={getObjectForPredicate(predicateObjectMappings, predicate)}
