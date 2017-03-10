@@ -15,7 +15,7 @@ class NamesForm extends React.Component {
   render() {
     const { columns, predicateObjectMappings, onColumnSelect, onClearColumn } = this.props;
 
-    const formRows = ["forename", "surname", "nameLink", "genName", "roleName"]
+    const formRows = ["forename", "surname", "nameLink", "genName", "roleName","patronym","pseudonym"]
       .map((predicate) => (
         <div key={predicate} className="row">
           <span style={{display: "inline-block", paddingLeft: "12px", width: "450px"}}>
