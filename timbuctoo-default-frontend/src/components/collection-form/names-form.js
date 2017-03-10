@@ -18,7 +18,7 @@ class NamesForm extends React.Component {
     const formRows = ["forename", "surname", "nameLink", "genName", "roleName"]
       .map((predicate) => (
         <div key={predicate} className="row">
-          <span style={{display: "inline-block", paddingLeft: "12px", width: "92px"}}>
+          <span style={{display: "inline-block", paddingLeft: "12px", width: "450px"}}>
             {camel2label(predicate)}
           </span>
           <ColumnSelect columns={columns}
