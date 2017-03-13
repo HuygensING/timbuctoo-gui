@@ -1,14 +1,12 @@
 import React from 'react';
 import DatasetCards from "./dataset-cards";
 import Footer from "./footer";
-// var Smooch = require('smooch');
-// import Smooch from 'smooch';
-
 
 const FOOTER_HEIGHT = 81;
 
 function Page(props) {
-{Smooch.init({appToken: 'eyug9ynod68e7zyskizldb06m'})}
+  Smooch.init({
+      appToken: 'eyug9ynod68e7zyskizldb06m'})
   return (
     <div className="page" style={{paddingBottom:'50px'}}>
       <div className="basic-margin hi-Green container-fluid">

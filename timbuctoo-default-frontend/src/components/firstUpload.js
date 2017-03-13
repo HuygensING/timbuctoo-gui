@@ -11,7 +11,7 @@ function FirstUpload(props) {
       <div className="jumbotron first-upload upload-bg">
         <h2>Upload your first dataset</h2>
         {sampleSheet}
-        {userId ? props.children : (
+        {userId ?  props.children : (
           <form action="https://secure.huygens.knaw.nl/saml2/login" method="POST">
             <input name="hsurl"  type="hidden" value={window.location.href} />
             <p>Login required with the user account of your home institution.</p>
