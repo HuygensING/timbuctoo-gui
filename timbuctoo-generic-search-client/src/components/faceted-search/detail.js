@@ -128,11 +128,12 @@ class Detail extends React.Component {
                 <div className="col-xs-5">
                   <ul style={{padding: "0", margin: "0", listStyle: "none", maxHeight: "200px", overflowY: "auto"}}>
                     {entity["@relations"][property]
-                      .map((rel) => (
-                        <li key={rel.path}>
-                            {<a href={`${process.env.TIMBUCTOO_SEARCH_GUI_URL}`+rel.path.replace("domain","?vreId="+vreId+"#")}>{rel.displayName} </a>|| "<no display name found>"}
+                      .map(function (rel) {
+                        console.log(process.env.TIMBUCTOO_SEARCH_GUI_URL, rel.path)
+                        return <li key={rel.path}>
+                            {<a href={`${process.env.TIMBUCTOO_SEARCH_GUI_URL}`+rel.path.replace(/^domain/,"?vreId="+vreId+"#")}>{rel.displayName} </a>|| "<no display name found>"}
                         </li>
-                      ))
+                      })
                     }
                   </ul>
                 </div>
