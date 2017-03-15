@@ -8,12 +8,14 @@ import CsvForm from "./upload-form/csv";
 import ExcelForm from "./upload-form/excel";
 import DataperfectForm from "./upload-form/dataperfect";
 import ResourceSyncForm from "./upload-form/resource-sync";
+import AccessForm from "./upload-form/access";
 
 const formatForms = {
   csv: (props) =>  <CsvForm {...props} />,
   xlsx: (props) => <ExcelForm {...props} />,
   dataperfect: (props) => <DataperfectForm {...props} />,
-  rs: (props) => <ResourceSyncForm {...props} />
+  rs: (props) => <ResourceSyncForm {...props} />,
+  mdb: (props) => <AccessForm {...props} />
 };
 
 class UploadForm extends React.Component {
@@ -28,11 +30,13 @@ class UploadForm extends React.Component {
       csv: urls.editDatasetWithFormat(vreId, "csv"),
       dataperfect: urls.editDatasetWithFormat(vreId, "dataperfect"),
       rs: urls.editDatasetWithFormat(vreId, "rs"),
+      mdb: urls.editDatasetWithFormat(vreId, "mdb"),
     } : {
       xlsx: urls.newDataset(),
       csv: urls.newDatasetWithFormat("csv"),
       dataperfect: urls.newDatasetWithFormat("dataperfect"),
       rs: urls.newDatasetWithFormat("rs"),
+      mdb: urls.newDataset(),
     };
 
     return (
@@ -55,10 +59,15 @@ class UploadForm extends React.Component {
               Dataperfect upload
             </Link>
           </li>
+          <li className={cx({active: activeTab === "mdb"})}>
+          <Link to={tabUrls.mdb} style={{cursor: activeTab === "mdb" ? "default" : "pointer"}}>
+            Access upload
+          </Link>
+          </li>
           <li className={cx({active: activeTab === "rs"})}>
-            <Link to={tabUrls.rs} style={{cursor: activeTab === "rs" ? "default" : "pointer"}}>
-              Remote repository
-            </Link>
+          <Link to={tabUrls.rs} style={{cursor: activeTab === "rs" ? "default" : "pointer"}}>
+            Remote repository
+          </Link>
           </li>
         </ul>
         <div style={{border: "1px solid #ddd", borderTop: "none", padding: "1em"}}>
