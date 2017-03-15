@@ -1,4 +1,5 @@
 var http = require('http'),
+    https = require("https"),
     url = require("url");
 
 // var server = http.createServer(function(req, res) {
@@ -43,8 +44,7 @@ var server = http.createServer(function(req, res) {
       "method": "GET",
       "headers": cleanHeaders
     };
-
-    http.get(options, (proxyres) => {
+    (parsed.protocol === "https:" ? https : http).get(options, (proxyres) => {
       res.statusCode = proxyres.statusCode;
       Object.keys(proxyres.headers).forEach(function (header) {
         var value = proxyres.headers[header];

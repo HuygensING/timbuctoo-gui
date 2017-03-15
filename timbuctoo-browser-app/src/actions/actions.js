@@ -106,7 +106,7 @@ function extractSource(source) {
 		uploadedSources.push(source)
 	}
 	source = source.toString().replace(/^(.*\/\/[^\/?#]*).*$/, "$1")
-	return source.split('http://')[1]
+	return source.split('://').slice(1).join(":.//")
 }
 
 function getObjectLabel(url) {
