@@ -130,7 +130,7 @@ class Detail extends React.Component {
                     {entity["@relations"][property]
                       .map((rel) => (
                         <li key={rel.path}>
-                            {<a href={`${process.env.TIMBUCTOO_SEARCH_GUI_URL}`+rel.path.replace("domain","?vreId=DUMMY_bia#")}>{rel.displayName} </a>|| "<no display name found>"}
+                            {<a href={`${process.env.TIMBUCTOO_SEARCH_GUI_URL}`+rel.path.replace("domain","?vreId="+vreId+"#")}>{rel.displayName} </a>|| "<no display name found>"}
                         </li>
                       ))
                     }

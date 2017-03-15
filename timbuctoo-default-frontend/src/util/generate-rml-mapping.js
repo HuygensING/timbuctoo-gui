@@ -71,7 +71,7 @@ function mapBasicProperty(predicateObjectMap) {
 const mapRelationProperty = (vre, predicateObjectMap) => ({
   "objectMap": {
     "joinCondition": predicateObjectMap.objectMap.joinCondition,
-    "parentTriplesMap": `http://timbuctoo.huygens.knaw.nl/mapping/${vre}/${predicateObjectMap.objectMap.parentTriplesMap}`
+    "parentTriplesMap": makeMapName(vre,predicateObjectMap.objectMap.parentTriplesMap)
   },
   "predicate": `${getNameSpaceFor(predicateObjectMap.predicate)}${predicateObjectMap.predicate}`
 });
