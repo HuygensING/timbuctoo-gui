@@ -33,4 +33,4 @@ class AccessForm extends React.Component {
   }
 }
 
-export default ExcelForm;
+export default AccessForm;
