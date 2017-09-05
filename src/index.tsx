@@ -3,11 +3,14 @@ import * as ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
 
 import App from './components/App';
-import './index.css';
 import ApolloClient from './services/ApolloClient';
 import { configureStore } from './store';
+import globalStyling from "./theme/globalStyling";
 
 const store = configureStore();
+
+// set global body styling in the head
+globalStyling();
 
 const Application = (
     <ApolloProvider client={ApolloClient} store={store}>
