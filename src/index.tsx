@@ -5,7 +5,7 @@ import { ApolloProvider } from 'react-apollo';
 import App from './components/App';
 import ApolloClient from './services/ApolloClient';
 import { configureStore } from './store';
-import globalStyling from "./theme/globalStyling";
+import globalStyling from './theme/globalStyling';
 
 const store = configureStore();
 

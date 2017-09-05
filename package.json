@@ -9,6 +9,7 @@
     "eject": "react-scripts-ts eject"
   },
   "dependencies": {
+    "polished": "^1.7.0",
     "react": "^15.6.1",
     "react-apollo": "^1.4.15",
     "react-dom": "^15.6.1",
