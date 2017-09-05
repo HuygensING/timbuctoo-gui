@@ -21,9 +21,6 @@ export type Color = 'primary' | 'shade' | string;
 export interface ThemeProps {
     colors: Colors;
     fonts: Fonts;
-    isCaps?: boolean;
-    color?: Color;
-    children?: any;
 }
 
 export interface ColProps {
