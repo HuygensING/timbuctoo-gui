@@ -2,6 +2,8 @@ import { injectGlobal } from 'styled-components';
 
 export default () =>  {
     injectGlobal`
+        @import url('https://fonts.googleapis.com/css?family=Droid+Serif|Roboto:300,400,500');
+
         * {
             box-sizing: border-box;
         }
@@ -17,6 +19,8 @@ export default () =>  {
             margin: 0;
             padding: 0;
             -webkit-font-smoothing: antialiased;
+
+            font-family: 'Roboto', sans-serif;
         }
-`;
+    `;
 }
