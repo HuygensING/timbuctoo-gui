@@ -23,6 +23,34 @@ export interface ThemeProps {
     fonts: Fonts;
 }
 
+export interface ElementProps {
+    theme: ThemeProps;
+    isCaps?: boolean;
+    color?: Color;
+    children?: any;
+}
+
+export interface LinkProps {
+    /*
+     * React Router specific
+     */
+    to: string | Object;
+    exact: boolean;
+    replace: boolean;
+
+    /*
+     * StyledCopy specific
+     */
+    children: any;
+    tag: string;
+    size: string;
+    theme: ThemeProps;
+    color: Color;
+    hoverColor: 'primary' | 'shade' | string;
+    weight: string;
+    isCaps: boolean;
+}
+
 export interface ColProps {
     xs: number;
     sm: number;

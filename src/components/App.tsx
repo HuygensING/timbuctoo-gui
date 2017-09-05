@@ -3,14 +3,18 @@ import { BrowserRouter } from 'react-router-dom';
 import Router from './Routes';
 import { ThemeProvider } from 'styled-components';
 import theme from '../theme';
+import Header from './header/Header';
 
 class App extends Component {
     render() {
         return (
             <ThemeProvider theme={theme}>
-                <BrowserRouter>
-                    <Router />
-                </BrowserRouter>
+                <div>
+                    <Header />
+                    <BrowserRouter>
+                        <Router />
+                    </BrowserRouter>
+                </div>
             </ThemeProvider>
         );
     }
