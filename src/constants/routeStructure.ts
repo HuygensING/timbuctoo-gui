@@ -13,6 +13,8 @@ export interface RouteInfo {
 export interface RouteObject {
     key: string;
     routes: RouteInfo[];
+    isPrivate?: boolean;
+
 }
 
 export const routes: RouteObject[] = [
@@ -54,6 +56,7 @@ export const routes: RouteObject[] = [
     },
     {
         key: ROUTE_PATHS.account,
+        isPrivate: true,
         routes: [
             {
                 path: SUB_ROUTES.favorites,

@@ -6,13 +6,14 @@ import NotFound from './routes/NotFound';
 import { ROUTE_PATHS } from '../constants/routeNaming';
 import { Redirect } from 'react-router';
 import { RouteInfo, RouteObject, routes } from '../constants/routeStructure';
+import PrivateRoute from './PrivateRoute';
 
 const renderRoutes = () => {
     let routeList: JSX.Element[] = [];
 
     routes.forEach(
         (routeItem: RouteObject) => {
-            const newRoutes = setRoutes(routeItem.key, routeItem.routes);
+            const newRoutes = setRoutes(routeItem.key, routeItem.routes, routeItem.isPrivate);
             routeList = routeList.concat(newRoutes);
         }
     );
@@ -20,7 +21,7 @@ const renderRoutes = () => {
     return routeList;
 };
 
-const setRoutes = (path: string, routeInfo: RouteInfo[]) => {
+const setRoutes = (path: string, routeInfo: RouteInfo[], isPrivate?: boolean) => {
     let routeList: JSX.Element[] = [];
 
     routeInfo.forEach(
@@ -39,7 +40,11 @@ const setRoutes = (path: string, routeInfo: RouteInfo[]) => {
                 );
             }
 
-            routeList.push(<Route key={'route' + path + index} path={routePath + key} component={route.component}/>);
+            const newRoute = isPrivate
+                ? <PrivateRoute key={'route' + path + index} path={routePath + key} component={route.component} />
+                : <Route key={'route' + path + index} path={routePath + key} component={route.component}/>;
+
+            routeList.push(newRoute);
         }
     );
 

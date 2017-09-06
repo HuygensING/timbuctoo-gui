@@ -1,5 +1,5 @@
 import { IUserReducer } from '../typings/store';
-import { IAction } from '../typings/index';
+import { Action } from '../typings/index';
 
 const defaultState: IUserReducer = {
     loggedIn: false,
@@ -9,7 +9,7 @@ const defaultState: IUserReducer = {
 // actions
 
 // reducer
-export default (state: IUserReducer = defaultState, action: IAction) => {
+export default (state: IUserReducer = defaultState, action: Action) => {
     switch (action.type) {
         default:
             return state;
