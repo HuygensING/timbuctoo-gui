@@ -25,11 +25,6 @@ class Home extends Component<Props, State> {
 
 const query = gql`
     query places {
-        clusius_PersonsList {
-            tim_gender{value}
-            tim_birthDate{value}
-            tim_deathDate{value}
-        }
         clusius_PlacesList {
             tim_name{value}
             tim_country{value}
