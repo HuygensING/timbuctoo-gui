@@ -2,15 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import AccountMenu from './AccountMenu';
 import styled from 'styled-components';
-import { ThemeProps } from '../../typings/layout';
+import { StyledProps } from '../../typings/layout';
 
 const logo = require('../../assets/logo.svg');
 
 const StyledHeader = styled.header`
+    border-top: .5rem solid ${(props: StyledProps) => props.theme.colors.primary.medium};
     width: 100vw;
-    height: 3.75rem;
+    padding: .5rem;
     position: relative;
-    background: ${(props: {theme?: ThemeProps, children?: JSX.Element[]}) => props.theme.colors.shade.dark}
+    background: ${(props: StyledProps) => props.theme.colors.shade.dark}
 `;
 
 const StyledImg = styled.img`

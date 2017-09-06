@@ -23,6 +23,11 @@ export interface ThemeProps {
     fonts: Fonts;
 }
 
+export interface StyledProps {
+    theme?: ThemeProps;
+    children?: JSX.Element[];
+}
+
 export interface ElementProps {
     theme: ThemeProps;
     isCaps?: boolean;
