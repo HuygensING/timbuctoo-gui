@@ -24,7 +24,7 @@ export interface ThemeProps {
 }
 
 export interface StyledProps {
-    theme?: ThemeProps;
+    theme: ThemeProps;
     children?: JSX.Element[];
 }
 

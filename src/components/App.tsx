@@ -10,9 +10,11 @@ class App extends Component {
         return (
             <ThemeProvider theme={theme}>
                 <div>
-                    <Header />
                     <BrowserRouter>
-                        <Router />
+                        <div>
+                            <Header />
+                            <Router />
+                        </div>
                     </BrowserRouter>
                 </div>
             </ThemeProvider>

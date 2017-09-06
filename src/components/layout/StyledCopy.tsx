@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../../styled-components';
 import CreateElementWithTag from '../../services/CreateElementWithTag';
 import { ElementProps, LinkProps } from '../../typings/layout';
 

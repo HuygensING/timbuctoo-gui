@@ -1,17 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import AccountMenu from './AccountMenu';
-import styled from 'styled-components';
-import { StyledProps } from '../../typings/layout';
+import styled from '../../styled-components';
+import { ROUTE_PATHS } from '../../constants/routeNaming';
+import { Link } from 'react-router-dom';
 
 const logo = require('../../assets/logo.svg');
 
 const StyledHeader = styled.header`
-    border-top: .5rem solid ${(props: StyledProps) => props.theme.colors.primary.medium};
+    border-top: .5rem solid ${(props) => props.theme.colors.primary.medium};
     width: 100vw;
     padding: .5rem;
     position: relative;
-    background: ${(props: StyledProps) => props.theme.colors.shade.dark}
+    background: ${(props) => props.theme.colors.shade.dark}
 `;
 
 const StyledImg = styled.img`
@@ -30,10 +31,9 @@ const LoginLink = styled.a`
 `;
 
 const Header = ({isLoggedIn, roles}) => {
-    console.log(roles);
     return (
         <StyledHeader>
-            <StyledImg src={logo} alt="timbuctoo"/>
+            <Link to={ROUTE_PATHS.root}><StyledImg src={logo} alt="timbuctoo"/></Link>
             {
                 isLoggedIn
                     ? <AccountMenu />
