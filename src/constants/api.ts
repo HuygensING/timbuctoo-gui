@@ -1,1 +1,1 @@
-export const GRAPH_URI = 'http://localhost:8080/v5/DUMMYT/oberontest';
+export const GRAPH_URI = process.env.API_URL ? process.env.API_URL : 'http://localhost:8080/v5/';
