@@ -7,7 +7,7 @@ import ApolloClient from './services/ApolloClient';
 import { configureStore } from './store';
 import globalStyling from './theme/globalStyling';
 
-const store = configureStore();
+export const store = configureStore();
 
 // set global body styling in the head
 globalStyling();

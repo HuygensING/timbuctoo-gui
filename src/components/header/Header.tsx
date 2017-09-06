@@ -4,6 +4,7 @@ import AccountMenu from './AccountMenu';
 import styled from '../../styled-components';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import { Link } from 'react-router-dom';
+import LoginLink from './LoginLink';
 
 const logo = require('../../assets/logo-timbuctoo.svg');
 
@@ -16,18 +17,10 @@ const StyledHeader = styled.header`
 `;
 
 const StyledImg = styled.img`
-    height: 3.75rem;
+    margin-left: 1rem;
+    height: 2.5rem;
     width: auto;
     display: block;
-`;
-
-const LoginLink = styled.a`
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    color: #fff;
-    text-decoration: none;
-    transform: translateY(-50%);
 `;
 
 const Header = ({isLoggedIn, roles}) => {
@@ -36,8 +29,8 @@ const Header = ({isLoggedIn, roles}) => {
             <Link to={ROUTE_PATHS.root}><StyledImg src={logo} alt="timbuctoo"/></Link>
             {
                 isLoggedIn
-                    ? <AccountMenu />
-                    : <LoginLink href="#">Login</LoginLink>
+                    ? <AccountMenu/>
+                    : <LoginLink />
             }
         </StyledHeader>
     );

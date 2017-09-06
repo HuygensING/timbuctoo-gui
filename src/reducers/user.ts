@@ -1,7 +1,10 @@
-import { IUserReducer } from '../typings/store';
+import { UserReducer } from '../typings/store';
 import { Action } from '../typings/index';
 
-const defaultState: IUserReducer = {
+// TODO: COMPLETE INITIAL REDUCER WITH ACTUAL DATA FROM CALL
+
+const defaultState: UserReducer = {
+    hsid: '',
     loggedIn: false,
     roles: []
 };
@@ -9,7 +12,7 @@ const defaultState: IUserReducer = {
 // actions
 
 // reducer
-export default (state: IUserReducer = defaultState, action: Action) => {
+export default (state: UserReducer = defaultState, action: Action) => {
     switch (action.type) {
         default:
             return state;

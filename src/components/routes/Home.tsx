@@ -17,17 +17,18 @@ class Home extends Component<Props, State> {
         return (
             <section>
                 <FullHelmet pageName="home"/>
-                <Hero search={true} />
+                <Hero search={true}/>
             </section>
         );
     }
 }
 
 const query = gql`
-    query places {
-        clusius_PlacesList {
-            tim_name{value}
-            tim_country{value}
+    query {
+        __schema {
+            types {
+                kind
+            }
         }
     }
 `;
