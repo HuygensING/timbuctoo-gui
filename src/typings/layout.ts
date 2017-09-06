@@ -48,10 +48,10 @@ export interface LinkProps {
     /*
      * StyledCopy specific
      */
+    theme?: ThemeProps;
     children?: any;
     tag?: string;
     size?: string;
-    theme?: ThemeProps;
     color?: Color;
     align?: 'left' | 'right' | 'center';
     hoverColor?: 'primary' | 'shade' | string;

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../../styled-components';
 import CreateElementWithTag from '../../services/CreateElementWithTag';
 import { ElementProps, LinkProps } from '../../typings/layout';
 
@@ -93,7 +93,7 @@ export const Link = styled((props: LinkProps) => CreateElementWithTag(props, 'Li
     
     &:hover {
         color: ${(props: LinkProps) => 
-        (props.theme.colors[props.hoverColor] && props.theme.colors[props.hoverColor].medium ) 
+        (props.theme && props.hoverColor && props.theme.colors[props.hoverColor] && props.theme.colors[props.hoverColor].medium ) 
         || props.hoverColor 
         || props.theme.colors.shade.dark};
     }

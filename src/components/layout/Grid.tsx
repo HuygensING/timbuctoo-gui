@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../../styled-components';
 import { GridProps, ColProps } from '../../typings/layout';
 
 const BREAKPOINT = {

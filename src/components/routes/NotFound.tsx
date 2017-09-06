@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { Component } from 'react';
 import FullHelmet from '../FullHelmet';
 
-const NotFound = () => {
+interface Props {}
+interface State {}
 
-    return (
-        <section>
-            <FullHelmet pageName="404" />
-            <h1>404, ik denk een foutje</h1>
-        </section>
-    );
-};
+class NotFound extends Component<Props, State> {
+    render() {
+        return (
+            <section>
+                <FullHelmet pageName="404" />
+                <h1>404, ik denk een foutje</h1>
+            </section>
+        );
+    }
+}
 
 export default NotFound;
