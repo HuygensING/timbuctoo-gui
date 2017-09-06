@@ -2,6 +2,7 @@ import { ThemeProps } from '../typings/layout';
 
 const COLORS = {
     timbuctooGreen: '#269075',
+    white: '#FFFFFF',
     grey: '#B8B8B8',
     darkGrey: '#2A292A'
 };
@@ -12,6 +13,7 @@ const theme: ThemeProps = {
             medium: COLORS.timbuctooGreen
         },
         shade: {
+            light: COLORS.white,
             medium: COLORS.grey,
             dark: COLORS.darkGrey
         }

@@ -4,7 +4,7 @@ import AccountMenu from './AccountMenu';
 import styled from 'styled-components';
 import { StyledProps } from '../../typings/layout';
 
-const logo = require('../../assets/logo.svg');
+const logo = require('../../assets/logo-timbuctoo.svg');
 
 const StyledHeader = styled.header`
     border-top: .5rem solid ${(props: StyledProps) => props.theme.colors.primary.medium};

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import FullHelmet from '../FullHelmet';
-import { Title } from '../layout/StyledCopy';
+
+import Hero from '../hero/Hero';
 
 interface Props {
 }
@@ -13,7 +14,7 @@ class Home extends Component<Props, State> {
         return (
             <section>
                 <FullHelmet pageName="home"/>
-                <Title>Home</Title>
+                <Hero search={true} />
             </section>
         );
     }

@@ -7,9 +7,6 @@ const CustomTags = {
 };
 
 const CreateElementWithTag = (props: any, defaultTag: string = 'div') => {
-
-    console.log( props );
-
     let elementProps = props.elementProps || {};
     elementProps.className = props.className;
     elementProps.ref = props.innerRef;

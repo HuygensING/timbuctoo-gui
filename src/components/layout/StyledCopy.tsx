@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import CreateElementWithTag from '../../services/CreateElementWithTag';
 import { ElementProps, LinkProps } from '../../typings/layout';
 
-const setColor = props =>
-    (props.theme.colors[props.color] && props.theme.colors[props.color].medium)
+const setColor = props => (props.theme.colors[props.color] && props.theme.colors[props.color].medium)
     || props.color
     || props.theme.colors.shade.dark;
 const setCaps = props => props.isCaps ? 'uppercase' : 'initial';
-const setLetterSpacing = props => props.isCapse ? '0.13em' : '0';
+const setLetterSpacing = props => props.isCaps ? '0.13em' : '0';
+const setAlignment = props => props.align ? props.align : 'left';
 
 /*
  * Title
@@ -20,6 +20,7 @@ export const Title = styled((props: ElementProps) => CreateElementWithTag(props,
     margin: 1.1vw 0;
     font: ${(props: ElementProps) => props.theme.fonts.heading};
     text-transform: ${setCaps};
+    text-align: ${setAlignment};
     color: ${setColor};
     letter-spacing: ${setLetterSpacing};
 `;
@@ -35,6 +36,7 @@ export const Subtitle = styled((props: ElementProps) => CreateElementWithTag(pro
     margin: 1.1vw 0;
     font: ${(props: ElementProps) => props.theme.fonts.title};
     text-transform: ${setCaps};
+    text-align: ${setAlignment};
     color: ${setColor};
     letter-spacing: ${setLetterSpacing};
 `;
@@ -50,6 +52,7 @@ export const Content = styled((props: ElementProps) => CreateElementWithTag(prop
     margin: 0;
     font: ${(props: ElementProps) => props.theme.fonts.body};
     text-transform: ${setCaps};
+    text-align: ${setAlignment};
     color: ${setColor};
     letter-spacing: ${setLetterSpacing};
 `;
@@ -65,6 +68,7 @@ export const Label = styled((props: ElementProps) => CreateElementWithTag(props,
     margin: 0;
     font: ${(props: ElementProps) => props.theme.fonts.small};
     text-transform: ${setCaps};
+    text-align: ${setAlignment};
     color: ${setColor};
     letter-spacing: ${setLetterSpacing};
  `;
@@ -81,6 +85,7 @@ export const Link = styled((props: LinkProps) => CreateElementWithTag(props, 'Li
     margin: 0;
     font: ${(props: LinkProps) => props.theme.fonts.body};
     text-transform: ${setCaps};
+    text-align: ${setAlignment};
     color: ${setColor};
     letter-spacing: ${setLetterSpacing};
 

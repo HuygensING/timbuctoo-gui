@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {ColProps} from '../../typings/layout';
+import { GridProps, ColProps } from '../../typings/layout';
 
 const BREAKPOINT = {
     MOBILE: '767px',
@@ -18,11 +18,17 @@ const calcColWidth = (cols: number) => `${cols / TOTAL_COLUMNS * 100}vw`;
 // const calcToCol = (px: number) => calc px to percentages using innerWidth and divide by total columns;
 
 const getProp = (props: number, queries: string[] = BREAKPOINT_KEYS.DESKTOP, prop: string ) => {
-    if (!prop) return 0;
+    if (!prop) {
+        return 0;
+    }
     let _prop = 0;
     for (let key of queries ) {
-        if (props[`${key}${prop}`]) _prop = props[`${key}${prop}`];
-        if (props[`${key}${prop}`] === false) _prop = 0;
+        if (props[`${key}${prop}`]) {
+            _prop = props[`${key}${prop}`];
+        }
+        if (props[`${key}${prop}`] === false) {
+            _prop = 0;
+        }
     }
     return _prop;
 };
@@ -42,17 +48,6 @@ const isHidden = (props, breakpoint) => {
         return props[ `${breakpoint}Hidden` ];
     }
     return false;
-};
-
-type GridProps = {
-    innerRef: Function,
-    xs: number,
-    sm: number,
-    md: number,
-
-    xsOffset: number,
-    smOffset: number,
-    mdOffset: number
 };
 
 const Grid = styled.div`
@@ -109,7 +104,9 @@ const Col = styled.div`
      */
     @media (max-width: ${BREAKPOINT.TABLET}) {
         ${(props: ColProps) => {
-            if (isHidden(props, 'sm')) return 'display: none;';
+            if (isHidden(props, 'sm')) {
+                return 'display: none;';
+            }
             return '';
         }}
 
@@ -130,7 +127,9 @@ const Col = styled.div`
     */
     @media (max-width: ${BREAKPOINT.MOBILE}) {
         ${(props: ColProps) => {
-            if (isHidden(props, 'xs')) return 'display: none;';
+            if (isHidden(props, 'xs')) {
+                return 'display: none;';
+            }
             return '';
         }}
                 
