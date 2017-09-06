@@ -18,7 +18,7 @@ const setAlignment = props => props.align ? props.align : 'left';
  */
 export const Title = styled((props: ElementProps) => CreateElementWithTag(props, 'h1'))`
     margin: 1.1vw 0;
-    font: ${(props: ElementProps) => props.theme.fonts.heading};
+    font: ${(props) => props.theme.fonts.heading};
     text-transform: ${setCaps};
     text-align: ${setAlignment};
     color: ${setColor};
@@ -34,7 +34,7 @@ export const Title = styled((props: ElementProps) => CreateElementWithTag(props,
 */
 export const Subtitle = styled((props: ElementProps) => CreateElementWithTag(props, 'h2'))`
     margin: 1.1vw 0;
-    font: ${(props: ElementProps) => props.theme.fonts.title};
+    font: ${(props) => props.theme.fonts.title};
     text-transform: ${setCaps};
     text-align: ${setAlignment};
     color: ${setColor};
@@ -50,7 +50,7 @@ export const Subtitle = styled((props: ElementProps) => CreateElementWithTag(pro
 */
 export const Content = styled((props: ElementProps) => CreateElementWithTag(props, 'p'))`
     margin: 0;
-    font: ${(props: ElementProps) => props.theme.fonts.body};
+    font: ${(props) => props.theme.fonts.body};
     text-transform: ${setCaps};
     text-align: ${setAlignment};
     color: ${setColor};
@@ -66,7 +66,7 @@ export const Content = styled((props: ElementProps) => CreateElementWithTag(prop
  */
 export const Label = styled((props: ElementProps) => CreateElementWithTag(props, 'span'))`
     margin: 0;
-    font: ${(props: ElementProps) => props.theme.fonts.small};
+    font: ${(props) => props.theme.fonts.small};
     text-transform: ${setCaps};
     text-align: ${setAlignment};
     color: ${setColor};
@@ -81,9 +81,9 @@ export const Label = styled((props: ElementProps) => CreateElementWithTag(props,
  * <Link to="/route" >
  */
 
-export const Link = styled((props: LinkProps) => CreateElementWithTag(props, 'Link'))`
+export const Link = styled((props: ElementProps & LinkProps) => CreateElementWithTag(props, 'Link'))`
     margin: 0;
-    font: ${(props: LinkProps) => props.theme.fonts.body};
+    font: ${(props) => props.theme.fonts.body};
     text-transform: ${setCaps};
     text-align: ${setAlignment};
     color: ${setColor};
@@ -92,8 +92,8 @@ export const Link = styled((props: LinkProps) => CreateElementWithTag(props, 'Li
     text-decoration: none;
     
     &:hover {
-        color: ${(props: LinkProps) => 
-        (props.theme && props.hoverColor && props.theme.colors[props.hoverColor] && props.theme.colors[props.hoverColor].medium ) 
+        color: ${(props) => 
+        (props.hoverColor && props.theme.colors[props.hoverColor] && props.theme.colors[props.hoverColor].medium ) 
         || props.hoverColor 
         || props.theme.colors.shade.dark};
     }

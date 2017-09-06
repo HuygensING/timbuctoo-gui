@@ -24,11 +24,6 @@ export interface ThemeProps {
     fonts: Fonts;
 }
 
-export interface StyledProps {
-    theme?: ThemeProps;
-    children?: any;
-}
-
 export interface ElementProps {
     theme: ThemeProps;
     isCaps?: boolean;
@@ -48,7 +43,6 @@ export interface LinkProps {
     /*
      * StyledCopy specific
      */
-    theme?: ThemeProps;
     children?: any;
     tag?: string;
     size?: string;
