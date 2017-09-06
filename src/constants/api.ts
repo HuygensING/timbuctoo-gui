@@ -1,1 +1,1 @@
-export const GRAPH_URI = 'https://graphql.example.com';
+export const GRAPH_URI = 'http://localhost:8080/v5/DUMMYT/oberontest';
