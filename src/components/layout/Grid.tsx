@@ -12,7 +12,7 @@ const BREAKPOINT_KEYS = {
     DESKTOP: ['xs', 'sm', 'md']
 };
 
-export const TOTAL_COLUMNS = 12;
+export const TOTAL_COLUMNS = 48;
 const calcColWidth = (cols: number) => `${cols / TOTAL_COLUMNS * 100}vw`;
 
 // const calcToCol = (px: number) => calc px to percentages using innerWidth and divide by total columns;
@@ -50,13 +50,14 @@ const isHidden = (props, breakpoint) => {
     return false;
 };
 
-const Grid = styled.div`
+const Grid = styled.section`
     display: flex;
     flex: 0 1 auto;
     flex-direction: row;
     position: relative;
     flex-wrap: wrap;
     width: ${(props: GridProps) => calcColWidth( props.md || props.sm || props.xs || (TOTAL_COLUMNS - getOffset(props)) )};
+    margin-top: 0;
     margin-left: ${(props: GridProps) => calcColWidth(getOffset(props))};
 
     /*
@@ -87,6 +88,7 @@ const Col = styled.div`
         return '';
     }}
 
+    position: relative;
     order: ${(props: ColProps) => getOrder(props) || 'initial'};
 
     width: ${(props: ColProps) => calcColWidth(props.md || props.sm || props.xs || (TOTAL_COLUMNS - getOffset(props)))};

@@ -3,7 +3,7 @@ import styled from '../../styled-components';
 
 import theme from '../../theme';
 
-import { Grid, Col } from '../layout/Grid';
+import { Col } from '../layout/Grid';
 import Image from '../layout/Image';
 import { Title, Content } from '../layout/StyledCopy';
 import Button from '../layout/Button';
@@ -39,21 +39,19 @@ interface HeroProps {
 const Hero = (props: HeroProps) => {
 
     return (
-        <Grid>
-            <Col>
-                <Image src={'/assets/_tmp/header--library.jpg'} ratio={16 / 9} />
-                <DarkenImage />
-                <CenteredContent>
-                    <Title align="center" color={theme.colors.shade.light}>We care for your data</Title>
-                    <Content align="center" color={theme.colors.shade.light}>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim in nisi, dolorem, ipsum labore sint voluptatibus tempora itaque eius maxime mollitia aliquid ex soluta. Voluptate quam quidem quia ipsa dolores?    
-                    </Content>
-                    <ButtonContainer>
-                        <Button to="/" align="center">Browse datasets</Button>
-                    </ButtonContainer>
-                </CenteredContent>
-            </Col>
-        </Grid>
+        <Col>
+            <Image src={'/assets/_tmp/header--library.jpg'} ratio={16 / 9} />
+            <DarkenImage />
+            <CenteredContent>
+                <Title align="center" color={theme.colors.shade.light}>We care for your data</Title>
+                <Content align="center" color={theme.colors.shade.light}>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim in nisi, dolorem, ipsum labore sint voluptatibus tempora itaque eius maxime mollitia aliquid ex soluta. Voluptate quam quidem quia ipsa dolores?    
+                </Content>
+                <ButtonContainer>
+                    <Button to="/" align="center">Browse datasets</Button>
+                </ButtonContainer>
+            </CenteredContent>
+        </Col>
     );
 };
 
