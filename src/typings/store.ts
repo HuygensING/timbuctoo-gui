@@ -5,5 +5,4 @@ export interface State {
 export interface UserReducer {
     hsid: string;
     loggedIn: boolean;
-    roles: string[];
 }
