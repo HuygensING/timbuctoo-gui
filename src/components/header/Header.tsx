@@ -13,8 +13,9 @@ const StyledHeader = styled.header`
     border-top: .5rem solid ${(props) => props.theme.colors.primary.medium};
     width: 100vw;
     padding: .5rem;
-    position: relative;
-    background: ${(props) => props.theme.colors.shade.dark}
+    position: fixed;
+    background: ${(props) => props.theme.colors.shade.dark};
+    z-index: 100;
 `;
 
 const StyledImg = styled.img`

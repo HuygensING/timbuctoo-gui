@@ -122,7 +122,7 @@ class AccountMenu extends Component<Props, State> {
         <MenuListItem key={name}>
             <MenuListItemLink to={ROUTE_PATHS.account + path}>{name}</MenuListItemLink>
         </MenuListItem>
-    );
+    )
 
     private renderMenu () {
         return (

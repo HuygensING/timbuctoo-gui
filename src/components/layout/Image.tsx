@@ -45,6 +45,7 @@ const Img = styled.img`
     left: 0;
     transform: scale(1);
     transition: transform 0.3s ease-in-out;
+    background-color: grey;
 `;
 
 class Image extends Component {
