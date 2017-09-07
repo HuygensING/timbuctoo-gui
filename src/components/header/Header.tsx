@@ -5,6 +5,7 @@ import styled from '../../styled-components';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import { Link } from 'react-router-dom';
 import LoginLink from './LoginLink';
+import { LogOutUser } from '../../reducers/user';
 
 const logo = require('../../assets/logo-timbuctoo.svg');
 
@@ -23,13 +24,18 @@ const StyledImg = styled.img`
     display: block;
 `;
 
-const Header = ({isLoggedIn, roles}) => {
+interface Props {
+    isLoggedIn: boolean;
+    onLogOut: () => void;
+}
+
+const Header = ({isLoggedIn, onLogOut}: Props) => {
     return (
         <StyledHeader>
             <Link to={ROUTE_PATHS.root}><StyledImg src={logo} alt="timbuctoo"/></Link>
             {
                 isLoggedIn
-                    ? <AccountMenu/>
+                    ? <AccountMenu onLogOut={onLogOut} />
                     : <LoginLink />
             }
         </StyledHeader>
@@ -37,8 +43,10 @@ const Header = ({isLoggedIn, roles}) => {
 };
 
 const mapStateToProps = state => ({
-    isLoggedIn: state.user.loggedIn,
-    roles: state.user.roles
+    isLoggedIn: state.user.loggedIn
 });
 
-export default connect(mapStateToProps, {})(Header);
+const mapDispatchToProps = dispatch => ({
+    onLogOut: () => dispatch(LogOutUser())
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
