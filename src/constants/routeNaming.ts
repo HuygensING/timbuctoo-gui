@@ -1,4 +1,6 @@
-const ROUTE_PATHS = {
+import { KeyValueObject } from '../typings';
+
+const ROUTE_PATHS: KeyValueObject = {
     root: '/',
     search: '/search',
     details: '/details',
@@ -6,7 +8,7 @@ const ROUTE_PATHS = {
     edit: '/edit'
 };
 
-const SUB_ROUTES = {
+const SUB_ROUTES: KeyValueObject = {
     dataSet: '/dataset',
     collection: '/collection',
     entry: '/entry',
@@ -24,7 +26,7 @@ const SUB_ROUTES = {
     records: '/records'
 };
 
-const ROUTE_KEYS = {
+const ROUTE_KEYS: KeyValueObject = {
     dataSet: 'dataSet',
     entry: 'entry',
     collection: 'collection',

@@ -4,6 +4,7 @@ import Router from './Routes';
 import { ThemeProvider } from 'styled-components';
 import theme from '../theme';
 import Header from './header/Header';
+import Footer from './footer/Footer';
 
 class App extends Component {
     render() {
@@ -14,6 +15,7 @@ class App extends Component {
                         <div>
                             <Header />
                             <Router />
+                            <Footer />
                         </div>
                     </BrowserRouter>
                 </div>

@@ -1,8 +1,8 @@
-export interface IState {
-    user: IUserReducer
+export interface State {
+    user: UserReducer;
 }
 
-export interface IUserReducer {
-    loggedIn: boolean,
-    roles: string[]
+export interface UserReducer {
+    hsid: string;
+    loggedIn: boolean;
 }

@@ -7,8 +7,8 @@ import gql from 'graphql-tag';
 import { Grid } from '../layout/Grid';
 
 import Hero from '../hero/Hero';
-import PromotedContent from '../PromotedContent';
-import ListContent from '../ListContent';
+import FeaturedContent from '../featured/FeaturedContent';
+import ListContent from '../lists/ListContent';
 
 interface Props {
     data?: any;
@@ -25,10 +25,10 @@ class Home extends Component<Props, State> {
             <Grid>
                 <FullHelmet pageName="home"/>
                 <Hero search={true} />
-                <PromotedContent title="Featured dataset" data={dataSets.promoted}/>
+                <FeaturedContent title="Featured dataset" data={dataSets.promoted}/>
             
                 <ListContent smOffset={3} sm={20} smPaddingY={1} title="Recently modified" data={dataSets.all}/>
-                <ListContent smOffset={2} sm={20} smPaddingY={1} title="Most Popular" data={dataSets.all}/>
+                <ListContent smOffset={2} sm={20} smPaddingY={1} title="Most Popular" data={dataSets.promoted}/>
             </Grid>
         );
     }

@@ -1,5 +1,9 @@
 import { Permissions } from './permissions';
 
+export interface KeyValueObject {
+    [name: string]: string;
+}
+
 export interface Action {
     type: string,
     payload: {
