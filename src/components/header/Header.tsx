@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { SFC } from 'react';
 import { connect } from 'react-redux';
-import AccountMenu from './AccountMenu';
 import styled from '../../styled-components';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import { Link } from 'react-router-dom';
 import LoginLink from './LoginLink';
 import { LogOutUser } from '../../reducers/user';
 import CreateElementWithTag from '../../services/CreateElementWithTag';
+import AccountToggle from './AccountToggle';
 
 const logo = require('../../assets/logo-timbuctoo.svg');
 
@@ -37,13 +37,13 @@ interface Props {
     onLogOut: () => void;
 }
 
-const Header = ({isLoggedIn, onLogOut, height}: Props) => {
+const Header: SFC<Props> = ({isLoggedIn, onLogOut, height}) => {
     return (
         <StyledHeader height={height}>
             <StyledLink to={ROUTE_PATHS.root}><StyledImg src={logo} alt="timbuctoo"/></StyledLink>
             {
                 isLoggedIn
-                    ? <AccountMenu onLogOut={onLogOut} />
+                    ? <AccountToggle onLogOut={onLogOut} />
                     : <LoginLink />
             }
         </StyledHeader>
