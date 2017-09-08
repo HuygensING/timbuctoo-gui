@@ -1,68 +1,8 @@
-import React, { Component } from 'react';
-import styled, { css } from '../../styled-components';
-import { lighten } from 'polished';
-
-import { MenuButtonStyle } from './MenuButtonStyle';
-import { Link } from '../layout/StyledCopy';
+import React, { SFC } from 'react';
 import { ROUTE_PATHS, SUB_ROUTES } from '../../constants/routeNaming';
-
-interface Props {
-    onLogOut: () => void;
-}
-interface State {
-    menuOpen: boolean;
-}
-
-const MenuButton = styled.button`${(props) => MenuButtonStyle}`;
-const MenuList = styled.ul`
-    position: absolute;
-    background: ${props => props.theme.colors.shade.medium};
-    border-radius: .25rem;
-    overflow: hidden;
-    width: 100%;
-    max-width: 20rem;
-    z-index: 2;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    right: 1rem;
-`;
-const MenuListItem = styled.li``;
-
-const MenuLinkStyle = css`
-    display: inline-block;
-    position: relative;
-    padding: .5rem 1rem .5rem 3rem;
-    cursor: pointer;
-    width: 100%;
-    
-    &:hover {
-        background-color: ${props => lighten(.5, props.theme.colors.shade.dark)}; 
-        
-        &:before {
-            background: ${props => props.theme.colors.primary.medium}
-        }
-    }
-    
-    &:before {
-        transition: background .2s ease;
-        box-shadow: 0 0 .25rem rgba(0,0,0,.2);
-        content: '';
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: #fff;
-        border-radius: 50%;
-        border: 2px solid #fff;
-        display: block;
-        left: 1rem;
-        width: 1rem;
-        height: 1rem;
-    }
-`;
-
-const MenuListItemLink = styled(Link)`${MenuLinkStyle}`;
-const MenuListItemSpan = styled.span`${MenuLinkStyle}`;
+import styled, { css } from 'styled-components';
+import { Link } from '../layout/StyledCopy';
+import { lighten } from 'polished';
 
 const menuList = [
     {
@@ -83,54 +23,84 @@ const menuList = [
     }
 ];
 
-class AccountMenu extends Component<Props, State> {
-    constructor() {
-        super();
+interface Props {
+    onLogOut: () => void;
+    isFooter?: boolean;
+}
 
-        this.state = {
-            menuOpen: false
-        };
+const AccountMenu: SFC<Props> = ({ onLogOut, isFooter }) => {
 
-        this.toggleMenu = this.toggleMenu.bind(this);
-        this.onLogOut = this.onLogOut.bind(this);
+    const MenuList = styled.ul` 
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        background: ${props => isFooter ? 'transparent' : props.theme.colors.shade.medium};
+
+    ${
+        !isFooter
+        ?  `position: absolute;
+            border-radius: .25rem;
+            overflow: hidden;
+            width: 100%;
+            max-width: 20rem;
+            z-index: 2;
+            right: 1rem;`
+        : ''
     }
+`;
+    const MenuListItem = styled.li``;
 
-    render () {
-        const { menuOpen } = this.state;
-        return (
-            <section>
-                <MenuButton onClick={this.toggleMenu}>Menu</MenuButton>
-                {menuOpen && this.renderMenu()}
-            </section>
-        );
+    const MenuLinkStyle = css`
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    color: ${p => isFooter ? '#fff' : 'inherit'};
+    padding: ${p => isFooter ? '0' : '.5rem 1rem .5rem 3rem'};
+    
+    &:before {
+        transition: background .2s ease;
+        box-shadow: 0 0 .25rem rgba(0,0,0,.2);
+        content: ${isFooter ? 'none' : '\'\''};
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #fff;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        display: block;
+        left: 1rem;
+        width: 1rem;
+        height: 1rem;
     }
+    &:hover {
+        background-color: ${props => isFooter ? 'transparent' : lighten(.5, props.theme.colors.shade.dark)};
+        color: ${ isFooter ? '#fff' : 'inherit' };
+        text-decoration: ${ isFooter ? 'underline' : 'none' };
 
-    private toggleMenu () {
-        this.setState({
-            menuOpen: !this.state.menuOpen
-        });
+        &:before {
+            background: ${props => isFooter ? 'transparent' : props.theme.colors.primary.medium}
+        }
     }
+`;
 
-    private onLogOut () {
-        this.props.onLogOut();
-    }
+    const MenuListItemLink = styled(Link)`${MenuLinkStyle}`;
+    const MenuListItemSpan = styled.span`${MenuLinkStyle}`;
 
-    private renderListItem = ({path, name}) => (
+    const renderListItem = ({path, name}) => (
         <MenuListItem key={name}>
             <MenuListItemLink to={ROUTE_PATHS.account + path}>{name}</MenuListItemLink>
         </MenuListItem>
-    )
+    );
 
-    private renderMenu () {
-        return (
-            <MenuList>
-                {menuList.map(this.renderListItem)}
-                <MenuListItem>
-                    <MenuListItemSpan onClick={this.onLogOut}>Log out</MenuListItemSpan>
-                </MenuListItem>
-            </MenuList>
-        );
-    }
-}
+    return (
+        <MenuList>
+            {menuList.map(renderListItem)}
+            <MenuListItem>
+                <MenuListItemSpan onClick={onLogOut}>Log out</MenuListItemSpan>
+            </MenuListItem>
+        </MenuList>
+    );
+};
 
 export default AccountMenu;

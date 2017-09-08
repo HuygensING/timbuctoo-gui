@@ -1,4 +1,4 @@
-import styled from '../../styled-components';
+import styled, { css } from '../../styled-components';
 import CreateElementWithTag from '../../services/CreateElementWithTag';
 import { ElementProps, LinkProps } from '../../typings/layout';
 
@@ -97,4 +97,15 @@ export const Link = styled((props: ElementProps & LinkProps) => CreateElementWit
         || props.hoverColor 
         || props.theme.colors.shade.dark};
     }
+`;
+
+export const srOnly = css`
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
 `;
