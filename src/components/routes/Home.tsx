@@ -37,7 +37,7 @@ class Home extends Component<Props, State> {
 
     static renderFeatured (promoted: DataSet[]) {
         return (
-            <GridSection title="test" cols={promoted.length} colSizeOffset={2}>
+            <GridSection title="test" cols={promoted.length} colSizeOffset={2} gridOffset={2}>
                 {Home.renderFeaturedItems(promoted)}
             </GridSection>
         );

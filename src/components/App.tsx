@@ -5,6 +5,7 @@ import { default as styled, ThemeProvider } from 'styled-components';
 import theme from '../theme';
 import Header from './header/Header';
 import Footer from './footer/Footer';
+import PoweredBy from './PoweredBy';
 import { Grid } from './layout/Grid';
 
 const headerHeight: string = '4rem';
@@ -22,6 +23,7 @@ class App extends Component {
                         <Header height={headerHeight} />
                         <Router />
                         <Footer />
+                        <PoweredBy />
                     </GridWithMargin>
                 </BrowserRouter>
             </ThemeProvider>
