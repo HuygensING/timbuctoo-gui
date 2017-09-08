@@ -8,6 +8,12 @@ import Image from '../layout/Image';
 import { Title, Content } from '../layout/StyledCopy';
 import Button from '../layout/Button';
 
+const HeroImageWrapper = styled.div`
+    position: relative;
+    width: 100%;
+    height: 80vh;
+`;
+
 const DarkenImage = styled.figure`
     position: absolute;
     top: 0;
@@ -40,8 +46,10 @@ const Hero = (props: HeroProps) => {
 
     return (
         <Col>
-            <Image src={'/assets/_tmp/header--library.jpg'} ratio={16 / 9} />
-            <DarkenImage />
+            <HeroImageWrapper>
+                <Image src={'/assets/_tmp/header--library.jpg'} fill={true} />
+                <DarkenImage />
+            </HeroImageWrapper>
             <CenteredContent>
                 <Title align="center" color={theme.colors.shade.light}>We care for your data</Title>
                 <Content align="center" color={theme.colors.shade.light}>
