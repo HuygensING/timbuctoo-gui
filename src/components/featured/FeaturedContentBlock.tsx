@@ -12,7 +12,7 @@ const ContentBlock = styled(Col)`
     }
 `;
 
-const PromotedContentBlock = (props: ContentProps) => {
+const FeaturedContentBlock = (props: ContentProps) => {
     return (
         <ContentBlock sm={7}>
             <Image src={props.imageUrl} ratio={1} />
@@ -22,4 +22,4 @@ const PromotedContentBlock = (props: ContentProps) => {
     );
 };
 
-export default PromotedContentBlock;
+export default FeaturedContentBlock;

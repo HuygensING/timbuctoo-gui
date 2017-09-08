@@ -97,9 +97,6 @@ class AccountMenu extends Component<Props, State> {
 
     render () {
         const { menuOpen } = this.state;
-
-        console.log(menuOpen);
-
         return (
             <section>
                 <MenuButton onClick={this.toggleMenu}>Menu</MenuButton>

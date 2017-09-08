@@ -32,7 +32,7 @@ export const routes: RouteObject[] = [
                 component: Search
             },
             {
-                component: NotFound
+                component: Search
             }
         ]
     },

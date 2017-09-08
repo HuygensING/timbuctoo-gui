@@ -7,32 +7,67 @@ import gql from 'graphql-tag';
 import { Col, Grid } from '../layout/Grid';
 
 import Hero from '../hero/Hero';
-import FeaturedContent from '../featured/FeaturedContent';
 import ListContent from '../lists/ListContent';
 import { Dummy } from '../Dummy';
+import GridSection from '../layout/GridSection';
+import FeaturedContentBlock from '../featured/FeaturedContentBlock';
+
+interface DataSet {
+    caption: string;
+    description?: string;
+    imageUrl?: string;
+    graphqlUrl: string;
+}
+
+interface DataSets {
+    all: DataSet[];
+    promoted: DataSet[];
+}
 
 interface Props {
     data?: any;
+    dataSets: DataSets;
 }
 
 interface State {
 }
 
 class Home extends Component<Props, State> {
+    static defaultSets = {promoted: [], all: []};
+
+    static renderFeatured (promoted: DataSet[]) {
+        return (
+            <GridSection title="test" cols={promoted.length} colSizeOffset={2}>
+                {Home.renderFeaturedItems(promoted)}
+            </GridSection>
+        );
+    }
+
+    static renderFeaturedItems (promoted: DataSet[]) {
+        if (!promoted.length) {
+            return <div>Loading</div>;
+        }
+
+        return promoted.map(
+            (set, idx: number) => <FeaturedContentBlock key={idx} {...set} />
+        );
+    }
+
     render () {
-        const { data } = this.props;
-        const dataSets = data.dataSets || {};
+        const {dataSets = Home.defaultSets} = this.props.data;
+
         return (
             <Grid>
                 <FullHelmet pageName="home"/>
-                <Hero search={true} />
-                <FeaturedContent title="Featured dataset" data={dataSets.promoted}/>
-            
+                <Hero search={true}/>
+
+                {dataSets.promoted.length > 2 && Home.renderFeatured(dataSets.promoted)}
+
                 <ListContent smOffset={3} sm={20} smPaddingY={1} title="Recently modified" data={dataSets.all}/>
                 <ListContent smOffset={2} sm={20} smPaddingY={1} title="Most Popular" data={dataSets.promoted}/>
 
                 <Col sm={48}>
-                    <Dummy text={'About Huygens'} height={10} />
+                    <Dummy text={'About Huygens'} height={10}/>
                 </Col>
             </Grid>
         );
