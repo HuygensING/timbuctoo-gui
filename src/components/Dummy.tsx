@@ -9,7 +9,7 @@ const DummyContainer = styled((props: {mvp: boolean, height: string | number, ma
     display: block;
     position: relative;
     height: ${p => typeof p.height === 'number' ? calcColWidth(p.height) : p.height};
-    margin: ${p => typeof p.marginY === 'number' ? `${calcColWidth(p.marginY)} 0` : p.marginY};
+    margin-bottom: ${p => typeof p.marginY === 'number' ? `${calcColWidth(p.marginY)}` : p.marginY};
     padding: .5rem 0;
     background: ${p => p.mvp ? lighten(.4 , p.theme.colors.primary.medium) : lighten(.15, p.theme.colors.shade.medium)};
     color: #fff;
@@ -21,6 +21,19 @@ const DummyContent = styled(Subtitle)`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+`;
+
+const DummySticker = styled.span`
+    background: yellow;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    border-radius: 50%;
+    position: absolute;
+    text-align: center;
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    top: -.5rem;
+    right: -.5rem;
 `;
 
 interface Props {
@@ -35,6 +48,7 @@ const Dummy = ({mvp = false, text, height = '5rem', marginY = '0'}: Props) => (
         <DummyContent color={'#fff'}>
             {text && text}
         </DummyContent>
+        {mvp && <DummySticker/>}
     </DummyContainer>
 );
 

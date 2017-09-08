@@ -10,9 +10,10 @@ interface Props {
     colSizeOffset?: number;
     cols?: number;
     rowSpacing?: number;
+    gridSpacing?: number;
 }
 
-const GridSection: SFC<Props> = ({ children, title, gridSize = 42, gridOffset = 3, colSizeOffset = gridOffset, cols = 2, rowSpacing = colSizeOffset}) => {
+const GridSection: SFC<Props> = ({ children, title, gridSize = 42, gridOffset = 3, colSizeOffset = gridOffset, cols = 2, rowSpacing = colSizeOffset, gridSpacing = 0}) => {
     if (!children) { return null; }
 
     const calcColSize = () => {
@@ -40,7 +41,7 @@ const GridSection: SFC<Props> = ({ children, title, gridSize = 42, gridOffset = 
 
     return (
         <Grid tag={'section'} sm={gridSize} smOffset={gridOffset}>
-            <Col sm={gridSize}><Title>{title}</Title></Col>
+            <Col sm={gridSize} smPaddingTop={gridSpacing}><Title>{title}</Title></Col>
             {renderAllItems}
         </Grid>
     );
