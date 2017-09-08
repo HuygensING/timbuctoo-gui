@@ -4,11 +4,12 @@ import FullHelmet from '../FullHelmet';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import { Grid } from '../layout/Grid';
+import { Col, Grid } from '../layout/Grid';
 
 import Hero from '../hero/Hero';
 import FeaturedContent from '../featured/FeaturedContent';
 import ListContent from '../lists/ListContent';
+import { Dummy } from '../Dummy';
 
 interface Props {
     data?: any;
@@ -29,6 +30,10 @@ class Home extends Component<Props, State> {
             
                 <ListContent smOffset={3} sm={20} smPaddingY={1} title="Recently modified" data={dataSets.all}/>
                 <ListContent smOffset={2} sm={20} smPaddingY={1} title="Most Popular" data={dataSets.promoted}/>
+
+                <Col sm={48}>
+                    <Dummy text={'About Huygens'} height={10} />
+                </Col>
             </Grid>
         );
     }

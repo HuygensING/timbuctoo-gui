@@ -1,5 +1,7 @@
+import React from 'react';
 import styled from '../../styled-components';
 import { GridProps, ColProps } from '../../typings/layout';
+import CreateElementWithTag from '../../services/CreateElementWithTag';
 
 const BREAKPOINT = {
     MOBILE: '767px',
@@ -50,7 +52,7 @@ const isHidden = (props, breakpoint) => {
     return false;
 };
 
-const Grid = styled.section`
+const Grid = styled((props: GridProps) => CreateElementWithTag(props, 'section'))`
     display: flex;
     flex: 0 1 auto;
     flex-direction: row;
@@ -77,7 +79,7 @@ const Grid = styled.section`
     }
 `;
 
-const Col = styled.div`
+const Col = styled((props: ColProps) => CreateElementWithTag(props, 'div'))`
     ${(props: ColProps) => {
         if (isHidden(props, 'md')) { return 'display: none;'; }
         return '';
@@ -147,4 +149,6 @@ const Col = styled.div`
     }
 `;
 
-export { Grid, Col, calcColWidth };
+const FullSection = ({ children }) => <Grid tag={'section'} sm={42} smOffset={3}>{children}</Grid>;
+
+export { Grid, Col, calcColWidth, FullSection };

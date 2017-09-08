@@ -55,6 +55,7 @@ export interface LinkProps {
 
 export interface GridProps {
     innerRef?: Function;
+    tag?: string;
     xs?: number;
     sm?: number;
     md?: number;
@@ -65,6 +66,7 @@ export interface GridProps {
 }
 
 export interface ColProps {
+    tag?: string;
     xs?: number;
     sm?: number;
     md?: number;

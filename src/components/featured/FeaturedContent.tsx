@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Grid, Col } from '../layout/Grid';
+import { Grid, FullSection } from '../layout/Grid';
 import { Title } from '../layout/StyledCopy';
 
 import FeaturedContentBlock from './FeaturedContentBlock';
@@ -12,13 +12,13 @@ const PromotedContent = (props) => {
     }
 
     return (
-        <Col sm={42} smOffset={3} smPaddingY={2}>
+        <FullSection>
             <Title>{props.title}</Title>
             <Grid sm={42}>
                 {renderContent(props.data)}
             </Grid>
             {/* <pre>{JSON.stringify(props, null, 4)}</pre> */}
-        </Col>
+        </FullSection>
     );
 };
 

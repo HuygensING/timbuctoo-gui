@@ -52,6 +52,22 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
+## Grid explained
+The grid used in this project is based on VW instead of px's or percentages. The biggest advantage is that grid-nesting all 
+maintain the same sizing. Just like what REM does against EM. This grid is based on 48 points.
+
+The grid has two different components:
+-  `<Grid />`: which explains the width of the area you want to set
+- `<Col />`: which is used to define columns inside each grid
+
+Keep in mind:
+- Both components have sizes and offsets to declare:
+     - for all `xs`
+     - from mobile to tablet `sm`
+     - everything above tablet `md` 
+- No default sizes are given to Cols and Grids. This means that without values, they grow to the full width of the monitor, 
+even if they are nested inside a grid that specifies less than 48 points.
+
 ## Supported Language Features and Polyfills
 
 This project supports a superset of the latest JavaScript standard.<br>
