@@ -5,12 +5,14 @@ import { Label } from './layout/StyledCopy';
 
 const logo = require('../assets/logo.svg');
 
+const tagWidth: number = 30;
+
 const Tag = styled(Label)`
     position: fixed;
-    right: 0;
-    bottom: 30px;
+    right: ${tagWidth / 2}px;
+    bottom: ${tagWidth}px;
     width: auto;
-    height: 30px;
+    height: ${tagWidth}px;
     padding: 5px;
     color: ${props => props.theme.colors.shade.light};
     background-color: ${props => props.theme.colors.primary.medium};
