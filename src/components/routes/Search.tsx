@@ -4,11 +4,16 @@ import { Dummy } from '../Dummy';
 import { Col, FullSection } from '../layout/Grid';
 import GridSection from '../layout/GridSection';
 import { Title } from '../layout/StyledCopy';
+import SearchForm from '../form/SearchForm';
 
 interface Props {
 }
 
 interface State {
+}
+
+interface SearchResults {
+    search: string;
 }
 
 class Search extends Component<Props, State> {
@@ -17,14 +22,19 @@ class Search extends Component<Props, State> {
         return (<Dummy key={idx} mvp={true} text={'result'} height={4}/>);
     }
 
+    static onSearch (values: SearchResults) {
+        // TODO: Do a refetch for results using this key
+        console.log(values.search);
+    }
+
     render () {
         return (
             <section>
                 <FullHelmet pageName="search"/>
 
                 {/* Search functionality */}
-                <Col sm={48}>
-                    <Dummy text={'Search'} height={5}/>
+                <Col sm={42} smOffset={3} smPaddingTop={1}>
+                    <SearchForm onSubmit={Search.onSearch} />
                 </Col>
 
                 <FullSection>
