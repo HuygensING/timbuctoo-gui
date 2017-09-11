@@ -13,6 +13,8 @@ import GridSection from '../layout/GridSection';
 import FeaturedContentBlock from '../featured/FeaturedContentBlock';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 
+import NameParser from '../../services/TimbuctooNamesParser';
+
 interface DataSet {
     caption: string;
     description?: string;
@@ -33,8 +35,20 @@ interface Props {
 interface State {
 }
 
+interface NameProps {
+    type?: string;
+    value: string;
+}
+
+interface TimNames {
+    items: NameProps[];
+}
+
 class Home extends Component<Props, State> {
     static defaultSets = {promoted: [], all: []};
+    
+    static defaultPersons = {items: []};
+    static defaultPersonName: {tim_names: TimNames};
 
     static renderFeatured (promoted: DataSet[]) {
         return (
@@ -54,8 +68,21 @@ class Home extends Component<Props, State> {
         );
     }
 
+    static renderName( items: Array<any> ) {
+        const persons = items.map( (person, index) => {
+            const fullName = NameParser.getFullName( person.tim_names );
+            if (fullName) {
+                return <p key={index}>{`${fullName.firstName && fullName.firstName || ''} ${fullName.middleName && fullName.middleName || ''} ${fullName.lastName && fullName.lastName || ''}`}</p>;
+            } else {
+                return null;
+            }
+        });
+        return persons;
+    }
+
     render () {
         const {dataSets = Home.defaultSets} = this.props.data;
+        const {clusius_PersonsList = Home.defaultPersons} = this.props.data;
 
         return (
             <Grid>
@@ -66,6 +93,12 @@ class Home extends Component<Props, State> {
 
                 <ListContent smOffset={3} sm={20} smPaddingY={1} title="Recently modified" data={dataSets.all}/>
                 <ListContent smOffset={2} sm={20} smPaddingY={1} title="Most Popular" data={dataSets.promoted}/>
+                    
+                {clusius_PersonsList.items.length > 0 && (
+                    <Col>
+                        {Home.renderName(clusius_PersonsList.items)}
+                    </Col>
+                )}
 
                 <Col sm={48}>
                     <Dummy text={'About Huygens'} height={10}/>
@@ -75,42 +108,40 @@ class Home extends Component<Props, State> {
     }
 }
 
+// const query = gql`
+//     query {
+//         dataSets {
+//             promoted {
+//                 caption
+//                 description
+//                 imageUrl
+//             }
+//             all {
+//                 caption
+//                 description
+//                 imageUrl
+//             }
+//         }
+//     }
+// `;
+
 const query = gql`
     query {
-        dataSets {
-            promoted {
-                caption
-                description
-                imageUrl
-            }
-            all {
-                caption
-                description
-                imageUrl
+        clusius_PersonsList {
+            prevCursor
+            nextCursor
+            items {
+                tim_gender{value}
+                tim_birthDate{value}
+                tim_deathDate{value}
+                tim_names {
+                    items {
+                        value
+                    }
+                }
             }
         }
     }
 `;
-
-// const query = gql`
-//     query {
-//         clusius_Persons(uri: "http://timbuctoo.huygens.knaw.nl/datasets/clusius/Persons_PE00004638") {
-//             tim_hasDeathPlace{
-//                 tim_name{value}
-//                 tim_country{value}
-//             }
-//             tim_deathDate {value}
-//             tim_gender {value}
-//         }
-//     }
-// `;
-
-// const query = gql`
-//     query {
-//         clusius_Places(uri:"http://timbuctoo.huygens.knaw.nl/datasets/clusius/Place_PL00000001") {
-//             tim_name{value}
-//         }
-//     }
-// `;
 
 export default graphql(query)(Home);
