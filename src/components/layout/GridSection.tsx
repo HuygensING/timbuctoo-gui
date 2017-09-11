@@ -4,7 +4,7 @@ import { Col, Grid } from './Grid';
 import { Title } from './StyledCopy';
 
 interface Props {
-    title: string;
+    title?: string;
     gridSize?: number;
     gridOffset?: number;
     colSizeOffset?: number;
@@ -41,7 +41,7 @@ const GridSection: SFC<Props> = ({ children, title, gridSize = 42, gridOffset = 
 
     return (
         <Grid tag={'section'} sm={gridSize} smOffset={gridOffset}>
-            <Col sm={gridSize} smPaddingTop={gridSpacing}><Title>{title}</Title></Col>
+            {title && title.length > 0 && <Col sm={gridSize} smPaddingTop={gridSpacing}><Title>{title}</Title></Col>}
             {renderAllItems}
         </Grid>
     );

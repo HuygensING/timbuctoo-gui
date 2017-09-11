@@ -39,25 +39,27 @@ const ButtonContainer = styled.div`
 `;
 
 interface HeroProps {
+    title: string;
+    content: string;
     searchPath?: string;
+    buttonText?: string;
+    imgUrl?: string;
 }
 
-const Hero = ({ searchPath }: HeroProps) => {
+const Hero = ({ title, content, searchPath, buttonText, imgUrl = '/assets/_tmp/header--library.jpg' }: HeroProps) => {
 
     return (
         <Col>
             <HeroImageWrapper>
-                <Image src={'/assets/_tmp/header--library.jpg'} fill={true} />
+                <Image src={imgUrl} fill={true} />
                 <DarkenImage />
             </HeroImageWrapper>
             <CenteredContent>
-                <Title align="center" color={theme.colors.shade.light}>We care for your data</Title>
-                <Content align="center" color={theme.colors.shade.light}>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim in nisi, dolorem, ipsum labore sint voluptatibus tempora itaque eius maxime mollitia aliquid ex soluta. Voluptate quam quidem quia ipsa dolores?    
-                </Content>
-                { searchPath &&
+                <Title align="center" color={theme.colors.shade.light}>{title}</Title>
+                <Content align="center" color={theme.colors.shade.light}>{content}</Content>
+                { searchPath && buttonText &&
                     <ButtonContainer>
-                        <Button to={searchPath} align="center">Browse datasets</Button>
+                        <Button to={searchPath} align="center">{buttonText}</Button>
                     </ButtonContainer>
                 }
 

@@ -3,6 +3,8 @@ import { ROUTE_KEYS, ROUTE_PATHS, SUB_ROUTES } from './routeNaming';
 import Search from '../components/routes/Search';
 import { RouteComponentProps } from 'react-router';
 import DummyRoute from '../components/routes/DummyRoute';
+import Entry from '../components/routes/Entry';
+import DataSet from '../components/routes/DataSet';
 
 export interface RouteInfo {
     path?: string;
@@ -42,15 +44,12 @@ export const routes: RouteObject[] = [
             {
                 path: SUB_ROUTES.dataSet,
                 key: ROUTE_KEYS.dataSet,
-                component: DummyRoute
+                component: DataSet
             },
             {
-                path: SUB_ROUTES.entry,
+                path: `${SUB_ROUTES.entry}/:${ROUTE_KEYS.dataSet}`,
                 key: ROUTE_KEYS.entry,
-                component: DummyRoute
-            },
-            {
-                component: DummyRoute
+                component: Entry
             }
         ]
     },
