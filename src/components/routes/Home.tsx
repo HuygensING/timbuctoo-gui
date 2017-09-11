@@ -11,6 +11,7 @@ import ListContent from '../lists/ListContent';
 import { Dummy } from '../Dummy';
 import GridSection from '../layout/GridSection';
 import FeaturedContentBlock from '../featured/FeaturedContentBlock';
+import { ROUTE_PATHS } from '../../constants/routeNaming';
 
 interface DataSet {
     caption: string;
@@ -59,7 +60,7 @@ class Home extends Component<Props, State> {
         return (
             <Grid>
                 <FullHelmet pageName="home"/>
-                <Hero search={true}/>
+                <Hero searchPath={ROUTE_PATHS.search}/>
 
                 {dataSets.promoted.length > 2 && Home.renderFeatured(dataSets.promoted)}
 

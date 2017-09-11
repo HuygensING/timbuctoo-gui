@@ -1,8 +1,8 @@
 import { ComponentType } from 'react';
 import { ROUTE_KEYS, ROUTE_PATHS, SUB_ROUTES } from './routeNaming';
 import Search from '../components/routes/Search';
-import NotFound from '../components/routes/NotFound';
 import { RouteComponentProps } from 'react-router';
+import DummyRoute from '../components/routes/DummyRoute';
 
 export interface RouteInfo {
     path?: string;
@@ -42,15 +42,15 @@ export const routes: RouteObject[] = [
             {
                 path: SUB_ROUTES.dataSet,
                 key: ROUTE_KEYS.dataSet,
-                component: NotFound
+                component: DummyRoute
             },
             {
                 path: SUB_ROUTES.entry,
                 key: ROUTE_KEYS.entry,
-                component: NotFound
+                component: DummyRoute
             },
             {
-                component: NotFound
+                component: DummyRoute
             }
         ]
     },
@@ -60,18 +60,18 @@ export const routes: RouteObject[] = [
         routes: [
             {
                 path: SUB_ROUTES.favorites,
-                component: NotFound
+                component: DummyRoute
             },
             {
                 path: SUB_ROUTES.dataSets,
-                component: NotFound
+                component: DummyRoute
             },
             {
                 path: SUB_ROUTES.pullRequests,
-                component: NotFound
+                component: DummyRoute
             },
             {
-                component: NotFound
+                component: DummyRoute
             }
         ]
     },
@@ -80,39 +80,39 @@ export const routes: RouteObject[] = [
         routes: [
             {
                 path: SUB_ROUTES.meta,
-                component: NotFound
+                component: DummyRoute
             },
             {
                 path: SUB_ROUTES.head,
-                component: NotFound
+                component: DummyRoute
             },
             {
                 path: SUB_ROUTES.colophon,
-                component: NotFound
+                component: DummyRoute
             },
             {
                 path: SUB_ROUTES.partners,
-                component: NotFound
+                component: DummyRoute
             },
             {
                 path: SUB_ROUTES.properties,
-                component: NotFound
+                component: DummyRoute
             },
             {
                 path: SUB_ROUTES.facets,
-                component: NotFound
+                component: DummyRoute
             },
             {
                 path: SUB_ROUTES.viewScreen,
-                component: NotFound
+                component: DummyRoute
             },
             {
                 path: SUB_ROUTES.editScreen,
-                component: NotFound
+                component: DummyRoute
             },
             {
                 path: SUB_ROUTES.records,
-                component: NotFound
+                component: DummyRoute
             }
         ]
     }

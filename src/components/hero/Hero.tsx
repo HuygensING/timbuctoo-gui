@@ -39,10 +39,10 @@ const ButtonContainer = styled.div`
 `;
 
 interface HeroProps {
-    search?: boolean;
+    searchPath?: string;
 }
 
-const Hero = (props: HeroProps) => {
+const Hero = ({ searchPath }: HeroProps) => {
 
     return (
         <Col>
@@ -55,9 +55,12 @@ const Hero = (props: HeroProps) => {
                 <Content align="center" color={theme.colors.shade.light}>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim in nisi, dolorem, ipsum labore sint voluptatibus tempora itaque eius maxime mollitia aliquid ex soluta. Voluptate quam quidem quia ipsa dolores?    
                 </Content>
-                <ButtonContainer>
-                    <Button to="/" align="center">Browse datasets</Button>
-                </ButtonContainer>
+                { searchPath &&
+                    <ButtonContainer>
+                        <Button to={searchPath} align="center">Browse datasets</Button>
+                    </ButtonContainer>
+                }
+
             </CenteredContent>
         </Col>
     );

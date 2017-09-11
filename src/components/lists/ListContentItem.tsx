@@ -31,7 +31,7 @@ const ListContentItem = (props: ContentProps) => {
     return (
         <ListItem>
             <Subtitle>{props.caption}</Subtitle>
-            <Content>{props.description && props.description.substr(0, 20)} in <StyledLink to="/">{Datasets[Math.floor(Math.random()*Datasets.length)]}</StyledLink></Content>
+            <Content>{props.description && props.description.substr(0, 20)} in <StyledLink to="/">{Datasets[Math.floor(Math.random() * Datasets.length)]}</StyledLink></Content>
             <DateLabel>Today</DateLabel>
         </ListItem>
     );
