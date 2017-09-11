@@ -60,7 +60,12 @@ class Home extends Component<Props, State> {
         return (
             <Grid>
                 <FullHelmet pageName="home"/>
-                <Hero searchPath={ROUTE_PATHS.search}/>
+                <Hero
+                    title={'We care for your data'}
+                    content={'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consequatur cumque dolorem doloribus esse exercitationem fugit molestias possimus recusandae vitae?'}
+                    searchPath={ROUTE_PATHS.search}
+                    buttonText={'Search datasets'}
+                />
 
                 {dataSets.promoted.length > 2 && Home.renderFeatured(dataSets.promoted)}
 
