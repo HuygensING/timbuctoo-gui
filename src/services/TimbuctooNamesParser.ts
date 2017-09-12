@@ -1,3 +1,4 @@
+// import { NameTypes, TimNames } from '../typings/timApi';
 
 const TYPES = {
     surname: 'SURNAME',

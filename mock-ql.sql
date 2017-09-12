@@ -1,3 +1,5 @@
+
+
 schema {
     query: QueryType
 }
@@ -13,12 +15,16 @@ type QueryType {
     aboutMe: AboutMe
 }
 
+union Test = AboutMe | DataSets
+
 type DataSets {
     #the datasets that are supposed to get extra attention
     promoted: [DataSet!]!
 
     #everything
     all: [DataSet!]!
+  
+  	test: [Test]
 }
 
 type AboutMe {
@@ -27,7 +33,7 @@ type AboutMe {
     
     #The unique identifier of this user
     id: ID! @fake(type: uuid)
-    
+  
     #a human readable name (or empty string if not available)
     name: String! @fake(type: fullName)
     

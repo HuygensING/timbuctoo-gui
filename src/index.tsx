@@ -18,4 +18,6 @@ const Application = (
     </ApolloProvider>
 );
 
+console.log( 'Apolloclient', ApolloClient );
+
 ReactDOM.render( Application, document.getElementById('root') as HTMLElement );

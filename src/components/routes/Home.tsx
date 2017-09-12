@@ -84,6 +84,8 @@ class Home extends Component<Props, State> {
         const {dataSets = Home.defaultSets} = this.props.data;
         const {clusius_PersonsList = Home.defaultPersons} = this.props.data;
 
+        console.log( dataSets );
+
         return (
             <Grid>
                 <FullHelmet pageName="home"/>
@@ -132,21 +134,43 @@ class Home extends Component<Props, State> {
 
 const query = gql`
     query {
-        clusius_PersonsList {
-            prevCursor
-            nextCursor
-            items {
-                tim_gender{value}
-                tim_birthDate{value}
-                tim_deathDate{value}
-                tim_names {
-                    items {
-                        value
-                    }
+        dataSets {
+            test {
+                ...on AboutMe {
+                    name
                 }
+            }
+            promoted {
+                caption
+                description
+                imageUrl
+            }
+            all {
+                caption
+                description
+                imageUrl
             }
         }
     }
 `;
+
+// const query = gql`
+//     query {
+//         clusius_PersonsList {
+//             prevCursor
+//             nextCursor
+//             items {
+//                 tim_gender{value}
+//                 tim_birthDate{value}
+//                 tim_deathDate{value}
+//                 tim_names {
+//                     items {
+//                         value
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// `;
 
 export default graphql(query)(Home);
