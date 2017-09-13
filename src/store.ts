@@ -1,5 +1,6 @@
-import { createStore } from 'redux';
+import { applyMiddleware, compose, createStore } from 'redux';
 import reducers from './reducers/rootReducer';
+import Client from './services/ApolloClient';
 
 /**
  * Initialize the redux store and configure hot reloading of reducers.
@@ -9,6 +10,9 @@ import reducers from './reducers/rootReducer';
 export function configureStore () {
     return createStore(
         reducers,
-        (<any> window).__REDUX_DEVTOOLS_EXTENSION__ && (<any> window).__REDUX_DEVTOOLS_EXTENSION__()
+        compose(
+            applyMiddleware(Client.middleware()),
+            (typeof (<any> window).__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined') ? (<any> window).__REDUX_DEVTOOLS_EXTENSION__() : f => f,
+        )
     );
 }

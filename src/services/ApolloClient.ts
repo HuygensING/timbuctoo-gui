@@ -1,7 +1,7 @@
 import { ApolloClient, createNetworkInterface } from 'react-apollo';
 import { GRAPH_URI } from '../constants/api';
 
-export default new ApolloClient({
+const Client = new ApolloClient({
     networkInterface: createNetworkInterface({
         uri: GRAPH_URI,
         opts: {
@@ -11,3 +11,5 @@ export default new ApolloClient({
         }
     })
 });
+
+export default Client;

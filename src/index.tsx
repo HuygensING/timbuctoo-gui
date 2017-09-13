@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
 
 import App from './components/App';
-import ApolloClient from './services/ApolloClient';
+import Client from './services/ApolloClient';
 import { configureStore } from './store';
 import globalStyling from './theme/globalStyling';
 
@@ -13,7 +13,7 @@ export const store = configureStore();
 globalStyling();
 
 const Application = (
-    <ApolloProvider client={ApolloClient} store={store}>
+    <ApolloProvider client={Client} store={store}>
         <App />
     </ApolloProvider>
 );
