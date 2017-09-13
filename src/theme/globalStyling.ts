@@ -3,7 +3,7 @@ import theme from './index';
 
 export default () => (
     injectGlobal`
-        @import url('https://fonts.googleapis.com/css?family=Droid+Serif|Roboto:300,400,500');
+        @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 
         * {
             box-sizing: border-box;

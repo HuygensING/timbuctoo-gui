@@ -1,3 +1,5 @@
+import { TimNames } from './timPersons';
+
 /*
  * Typings for the graphql api datastructure
  */
@@ -5,18 +7,15 @@
 /*
  * General types
  */
-
 export type Cursor = String;
 export interface Cursors {
     prevCursor: Cursor;
     nextCursor: Cursor;
 }
 
-/*
- * Type: clusius_Persons
- */
-export interface clusiusPerons {
-    timNames: timNames
+export interface TypeValue {
+    type: string;
+    value: string;
 }
 
 /*
@@ -27,9 +26,8 @@ export interface clusiusPersonsList {
 }
 
 /*
- * Type tim_names
+ * Type: clusius_Persons
  */
-export interface timNames {
-    prevCursor: Cursor;
-    nextCursor: Cursor;
+export interface clusiusPerons {
+    timNames: TimNames
 }

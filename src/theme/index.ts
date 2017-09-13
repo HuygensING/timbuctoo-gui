@@ -1,3 +1,4 @@
+import { lighten, darken } from 'polished/lib';
 import { ThemeProps } from '../typings/layout';
 
 const COLORS = {
@@ -10,7 +11,9 @@ const COLORS = {
 const theme: ThemeProps = {
     colors: {
         primary: {
-            medium: COLORS.timbuctooGreen
+            light: lighten(0.1, COLORS.timbuctooGreen),
+            medium: COLORS.timbuctooGreen,
+            dark: darken(0.1, COLORS.timbuctooGreen)
         },
         shade: {
             light: COLORS.white,
@@ -19,9 +22,9 @@ const theme: ThemeProps = {
         }
     },
     fonts: {
-        heading: '400 2.5rem/1.2 Droid serif, sans-serif',
-        title: '400 1.5rem/1.2 Droid serif, sans-serif',
-        subTitle: '400 1.25rem/1.2 Droid serif, sans-serif',
+        heading: '400 2.5rem/1.2 Roboto, sans-serif',
+        title: '400 1.5rem/1.2 Roboto, sans-serif',
+        subTitle: '400 1.25rem/1.2 Roboto, sans-serif',
         body: '400 1rem/1.6 Roboto, sans-serif',
         small: '400 .75rem/1.6 Roboto, sans-serif'
     },

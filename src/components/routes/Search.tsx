@@ -6,6 +6,8 @@ import GridSection from '../layout/GridSection';
 import { Title } from '../layout/StyledCopy';
 import SearchForm from '../form/SearchForm';
 
+import SearchResultItem from '../search/SearchResultItem';
+
 interface Props {
 }
 
@@ -16,10 +18,84 @@ interface SearchResults {
     search: string;
 }
 
+interface CollectionProps {
+    type: string;
+    total: Number;
+}
+
+interface SearchResultProps {
+    imageUrl: string;
+    name: string;
+    licence: string;
+    description: string;
+    collections: CollectionProps[];
+}
+const FakeData = [{
+    imageUrl: 'http://lorempixel.com/400/200/people',
+    name: 'Barack Obama',
+    licence: 'licence:uri',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id.',
+    collections: [{
+        type: 'Leader',
+        total: 1612
+    }, {
+        type: 'Birthplace',
+        total: 717
+    }]
+}, {
+    imageUrl: 'http://lorempixel.com/300/300/people',
+    name: 'Donal Trump',
+    licence: 'licence:uri',
+    description: 'Lorem ipsum dolor sit amet.',
+    collections: [{
+        type: 'Leader',
+        total: 1012
+    }]
+}, {
+    imageUrl: 'http://lorempixel.com/300/500/people',
+    name: 'George Bush',
+    licence: 'licence:uri',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id lectus eleifend fringilla.',
+    collections: [{
+        type: 'Leader',
+        total: 1012
+    }]
+}, {
+    imageUrl: 'http://lorempixel.com/400/200/people',
+    name: 'Barack Obama',
+    licence: 'licence:uri',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id lectus eleifend.',
+    collections: [{
+        type: 'Leader',
+        total: 1612
+    }, {
+        type: 'Birthplace',
+        total: 717
+    }]
+}, {
+    imageUrl: 'http://lorempixel.com/300/300/people',
+    name: 'Donal Trump',
+    licence: 'licence:uri',
+    description: 'Lorem ipsum dolor sit amet.',
+    collections: [{
+        type: 'Leader',
+        total: 1012
+    }]
+}, {
+    imageUrl: 'http://lorempixel.com/300/500/people',
+    name: 'George Bush',
+    licence: 'licence:uri',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id lectus eleifend fringilla.',
+    collections: [{
+        type: 'Leader',
+        total: 1012
+    }]
+}];
+
 class Search extends Component<Props, State> {
 
-    static renderItems (_: any, idx: number) {
-        return (<Dummy key={idx} mvp={true} text={'result'} height={4}/>);
+    static renderItems (data: SearchResultProps, idx: number) {
+        return <SearchResultItem key={idx} data={data} />;
     }
 
     static onSearch (values: SearchResults) {
@@ -36,6 +112,16 @@ class Search extends Component<Props, State> {
                 <Col sm={42} smOffset={3} smPaddingTop={1}>
                     <SearchForm onSubmit={Search.onSearch} />
                 </Col>
+                
+                {/* Search Pills */}
+                <Col sm={42} smOffset={3} smPaddingTop={1}>
+                    <GridSection gridSize={42} cols={4} gridOffset={0} colSizeOffset={1}>
+                        <Dummy text={'Dataset (1.337)'} />
+                        <Dummy text={'Collection 1 (1.196)'} mvp={true} />
+                        <Dummy text={'Collection 2 (120)'} mvp={true} />
+                        <Dummy text={'Collection 3 (21)'} mvp={true} />
+                    </GridSection>
+                </Col>
 
                 <FullSection>
 
@@ -50,8 +136,8 @@ class Search extends Component<Props, State> {
 
                     <Col sm={27} smOffset={1}>
                         {/* Filter functionality */}
-                        <GridSection title="test" cols={2} gridSize={27} gridOffset={0} colSizeOffset={1} gridSpacing={2}>
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(Search.renderItems)}
+                        <GridSection title="Results" cols={2} gridSize={27} gridOffset={0} colSizeOffset={1} gridSpacing={2}>
+                            {FakeData.map(Search.renderItems)}
                         </GridSection>
                         <Dummy text={'Pagination'} height={2} marginY={2}/>
                     </Col>

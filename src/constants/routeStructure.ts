@@ -24,13 +24,7 @@ export const routes: RouteObject[] = [
         key: ROUTE_PATHS.search,
         routes: [
             {
-                path: SUB_ROUTES.dataSet,
-                key: ROUTE_KEYS.dataSet,
-                component: Search
-            },
-            {
-                path: ROUTE_KEYS.dataSet + SUB_ROUTES.collection,
-                key: ROUTE_KEYS.collection,
+                path: `${SUB_ROUTES.dataSet}/:${ROUTE_KEYS.dataSet}`,
                 component: Search
             },
             {
@@ -42,14 +36,16 @@ export const routes: RouteObject[] = [
         key: ROUTE_PATHS.details,
         routes: [
             {
-                path: SUB_ROUTES.dataSet,
-                key: ROUTE_KEYS.dataSet,
-                component: DataSet
+                path: `/:${ROUTE_KEYS.userId}/:${ROUTE_KEYS.dataSet}/:${ROUTE_KEYS.collection}/:${ROUTE_KEYS.entry}`,
+                component: Entry
             },
             {
-                path: `${SUB_ROUTES.entry}/:${ROUTE_KEYS.dataSet}`,
-                key: ROUTE_KEYS.entry,
-                component: Entry
+                path: `/:${ROUTE_KEYS.userId}/:${ROUTE_KEYS.dataSet}/:${ROUTE_KEYS.collection}`,
+                component: Search
+            },
+            {
+                path: `/:${ROUTE_KEYS.userId}/:${ROUTE_KEYS.dataSet}`,
+                component: DataSet
             }
         ]
     },

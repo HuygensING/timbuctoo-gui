@@ -1,6 +1,8 @@
 export interface Colors {
     readonly primary: {
-        medium: string
+        light: string,
+        medium: string,
+        dark: string
     };
     readonly shade: {
         light: string,
@@ -26,6 +28,7 @@ export interface ThemeProps {
 
 export interface ElementProps {
     theme: ThemeProps;
+    tag?: string;
     isCaps?: boolean;
     color?: Color;
     children?: any;
@@ -51,6 +54,11 @@ export interface LinkProps {
     hoverColor?: 'primary' | 'shade' | string;
     weight?: string;
     isCaps?: boolean;
+}
+
+export interface ButtonProps extends LinkProps { 
+    small?: boolean;
+    primary?: boolean;
 }
 
 export interface GridProps {

@@ -1,24 +1,52 @@
 import * as React from 'react';
 import styled, { css } from '../../styled-components';
 
-import { LinkProps } from '../../typings/layout';
+import { ButtonProps } from '../../typings/layout';
 import { Link } from './StyledCopy';
 
-const ButtonStyling = css`
+const BaseButtonStyling = css`
     display: inline-block;
+    font: ${p => p.theme.fonts.body};
+    margin-top: 0.5rem;
+    border: 1px solid ${props => props.theme.colors.shade.dark};
+    color: ${props => props.theme.colors.shade.light};
+    text-align: center;
+    background-color: ${props => props.theme.colors.shade.dark};
+    
+    &:hover {
+        border: 1px solid ${props => props.theme.colors.shade.medium};
+        background-color: ${props => props.theme.colors.shade.medium};
+    }
+`;
+
+const ButtonStyling = css`
     padding: 0.5rem 1rem;
     border-radius: .25rem;
-    font: ${p => p.theme.fonts.body};
+`;
+    
+const SmallButtonStyling = css`
+    padding: 0 0.5rem;
+    border-radius: .15rem;
+`;
+
+const PrimaryButtonStyling = css`
     border: 1px solid ${props => props.theme.colors.primary.medium};
-    color: ${props => props.theme.colors.shade.light};
     background-color: ${props => props.theme.colors.primary.medium};
+    
+    &:hover {
+        color: ${props => props.theme.colors.shade.light};
+        border: 1px solid ${props => props.theme.colors.primary.dark};
+        background-color: ${props => props.theme.colors.primary.dark};
+    }
 `;
 
-const ButtonLink = styled(Link)`
-    ${ButtonStyling}
-`;
+const Button = (props: ButtonProps) => {
+    const ButtonLink = styled(Link)`
+        ${BaseButtonStyling};
+        ${props.small ? SmallButtonStyling : ButtonStyling};
+        ${props.primary ? PrimaryButtonStyling : ''};
+    `;
 
-const Button = (props: LinkProps) => {
     return (
         <ButtonLink to={props.to}>
             {props.children}
@@ -26,5 +54,5 @@ const Button = (props: LinkProps) => {
     );
 };
 
-export { ButtonStyling };
+export { BaseButtonStyling, PrimaryButtonStyling };
 export default Button;

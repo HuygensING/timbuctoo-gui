@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { withProps, css } from '../../styled-components';
 import { BaseFieldProps, Field } from 'redux-form';
-import { ButtonStyling } from '../layout/Button';
+import { BaseButtonStyling, PrimaryButtonStyling } from '../layout/Button';
 import { SFC } from 'react';
 
 const StandardStyledFormElements = css`
@@ -55,9 +55,9 @@ const ResetButton = styled.button`
 `;
 
 const SubmitButton = styled.button`
-    ${ButtonStyling}
+    ${BaseButtonStyling};
+    ${PrimaryButtonStyling};
     width: 100%;
-    text-align: center;
 `;
 
 export { InputField, SelectField, SubmitButton, ResetButton };

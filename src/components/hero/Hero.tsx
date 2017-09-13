@@ -59,7 +59,7 @@ const Hero = ({ title, content, searchPath, buttonText, imgUrl = '/assets/_tmp/h
                 <Content align="center" color={theme.colors.shade.light}>{content}</Content>
                 { searchPath && buttonText &&
                     <ButtonContainer>
-                        <Button to={searchPath} align="center">{buttonText}</Button>
+                        <Button to={searchPath} primary={true} align="center">{buttonText}</Button>
                     </ButtonContainer>
                 }
 

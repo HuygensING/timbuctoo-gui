@@ -1,4 +1,5 @@
-// import { NameTypes, TimNames } from '../typings/timApi';
+import { TypeValue } from '../typings/timbuctoo';
+import { NameTypes, TimNames } from '../typings/timbuctoo/timPersons';
 
 const TYPES = {
     surname: 'SURNAME',
@@ -8,17 +9,6 @@ const TYPES = {
     name_link: 'NAME_LINK',
     gen_name: 'GEN_NAME',
 };
-
-type NameTypes = typeof TYPES.surname | typeof TYPES.forename | typeof TYPES.role_name | typeof TYPES.add_name | typeof TYPES.name_link | typeof TYPES.gen_name;
-
-interface TimNames {
-    items: NameProps[];
-}
-
-interface NameProps {
-    type?: string;
-    value: string;
-}
 
 interface NameObjectProps {
     type: NameTypes;
@@ -62,7 +52,7 @@ const TimbuctooNamesParser = {
         return name;
     },
 
-    getFullNames( items: NameProps[], limit?: Number ): void | Name[] {
+    getFullNames( items: TypeValue[], limit?: Number ): void | Name[] {
         if (!items) { return; }
 
         limit = limit || items.length;

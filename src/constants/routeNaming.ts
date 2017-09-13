@@ -27,6 +27,7 @@ const SUB_ROUTES: KeyValueObject = {
 };
 
 const ROUTE_KEYS: KeyValueObject = {
+    userId: 'userId',
     dataSet: 'dataSet',
     entry: 'entry',
     collection: 'collection',
