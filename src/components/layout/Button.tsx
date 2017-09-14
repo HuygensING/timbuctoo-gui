@@ -8,14 +8,15 @@ const BaseButtonStyling = css`
     display: inline-block;
     font: ${p => p.theme.fonts.body};
     margin-top: 0.5rem;
-    border: 1px solid ${props => props.theme.colors.shade.dark};
-    color: ${props => props.theme.colors.shade.light};
+    border: 1px solid ${props => props.theme.colors.shade.medium};
+    color: ${props => props.theme.colors.white};
     text-align: center;
-    background-color: ${props => props.theme.colors.shade.dark};
+    background-color: ${props => props.theme.colors.shade.medium};
     
     &:hover {
-        border: 1px solid ${props => props.theme.colors.shade.medium};
-        background-color: ${props => props.theme.colors.shade.medium};
+        color: ${props => props.theme.colors.white};
+        border: 1px solid ${props => props.theme.colors.shade.dark};
+        background-color: ${props => props.theme.colors.shade.dark};
     }
 `;
 
@@ -34,7 +35,7 @@ const PrimaryButtonStyling = css`
     background-color: ${props => props.theme.colors.primary.medium};
     
     &:hover {
-        color: ${props => props.theme.colors.shade.light};
+        color: ${props => props.theme.colors.white};
         border: 1px solid ${props => props.theme.colors.primary.dark};
         background-color: ${props => props.theme.colors.primary.dark};
     }

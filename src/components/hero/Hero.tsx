@@ -55,8 +55,8 @@ const Hero = ({ title, content, searchPath, buttonText, imgUrl = '/assets/_tmp/h
                 <DarkenImage />
             </HeroImageWrapper>
             <CenteredContent>
-                <Title align="center" color={theme.colors.shade.light}>{title}</Title>
-                <Content align="center" color={theme.colors.shade.light}>{content}</Content>
+                <Title align="center" color={theme.colors.white}>{title}</Title>
+                <Content align="center" color={theme.colors.white}>{content}</Content>
                 { searchPath && buttonText &&
                     <ButtonContainer>
                         <Button to={searchPath} primary={true} align="center">{buttonText}</Button>

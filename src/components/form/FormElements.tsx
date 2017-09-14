@@ -57,7 +57,9 @@ const ResetButton = styled.button`
 const SubmitButton = styled.button`
     ${BaseButtonStyling};
     ${PrimaryButtonStyling};
+    margin: 0;
     width: 100%;
+    height: 100%;
 `;
 
 export { InputField, SelectField, SubmitButton, ResetButton };

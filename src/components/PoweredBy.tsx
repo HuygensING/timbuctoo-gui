@@ -14,7 +14,7 @@ const Tag = styled(Label)`
     width: auto;
     height: ${tagWidth}px;
     padding: 5px;
-    color: ${props => props.theme.colors.shade.light};
+    color: ${props => props.theme.colors.white};
     background-color: ${props => props.theme.colors.primary.medium};
     transform-origin: right;
     transform: rotate(90deg);

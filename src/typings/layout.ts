@@ -9,6 +9,8 @@ export interface Colors {
         medium: string,
         dark: string
     };
+    readonly white: string;
+    readonly black: string;
 }
 
 export interface Fonts {
