@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled from '../../styled-components';
 
-import { ContentProps } from '../../typings';
+import { ROUTE_PATHS } from '../../constants/routeNaming';
+import { DataSetProps } from '../../typings';
 import { calcColWidth } from '../layout/Grid';
 import { Subtitle, Content, Link, Label } from '../layout/StyledCopy';
 
@@ -27,12 +28,12 @@ const DateLabel = styled(Label)`
     margin: auto;
 `;
 
-const ListContentItem = (props: ContentProps) => {
+const ListContentItem = (props: DataSetProps) => {
     return (
         <ListItem>
-            <Subtitle>{props.caption}</Subtitle>
-            <Content>{props.description && props.description.substr(0, 20)} in <StyledLink to="/">{Datasets[Math.floor(Math.random() * Datasets.length)]}</StyledLink></Content>
-            <DateLabel>Today</DateLabel>
+            <Subtitle>{props.title}</Subtitle>
+            <Content>{props.description && props.description.substr(0, 20)} in <StyledLink to={`${ROUTE_PATHS.details}/userId/${props.datasetId}`}>{Datasets[Math.floor(Math.random() * Datasets.length)]}</StyledLink></Content>
+            <DateLabel>today</DateLabel>
         </ListItem>
     );
 };

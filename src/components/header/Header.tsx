@@ -18,6 +18,7 @@ const StyledHeader = styled((props: {height: string}) => CreateElementWithTag(pr
     top: 0;
     height: ${props => props.height};
     background: ${(props) => props.theme.colors.shade.dark};
+    backface-visibility: hidden;
     z-index: 100;
 `;
 

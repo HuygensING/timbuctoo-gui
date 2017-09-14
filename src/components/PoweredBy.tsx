@@ -18,6 +18,7 @@ const Tag = styled(Label)`
     background-color: ${props => props.theme.colors.primary.medium};
     transform-origin: right;
     transform: rotate(90deg);
+    backface-visiblity: hidden;
     z-index: 100;
 `;
 

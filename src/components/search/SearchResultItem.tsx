@@ -5,7 +5,7 @@ import { Subtitle, Content, Label } from '../layout/StyledCopy';
 import Image from '../layout/Image';
 import Button from '../layout/Button';
 
-const SearchItem = styled.article`
+const SearchItem = styled.section`
 `;
 
 const CollectionList = styled.ul`

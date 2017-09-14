@@ -5,6 +5,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import { Col, Grid } from '../layout/Grid';
+import { DataSetProps } from '../../typings';
 
 import Hero from '../hero/Hero';
 import ListContent from '../lists/ListContent';
@@ -15,16 +16,8 @@ import { ROUTE_PATHS } from '../../constants/routeNaming';
 
 import NameParser from '../../services/TimbuctooNamesParser';
 
-interface DataSet {
-    caption: string;
-    description?: string;
-    imageUrl?: string;
-    graphqlUrl: string;
-}
-
 interface DataSets {
-    all: DataSet[];
-    promoted: DataSet[];
+    promotedDataSets: DataSetProps[];
 }
 
 interface Props {
@@ -35,22 +28,16 @@ interface Props {
 interface State {
 }
 
-interface NameProps {
-    type?: string;
-    value: string;
-}
-
-interface TimNames {
-    items: NameProps[];
-}
-
 class Home extends Component<Props, State> {
-    static defaultSets = {promoted: [], all: []};
-    
-    static defaultPersons = {items: []};
-    static defaultPersonName: {tim_names: TimNames};
+    static defaults = {
+        promotedDataSets: [],
+        persons: {
+            items: []
+        }
 
-    static renderFeatured (promoted: DataSet[]) {
+    };
+
+    static renderFeatured (promoted: DataSetProps[]) {
         return (
             <GridSection title="Featured datasets" cols={promoted.length} colSizeOffset={2}>
                 {Home.renderFeaturedItems(promoted)}
@@ -58,7 +45,7 @@ class Home extends Component<Props, State> {
         );
     }
 
-    static renderFeaturedItems (promoted: DataSet[]) {
+    static renderFeaturedItems (promoted: DataSetProps[]) {
         if (!promoted.length) {
             return <div>Loading</div>;
         }
@@ -81,8 +68,8 @@ class Home extends Component<Props, State> {
     }
 
     render () {
-        const {dataSets = Home.defaultSets} = this.props.data;
-        const {clusius_PersonsList = Home.defaultPersons} = this.props.data;
+        const {promotedDataSets = Home.defaults.promotedDataSets} = this.props.data;
+        const {clusius_PersonsList = Home.defaults.persons} = this.props.data;
 
         return (
             <Grid>
@@ -94,10 +81,10 @@ class Home extends Component<Props, State> {
                     buttonText={'Search datasets'}
                 />
 
-                {dataSets.promoted.length > 2 && Home.renderFeatured(dataSets.promoted)}
+                {promotedDataSets.length > 2 && Home.renderFeatured(promotedDataSets)}
 
-                <ListContent smOffset={3} sm={20} smPaddingY={1} title="Recently modified" data={dataSets.all}/>
-                <ListContent smOffset={2} sm={20} smPaddingY={1} title="Most Popular" data={dataSets.promoted}/>
+                <ListContent smOffset={3} sm={20} smPaddingY={1} title="Recently modified" data={promotedDataSets}/>
+                <ListContent smOffset={2} sm={20} smPaddingY={1} title="Most Popular" data={promotedDataSets}/>
                     
                 {clusius_PersonsList.items.length > 0 && (
                     <Col>
@@ -113,55 +100,13 @@ class Home extends Component<Props, State> {
     }
 }
 
-// const query = gql`
-//     query {
-//         dataSets {
-//             promoted {
-//                 caption
-//                 description
-//                 imageUrl
-//             }
-//             all {
-//                 caption
-//                 description
-//                 imageUrl
-//             }
-//         }
-//     }
-// `;
-
-// const query = gql`
-//     query {
-//         dataSets {
-//             promoted {
-//                 caption
-//                 description
-//                 imageUrl
-//             }
-//             all {
-//                 caption
-//                 description
-//                 imageUrl
-//             }
-//         }
-//     }
-// `;
-
 const query = gql`
     query {
-        clusius_PersonsList {
-            prevCursor
-            nextCursor
-            items {
-                tim_gender{value}
-                tim_birthDate{value}
-                tim_deathDate{value}
-                tim_names {
-                    items {
-                        value
-                    }
-                }
-            }
+        promotedDataSets {
+            imageUrl
+            title
+            description
+            datasetId
         }
     }
 `;

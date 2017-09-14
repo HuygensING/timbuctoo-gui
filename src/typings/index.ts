@@ -12,11 +12,16 @@ export interface Action {
     error: any
 }
 
-export interface ContentProps {
+export interface DataSetProps {
+    datasetId: string;
+    title: string;
+    description: string;
     imageUrl?: string;
-    caption?: string;
-    description?: string;
-    graphqlUrl?: string;
-    promoted?: boolean;
-    permissions?: Permissions[];
+    owner?: any
+    contact?: any
+    provenanceInfo?: any
+    contributors?: any[];
+    licence?: any[];
+    roles?: Permissions[];
+    collections?: any[];
 }
