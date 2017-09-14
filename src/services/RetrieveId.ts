@@ -24,7 +24,6 @@ const retrieveId = (): string => {
     const queryParamValue: Query = getQueryStringValue(query, HSID);
 
     if (queryParamValue) {
-        Cookies.set(HSID, queryParamValue);
         return queryParamValue;
     }
 

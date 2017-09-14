@@ -98,7 +98,7 @@ class Home extends Component<Props, State> {
 
                 <ListContent smOffset={3} sm={20} smPaddingY={1} title="Recently modified" data={dataSets.all}/>
                 <ListContent smOffset={2} sm={20} smPaddingY={1} title="Most Popular" data={dataSets.promoted}/>
-                    
+
                 {clusius_PersonsList.items.length > 0 && (
                     <Col>
                         {Home.renderName(clusius_PersonsList.items)}
@@ -113,53 +113,12 @@ class Home extends Component<Props, State> {
     }
 }
 
-// const query = gql`
-//     query {
-//         dataSets {
-//             promoted {
-//                 caption
-//                 description
-//                 imageUrl
-//             }
-//             all {
-//                 caption
-//                 description
-//                 imageUrl
-//             }
-//         }
-//     }
-// `;
-
-// const query = gql`
-//     query {
-//         dataSets {
-//             promoted {
-//                 caption
-//                 description
-//                 imageUrl
-//             }
-//             all {
-//                 caption
-//                 description
-//                 imageUrl
-//             }
-//         }
-//     }
-// `;
-
 const query = gql`
     query {
-        clusius_PersonsList {
-            prevCursor
-            nextCursor
-            items {
-                tim_gender{value}
-                tim_birthDate{value}
-                tim_deathDate{value}
-                tim_names {
-                    items {
-                        value
-                    }
+        dataSets {
+            jauco_leaders {
+                metadata {
+                    imageUrl
                 }
             }
         }
