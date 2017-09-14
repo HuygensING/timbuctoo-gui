@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import FullHelmet from '../FullHelmet';
 
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import { graphql, gql } from 'react-apollo';
 
 import { Col, Grid } from '../layout/Grid';
 import { DataSetProps } from '../../typings';
