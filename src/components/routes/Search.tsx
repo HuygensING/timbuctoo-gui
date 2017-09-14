@@ -3,8 +3,8 @@ import FullHelmet from '../FullHelmet';
 import { Dummy } from '../Dummy';
 import { Col, FullSection } from '../layout/Grid';
 import GridSection from '../layout/GridSection';
-import { Title } from '../layout/StyledCopy';
 import SearchForm from '../form/SearchForm';
+import Filters from '../Filters';
 
 import SearchResultItem from '../search/SearchResultItem';
 
@@ -103,6 +103,10 @@ class Search extends Component<Props, State> {
         console.log(values.search);
     }
 
+    static onFilter (values: any) {
+        console.log(values);
+    }
+
     render () {
         return (
             <section>
@@ -126,15 +130,11 @@ class Search extends Component<Props, State> {
                 <FullSection>
 
                     {/* Filter functionality */}
-                    <Col sm={14} smPaddingTop={2}>
-                        <Title>Filters</Title>
-                        <Dummy text={'filter hierarchy'} height={2} marginY={.5}/>
-                        <Dummy text={'filter multiselect'} mvp={true} height={5} marginY={.5}/>
-                        <Dummy text={'filter hierarchy'} height={5} marginY={.5}/>
-                        <Dummy text={'filter range'} height={5} marginY={.5}/>
+                    <Col sm={12} smPaddingTop={2}>
+                        <Filters />
                     </Col>
 
-                    <Col sm={27} smOffset={1}>
+                    <Col sm={27} smOffset={3}>
                         {/* Filter functionality */}
                         <GridSection title="Results" cols={2} gridSize={27} gridOffset={0} colSizeOffset={1} gridSpacing={2}>
                             {FakeData.map(Search.renderItems)}

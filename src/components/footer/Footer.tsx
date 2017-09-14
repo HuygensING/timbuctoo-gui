@@ -17,7 +17,7 @@ interface Props {
 
 const FooterContainer = styled(Grid)`
     padding: ${calcColWidth(1)} ${calcColWidth(3)};
-    background-color: ${(props) => props.theme.colors.shade.dark};
+    background-color: ${(props) => props.theme.colors.black};
 `;
 
 const WhiteCol = styled(Col)`
@@ -33,6 +33,7 @@ const Dt = styled.dt`
 `;
 
 const Dd = styled.dd`
+    color: ${props => props.theme.colors.white};
     margin: 0;
     padding: 0;
 `;

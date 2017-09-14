@@ -17,7 +17,7 @@ const StyledHeader = styled((props: {height: string}) => CreateElementWithTag(pr
     position: fixed;
     top: 0;
     height: ${props => props.height};
-    background: ${(props) => props.theme.colors.shade.dark};
+    background: ${(props) => props.theme.colors.black};
     z-index: 100;
 `;
 

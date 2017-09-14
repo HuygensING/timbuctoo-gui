@@ -18,7 +18,6 @@ export interface Fonts {
     readonly title: string;
     readonly subTitle: string;
     readonly body: string;
-    readonly small: string;
 }
 
 export type Color = 'primary' | 'shade' | string;
@@ -60,7 +59,6 @@ export interface LinkProps {
 
 export interface ButtonProps extends LinkProps { 
     small?: boolean;
-    primary?: boolean;
 }
 
 export interface GridProps {

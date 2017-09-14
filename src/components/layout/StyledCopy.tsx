@@ -16,9 +16,25 @@ const setAlignment = props => props.align ? props.align : 'left';
  * Usage:
  * <Title tag='h1' size='xxl' weight='bold' color='quarts' isCaps={false}>This is a title</Title>
  */
+export const Heading = styled((props: ElementProps) => CreateElementWithTag(props, 'h1'))`
+    margin: 1.1vw 0;
+    font: ${props => props.theme.fonts.heading};
+    text-transform: ${setCaps};
+    text-align: ${setAlignment};
+    color: ${setColor};
+    letter-spacing: ${setLetterSpacing};
+`;
+
+/*
+ * Title
+ * Available props: TextProps
+ *
+ * Usage:
+ * <Title tag='h1' size='xxl' weight='bold' color='quarts' isCaps={false}>This is a title</Title>
+ */
 export const Title = styled((props: ElementProps) => CreateElementWithTag(props, 'h1'))`
     margin: 1.1vw 0;
-    font: ${(props) => props.theme.fonts.heading};
+    font: ${props => props.theme.fonts.title};
     text-transform: ${setCaps};
     text-align: ${setAlignment};
     color: ${setColor};
@@ -34,7 +50,7 @@ export const Title = styled((props: ElementProps) => CreateElementWithTag(props,
 */
 export const Subtitle = styled((props: ElementProps) => CreateElementWithTag(props, 'h2'))`
     margin: 1.1vw 0;
-    font: ${(props) => props.theme.fonts.title};
+    font: ${(props) => props.theme.fonts.subTitle};
     text-transform: ${setCaps};
     text-align: ${setAlignment};
     color: ${setColor};
@@ -66,7 +82,7 @@ export const Content = styled((props: ElementProps) => CreateElementWithTag(prop
  */
 export const Label = styled((props: ElementProps) => CreateElementWithTag(props, 'span'))`
     margin: 0;
-    font: ${(props) => props.theme.fonts.small};
+    font: ${(props) => props.theme.fonts.body};
     text-transform: ${setCaps};
     text-align: ${setAlignment};
     color: ${setColor};
