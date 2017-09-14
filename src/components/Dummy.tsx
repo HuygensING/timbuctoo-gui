@@ -4,15 +4,17 @@ import CreateElementWithTag from '../services/CreateElementWithTag';
 import { Subtitle } from './layout/StyledCopy';
 import { calcColWidth } from './layout/Grid';
 import { lighten } from 'polished/lib';
+import theme from '../theme/index';
 
-const DummyContainer = styled((props: {mvp: boolean, height: string | number, marginY: string | number}) => CreateElementWithTag(props, 'div'))`
+const DummyContainer = styled((props: {mvp: boolean, height: string | number, width: string | number, marginY: string | number, absolute: boolean}) => CreateElementWithTag(props, 'div'))`
     display: block;
-    position: relative;
-    height: ${p => typeof p.height === 'number' ? calcColWidth(p.height) : p.height};
-    margin-bottom: ${p => typeof p.marginY === 'number' ? `${calcColWidth(p.marginY)}` : p.marginY};
+    ${props => props.absolute ? 'position: absolute; top: 0; right: 0;' : 'position: relative;'}
+    float:right;
+    height: ${props => typeof props.height === 'number' ? calcColWidth(props.height) : props.height};
+    width: ${props => typeof props.width === 'number' ? calcColWidth(props.width) : props.width};
+    margin-bottom: ${props => typeof props.marginY === 'number' ? `${calcColWidth(props.marginY)}` : props.marginY};
     padding: .5rem 0;
-    background: ${p => p.mvp ? lighten(.4 , p.theme.colors.primary.medium) : lighten(.15, p.theme.colors.shade.medium)};
-    color: #fff;
+    border: 2px dashed ${props => props.mvp ? lighten(.5 , props.theme.colors.primary.medium) : lighten(.2, props.theme.colors.shade.light)};
 `;
 
 const DummyContent = styled(Subtitle)`
@@ -24,14 +26,13 @@ const DummyContent = styled(Subtitle)`
 `;
 
 const DummySticker = styled.span`
-    background: yellow;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    background: coral;
     border-radius: 50%;
     position: absolute;
     text-align: center;
     display: block;
-    width: 2rem;
-    height: 2rem;
+    width: 1rem;
+    height: 1rem;
     top: -.5rem;
     right: -.5rem;
 `;
@@ -39,13 +40,15 @@ const DummySticker = styled.span`
 interface Props {
     mvp?: boolean;
     text?: string;
+    absolute?: boolean;
     height?: number | string;
+    width?: number | string;
     marginY?: number | string;
 }
 
-const Dummy = ({mvp = false, text, height = '5rem', marginY = '0'}: Props) => (
-    <DummyContainer mvp={mvp} height={height} marginY={marginY}>
-        <DummyContent color={'#fff'}>
+const Dummy = ({mvp = false, text, height = '5rem', width = '100%', marginY = '0', absolute = false}: Props) => (
+    <DummyContainer mvp={mvp} height={height} width={width} marginY={marginY} absolute={absolute}>
+        <DummyContent color={mvp ? lighten(.2, theme.colors.primary.medium) : theme.colors.shade.light}>
             {text && text}
         </DummyContent>
         {mvp && <DummySticker/>}

@@ -28,9 +28,8 @@ const theme: ThemeProps = {
     fonts: {
         heading: '400 2.5rem/1.2 Roboto, sans-serif',
         title: '400 1.5rem/1.2 Roboto, sans-serif',
-        subTitle: '400 1.25rem/1.2 Roboto, sans-serif',
-        body: '400 1rem/1.6 Roboto, sans-serif',
-        small: '400 .75rem/1.6 Roboto, sans-serif'
+        subTitle: '400 1rem/1.2 Roboto, sans-serif',
+        body: '400 .875rem/1.6 Roboto, sans-serif'
     },
 };
 
