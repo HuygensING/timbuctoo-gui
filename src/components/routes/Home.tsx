@@ -20,7 +20,7 @@ interface DataSets {
 }
 
 interface Props {
-    user: UserReducer; 
+    user: UserReducer;
     data?: any;
     dataSets: DataSets;
 }

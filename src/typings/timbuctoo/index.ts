@@ -4,6 +4,8 @@ import { TimNames } from './timPersons';
  * Typings for the graphql api datastructure
  */
 
+
+
 /*
  * General types
  */
