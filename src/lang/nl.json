@@ -1,8 +1,7 @@
 {
-    "errors": {
-        "invalid_key": "{var} is een ongeldige key"
-    },
     "globals": {
+        "filters": "Filters",
+        "results": "Resultaten",
         "yesterday": "gisteren",
         "today": "vandaag",
         "tomorrow": "morgen"
@@ -12,6 +11,29 @@
             "title": "Wij geven om jouw data",
             "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consequatur cumque dolorem doloribus esse exercitationem fugit molestias possimus recusandae vitae?",
             "button": "Zoek binnen datasets"
+        },
+        "featured": {
+            "title": "Uitgelichte datasets"
+        },
+        "recently_modified": {
+            "title": "Laatst aangepast"
+        },
+        "most_popular": {
+            "title": "Populaire datasets"
         }
+    },
+    "search": {
+        "placeholder": "Type om te zoeken...",
+        "reset": "Reset",
+        "search": "Zoek",
+        "view_dataset": "Bekijk dataset"
+    },
+    "footer": {
+        "powered_by": "Timbuctoo wordt gesponsord door",
+        "company_name": "Bedrijfs naam",
+        "street": "Straat",
+        "address": "Adres",
+        "phone": "Telefoon nummer",
+        "opening_hours": "Openingstijden"
     }
 }

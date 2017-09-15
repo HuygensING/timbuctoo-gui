@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import styled from '../../styled-components';
+import Translations from '../../services/Translations';
 
 import { calcColWidth, Col, Grid } from '../layout/Grid';
 import { srOnly, Content } from '../layout/StyledCopy';
@@ -59,21 +60,21 @@ const Footer: SFC<Props> = ({ isLoggedIn, onLogOut, switchLanguage }) => {
                 </WhiteCol>
             }
             <WhiteCol sm={8} smOffset={isLoggedIn ? 26 : 34}>
-                <Content color={'#fff'}>Timbuctoo is powered by:</Content>
+                <Content color={'#fff'}>{Translations.translate('footer.powered_by')}:</Content>
                 <Dl>
-                    <Dt>company name</Dt>
+                    <Dt>{Translations.translate('footer.company_name')}</Dt>
                     <Dd>{addressData.company}</Dd>
 
-                    <Dt>Street</Dt>
+                    <Dt>{Translations.translate('footer.street')}</Dt>
                     <Dd>{addressData.street}</Dd>
 
-                    <Dt>ADdress</Dt>
+                    <Dt>{Translations.translate('footer.address')}</Dt>
                     <Dd>{addressData.zip} {addressData.city}</Dd>
 
-                    <Dt>Phone number</Dt>
+                    <Dt>{Translations.translate('footer.phone')}</Dt>
                     <Dd>{addressData.phone}</Dd>
 
-                    <Dt>Opening hours</Dt>
+                    <Dt>{Translations.translate('footer.opening_hours')}</Dt>
                     <Dd>{addressData.openingHours}</Dd>
                 </Dl>
             </WhiteCol>

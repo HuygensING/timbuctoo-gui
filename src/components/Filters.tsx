@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import Translations from '../services/Translations';
 import FormWrapper from './form/FormWrapper';
 import MultiSelectForm from './form/MultiselectForm';
 import styled from '../styled-components';
@@ -40,7 +41,7 @@ class Filters extends PureComponent<Props, State> {
         return (
             <FormWrapper form={'filter'} onChange={() => setTimeout(this.onSubmit)}>
                 <SpecialDiv>
-                    <Title>Filters</Title>
+                    <Title>{Translations.translate('globals.filters')}</Title>
                     <Dummy text={'search-filter'} height={2} marginY={.5}/>
                     <MultiSelectForm title={'letters'} selection={['a' , 'b' , 'c']} />
                     <MultiSelectForm title={'numbers'} selection={['1' , '2' , '3']} />

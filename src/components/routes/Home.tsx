@@ -41,7 +41,7 @@ class Home extends Component<Props, State> {
 
     renderFeatured (promoted: DataSetProps[]) {
         return (
-            <GridSection title="Featured datasets" cols={5} colSizeOffset={2}>
+            <GridSection title={Translations.translate('home.featured.title')} cols={5} colSizeOffset={2}>
                 {this.renderFeaturedItems(promoted)}
             </GridSection>
         );
@@ -55,8 +55,6 @@ class Home extends Component<Props, State> {
     render () {
         const {promotedDataSets = Home.defaults.promotedDataSets} = this.props.data;
 
-        console.log( 'Translate', Translations.translate('blaa') );
-
         return (
             <Grid>
                 <FullHelmet pageName="home"/>
@@ -69,8 +67,8 @@ class Home extends Component<Props, State> {
 
                 {promotedDataSets && this.renderFeatured(promotedDataSets)}
 
-                <ListContent smOffset={3} sm={20} smPaddingY={1} title="Recently modified" data={promotedDataSets}/>
-                <ListContent smOffset={2} sm={20} smPaddingY={1} title="Most Popular" data={promotedDataSets}/>
+                <ListContent smOffset={3} sm={20} smPaddingY={1} title={Translations.translate('home.recently_modified.title')} data={promotedDataSets}/>
+                <ListContent smOffset={2} sm={20} smPaddingY={1} title={Translations.translate('home.most_popular.title')} data={promotedDataSets}/>
                 <Col sm={48}>
                     <Dummy text={'About Huygens'} height={10}/>
                 </Col>

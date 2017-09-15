@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+
+import Translations from '../../services/Translations';
 import FullHelmet from '../FullHelmet';
 import { Dummy } from '../Dummy';
 import { Col, FullSection } from '../layout/Grid';
@@ -136,7 +138,7 @@ class Search extends Component<Props, State> {
 
                     <Col sm={27} smOffset={3}>
                         {/* Filter functionality */}
-                        <GridSection title="Results" cols={2} gridSize={27} gridOffset={0} colSizeOffset={1} gridSpacing={2}>
+                        <GridSection title={Translations.translate('globals.results')} cols={2} gridSize={27} gridOffset={0} colSizeOffset={1} gridSpacing={2}>
                             {FakeData.map(Search.renderItems)}
                         </GridSection>
                         <Dummy text={'Pagination'} height={2} marginY={2}/>

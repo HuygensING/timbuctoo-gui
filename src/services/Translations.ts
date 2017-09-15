@@ -2,7 +2,8 @@ import Languages from '../lang';
 
 class Translations {
 
-    private language: string = 'en';
+    private defaultLanguage: string = 'en';
+    private language: string = this.defaultLanguage;
 
     setLanguage( lang: string ) {
         this.language = lang;
@@ -11,9 +12,21 @@ class Translations {
     translate( translationKey: string, keySplit: string = '.' ) {
         const keys = translationKey.split(keySplit);
         const Language = Languages[this.language];
-        let translation = Language;
-        keys.map(key => translation = translation[key] || `${Language.errors.invalid_key.replace('{var}', key)}`);
-        return translation;
+        return this.getTranslation(keys, Language);
+    }
+
+    private getTranslation( keys: string[], language: string ): string {
+        let translation = language;
+        let defaultTranslation = Languages[this.defaultLanguage];
+        keys.map(key => {
+            if (translation) {
+                translation = translation[key] || null;
+            }
+            if (defaultTranslation) {
+                defaultTranslation = defaultTranslation [key] || null;
+            }
+        });
+        return translation || defaultTranslation;
     }
 }
 

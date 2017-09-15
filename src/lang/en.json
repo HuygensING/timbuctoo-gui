@@ -1,8 +1,7 @@
 {
-    "errors": {
-        "invalid_key": "{var} is an invalid key"
-    },
     "globals": {
+        "filters": "Filters",
+        "results": "Results",
         "yesterday": "yesterday",
         "today": "today",
         "tomorrow": "tomorrow"
@@ -12,6 +11,29 @@
             "title": "We care for your data",
             "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consequatur cumque dolorem doloribus esse exercitationem fugit molestias possimus recusandae vitae?",
             "button": "Search datasets"
+        },
+        "featured": {
+            "title": "Featured datasets"
+        },
+        "recently_modified": {
+            "title": "Recently modified"
+        },
+        "most_popular": {
+            "title": "Most Popular"
         }
+    },
+    "search": {
+        "placeholder": "Type to search...",
+        "reset": "Reset",
+        "search": "Search",
+        "view_dataset": "View dataset"
+    },
+    "footer": {
+        "powered_by": "Timbuctoo is powered by",
+        "company_name": "Company name",
+        "street": "Street",
+        "address": "Address",
+        "phone": "Phone Number",
+        "opening_hours": "Opening hours"
     }
 }

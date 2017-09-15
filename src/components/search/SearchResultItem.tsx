@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '../../styled-components';
 
+import Translations from '../../services/Translations';
 import { Subtitle, Content, Label } from '../layout/StyledCopy';
 import Image from '../layout/Image';
 import Button from '../layout/Button';
@@ -40,7 +41,7 @@ const SearchResultItem = (props) => {
                 {renderCollections()}
             </CollectionList>
             <Content>{data.description}</Content>
-            <Button to="/" small={true}>Bekijk dataset</Button>
+            <Button to="/" small={true}>{Translations.translate('search.view_dataset')}</Button>
         </SearchItem>
     );
 };
