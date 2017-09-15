@@ -4,6 +4,7 @@ import { UserReducer } from '../typings/store';
 import { Action } from '../typings/index';
 import retrieveId from '../services/RetrieveId';
 import { HSID } from '../constants/global';
+import Client from '../services/ApolloClient';
 
 const loggedOutState = {
     hsid: '',
@@ -45,6 +46,8 @@ export const LogInUser = () => {
 
 export const LogOutUser = () => {
     Cookies.remove(HSID);
+    Client.resetStore();
+
     return {
         type: LOG_OUT
     };

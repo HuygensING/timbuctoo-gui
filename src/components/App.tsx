@@ -29,6 +29,7 @@ interface Props {
         aboutMe: AboutMe
     };
     user: UserReducer;
+    logInUser: () => void;
 }
 
 interface State {
@@ -36,25 +37,22 @@ interface State {
 }
 
 class App extends Component<ChildProps<Props, Response>, State> {
-    componentWillReceiveProps ({ data, user }: Props) {
-        if (this.props.data !== data) {
-            if (data.aboutMe && data.aboutMe.id) {
-                if (!user.loggedIn && user.hsid.length > 0) {
-                    console.log('should log in!');
-                }
-            }
+
+    componentWillReceiveProps ({data, user}: Props) {
+        if (!user.loggedIn && data.aboutMe && data.aboutMe.id && this.props.data.aboutMe !== data.aboutMe) {
+            this.props.logInUser();
         }
     }
 
-    render() {
+    render () {
         return (
             <ThemeProvider theme={theme}>
                 <BrowserRouter>
                     <GridWithMargin>
-                        <Header height={headerHeight} />
-                        <Router />
-                        <Footer />
-                        <PoweredBy />
+                        <Header height={headerHeight}/>
+                        <Router/>
+                        <Footer/>
+                        <PoweredBy/>
                     </GridWithMargin>
                 </BrowserRouter>
             </ThemeProvider>
