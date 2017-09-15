@@ -1,0 +1,17 @@
+{
+    "errors": {
+        "invalid_key": "{var} is an invalid key"
+    },
+    "globals": {
+        "yesterday": "yesterday",
+        "today": "today",
+        "tomorrow": "tomorrow"
+    },
+    "home": {
+        "hero": {
+            "title": "We care for your data",
+            "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consequatur cumque dolorem doloribus esse exercitationem fugit molestias possimus recusandae vitae?",
+            "button": "Search datasets"
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "errors": {
+        "invalid_key": "{var} is een ongeldige key"
+    },
+    "globals": {
+        "yesterday": "gisteren",
+        "today": "vandaag",
+        "tomorrow": "morgen"
+    },
+    "home": {
+        "hero": {
+            "title": "Wij geven om jouw data",
+            "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consequatur cumque dolorem doloribus esse exercitationem fugit molestias possimus recusandae vitae?",
+            "button": "Zoek binnen datasets"
+        }
+    }
+}

@@ -4,5 +4,6 @@ export interface State {
 
 export interface UserReducer {
     hsid: string;
+    language: string;
     loggedIn: boolean;
 }

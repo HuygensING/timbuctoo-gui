@@ -65,7 +65,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    LogInUser: dispatch(LogInUser())
+    logInUser: () => dispatch(LogInUser())
 });
 
 const query = gql`

@@ -6,6 +6,8 @@ import { DataSetProps } from '../../typings';
 import { calcColWidth } from '../layout/Grid';
 import { Subtitle, Content, Link, Label } from '../layout/StyledCopy';
 
+import Translations from '../../services/Translations';
+
 const Datasets = ['World Leaders', 'German Royalty', '18th century literature'];
 
 const ListItem = styled.li`
@@ -33,7 +35,7 @@ const ListContentItem = (props: DataSetProps) => {
         <ListItem>
             <Subtitle>{props.title}</Subtitle>
             <Content>{props.description && props.description.substr(0, 20)} in <StyledLink to={`${ROUTE_PATHS.details}/userId/${props.datasetId}`}>{Datasets[Math.floor(Math.random() * Datasets.length)]}</StyledLink></Content>
-            <DateLabel>today</DateLabel>
+            <DateLabel>{Translations.translate('globals.today')}</DateLabel>
         </ListItem>
     );
 };

@@ -15,6 +15,8 @@ import GridSection from '../layout/GridSection';
 import FeaturedContentBlock from '../featured/FeaturedContentBlock';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 
+import Translations from '../../services/Translations';
+
 interface DataSets {
     promotedDataSets: DataSetProps[];
 }
@@ -53,14 +55,16 @@ class Home extends Component<Props, State> {
     render () {
         const {promotedDataSets = Home.defaults.promotedDataSets} = this.props.data;
 
+        console.log( 'Translate', Translations.translate('blaa') );
+
         return (
             <Grid>
                 <FullHelmet pageName="home"/>
                 <Hero
-                    title={'We care for your data'}
-                    content={'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consequatur cumque dolorem doloribus esse exercitationem fugit molestias possimus recusandae vitae?'}
+                    title={Translations.translate('home.hero.title')}
+                    content={Translations.translate('home.hero.content')}
                     searchPath={ROUTE_PATHS.search}
-                    buttonText={'Search datasets'}
+                    buttonText={Translations.translate('home.hero.button')}
                 />
 
                 {promotedDataSets && this.renderFeatured(promotedDataSets)}

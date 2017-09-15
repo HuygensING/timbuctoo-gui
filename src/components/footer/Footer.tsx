@@ -8,11 +8,12 @@ import { srOnly, Content } from '../layout/StyledCopy';
 import { addressData } from '../../constants/address';
 import { SFC } from 'react';
 import AccountMenu from '../header/AccountMenu';
-import { LogOutUser } from '../../reducers/user';
+import { LogOutUser, SwitchLanguage } from '../../reducers/user';
 
 interface Props {
     isLoggedIn: boolean;
     onLogOut: () => void;
+    switchLanguage: (language: string) => void;
 }
 
 const FooterContainer = styled(Grid)`
@@ -45,7 +46,7 @@ const Dl = styled.dl`
     font: ${p => p.theme.fonts.body}    
 `;
 
-const Footer: SFC<Props> = ({ isLoggedIn, onLogOut }) => {
+const Footer: SFC<Props> = ({ isLoggedIn, onLogOut, switchLanguage }) => {
 
     return (
         <FooterContainer tag={'footer'}>
@@ -54,6 +55,7 @@ const Footer: SFC<Props> = ({ isLoggedIn, onLogOut }) => {
                 isLoggedIn &&
                 <WhiteCol sm={8}>
                     <AccountMenu isFooter={true} onLogOut={() => onLogOut()}/>
+                    <button onClick={() => switchLanguage('nl')}>NL</button> | <button onClick={() => switchLanguage('en')}>EN</button>
                 </WhiteCol>
             }
             <WhiteCol sm={8} smOffset={isLoggedIn ? 26 : 34}>
@@ -84,7 +86,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onLogOut: () => dispatch(LogOutUser)
+    onLogOut: () => dispatch(LogOutUser()),
+    switchLanguage: (language) => dispatch(SwitchLanguage(language))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Footer);
