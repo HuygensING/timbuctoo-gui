@@ -30,6 +30,7 @@ type QueryType {
 
 type DataSets {
   jauco_leaders: Jauco_Leaders
+  jauco_minions: Jauco_Leaders
 }
 
 type MimeType {

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '../../styled-components';
 
-import { Url, CollectionMetadataList } from '../../typings/timbuctoo/schema';
+import { Url, Licence, CollectionMetadataList } from '../../typings/timbuctoo/schema';
 
 import Translations from '../../services/Translations';
 import { Subtitle, Content, Label } from '../layout/StyledCopy';
@@ -12,6 +12,7 @@ export interface ResultDataSetMetadata {
     imageUrl: Url | null;
     title: string;
     description: string;
+    licence: Licence;
     collections: CollectionMetadataList;
 };
 
@@ -37,7 +38,7 @@ const SearchResulDataset = (props: ResultDataSetMetadata) => {
     const renderCollections = () => (
         collections.items.map((collection, index) => (
             <CollectionListItem key={index}>
-                <CollectionLabel>{collection.name} ({collection.properties && collection.properties.items.length})</CollectionLabel>
+                <CollectionLabel>{collection.name} {collection.properties && `(${collection.properties.items.length})`}</CollectionLabel>
             </CollectionListItem>
         ))
     );
