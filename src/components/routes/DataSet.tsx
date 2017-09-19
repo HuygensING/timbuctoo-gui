@@ -8,7 +8,8 @@ import GridSection from '../layout/GridSection';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import Hero from '../hero/Hero';
 import buildDynamicQuery from '../../services/AddDynamicQuery';
-import { DataSetMetadata, DataSets } from '../../typings/timbuctoo/schema';
+import { CollectionMetadata, DataSetMetadata, DataSets } from '../../typings/timbuctoo/schema';
+import CollectionTags from '../CollectionTags';
 
 interface Props {}
 
@@ -22,6 +23,9 @@ type FullProps = Props & ApolloProps & RouteComponentProps<any>;
 interface State {}
 
 class DataSet extends Component<FullProps, State> {
+
+
+
     render () {
         const { dataSet } = this.props.match.params;
         const { dataSets } = this.props.data;
@@ -29,7 +33,11 @@ class DataSet extends Component<FullProps, State> {
         if (!dataSet || !dataSets) { return null; }
         console.log(dataSets);
 
-        const { datasetId, title, description, imageUrl }: DataSetMetadata = dataSets[dataSet].metadata;
+        const { datasetId, title, description, imageUrl, collections }: DataSetMetadata = dataSets[dataSet].metadata;
+
+        const collectionKeys: CollectionMetadata[] = collections && collections.items
+            ? collections.items
+            : [];
 
         return (
             <section>
@@ -43,9 +51,8 @@ class DataSet extends Component<FullProps, State> {
                     buttonText={'Search this dataset'}
                 />
 
-                <Col sm={48} smPaddingBottom={2}>
-                    {/*tags component*/}
-                    <Dummy text={'collection tags'} height={3}/>
+                <Col sm={48} smPaddingBottom={.5}>
+                    {collectionKeys.length > 0 && <CollectionTags colKeys={collectionKeys} datasetId={datasetId}/>}
                 </Col>
 
                 <Col sm={48}>
