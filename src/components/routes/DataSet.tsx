@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import FullHelmet from '../FullHelmet';
 import { Dummy } from '../Dummy';
 import { Col } from '../layout/Grid';
@@ -6,27 +7,38 @@ import { RouteComponentProps } from 'react-router';
 import GridSection from '../layout/GridSection';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import Hero from '../hero/Hero';
+import buildDynamicQuery from '../../services/AddDynamicQuery';
+import { DataSetMetadata, DataSets } from '../../typings/timbuctoo/schema';
 
-interface Props {
+interface Props {}
+
+interface ApolloProps {
+    data: {
+        dataSets: DataSets;
+    };
 }
 
-interface State {
-}
+type FullProps = Props & ApolloProps & RouteComponentProps<any>;
+interface State {}
 
-class DataSet extends Component<Props & RouteComponentProps<any>, State> {
+class DataSet extends Component<FullProps, State> {
     render () {
         const { dataSet } = this.props.match.params;
+        const { dataSets } = this.props.data;
 
-        if (!dataSet) { return null; }
+        if (!dataSet || !dataSets) { return null; }
+        console.log(dataSets);
+
+        const { datasetId, title, description }: DataSetMetadata = dataSets[dataSet].metadata;
 
         return (
             <section>
-                <FullHelmet pageName={`Dataset - ${dataSet}`}/>
+                <FullHelmet pageName={`Dataset - ${datasetId}`}/>
 
                 <Hero
-                    title={`Dataset: ${dataSet}`}
-                    content={'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consequatur cumque dolorem doloribus esse exercitationem fugit molestias possimus recusandae vitae?'}
-                    searchPath={`${ROUTE_PATHS.search}/${dataSet}`}
+                    title={title}
+                    content={description}
+                    searchPath={`${ROUTE_PATHS.search}/${datasetId}`}
                     buttonText={'Search this dataset'}
                 />
 
@@ -61,4 +73,10 @@ class DataSet extends Component<Props & RouteComponentProps<any>, State> {
     }
 }
 
-export default DataSet;
+const mapStateToProps = (state) => ({
+    user: state.user
+});
+
+export default buildDynamicQuery(
+    connect(mapStateToProps)(DataSet)
+);

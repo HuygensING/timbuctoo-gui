@@ -36,15 +36,15 @@ export const routes: RouteObject[] = [
         key: ROUTE_PATHS.details,
         routes: [
             {
-                path: `/:${ROUTE_KEYS.userId}/:${ROUTE_KEYS.dataSet}/:${ROUTE_KEYS.collection}/:${ROUTE_KEYS.entry}`,
+                path: `/:${ROUTE_KEYS.dataSet}/:${ROUTE_KEYS.collection}/:${ROUTE_KEYS.entry}`,
                 component: Entry
             },
             {
-                path: `/:${ROUTE_KEYS.userId}/:${ROUTE_KEYS.dataSet}/:${ROUTE_KEYS.collection}`,
+                path: `/:${ROUTE_KEYS.dataSet}/:${ROUTE_KEYS.collection}`,
                 component: Search
             },
             {
-                path: `/:${ROUTE_KEYS.userId}/:${ROUTE_KEYS.dataSet}`,
+                path: `/:${ROUTE_KEYS.dataSet}`,
                 component: DataSet
             }
         ]

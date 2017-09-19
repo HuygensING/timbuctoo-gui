@@ -40,7 +40,7 @@ const ButtonContainer = styled.div`
 
 interface HeroProps {
     title: string;
-    content: string;
+    content: string | null;
     searchPath?: string;
     buttonText?: string;
     imgUrl?: string;
@@ -56,7 +56,7 @@ const Hero = ({ title, content, searchPath, buttonText, imgUrl = '/assets/_tmp/h
             </HeroImageWrapper>
             <CenteredContent>
                 <Title align="center" color={theme.colors.white}>{title}</Title>
-                <Content align="center" color={theme.colors.white}>{content}</Content>
+                {content && <Content align="center" color={theme.colors.white}>{content}</Content>}
                 { searchPath && buttonText &&
                     <ButtonContainer>
                         <Button to={searchPath} align="center">{buttonText}</Button>

@@ -1,6 +1,8 @@
 import styled, { css } from '../../styled-components';
 import CreateElementWithTag from '../../services/CreateElementWithTag';
 import { ElementProps, LinkProps } from '../../typings/layout';
+import { keyframes } from '../../styled-components';
+import { lighten } from 'polished';
 
 const setColor = props => (props.theme.colors[props.color] && props.theme.colors[props.color].medium)
     || props.color
@@ -8,6 +10,35 @@ const setColor = props => (props.theme.colors[props.color] && props.theme.colors
 const setCaps = props => props.isCaps ? 'uppercase' : 'initial';
 const setLetterSpacing = props => props.isCaps ? '0.13em' : '0';
 const setAlignment = props => props.align ? props.align : 'left';
+
+const anim = keyframes`
+    from {
+        transform: translateX(-100%);
+    }
+    
+    to {
+        transform: translateX(100%);
+    }
+`;
+
+const EmptyStyle = css`
+    &:empty {
+        width: 100%;
+        display: block;
+        background: ${props => lighten(.2, props.theme.colors.shade.light)};
+        height: 1.5rem;
+        
+        &:before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 1.5rem;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 50%,rgba(255,255,255,0) 100%);           
+            animation: ${anim} 1.7s infinite;
+            opacity: .5;
+        }
+    }
+`;
 
 /*
  * Title
@@ -39,6 +70,8 @@ export const Title = styled((props: ElementProps) => CreateElementWithTag(props,
     text-align: ${setAlignment};
     color: ${setColor};
     letter-spacing: ${setLetterSpacing};
+    
+    ${EmptyStyle}
 `;
 
 /*
