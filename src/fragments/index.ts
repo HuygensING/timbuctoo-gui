@@ -19,6 +19,12 @@ export default {
                 title
                 body
             }
+            collections {
+                items {
+                    name
+                    collectionId
+                }
+            }
         }`
     }
 };
