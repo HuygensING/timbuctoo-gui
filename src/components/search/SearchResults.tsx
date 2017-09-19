@@ -2,89 +2,104 @@ import React, { PureComponent } from 'react';
 import Translations from '../../services/Translations';
 
 import GridSection from '../layout/GridSection';
-import SearchResultItem from './SearchResultItem';
+import SearchResultDataset, { ResultDataSetMetadata } from './SearchResultDataset';
+import SearchResultEntry from './SearchResultEntry';
 
-const FakeData = [{
+const DataType: string = 'dataset';
+const FakeData: Array<any> = [{
     imageUrl: 'http://lorempixel.com/400/200/people',
-    name: 'Barack Obama',
+    title: 'Barack Obama',
     licence: 'licence:uri',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id.',
-    collections: [{
-        type: 'Leader',
-        total: 1612
-    }, {
-        type: 'Birthplace',
-        total: 717
-    }]
+    collections: {
+        items: [{
+            type: 'Leader',
+            total: 1612
+        }, {
+            type: 'Birthplace',
+            total: 717
+        }]
+    }
 }, {
     imageUrl: 'http://lorempixel.com/300/300/people',
-    name: 'Donal Trump',
+    title: 'Donal Trump',
     licence: 'licence:uri',
     description: 'Lorem ipsum dolor sit amet.',
-    collections: [{
-        type: 'Leader',
-        total: 1012
-    }]
+    collections: {
+        items: [{
+            type: 'Leader',
+            total: 1012
+        }]
+    }
 }, {
     imageUrl: 'http://lorempixel.com/300/500/people',
-    name: 'George Bush',
+    title: 'George Bush',
     licence: 'licence:uri',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id lectus eleifend fringilla.',
-    collections: [{
-        type: 'Leader',
-        total: 1012
-    }]
+    collections: {
+        items: [{
+            type: 'Leader',
+            total: 1012
+        }]
+    }
 }, {
     imageUrl: 'http://lorempixel.com/400/200/people',
-    name: 'Barack Obama',
+    title: 'Barack Obama',
     licence: 'licence:uri',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id lectus eleifend.',
-    collections: [{
-        type: 'Leader',
-        total: 1612
-    }, {
-        type: 'Birthplace',
-        total: 717
-    }]
+    collections: {
+        items: [{
+            type: 'Leader',
+            total: 1612
+        }, {
+            type: 'Birthplace',
+            total: 717
+        }]
+    }
 }, {
     imageUrl: 'http://lorempixel.com/300/300/people',
-    name: 'Donal Trump',
+    title: 'Donal Trump',
     licence: 'licence:uri',
     description: 'Lorem ipsum dolor sit amet.',
-    collections: [{
-        type: 'Leader',
-        total: 1012
-    }]
+    collections: {
+        items: [{
+            type: 'Leader',
+            total: 1012
+        }]
+    }
 }, {
     imageUrl: 'http://lorempixel.com/300/500/people',
-    name: 'George Bush',
+    title: 'George Bush',
     licence: 'licence:uri',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id lectus eleifend fringilla.',
-    collections: [{
-        type: 'Leader',
-        total: 1012
-    }]
+    collections: {
+        items: [{
+            type: 'Leader',
+            total: 1012
+        }]
+    }
 }];
 
 interface Props {}
 interface State {}
 
-interface CollectionProps {
-    type: string;
-    total: Number;
-}
-
-interface SearchResultProps {
-    imageUrl: string;
-    name: string;
-    licence: string;
-    description: string;
-    collections: CollectionProps[];
-}
+// interface SearchResultProps {
+//     imageUrl: string;
+//     title: string;
+//     licence: string;
+//     description: string;
+//     collections: CollectionMetadataList;
+// }
 
 class SearchResults extends PureComponent<Props, State> {
-    static renderItems (data: SearchResultProps, idx: number) {
-        return <SearchResultItem key={idx} data={data} />;
+    static renderItems (data: ResultDataSetMetadata, idx: number) {
+        switch (DataType) {
+            case 'entry':
+                return <SearchResultEntry key={idx} data={data} />;
+
+            default:
+                return <SearchResultDataset key={idx} {...data} />;
+        }
     }
     render () {
         return (
