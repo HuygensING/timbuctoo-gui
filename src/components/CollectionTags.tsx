@@ -31,7 +31,7 @@ const CollectionTags: SFC<Props> = ({ colKeys, datasetId }) => {
 
     return (
         <List>
-            {colKeys.map((col, idx) => renderButton(col.name))}
+            {colKeys.map((col, idx) => renderButton(col.title))}
         </List>
     );
 };

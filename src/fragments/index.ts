@@ -10,8 +10,8 @@ const contactFragment = gql`
 const collectionsFragment = gql`
   fragment CollectionsFragment on CollectionMetadataList {
       items {
-          name
-          collectionId
+          title
+          collectionId   
       }
   } 
 `;

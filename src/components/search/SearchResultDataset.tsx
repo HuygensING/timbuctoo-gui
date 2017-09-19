@@ -14,7 +14,7 @@ export interface ResultDataSetMetadata {
     description: string;
     licence: Licence;
     collections: CollectionMetadataList;
-};
+}
 
 const SearchItem = styled.section`
 `;
@@ -38,7 +38,7 @@ const SearchResulDataset = (props: ResultDataSetMetadata) => {
     const renderCollections = () => (
         collections.items.map((collection, index) => (
             <CollectionListItem key={index}>
-                <CollectionLabel>{collection.name} {collection.properties && `(${collection.properties.items.length})`}</CollectionLabel>
+                <CollectionLabel>{collection.title} ({collection.properties && collection.properties.items.length})</CollectionLabel>
             </CollectionListItem>
         ))
     );

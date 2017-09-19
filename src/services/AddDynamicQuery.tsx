@@ -1,7 +1,8 @@
 import React from 'react';
 import { graphql, gql } from 'react-apollo';
-import { collectionsFragment, dataSetMetaDataFragment } from '../fragments';
+import { dataSetMetaDataFragment } from '../fragments';
 import { INTROSPECTION, QUERY } from '../constants/global';
+import { decode } from './UrlStringCreator';
 
 interface Params {
     dataSet: string;
@@ -9,14 +10,23 @@ interface Params {
     entry?: string;
 }
 
+interface Props {
+    match: {
+      params: Params;
+    };
+    queryString?: string;
+
+}
+
 type QueryType = 'query' | 'introspection';
 
-const createQueryBody = ({collection, entry}: Params): string => {
+const createQueryBody = ({collection, entry}: Params, queryString: string = '/all'): string => {
     if (entry) {
         return `
             __typename
         `;
     } else if (collection) {
+        const collectionString = decode(collection);
         return `
             metadata {
                 collections {
@@ -29,6 +39,11 @@ const createQueryBody = ({collection, entry}: Params): string => {
                     }
                 }
             }
+            ${collectionString}(query: ${queryString}) {
+                items {
+                    
+                }
+            }
         `;
     }
 
@@ -38,13 +53,15 @@ const createQueryBody = ({collection, entry}: Params): string => {
         }`;
 };
 
-const createQuery = (type: QueryType, params: Params): string => {
+const createQuery = (type: QueryType, props: Props): string => {
+    const { match, queryString } = props;
+
     if (type === 'query') {
         return `
             query {
                 dataSets {
-                    ${params.dataSet} {
-                        ${createQueryBody(params)}
+                    ${match.params.dataSet} {
+                        ${createQueryBody(match.params, queryString)}
                     }
                 }
             }
@@ -59,10 +76,10 @@ const createQuery = (type: QueryType, params: Params): string => {
 };
 
 const buildDynamicQuery = (queryType: QueryType) => (ComponentToWrap: any) => {
+    // TODO: maybe casting the props of component is nicer than "any"
     return function (props: any) {
-        const queryString = createQuery(queryType, props.match.params);
-        console.log(queryString);
-        const query = gql`${queryString}${dataSetMetaDataFragment}${collectionsFragment}`;
+        const queryString = createQuery(queryType, props);
+        const query = gql`${queryString}${dataSetMetaDataFragment}`;
         const Wrapped = graphql(query)(ComponentToWrap);
         return <Wrapped {...props}/>;
     };
@@ -72,4 +89,3 @@ const connectQuery = buildDynamicQuery(QUERY);
 const connectIntrospection = buildDynamicQuery(INTROSPECTION);
 
 export {connectQuery, connectIntrospection};
-
