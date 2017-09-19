@@ -46,7 +46,7 @@ class DataSet extends Component<FullProps, State> {
                     title={title}
                     content={description}
                     imgUrl={imageUrl}
-                    searchPath={`${ROUTE_PATHS.search}/${datasetId}/${encode(collectionKeys[0].name)}`}
+                    searchPath={`${ROUTE_PATHS.search}/${datasetId}/${encode(collectionKeys[0].title)}`}
                     buttonText={'Search this dataset'}
                 />
 

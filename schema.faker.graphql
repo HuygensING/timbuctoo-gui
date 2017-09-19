@@ -6,7 +6,7 @@ scalar Email
 scalar Markdown
 
 schema {
-    query: QueryType
+  query: QueryType
 }
 
 # - [x] check alle lists of ze gewrapped moeten worden
@@ -15,16 +15,13 @@ schema {
 # - [x] Loop van boven naar beneden of alle properties en hun types kloppen
 
 type QueryType {
-	# the datasets that are supposed to get extra attention
+  #the datasets that are supposed to get extra attention
   promotedDataSets: [DataSetMetadata!]!
-  
-  # All datasets
-  dataSets(uri:String): DataSets
-  
-  # all mimetypes that you can use when downloading data from a dataSet
+  dataSets: DataSets
+  #all mimetypes that you can use when downloading data from a dataSet
   availableExportMimetypes: [MimeType!]!
-  
-  # information about the logged in user, or null of no user is logged in
+
+  #information about the logged in user, or null of no user is logged in
   aboutMe: AboutMe
 }
 
@@ -45,22 +42,22 @@ type MimeTypeDescription {
 type AboutMe {
   #datasets that this user has some specific permissions on
   dataSets: [DataSetMetadata!]!
-  
+
   #The unique identifier of this user
-  id: ID! @fake(type: uuid)
-  
+  id: ID! @examples(values: ["1234"])
+
   #a human readable name (or empty string if not available)
   name: String! @fake(type: fullName)
-  
+
   #a url to a page with personal information on this user
   personalInfo: Url! @fake(type: url)
-  
+
   #This user may create a new dataset on this timbuctoo instance
   canCreateDataSet: Boolean!
 }
 
 type DataSetMetadata {
-  datasetId: ID!
+  datasetId: ID! 	@examples(values: ["jauco_leaders"])
   title: String!					@fake(type:county)
   description: String			@fake(type:lorem)
   imageUrl: Url						@fake(type:imageUrl options: {imageCategory: cats, randomizeImageUrl: true})
@@ -71,7 +68,7 @@ type DataSetMetadata {
 
   licence: Licence!
   roles: [DataSetPermission!]!
-  
+
   collections(count: Int = 20, cursor: ID = ""): CollectionMetadataList
 }
 
@@ -88,12 +85,19 @@ type CollectionMetadataList {
 type CollectionMetadata {
   collectionId: ID!
   uri: Uri! 									@fake(type: url)
-  name: String! 							@fake(type: productName)
-  views(count: Int = 20, cursor: ID = ""): ViewList! #FIXME: wat is een view
+  title: String! 							@fake(type: productName)
+  summary: Summary!
+  components(count: Int = 20, cursor: ID = ""): ComponentList!
   #facetconfig?
   properties(count: Int = 20, cursor: ID = ""): PropertyList!
   archeType: String
   #estimatedTotal: String!
+}
+
+type Summary {
+  title: String! @examples(values:["schema_org_name"])
+  description: String @examples(values:["schema_org_description"])
+  image: String @examples(values:["schema_org_imageUrl"])
 }
 
 type RoleWithMembers {
@@ -101,10 +105,10 @@ type RoleWithMembers {
   members: [MemberInfo!]!
 }
 
-type ViewList {
+type ComponentList {
   prevCursor: ID
   nextCursor: ID
-  items: [View!]!
+  items: [Component!]!
 }
 
 type PropertyList {
@@ -121,7 +125,7 @@ type Property {
 }
 
 type TypeList {
-  prevCursor: ID @fake(type:uuid)
+  prevCursor: ID 	@fake(type:uuid)
   nextCursor: ID	@fake(type:uuid)
   items: [Uri!]!	@fake(type:url)
 }
@@ -141,7 +145,9 @@ type Jauco_Leaders_LeaderCollection {
 
 type Jauco_Leaders_Leader {
   schema_org_name: String					@fake(type:fullName)
+  schema_org_description: String 	@fake(type:lorem)
   schema_org_birthPlace: String		@fake(type:city)
+  schema_org_imageUrl: String 		@fake(type: imageUrl)
 }
 
 type Facet {
@@ -154,7 +160,7 @@ type Option {
   count: Int
 }
 
-type View {
+type Component {
   id: ID			@fake(type:uuid)
   type: Value
 }
@@ -174,7 +180,7 @@ type DataTable {
 
 type TableColumn {
   columnName: String 			@fake(type:productCategory)
-  cells: [Value!]! 				
+  cells: [Value!]!
 }
 
 type DataDivider {
@@ -183,9 +189,9 @@ type DataDivider {
 
 # Different kinds of values supported by the different Elements
 type ValueString {
-	type: ValueTypes! 				
-	value: String! 					@fake(type:productCategory)
-	url: Url								@fake(type:url)
+  type: ValueTypes!
+  value: String! 					@fake(type:productCategory)
+  url: Url								@fake(type:url)
 }
 
 type ContactInfo {
@@ -204,14 +210,14 @@ type ProvenanceInfo {
 }
 
 enum DataSetPermission {
-    SEARCH_AND_VIEW				#Is allowed to search the dataset and query it using graphql
-    DOWNLOAD_DUMP					#Is allowed to download raw rdf files with the data and query for recent changes
-    FORK									#Is allowed to fork the dataset (into a new dataset)
-    PUBLISH								#Is allowed to change this dataset into a publicly visible one
-    EDIT_ENTRIES					#Is allowed to edit entries using the REST endpoint
-		EDIT_DATASET					#Is allowed to upload rdf data/change dataset metadata/upload files etc.
-    EDIT_ROLES						#Is allowed to assign roles to users
-}  
+  SEARCH_AND_VIEW				#Is allowed to search the dataset and query it using graphql
+  DOWNLOAD_DUMP					#Is allowed to download raw rdf files with the data and query for recent changes
+  FORK									#Is allowed to fork the dataset (into a new dataset)
+  PUBLISH								#Is allowed to change this dataset into a publicly visible one
+  EDIT_ENTRIES					#Is allowed to edit entries using the REST endpoint
+  EDIT_DATASET					#Is allowed to upload rdf data/change dataset metadata/upload files etc.
+  EDIT_ROLES						#Is allowed to assign roles to users
+}
 
 enum ValueTypes {
   STRING
