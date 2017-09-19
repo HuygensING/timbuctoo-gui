@@ -7,9 +7,10 @@ import { RouteComponentProps } from 'react-router';
 import GridSection from '../layout/GridSection';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import Hero from '../hero/Hero';
-import buildDynamicQuery from '../../services/AddDynamicQuery';
+import { connectQuery } from '../../services/AddDynamicQuery';
 import { CollectionMetadata, DataSetMetadata, DataSets } from '../../typings/timbuctoo/schema';
 import CollectionTags from '../CollectionTags';
+import { encode } from '../../services/UrlStringCreator';
 
 interface Props {}
 
@@ -45,7 +46,7 @@ class DataSet extends Component<FullProps, State> {
                     title={title}
                     content={description}
                     imgUrl={imageUrl}
-                    searchPath={`${ROUTE_PATHS.search}/${datasetId}`}
+                    searchPath={`${ROUTE_PATHS.search}/${datasetId}/${encode(collectionKeys[0].name)}`}
                     buttonText={'Search this dataset'}
                 />
 
@@ -83,6 +84,6 @@ const mapStateToProps = (state) => ({
     user: state.user
 });
 
-export default buildDynamicQuery(
+export default connectQuery(
     connect(mapStateToProps)(DataSet)
 );

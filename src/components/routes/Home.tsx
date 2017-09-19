@@ -64,7 +64,7 @@ class Home extends Component<Props & ApolloProps, State> {
                 <Hero
                     title={Translations.translate('home.hero.title')}
                     content={Translations.translate('home.hero.content')}
-                    searchPath={ROUTE_PATHS.search}
+                    searchPath={`${ROUTE_PATHS.details}/jauco_leaders`}
                     buttonText={Translations.translate('home.hero.button')}
                 />
 
@@ -89,6 +89,7 @@ const query = gql`
             datasetId
         }
         aboutMe {
+            id
             name
             personalInfo
         }

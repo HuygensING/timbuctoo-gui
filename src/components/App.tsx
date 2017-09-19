@@ -37,7 +37,6 @@ interface State {
 }
 
 class App extends Component<ChildProps<Props, Response>, State> {
-
     componentWillReceiveProps ({data, user}: Props) {
         if (!user.loggedIn && data.aboutMe && data.aboutMe.id && this.props.data.aboutMe !== data.aboutMe) {
             this.props.logInUser();
