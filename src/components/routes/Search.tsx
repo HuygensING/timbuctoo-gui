@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import Translations from '../../services/Translations';
 import FullHelmet from '../FullHelmet';
 import { Dummy } from '../Dummy';
 import { Col, FullSection } from '../layout/Grid';
@@ -8,99 +7,23 @@ import GridSection from '../layout/GridSection';
 import SearchForm from '../form/SearchForm';
 import Filters from '../Filters';
 
-import SearchResultItem from '../search/SearchResultItem';
+import { RouteComponentProps } from 'react-router';
+import SearchResults from '../search/SearchResults';
 
 interface Props {
 }
 
+interface ApolloProps {
+
+}
+
+type FullProps = Props & ApolloProps & RouteComponentProps<any>;
+
 interface State {
 }
 
-interface SearchResults {
-    search: string;
-}
-
-interface CollectionProps {
-    type: string;
-    total: Number;
-}
-
-interface SearchResultProps {
-    imageUrl: string;
-    name: string;
-    licence: string;
-    description: string;
-    collections: CollectionProps[];
-}
-const FakeData = [{
-    imageUrl: 'http://lorempixel.com/400/200/people',
-    name: 'Barack Obama',
-    licence: 'licence:uri',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id.',
-    collections: [{
-        type: 'Leader',
-        total: 1612
-    }, {
-        type: 'Birthplace',
-        total: 717
-    }]
-}, {
-    imageUrl: 'http://lorempixel.com/300/300/people',
-    name: 'Donal Trump',
-    licence: 'licence:uri',
-    description: 'Lorem ipsum dolor sit amet.',
-    collections: [{
-        type: 'Leader',
-        total: 1012
-    }]
-}, {
-    imageUrl: 'http://lorempixel.com/300/500/people',
-    name: 'George Bush',
-    licence: 'licence:uri',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id lectus eleifend fringilla.',
-    collections: [{
-        type: 'Leader',
-        total: 1012
-    }]
-}, {
-    imageUrl: 'http://lorempixel.com/400/200/people',
-    name: 'Barack Obama',
-    licence: 'licence:uri',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id lectus eleifend.',
-    collections: [{
-        type: 'Leader',
-        total: 1612
-    }, {
-        type: 'Birthplace',
-        total: 717
-    }]
-}, {
-    imageUrl: 'http://lorempixel.com/300/300/people',
-    name: 'Donal Trump',
-    licence: 'licence:uri',
-    description: 'Lorem ipsum dolor sit amet.',
-    collections: [{
-        type: 'Leader',
-        total: 1012
-    }]
-}, {
-    imageUrl: 'http://lorempixel.com/300/500/people',
-    name: 'George Bush',
-    licence: 'licence:uri',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id lectus eleifend fringilla.',
-    collections: [{
-        type: 'Leader',
-        total: 1012
-    }]
-}];
-
-class Search extends Component<Props, State> {
-
-    static renderItems (data: SearchResultProps, idx: number) {
-        return <SearchResultItem key={idx} data={data} />;
-    }
-
-    static onSearch (values: SearchResults) {
+class Search extends Component<FullProps, State> {
+    static onSearch (values: {search: string}) {
         // TODO: Do a refetch for results using this key
         console.log(values.search);
     }
@@ -138,9 +61,7 @@ class Search extends Component<Props, State> {
 
                     <Col sm={27} smOffset={3}>
                         {/* Filter functionality */}
-                        <GridSection title={Translations.translate('globals.results')} cols={2} gridSize={27} gridOffset={0} colSizeOffset={1} gridSpacing={2}>
-                            {FakeData.map(Search.renderItems)}
-                        </GridSection>
+                        <SearchResults />
                         <Dummy text={'Pagination'} height={2} marginY={2}/>
                     </Col>
 

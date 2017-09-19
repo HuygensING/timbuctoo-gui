@@ -29,15 +29,16 @@ class DataSet extends Component<FullProps, State> {
         if (!dataSet || !dataSets) { return null; }
         console.log(dataSets);
 
-        const { datasetId, title, description }: DataSetMetadata = dataSets[dataSet].metadata;
+        const { datasetId, title, description, imageUrl }: DataSetMetadata = dataSets[dataSet].metadata;
 
         return (
             <section>
-                <FullHelmet pageName={`Dataset - ${datasetId}`}/>
+                <FullHelmet pageName={`Dataset: ${title}`}/>
 
                 <Hero
                     title={title}
                     content={description}
+                    imgUrl={imageUrl}
                     searchPath={`${ROUTE_PATHS.search}/${datasetId}`}
                     buttonText={'Search this dataset'}
                 />
