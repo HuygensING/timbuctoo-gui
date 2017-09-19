@@ -24,8 +24,6 @@ interface State {}
 
 class DataSet extends Component<FullProps, State> {
 
-
-
     render () {
         const { dataSet } = this.props.match.params;
         const { dataSets } = this.props.data;
