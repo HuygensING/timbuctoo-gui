@@ -13,11 +13,30 @@ const FakeData: Array<any> = [{
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id.',
     collections: {
         items: [{
-            type: 'Leader',
-            total: 1612
+            name: 'Leader',
+            properties: {
+                items: [{
+                    name: 'property name',
+                    density: 50
+                }, {
+                    name: 'property name 2',
+                    density: 25
+                }, {
+                    name: 'property name 3',
+                    density: 70
+                }]
+            }
         }, {
-            type: 'Birthplace',
-            total: 717
+            name: 'Birthplace',
+            properties: {
+                items: [{
+                    name: 'property name',
+                    density: 50
+                }, {
+                    name: 'property name 2',
+                    density: 25
+                }]
+            }
         }]
     }
 }, {
@@ -27,8 +46,16 @@ const FakeData: Array<any> = [{
     description: 'Lorem ipsum dolor sit amet.',
     collections: {
         items: [{
-            type: 'Leader',
-            total: 1012
+            name: 'Leader',
+            properties: {
+                items: [{
+                    name: 'property name',
+                    density: 50
+                }, {
+                    name: 'property name 2',
+                    density: 25
+                }]
+            }
         }]
     }
 }, {
@@ -38,8 +65,19 @@ const FakeData: Array<any> = [{
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id lectus eleifend fringilla.',
     collections: {
         items: [{
-            type: 'Leader',
-            total: 1012
+            name: 'Leader',
+            properties: {
+                items: [{
+                    name: 'property name',
+                    density: 50
+                }, {
+                    name: 'property name 2',
+                    density: 25
+                }, {
+                    name: 'property name 3',
+                    density: 70
+                }]
+            }
         }]
     }
 }, {
@@ -49,11 +87,24 @@ const FakeData: Array<any> = [{
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id lectus eleifend.',
     collections: {
         items: [{
-            type: 'Leader',
-            total: 1612
+            name: 'Leader',
+            properties: {
+                items: [{
+                    name: 'property name',
+                    density: 50
+                }]
+            }
         }, {
-            type: 'Birthplace',
-            total: 717
+            name: 'Birthplace',
+            properties: {
+                items: [{
+                    name: 'property name',
+                    density: 50
+                }, {
+                    name: 'property name 2',
+                    density: 25
+                }]
+            }
         }]
     }
 }, {
@@ -63,8 +114,19 @@ const FakeData: Array<any> = [{
     description: 'Lorem ipsum dolor sit amet.',
     collections: {
         items: [{
-            type: 'Leader',
-            total: 1012
+            name: 'Leader',
+            properties: {
+                items: [{
+                    name: 'property name',
+                    density: 50
+                }, {
+                    name: 'property name 2',
+                    density: 25
+                }, {
+                    name: 'property name 3',
+                    density: 70
+                }]
+            }
         }]
     }
 }, {
@@ -74,22 +136,25 @@ const FakeData: Array<any> = [{
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in enim id lectus eleifend fringilla.',
     collections: {
         items: [{
-            type: 'Leader',
-            total: 1012
+            name: 'Leader',
+            properties: {
+                items: [{
+                    name: 'property name',
+                    density: 50
+                }, {
+                    name: 'property name 2',
+                    density: 25
+                }, {
+                    name: 'property name 3',
+                    density: 70
+                }]
+            }
         }]
     }
 }];
 
 interface Props {}
 interface State {}
-
-// interface SearchResultProps {
-//     imageUrl: string;
-//     title: string;
-//     licence: string;
-//     description: string;
-//     collections: CollectionMetadataList;
-// }
 
 class SearchResults extends PureComponent<Props, State> {
     static renderItems (data: ResultDataSetMetadata, idx: number) {
