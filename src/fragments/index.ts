@@ -11,7 +11,7 @@ const collectionsFragment = gql`
   fragment CollectionsFragment on CollectionMetadataList {
       items {
           title
-          collectionId
+          collectionId   
       }
   } 
 `;

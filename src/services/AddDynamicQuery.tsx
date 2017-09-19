@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql, gql } from 'react-apollo';
-import { collectionsFragment, dataSetMetaDataFragment } from '../fragments';
+import { dataSetMetaDataFragment } from '../fragments';
 import { INTROSPECTION, QUERY } from '../constants/global';
 import { decode } from './UrlStringCreator';
 
@@ -79,7 +79,7 @@ const buildDynamicQuery = (queryType: QueryType) => (ComponentToWrap: any) => {
     // TODO: maybe casting the props of component is nicer than "any"
     return function (props: any) {
         const queryString = createQuery(queryType, props);
-        const query = gql`${queryString}${dataSetMetaDataFragment}${collectionsFragment}`;
+        const query = gql`${queryString}${dataSetMetaDataFragment}`;
         const Wrapped = graphql(query)(ComponentToWrap);
         return <Wrapped {...props}/>;
     };
