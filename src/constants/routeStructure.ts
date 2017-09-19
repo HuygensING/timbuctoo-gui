@@ -8,7 +8,6 @@ import DataSet from '../components/routes/DataSet';
 
 export interface RouteInfo {
     path?: string;
-    key?: string;
     component: ComponentType<RouteComponentProps<any> | {}>;
 }
 
@@ -24,8 +23,8 @@ export const routes: RouteObject[] = [
         key: ROUTE_PATHS.search,
         routes: [
             {
-                path: `${SUB_ROUTES.dataSet}/:${ROUTE_KEYS.dataSet}`,
-                component: Search
+                path: `/:${ROUTE_KEYS.dataSet}`,
+                component: DummyRoute
             },
             {
                 component: Search

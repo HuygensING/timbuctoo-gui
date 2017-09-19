@@ -1,30 +1,43 @@
 import { gql } from 'react-apollo';
 
-export default {
-    fragments: {
-        dataSetMetaData: gql`fragment CommentsPageComment on DataSetMetadata {
-            datasetId
-            title
-            description
-            imageUrl
-            owner {
-                name
-                email
-            }
-            contact {
-                name
-                email
-            }
-            provenanceInfo {
-                title
-                body
-            }
-            collections {
-                items {
-                    name
-                    collectionId
-                }
-            }
-        }`
+const contactFragment = gql`
+    fragment ContactFragment on ContactInfo {
+        name
+        email
     }
-};
+`;
+
+const collectionsFragment = gql`
+  fragment CollectionsFragment on CollectionMetadataList {
+      items {
+          name
+          collectionId
+      }
+  } 
+`;
+const dataSetMetaDataFragment = gql`
+    fragment DataSetMetaDataFragment on DataSetMetadata {
+        datasetId
+        title
+        description
+        imageUrl
+        owner {
+            name
+            email
+        }
+        contact {
+            ...ContactFragment
+        }
+        provenanceInfo {
+            title
+            body
+        }
+        collections {
+            ...CollectionsFragment
+        }
+    }
+    ${contactFragment}
+    ${collectionsFragment}
+`;
+
+export { dataSetMetaDataFragment, collectionsFragment };

@@ -24,7 +24,7 @@ const List = styled.ul`
 const CollectionTags: SFC<Props> = ({ colKeys, datasetId }) => {
 
     const renderButton = (name: string) => (
-        <ListItem>
+        <ListItem key={name}>
             <Button to={`${ROUTE_PATHS.search}/${datasetId}/${encode(name)}`}>{name}</Button>
         </ListItem>
     );
