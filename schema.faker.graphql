@@ -83,10 +83,10 @@ type CollectionMetadataList {
 }
 
 type CollectionMetadata {
-  collectionId: ID!						@fake(type: uuid)
-  collectionListId: ID!				@fake(type: uuid)
+  collectionId: ID!						@examples(values:["Leaders"])
+  collectionListId: ID!				@examples(values:["LeadersList"])
   uri: Uri! 									@fake(type: url)
-  title: String! 							@examples(values:["Leaders"])
+  title: String! 							@fake(type: productName)
   summaryProperties: SummaryProperties!
   components(count: Int = 20, cursor: ID = ""): ComponentList!
   #facetconfig?
@@ -134,7 +134,7 @@ type TypeList {
 type Jauco_Leaders {
   metadata: DataSetMetadata
   LeadersList(count: Int = 20, query: String, cursor: ID = ""): Jauco_Leaders_LeaderCollection
-  Leaders(uri: string): Jauco_Leaders_Leader
+  Leaders(uri: String): Jauco_Leaders_Leader
 }
 
 type Jauco_Leaders_LeaderCollection {
