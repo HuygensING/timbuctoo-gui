@@ -7,9 +7,9 @@ const QUERY_COLLECTION_VALUES = ({ match, queryString = '/all', currentCollectio
                 ${match.params.dataSet} {
                    ${currentCollection.collectionListId}(query: "${queryString}") {
                         items {
-                            ${currentCollection.summaryProperties.title}
-                            ${currentCollection.summaryProperties.description}
-                            ${currentCollection.summaryProperties.image}
+                            ${currentCollection.summaryProperties.title} { value }
+                            ${currentCollection.summaryProperties.description} { value }
+                            ${currentCollection.summaryProperties.image} { value }
                         }
                     }
                 }
@@ -17,7 +17,6 @@ const QUERY_COLLECTION_VALUES = ({ match, queryString = '/all', currentCollectio
         }
     `;
 
-    console.log(query);
     return gql`${query}`;
 };
 
