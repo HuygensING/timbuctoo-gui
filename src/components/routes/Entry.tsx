@@ -1,29 +1,37 @@
 import React, { Component } from 'react';
 import { RouteComponentProps } from 'react-router';
 
+import { DataSets } from '../../typings/timbuctoo/schema';
 import connectQuery from '../../services/ConnectQuery';
 import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
 
+import GetDataSet from '../../services/GetDataSet';
 import EntryBody from '../entry/EntryBody';
 
 interface Props {
 }
 
-interface State {
+interface ApolloProps {
+    data: {
+        dataSets: DataSets;
+    };
 }
 
-class Entry extends Component<Props & RouteComponentProps<any>, State> {
+type FullProps = Props & ApolloProps & RouteComponentProps<any>;
+
+interface State {}
+
+class Entry extends Component<FullProps, State> {
 
     render () {
-        const { dataSet, entry } = this.props.match.params;
+        const dataSet = GetDataSet(this.props);
+        if ( !dataSet ) { return null; }
 
-        if (!dataSet || !entry) { return null; }
-
-        console.log( dataSet, entry );
+        console.log( this.props );
 
         return (
             <EntryBody
-                entry={entry}
+                entry={'entry'}
             />
         );
     }

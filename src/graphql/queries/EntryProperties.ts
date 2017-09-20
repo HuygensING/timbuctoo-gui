@@ -1,5 +1,5 @@
 import { gql } from 'react-apollo';
-import { valuesFragment } from '../fragments/Components';
+import { componentsFragment } from '../fragments/Components';
 
 const QUERY_ENTRY_PROPERTIES = ({ match }) => {
     const query = `
@@ -13,7 +13,7 @@ const QUERY_ENTRY_PROPERTIES = ({ match }) => {
                                 collectionId
                                 components {
                                     items {
-                                        ..valuesFragment
+                                        ...ComponentsFragment
                                     }
                                 }
                             }
@@ -24,7 +24,7 @@ const QUERY_ENTRY_PROPERTIES = ({ match }) => {
         }
     `;
 
-    return gql`${query}${valuesFragment}`;
+    return gql`${query}${componentsFragment}`;
 };
 
 export default QUERY_ENTRY_PROPERTIES;

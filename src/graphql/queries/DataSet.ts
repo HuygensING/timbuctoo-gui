@@ -7,7 +7,7 @@ const QUERY_DATASET = ({ match }) => {
             dataSets {
                 ${match.params.dataSet} {
                     metadata {
-                       ...DataSetMetadataFragment
+                        ...DataSetMetadataFragment
                     }
                 }
             }

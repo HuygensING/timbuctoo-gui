@@ -26,25 +26,23 @@ const dataTableFragment = gql`
 
 const keyValueFragment = gql`
     fragment KeyValueFragment on DataKeyValue {
-        ...on DataKeyValue {
-            key
-            values {
-                __typename
-            }
+        key
+        values {
+            __typename
         }
     }  
 `;
 
-const valuesFragment = gql`
-    fragment Valuesfragment on Value {
+const componentsFragment = gql`
+    fragment ComponentsFragment on Component {
         __typename
         ...ValueStringFragment
         ...DataTableFragment
-        ...keyValueFragment
+        ...KeyValueFragment
     }
     ${valueStringFragment}
     ${dataTableFragment}
     ${keyValueFragment}
 `;
 
-export { valuesFragment };
+export { componentsFragment };
