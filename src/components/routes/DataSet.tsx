@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { CollectionMetadata, DataSets } from '../../typings/timbuctoo/schema';
 import GetDataSet from '../../services/GetDataSet';
-import DataSetBody from '../DataSet/DataSetBody';
+import DataSetBody from '../dataSet/DataSetBody';
 import QUERY_DATASET from '../../graphql/queries/DataSet';
 import connectQuery from '../../services/ConnectQuery';
 
