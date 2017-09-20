@@ -43,7 +43,7 @@ class Search extends Component<FullProps, State> {
         const dataSet = getDataSet(this.props);
         if ( !dataSet ) { return <Loading />; }
 
-        const { datasetId, title, description, imageUrl, collections } = dataSet.metadata;
+        const { title, description, imageUrl, collections } = dataSet.metadata;
 
         const collectionItems: CollectionMetadata[] = collections && collections.items
             ? collections.items
@@ -56,7 +56,7 @@ class Search extends Component<FullProps, State> {
                 title={title}
                 description={description}
                 imageUrl={imageUrl}
-                datasetId={datasetId}
+                datasetId={this.props.match.params.dataSet}
                 collectionKeys={collectionItems}
                 currentCollection={currentCollection}
                 match={this.props.match}

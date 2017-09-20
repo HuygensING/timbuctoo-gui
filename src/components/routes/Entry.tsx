@@ -28,8 +28,6 @@ class Entry extends Component<FullProps, State> {
         const dataSet = getDataSet(this.props);
         if ( !dataSet ) { return <Loading />; }
 
-        console.log( this.props );
-
         return (
             <EntryBody
                 entry={'entry'}

@@ -16,13 +16,12 @@ const getDataSet = (props: Props) => {
     return dataSets[dataSet];
 };
 
-const getCollection = (props: Props) =>  {
+const getCollection = (props: Props, collectionId) =>  {
     const dataSet = getDataSet(props);
-    const { collection } = props.match.params;
 
-    if (!dataSet || !collection) { return noContent; }
+    if (!dataSet || !collectionId) { return noContent; }
 
-    return dataSet[collection];
+    return dataSet[collectionId];
 };
 
 export { getDataSet, getCollection };
