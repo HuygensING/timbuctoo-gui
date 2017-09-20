@@ -109,13 +109,13 @@ type RoleWithMembers {
 type ComponentList {
   prevCursor: ID
   nextCursor: ID
-  items: [Value!]!
+  items: [Component!]!
 }
 
 type PropertyList {
   prevCursor: ID
   nextCursor: ID
-  items: [Value!]!
+  items: [Property!]!
 }
 
 type Property {
@@ -168,11 +168,11 @@ type Option {
 }
 
 # Different types for entryData
-union Value = ValueString | DataTable | DataKeyValue #| Header FIXME I removed header as hero. Do I need to add it heare?
+union Component = ValueString | DataTable | DataKeyValue #| Header FIXME I removed header as hero. Do I need to add it heare?
 
 type DataKeyValue {
   key: Key! 							@fake(type: productName)
-  values: [Value!]!
+  values: [Component!]!
 }
 
 type DataTable {
@@ -182,7 +182,7 @@ type DataTable {
 
 type TableColumn {
   columnName: String 			@fake(type:productCategory)
-  cells: [Value!]! 				
+  cells: [Component!]! 				
 }
 
 type DataDivider {

@@ -1,4 +1,4 @@
-import { PureComponent, default as React } from 'react';
+import React, { PureComponent } from 'react';
 import FullHelmet from '../FullHelmet';
 import Hero from '../hero/Hero';
 import { Col } from '../layout/Grid';

@@ -5,17 +5,17 @@ const QUERY_ENTRY_PROPERTIES = ({ match }) => {
         query {
             dataSets {
                 ${match.params.dataSet} {
-                   metadata {
-                    collections {
-                        items {
-                            title
-                            collectionId
-                            components {
-                                // TODO: fill with right values   
+                    metadata {
+                        collections {
+                            items {
+                                title
+                                collectionId
+                                # components {
+                                #    // TODO: fill with right values   
+                                # }
                             }
                         }
                     }
-                }
                 }
             }
         }
