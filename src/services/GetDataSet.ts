@@ -1,4 +1,5 @@
 import { match } from 'react-router';
+import { CollectionMetadata } from '../typings/timbuctoo/schema';
 
 interface Props {
     data: any;
@@ -25,4 +26,13 @@ const getCollection = (props: Props) =>  {
     return dataSet[collection];
 };
 
-export { getDataSet, getCollection };
+const getCurrentCollectionName = (collectionItems: CollectionMetadata[], collection: string) => {
+    const fallBack = collectionItems[0];
+
+    if ( !location ) { return fallBack; }
+    const currentCollection = collectionItems.find(item => item.title === collection);
+
+    return currentCollection ? currentCollection : fallBack;
+};
+
+export { getDataSet, getCollection, getCurrentCollectionName };

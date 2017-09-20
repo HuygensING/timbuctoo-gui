@@ -16,7 +16,7 @@ import Loading from '../Loading';
 interface Props {
     datasetId: string;
     collectionKeys: CollectionMetadata[];
-    currentCollectionIndex: number;
+    currentCollectionId: string;
     match: match<any>;
     onSubmit: any;
 }
@@ -37,8 +37,6 @@ class SearchBody extends PureComponent<FullProps, State> {
         const collection = getCollection(this.props);
 
         if (!collection) { return <Loading/>; }
-
-        console.log(collection);
 
         return (
             <section>

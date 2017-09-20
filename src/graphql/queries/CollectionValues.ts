@@ -5,7 +5,7 @@ const QUERY_COLLECTION_VALUES = ({ match, queryString = '/all', currentCollectio
         query {
             dataSets {
                 ${match.params.dataSet} {
-                   ${currentCollection.collectionListId}(query: "${queryString}") {
+                    ${currentCollection.collectionListId}(query: "${queryString}") {
                         items {
                             ${currentCollection.summaryProperties.title} { value }
                             ${currentCollection.summaryProperties.description} { value }

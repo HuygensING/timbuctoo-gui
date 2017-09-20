@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { RouteComponentProps } from 'react-router';
 import { CollectionMetadata } from '../../typings/timbuctoo/schema';
-import { getDataSet } from '../../services/GetDataSet';
+import { getDataSet, getCurrentCollectionName } from '../../services/GetDataSet';
 import SearchBody from '../search/SearchBody';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import connectQuery from '../../services/ConnectQuery';
@@ -30,15 +30,6 @@ class Search extends Component<FullProps, State> {
         console.log(values);
     }
 
-    static getCurrentCollectionName (collectionItems: CollectionMetadata[], collection: string) {
-        const fallBack = collectionItems[0];
-
-        if ( !location ) { return fallBack; }
-        const currentCollection = collectionItems.find(item => item.title === collection);
-
-        return currentCollection ? currentCollection : fallBack;
-    }
-
     render () {
         const dataSet = getDataSet(this.props);
         if ( !dataSet ) { return <Loading />; }
@@ -49,7 +40,7 @@ class Search extends Component<FullProps, State> {
             ? collections.items
             : [];
 
-        const currentCollection = Search.getCurrentCollectionName(collectionItems, this.props.match.params.collection);
+        const currentCollectionId = getCurrentCollectionName(collectionItems, this.props.match.params.collection);
 
         return (
             <SearchBody
@@ -58,7 +49,7 @@ class Search extends Component<FullProps, State> {
                 imageUrl={imageUrl}
                 datasetId={datasetId}
                 collectionKeys={collectionItems}
-                currentCollection={currentCollection}
+                currentCollectionId={currentCollectionId}
                 match={this.props.match}
             />
         );
