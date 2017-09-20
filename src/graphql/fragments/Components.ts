@@ -18,6 +18,7 @@ const dataTableFragment = gql`
                 columnName
                 cells {
                     __typename
+                    ...ValueStringFragment
                 }
             }
         }
@@ -29,6 +30,7 @@ const keyValueFragment = gql`
         key
         values {
             __typename
+            ...ValueStringFragment
         }
     }  
 `;

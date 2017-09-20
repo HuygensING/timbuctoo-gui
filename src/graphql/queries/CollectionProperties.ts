@@ -6,9 +6,9 @@ const QUERY_COLLECTION_PROPERTIES = ({ match }) => {
         query {
             dataSets {
                 ${match.params.dataSet} {
-                   metadata {
+                    metadata {
                         ...CollectionsFragment
-                   }
+                    }
                 }
             }
         }

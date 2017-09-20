@@ -196,9 +196,9 @@ type DataDivider {
 
 # Different kinds of values supported by the different Elements
 type ValueString {
-  type: ValueTypes!
-  valueKey: String! 				 	@examples(values:["schema_org_name", "schema_org_birthPlace"])
-  urlKey: Url								@examples(values:["schema_org_url", "schema_org_imageUrl"])
+	type: ValueTypes! 				
+	valueKey: String! 				 	@examples(values:["schema_org_name", "schema_org_birthPlace", "schema_org_description"])
+	urlKey: Url								@examples(values:["schema_org_url", "schema_org_imageUrl"])
 }
 
 type ContactInfo {
