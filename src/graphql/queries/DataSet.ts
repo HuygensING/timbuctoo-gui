@@ -1,4 +1,5 @@
 import { gql } from 'react-apollo';
+import { dataSetMetadataFragment } from '../fragments/Metadata';
 
 const QUERY_DATASET = ({ match }) => {
     const query = `
@@ -6,35 +7,14 @@ const QUERY_DATASET = ({ match }) => {
             dataSets {
                 ${match.params.dataSet} {
                     metadata {
-                        datasetId
-                        title
-                        description
-                        imageUrl
-                        owner {
-                            name
-                            email
-                        }
-                        contact {
-                            name
-                            email
-                        }
-                        provenanceInfo {
-                            title
-                            body
-                        }
-                        collections {
-                            items {
-                                title 
-                                collectionId
-                            }
-                        }                
+                       ...DataSetMetadataFragment
                     }
                 }
             }
         }
     `;
 
-    return gql`${query}`;
+    return gql`${query}${dataSetMetadataFragment}`;
 };
 
 export default QUERY_DATASET;

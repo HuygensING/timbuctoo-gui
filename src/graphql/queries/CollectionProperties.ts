@@ -1,4 +1,5 @@
 import { gql } from 'react-apollo';
+import { collectionsFragment } from '../fragments/Metadata';
 
 const QUERY_COLLECTION_PROPERTIES = ({ match }) => {
     const query = `
@@ -6,24 +7,14 @@ const QUERY_COLLECTION_PROPERTIES = ({ match }) => {
             dataSets {
                 ${match.params.dataSet} {
                    metadata {
-                        collections {
-                            items {
-                                title
-                                collectionListId
-                                summaryProperties {
-                                    title
-                                    description
-                                    image
-                                }
-                            }
-                        }
-                    }
+                        ...CollectionsFragment
+                   }
                 }
             }
         }
     `;
 
-    return gql`${query}`;
+    return gql`${query}${collectionsFragment}`;
 };
 
 export default QUERY_COLLECTION_PROPERTIES;
