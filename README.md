@@ -42,6 +42,12 @@ Your app is ready to be deployed!
 
 See the section about [deployment](#deployment) for more information.
 
+### `npm run gql-ts`
+
+To make sure your Typescript file stays up-to-date with the schema, 
+this command updates the ts from the schema.faker.graphql file.
+Saves some time in endlessly converting graphql to typescript.
+
 ### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**

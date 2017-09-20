@@ -5,6 +5,7 @@
   "scripts": {
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
+    "gql-ts": "graphql-to-typescript schema.faker.graphql src/typings/timbuctoo/schema.ts",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
@@ -33,6 +34,7 @@
     "@types/react-dom": "^15.5.4",
     "@types/react-router-dom": "^4.0.7",
     "@types/redux-form": "^7.0.4",
-    "graphql-tools": "^1.2.2"
+    "graphql-tools": "^1.2.2",
+
   }
 }
