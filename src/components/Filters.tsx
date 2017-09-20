@@ -46,8 +46,6 @@ class Filters extends PureComponent<Props, State> {
     }
 
     render() {
-
-
         return (
             <FormWrapper form={'filter'} onChange={() => setTimeout(this.onSubmit)}>
                 <SpecialDiv>

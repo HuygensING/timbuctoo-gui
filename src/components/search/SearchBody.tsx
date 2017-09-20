@@ -37,8 +37,6 @@ class SearchBody extends PureComponent<FullProps, State> {
 
         if (!collection) { return <Loading/>; }
 
-        console.log(collection.facets);
-
         return (
             <section>
                 <FullHelmet pageName={`search: datasetId`}/>
