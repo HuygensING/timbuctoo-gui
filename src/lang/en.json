@@ -26,7 +26,8 @@
         "placeholder": "Type to search...",
         "reset": "Reset",
         "search": "Search",
-        "view_dataset": "View dataset"
+        "view_dataset": "View dataset",
+        "view_entry": "View entry"
     },
     "footer": {
         "powered_by": "Timbuctoo is powered by",

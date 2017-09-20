@@ -13,7 +13,7 @@ export interface ResultDataSetMetadata {
     title: string;
     description: string;
     collections: CollectionMetadataList;
-};
+}
 
 const SearchItem = styled.section`
     height: 80px;
@@ -36,7 +36,7 @@ const SearchResultEntry = (props: ResultDataSetMetadata) => {
             <Subtitle tag="h1">
                 {title}
             </Subtitle>
-            <Button to="/" small={true}>{Translations.translate('search.view_dataset')}</Button>
+            <Button to="/" small={true}>{Translations.translate('search.view_entry')}</Button>
             <ImageWrapper>
                 <Image src={imageUrl} ratio={1}/>
             </ImageWrapper>
