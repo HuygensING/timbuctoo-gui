@@ -24,7 +24,7 @@ export const routes: RouteObject[] = [
         routes: [
             {
                 path: `/:${ROUTE_KEYS.dataSet}`,
-                component: DummyRoute
+                component: Search
             },
             {
                 component: Search
