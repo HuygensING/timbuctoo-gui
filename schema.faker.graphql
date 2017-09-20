@@ -6,7 +6,7 @@ scalar Email
 scalar Markdown
 
 schema {
-    query: QueryType
+  query: QueryType
 }
 
 # - [x] check alle lists of ze gewrapped moeten worden
@@ -15,12 +15,12 @@ schema {
 # - [x] Loop van boven naar beneden of alle properties en hun types kloppen
 
 type QueryType {
-	#the datasets that are supposed to get extra attention
+  #the datasets that are supposed to get extra attention
   promotedDataSets: [DataSetMetadata!]!
   dataSets: DataSets
   #all mimetypes that you can use when downloading data from a dataSet
   availableExportMimetypes: [MimeType!]!
-  
+
   #information about the logged in user, or null of no user is logged in
   aboutMe: AboutMe
 }
@@ -42,22 +42,22 @@ type MimeTypeDescription {
 type AboutMe {
   #datasets that this user has some specific permissions on
   dataSets: [DataSetMetadata!]!
-  
+
   #The unique identifier of this user
   id: ID! @examples(values: ["1234"])
-  
+
   #a human readable name (or empty string if not available)
   name: String! @fake(type: fullName)
-  
+
   #a url to a page with personal information on this user
   personalInfo: Url! @fake(type: url)
-  
+
   #This user may create a new dataset on this timbuctoo instance
   canCreateDataSet: Boolean!
 }
 
 type DataSetMetadata {
-  datasetId: ID! 	@examples(values: ["jauco_leaders"]) 
+  datasetId: ID! 	@examples(values: ["jauco_leaders"])
   title: String!					@fake(type:county)
   description: String			@fake(type:lorem)
   imageUrl: Url						@fake(type:imageUrl options: {imageCategory: cats, randomizeImageUrl: true})
@@ -68,7 +68,7 @@ type DataSetMetadata {
 
   licence: Licence!
   roles: [DataSetPermission!]!
-  
+
   collections(count: Int = 20, cursor: ID = ""): CollectionMetadataList
 }
 
@@ -146,11 +146,16 @@ type Jauco_Leaders_LeaderCollection {
 }
 
 type Jauco_Leaders_Leader {
+  uri: Uri! 						@fake(type:url)
   schema_org_name: ValueObject # Added ValueObject to show that these need a {value}
   schema_org_description: ValueObject
   schema_org_birthPlace: ValueObject
-  schema_org_imageUrl: ValueObject
+  schema_org_imageUrl: UrlObject
   schema_org_url: ValueObject
+}
+
+type UrlObject {
+  value: Url @fake(type:imageUrl, options:{ imageCategory: cats })
 }
 
 type ValueObject {
@@ -158,13 +163,13 @@ type ValueObject {
 }
 
 type Facet {
-  caption: String
+  caption: String!	@fake(type: productCategory)
   options: [Option!]!
 }
 
 type Option {
-  name: String
-  count: Int
+  name: String!	@fake(type: productName)
+  count: Int! @fake(type:money)
 }
 
 # Different types for entryData
@@ -182,7 +187,7 @@ type DataTable {
 
 type TableColumn {
   columnName: String 			@fake(type:productCategory)
-  cells: [Component!]! 				
+  cells: [Component!]!
 }
 
 type DataDivider {
@@ -212,14 +217,14 @@ type ProvenanceInfo {
 }
 
 enum DataSetPermission {
-    SEARCH_AND_VIEW				#Is allowed to search the dataset and query it using graphql
-    DOWNLOAD_DUMP					#Is allowed to download raw rdf files with the data and query for recent changes
-    FORK									#Is allowed to fork the dataset (into a new dataset)
-    PUBLISH								#Is allowed to change this dataset into a publicly visible one
-    EDIT_ENTRIES					#Is allowed to edit entries using the REST endpoint
-		EDIT_DATASET					#Is allowed to upload rdf data/change dataset metadata/upload files etc.
-    EDIT_ROLES						#Is allowed to assign roles to users
-}  
+  SEARCH_AND_VIEW				#Is allowed to search the dataset and query it using graphql
+  DOWNLOAD_DUMP					#Is allowed to download raw rdf files with the data and query for recent changes
+  FORK									#Is allowed to fork the dataset (into a new dataset)
+  PUBLISH								#Is allowed to change this dataset into a publicly visible one
+  EDIT_ENTRIES					#Is allowed to edit entries using the REST endpoint
+  EDIT_DATASET					#Is allowed to upload rdf data/change dataset metadata/upload files etc.
+  EDIT_ROLES						#Is allowed to assign roles to users
+}
 
 enum ValueTypes {
   STRING

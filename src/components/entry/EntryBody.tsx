@@ -31,10 +31,10 @@ class EntryBody extends PureComponent<FullProps, State> {
     render() {
         const { match, components } = this.props;
 
-        const currentCollection = getCollection(this.props);
+        const currentCollection = getCollection(this.props, match.params.collection);
         
         if (!currentCollection) { return <Loading/>; }
-        
+
         console.log( 'currentCollection', currentCollection );
 
         return (

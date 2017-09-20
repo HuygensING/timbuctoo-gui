@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { RouteComponentProps } from 'react-router';
 import { CollectionMetadata } from '../../typings/timbuctoo/schema';
-import { getDataSet, getCurrentCollectionName } from '../../services/GetDataSet';
+import { getDataSet, getCurrentCollection } from '../../services/GetDataSet';
 import SearchBody from '../search/SearchBody';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import connectQuery from '../../services/ConnectQuery';
@@ -34,22 +34,22 @@ class Search extends Component<FullProps, State> {
         const dataSet = getDataSet(this.props);
         if ( !dataSet ) { return <Loading />; }
 
-        const { datasetId, title, description, imageUrl, collections } = dataSet.metadata;
+        const { title, description, imageUrl, collections } = dataSet.metadata;
 
         const collectionItems: CollectionMetadata[] = collections && collections.items
             ? collections.items
             : [];
 
-        const currentCollectionId = getCurrentCollectionName(collectionItems, this.props.match.params.collection);
+        const currentCollection = getCurrentCollection(collectionItems, this.props.match.params.collection);
 
         return (
             <SearchBody
                 title={title}
                 description={description}
                 imageUrl={imageUrl}
-                datasetId={datasetId}
+                datasetId={this.props.match.params.dataSet}
                 collectionKeys={collectionItems}
-                currentCollectionId={currentCollectionId}
+                currentCollection={currentCollection}
                 match={this.props.match}
             />
         );

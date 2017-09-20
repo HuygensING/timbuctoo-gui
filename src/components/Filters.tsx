@@ -7,9 +7,13 @@ import MultiSelectForm from './form/MultiselectForm';
 import styled from '../styled-components';
 import { Title } from './layout/StyledCopy';
 import { Dummy } from './Dummy';
+import { Facet } from '../typings/timbuctoo/schema';
 
 interface Props {
-    filter: any;
+    facets: Facet[];
+    filter: {
+        values?: string;
+    };
 }
 interface State {}
 
@@ -23,9 +27,13 @@ class Filters extends PureComponent<Props, State> {
         console.groupEnd();
     }
 
+    static renderFilter (facet: Facet, idx: number) {
+        console.log(facet);
+        return <MultiSelectForm key={idx} title={facet.caption} options={facet.options} />;
+    }
+
     constructor () {
         super();
-
         this.onSubmit = this.onSubmit.bind(this);
     }
 
@@ -38,18 +46,23 @@ class Filters extends PureComponent<Props, State> {
     }
 
     render() {
+
+
         return (
             <FormWrapper form={'filter'} onChange={() => setTimeout(this.onSubmit)}>
                 <SpecialDiv>
                     <Title>{Translations.translate('globals.filters')}</Title>
-                    <Dummy text={'search-filter'} height={2} marginY={.5}/>
-                    <MultiSelectForm title={'letters'} selection={['a' , 'b' , 'c']} />
-                    <MultiSelectForm title={'numbers'} selection={['1' , '2' , '3']} />
-                    <Dummy text={'filter hierarchy'} height={5} marginY={.5}/>
+                    <Dummy text={'search-filter'} height={1} marginY={.5}/>
+                    {this.renderFilters()}
+                    <Dummy text={'filter hierarchy'} height={2} marginY={.5}/>
                     <Dummy text={'filter range'} height={5} marginY={.5}/>
                 </SpecialDiv>
             </FormWrapper>
         );
+    }
+
+    private renderFilters () {
+        return this.props.facets.map(Filters.renderFilter);
     }
 }
 

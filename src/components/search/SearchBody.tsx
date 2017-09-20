@@ -2,21 +2,20 @@ import { PureComponent, default as React } from 'react';
 import FullHelmet from '../FullHelmet';
 import { Col, FullSection } from '../layout/Grid';
 import CollectionTags from '../CollectionTags';
-import { Dummy } from '../Dummy';
 import { CollectionMetadata, DataSets } from '../../typings/timbuctoo/schema';
 import { match } from 'react-router';
-import SearchResults from './SearchResults';
 import Filters from '../Filters';
 import SearchForm from '../form/SearchForm';
 import connectQuery from '../../services/ConnectQuery';
 import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
 import { getCollection } from '../../services/GetDataSet';
 import Loading from '../Loading';
+import SearchResults from './SearchResults';
 
 interface Props {
     datasetId: string;
     collectionKeys: CollectionMetadata[];
-    currentCollectionId: string;
+    currentCollection: CollectionMetadata;
     match: match<any>;
     onSubmit: any;
 }
@@ -33,10 +32,12 @@ interface State {}
 
 class SearchBody extends PureComponent<FullProps, State> {
     render () {
-        const { datasetId, collectionKeys } = this.props;
-        const collection = getCollection(this.props);
+        const { datasetId, collectionKeys, currentCollection } = this.props;
+        const collection = getCollection(this.props, currentCollection.collectionListId);
 
         if (!collection) { return <Loading/>; }
+
+        console.log(collection.facets);
 
         return (
             <section>
@@ -55,13 +56,18 @@ class SearchBody extends PureComponent<FullProps, State> {
 
                     {/* Filter functionality */}
                     <Col sm={12} smPaddingTop={2}>
-                        <Filters />
+                        <Filters facets={collection.facets} />
                     </Col>
 
                     <Col sm={27} smOffset={3}>
                         {/* Filter functionality */}
-                        <SearchResults />
-                        <Dummy text={'Pagination'} height={2} marginY={2}/>
+
+                        <SearchResults
+                            datasetId={datasetId}
+                            collectionId={currentCollection.collectionId}
+                            properties={currentCollection.summaryProperties}
+                            results={collection.items}
+                        />
                     </Col>
 
                 </FullSection>

@@ -4,13 +4,14 @@ import { Subtitle } from '../layout/StyledCopy';
 import { HiddenField } from './FormElements';
 import styled from '../../styled-components';
 import { Dummy } from '../Dummy';
+import { Option } from '../../typings/timbuctoo/schema';
 
 interface Props {
     pristine?: boolean;
     submitting?: boolean;
     reset?: () => void;
     title: string;
-    selection: string[];
+    options: Option[];
 }
 
 const Section = styled.section`
@@ -29,18 +30,18 @@ const Amount = styled.span`
    float: right;
 `;
 
-const MultiSelectForm: SFC<Props> = ({title, selection}) => {
-    const renderCheckBox = key => {
+const MultiSelectForm: SFC<Props> = ({title, options}) => {
+    const renderCheckBox = (option: Option) => {
         return (
-            <li key={key}>
+            <li key={option.name}>
                 <fieldset>
                     <HiddenField
-                        name={key}
-                        id={key}
+                        name={option.name}
+                        id={option.name}
                         component={'input'}
                         type={'checkbox'}
                     />
-                    <label htmlFor={key}>{key}<Amount>10</Amount></label>
+                    <label htmlFor={option.name}>{option.name}<Amount>{option.count}</Amount></label>
                 </fieldset>
             </li>
         );
@@ -51,7 +52,7 @@ const MultiSelectForm: SFC<Props> = ({title, selection}) => {
             <Sub>{title}</Sub>
             <Dummy absolute={true} height={'1.5rem'} width={'3.5rem'} text={'toggle'}/>
             <ul>
-                {selection.map(renderCheckBox)}
+                {options.map(renderCheckBox)}
             </ul>
         </Section>
     );

@@ -17,16 +17,15 @@ const getDataSet = (props: Props) => {
     return dataSets[dataSet];
 };
 
-const getCollection = (props: Props) =>  {
+const getCollection = (props: Props, collectionId) =>  {
     const dataSet = getDataSet(props);
-    const { collection } = props.match.params;
 
-    if (!dataSet || !collection) { return noContent; }
+    if (!dataSet || !collectionId) { return noContent; }
 
-    return dataSet[collection];
+    return dataSet[collectionId];
 };
 
-const getCurrentCollectionName = (collectionItems: CollectionMetadata[], collection: string) => {
+const getCurrentCollection = (collectionItems: CollectionMetadata[], collection: string) => {
     const fallBack = collectionItems[0];
 
     if ( !location ) { return fallBack; }
@@ -35,4 +34,4 @@ const getCurrentCollectionName = (collectionItems: CollectionMetadata[], collect
     return currentCollection ? currentCollection : fallBack;
 };
 
-export { getDataSet, getCollection, getCurrentCollectionName };
+export { getDataSet, getCollection, getCurrentCollection };
