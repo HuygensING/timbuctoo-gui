@@ -6,6 +6,13 @@ const QUERY_COLLECTION_VALUES = ({ match, queryString = '/all', currentCollectio
             dataSets {
                 ${match.params.dataSet} {
                    ${currentCollection.collectionListId}(query: "${queryString}") {
+                        facets {
+                            caption
+                            options {
+                                name
+                                count
+                            }    
+                        }
                         items {
                             uri
                             ${currentCollection.summaryProperties.title} { value }

@@ -149,8 +149,8 @@ type Jauco_Leaders_Leader {
   uri: Uri! 						@fake(type:url)
   schema_org_name: ValueObject # Added ValueObject to show that these need a {value}
   schema_org_description: ValueObject
-  schema_org_birthPlace: UrlObject
-  schema_org_imageUrl: ValueObject
+  schema_org_birthPlace: ValueObject
+  schema_org_imageUrl: UrlObject
   schema_org_url: ValueObject
 }
 
@@ -163,13 +163,13 @@ type ValueObject {
 }
 
 type Facet {
-  caption: String
+  caption: String!	@fake(type: productCategory)
   options: [Option!]!
 }
 
 type Option {
-  name: String
-  count: Int
+  name: String!	@fake(type: productName)
+  count: Int! @fake(type:money)
 }
 
 # Different types for entryData

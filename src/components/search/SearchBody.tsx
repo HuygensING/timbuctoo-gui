@@ -37,6 +37,8 @@ class SearchBody extends PureComponent<FullProps, State> {
 
         if (!collection) { return <Loading/>; }
 
+        console.log(collection.facets);
+
         return (
             <section>
                 <FullHelmet pageName={`search: datasetId`}/>
@@ -54,7 +56,7 @@ class SearchBody extends PureComponent<FullProps, State> {
 
                     {/* Filter functionality */}
                     <Col sm={12} smPaddingTop={2}>
-                        <Filters />
+                        <Filters facets={collection.facets} />
                     </Col>
 
                     <Col sm={27} smOffset={3}>
