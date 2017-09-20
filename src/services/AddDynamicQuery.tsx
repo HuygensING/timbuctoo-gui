@@ -12,7 +12,7 @@ interface Params {
 
 interface Props {
     match: {
-      params: Params;
+        params: Params;
     };
     queryString?: string;
 
@@ -50,7 +50,8 @@ const createQueryBody = ({collection, entry}: Params, queryString: string = '/al
     return ` 
         metadata {
             ...DataSetMetaDataFragment                       
-        }`;
+        }
+    `;
 };
 
 const createQuery = (type: QueryType, props: Props): string => {

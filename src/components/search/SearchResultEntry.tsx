@@ -1,47 +1,45 @@
 import React from 'react';
 import styled from '../../styled-components';
 
+import { Url, CollectionMetadataList } from '../../typings/timbuctoo/schema';
+
 import Translations from '../../services/Translations';
-import { Subtitle, Content, Label } from '../layout/StyledCopy';
+import { Subtitle } from '../layout/StyledCopy';
 import Image from '../layout/Image';
 import Button from '../layout/Button';
 
+export interface ResultDataSetMetadata {
+    imageUrl: Url | null;
+    title: string;
+    description: string;
+    collections: CollectionMetadataList;
+}
+
 const SearchItem = styled.section`
+    height: 80px;
+    border-left: 2px solid ${props => props.theme.colors.shade.light};
+    padding-left: 10px;
 `;
 
-const CollectionList = styled.ul`
-    margin: 0;
-    list-style: none;
+const ImageWrapper = styled.figure`
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
 `;
 
-const CollectionListItem = styled.li`
-    display: inline-block;
-    margin-right: 5px;
-`;
-
-const CollectionLabel = styled(Label)`
-`;
-
-const SearchResultEntry = (props) => {
-    const { data } = props;
-
-    const renderCollections = () => (
-        data.collections.map((collection, index) => (
-            <CollectionListItem key={index}>
-                <CollectionLabel>{collection.type} ({collection.total})</CollectionLabel>
-            </CollectionListItem>
-        ))
-    );
+const SearchResultEntry = (props: ResultDataSetMetadata) => {
+    const { title, imageUrl } = props;
 
     return (
         <SearchItem>
-            <Image src={data.imageUrl} ratio={4 / 2}/>
-            <Subtitle tag="h1">{data.name}</Subtitle>
-            <CollectionList>
-                {renderCollections()}
-            </CollectionList>
-            <Content>{data.description}</Content>
-            <Button to="/" small={true}>{Translations.translate('search.view_dataset')}</Button>
+            <Subtitle tag="h1">
+                {title}
+            </Subtitle>
+            <Button to="/" small={true}>{Translations.translate('search.view_entry')}</Button>
+            <ImageWrapper>
+                <Image src={imageUrl} ratio={1}/>
+            </ImageWrapper>
         </SearchItem>
     );
 };

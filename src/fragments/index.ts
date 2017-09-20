@@ -8,12 +8,12 @@ const contactFragment = gql`
 `;
 
 const collectionsFragment = gql`
-  fragment CollectionsFragment on CollectionMetadataList {
-      items {
-          title
-          collectionId   
-      }
-  } 
+    fragment CollectionsFragment on CollectionMetadataList {
+        items {
+            title
+            collectionId   
+        }
+    } 
 `;
 const dataSetMetaDataFragment = gql`
     fragment DataSetMetaDataFragment on DataSetMetadata {
