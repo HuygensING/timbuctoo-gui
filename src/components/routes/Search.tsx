@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
 
-import FullHelmet from '../FullHelmet';
-import { Dummy } from '../Dummy';
-import { Col, FullSection } from '../layout/Grid';
-import GridSection from '../layout/GridSection';
-import SearchForm from '../form/SearchForm';
-import Filters from '../Filters';
-
 import { RouteComponentProps } from 'react-router';
-import SearchResults from '../search/SearchResults';
+import { CollectionMetadata } from '../../typings/timbuctoo/schema';
+import GetDataSet from '../../services/GetDataSet';
+import SearchBody from '../search/SearchBody';
+import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
+import connectQuery from '../../services/ConnectQuery';
 
 interface Props {
 }
 
 interface ApolloProps {
-
+    data: any;
 }
 
 type FullProps = Props & ApolloProps & RouteComponentProps<any>;
@@ -32,43 +29,39 @@ class Search extends Component<FullProps, State> {
         console.log(values);
     }
 
+    static getCurrentCollectionName (collectionItems: CollectionMetadata[], collection: string) {
+        const fallBack = collectionItems[0];
+
+        if ( !location ) { return fallBack; }
+        const currentCollection = collectionItems.find(item => item.title === collection);
+
+        return currentCollection ? currentCollection : fallBack;
+    }
+
     render () {
+        const dataSet = GetDataSet(this.props);
+        if ( !dataSet ) { return null; }
+
+        const { datasetId, title, description, imageUrl, collections } = dataSet.metadata;
+
+        const collectionItems: CollectionMetadata[] = collections && collections.items
+            ? collections.items
+            : [];
+
+        const currentCollection = Search.getCurrentCollectionName(collectionItems, this.props.match.params.collection);
+
         return (
-            <section>
-                <FullHelmet pageName="search"/>
-
-                {/* Search functionality */}
-                <Col sm={42} smOffset={3} smPaddingTop={1}>
-                    <SearchForm onSubmit={Search.onSearch} />
-                </Col>
-                
-                {/* Search Pills */}
-                <Col sm={42} smOffset={3} smPaddingTop={1}>
-                    <GridSection gridSize={42} cols={4} gridOffset={0} colSizeOffset={1}>
-                        <Dummy text={'Dataset (1.337)'} />
-                        <Dummy text={'Collection 1 (1.196)'} mvp={true} />
-                        <Dummy text={'Collection 2 (120)'} mvp={true} />
-                        <Dummy text={'Collection 3 (21)'} mvp={true} />
-                    </GridSection>
-                </Col>
-
-                <FullSection>
-
-                    {/* Filter functionality */}
-                    <Col sm={12} smPaddingTop={2}>
-                        <Filters />
-                    </Col>
-
-                    <Col sm={27} smOffset={3}>
-                        {/* Filter functionality */}
-                        <SearchResults />
-                        <Dummy text={'Pagination'} height={2} marginY={2}/>
-                    </Col>
-
-                </FullSection>
-            </section>
+            <SearchBody
+                title={title}
+                description={description}
+                imageUrl={imageUrl}
+                datasetId={datasetId}
+                collectionKeys={collectionItems}
+                currentCollection={currentCollection}
+                match={this.props.match}
+            />
         );
     }
 }
 
-export default Search;
+export default connectQuery(QUERY_COLLECTION_PROPERTIES)(Search);

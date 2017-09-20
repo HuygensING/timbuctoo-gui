@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connectQuery } from '../../services/AddDynamicQuery';
 import FullHelmet from '../FullHelmet';
 import { Dummy } from '../Dummy';
 import { Col } from '../layout/Grid';
@@ -11,6 +10,8 @@ import ComponentLoader from '../../services/ComponentLoader';
 
 import { VALUE_STRING, DATA_KEY_VALUE, DATA_TABLE } from '../../services/ComponentLoader';
 import KeyValue from '../entry/KeyValue';
+import connectQuery from '../../services/ConnectQuery';
+import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
 
 interface Props {
 }
@@ -41,7 +42,7 @@ class Entry extends Component<Props & RouteComponentProps<any>, State> {
 
         console.log( 'component', component );
 
-        return <ComponentLoader component={component} />
+        return <ComponentLoader component={component} />;
     }
 
     render () {
@@ -75,7 +76,7 @@ class Entry extends Component<Props & RouteComponentProps<any>, State> {
     }
 }
 
-export default connectQuery(Entry);
+export default connectQuery(QUERY_ENTRY_PROPERTIES)(Entry);
 
 const FakeData = [{
     schema_org_name: 'Fake name',

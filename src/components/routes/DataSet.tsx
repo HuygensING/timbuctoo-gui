@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import FullHelmet from '../FullHelmet';
-import { Dummy } from '../Dummy';
-import { Col } from '../layout/Grid';
 import { RouteComponentProps } from 'react-router';
-import GridSection from '../layout/GridSection';
-import { ROUTE_PATHS } from '../../constants/routeNaming';
-import Hero from '../hero/Hero';
-import { connectQuery } from '../../services/AddDynamicQuery';
-import { CollectionMetadata, DataSetMetadata, DataSets } from '../../typings/timbuctoo/schema';
-import CollectionTags from '../CollectionTags';
-import { encode } from '../../services/UrlStringCreator';
+import { CollectionMetadata, DataSets } from '../../typings/timbuctoo/schema';
+import GetDataSet from '../../services/GetDataSet';
+import DataSetBody from '../DataSet/DataSetBody';
+import QUERY_DATASET from '../../graphql/queries/DataSet';
+import connectQuery from '../../services/ConnectQuery';
 
 interface Props {}
 
@@ -24,58 +19,37 @@ type FullProps = Props & ApolloProps & RouteComponentProps<any>;
 interface State {}
 
 class DataSet extends Component<FullProps, State> {
+    static getCurrentCollectionName (collectionItems: CollectionMetadata[], collection: string) {
+        const fallBack = collectionItems[0];
+
+        if ( !location ) { return fallBack; }
+        const currentCollection = collectionItems.find(item => item.title === collection);
+
+        return currentCollection ? currentCollection : fallBack;
+    }
 
     render () {
-        const { dataSet } = this.props.match.params;
-        const { dataSets } = this.props.data;
+        const dataSet = GetDataSet(this.props);
+        if ( !dataSet ) { return null; }
 
-        if (!dataSet || !dataSets) { return null; }
-        console.log(dataSets);
+        const { datasetId, title, description, imageUrl, collections } = dataSet.metadata;
 
-        const { datasetId, title, description, imageUrl, collections }: DataSetMetadata = dataSets[dataSet].metadata;
-
-        const collectionKeys: CollectionMetadata[] = collections && collections.items
+        const collectionItems: CollectionMetadata[] = collections && collections.items
             ? collections.items
             : [];
 
+        const currentCollection = DataSet.getCurrentCollectionName(collectionItems, this.props.match.params.collection);
+
         return (
-            <section>
-                <FullHelmet pageName={`Dataset: ${title}`}/>
-
-                <Hero
-                    title={title}
-                    content={description}
-                    imgUrl={imageUrl}
-                    searchPath={`${ROUTE_PATHS.search}/${datasetId}/${encode(collectionKeys[0].title)}`}
-                    buttonText={'Search this dataset'}
-                />
-
-                <Col sm={48} smPaddingBottom={.5}>
-                    {collectionKeys.length > 0 && <CollectionTags colKeys={collectionKeys} datasetId={datasetId}/>}
-                </Col>
-
-                <Col sm={48}>
-                    <GridSection gridSize={48} gridOffset={0} cols={2} colSizeOffset={2} gridSpacing={2}>
-
-                        {/*Colophon*/}
-                        <Dummy text={'Colophon'} height={10} />
-
-                        {/*Partners*/}
-                        <Dummy text={'Partners'} height={10} />
-
-                    </GridSection>
-                </Col>
-
-                <Col sm={48} smPaddingBottom={2}>
-                    {/*About*/}
-                    <Dummy text={'About this dataset'} height={12}/>
-                </Col>
-
-                <Col sm={48}>
-                    {/*Contributors*/}
-                    <Dummy text={'Contributors'} height={12}/>
-                </Col>
-            </section>
+            <DataSetBody
+                title={title}
+                description={description}
+                imageUrl={imageUrl}
+                datasetId={datasetId}
+                collectionKeys={collectionItems}
+                currentCollection={currentCollection}
+                match={this.props.match}
+            />
         );
     }
 }
@@ -84,6 +58,6 @@ const mapStateToProps = (state) => ({
     user: state.user
 });
 
-export default connectQuery(
-    connect(mapStateToProps)(DataSet)
-);
+const connectedDataSet = connect(mapStateToProps)(DataSet);
+
+export default connectQuery(QUERY_DATASET)(connectedDataSet);

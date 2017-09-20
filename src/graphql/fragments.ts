@@ -7,14 +7,27 @@ const contactFragment = gql`
     }
 `;
 
-const collectionsFragment = gql`
-    fragment CollectionsFragment on CollectionMetadataList {
-        items {
-            title
-            collectionId   
-        }
-    } 
+const collectionBase = gql`
+    fragment CollectionBase on CollectionMetadata {
+        title
+        collectionId
+    }
 `;
+
+const collectionsFragment = gql`
+  fragment CollectionsFragment on CollectionMetadataList {
+      items {
+          ...CollectionBase
+          summaryProperties {
+              title
+              description
+              image
+          }
+      }
+  }
+  ${collectionBase}
+`;
+
 const dataSetMetaDataFragment = gql`
     fragment DataSetMetaDataFragment on DataSetMetadata {
         datasetId
@@ -33,11 +46,13 @@ const dataSetMetaDataFragment = gql`
             body
         }
         collections {
-            ...CollectionsFragment
+            items {
+                ...CollectionBase
+            }
         }
     }
     ${contactFragment}
-    ${collectionsFragment}
+    ${collectionBase}
 `;
 
 export { dataSetMetaDataFragment, collectionsFragment };

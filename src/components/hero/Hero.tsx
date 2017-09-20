@@ -40,7 +40,7 @@ const ButtonContainer = styled.div`
 
 interface HeroProps {
     title: string;
-    content: string | null;
+    content?: string | null;
     searchPath?: string;
     buttonText?: string;
     imgUrl?: string;
