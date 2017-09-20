@@ -17,7 +17,7 @@ const ComponentLoader = (props) => {
                     </div>
                 );
                 
-                case DATA_KEY_VALUE:
+            case DATA_KEY_VALUE:
                 console.log('rendering Data Key Value component');
                 return (
                     <div style={{borderBottom:'4px solid red'}}>
@@ -26,7 +26,7 @@ const ComponentLoader = (props) => {
                     </div>
                 );
                 
-                case DATA_TABLE:
+            case DATA_TABLE:
                 console.log('rendering Data Table component');
                 return (
                     <div style={{borderBottom:'4px solid red'}}>
