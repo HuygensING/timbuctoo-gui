@@ -1,18 +1,28 @@
-import { RouteComponentProps } from 'react-router';
+import { match } from 'react-router';
 
 interface Props {
     data: any;
+    match: match<any>;
 }
 
-type FullProps = Props & RouteComponentProps<any>;
+const noContent = null;
 
-const GetDataSet = (props: FullProps) => {
+const getDataSet = (props: Props) => {
     const { dataSet } = props.match.params;
     const { dataSets } = props.data;
 
-    if (!dataSet || !dataSets) { return null; }
+    if (!dataSet || !dataSets) { return noContent; }
 
     return dataSets[dataSet];
 };
 
-export default GetDataSet;
+const getCollection = (props: Props) =>  {
+    const dataSet = getDataSet(props);
+    const { collection } = props.match.params;
+
+    if (!dataSet || !collection) { return noContent; }
+
+    return dataSet[collection];
+};
+
+export { getDataSet, getCollection };

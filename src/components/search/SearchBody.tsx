@@ -10,6 +10,8 @@ import Filters from '../Filters';
 import SearchForm from '../form/SearchForm';
 import connectQuery from '../../services/ConnectQuery';
 import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
+import { getCollection } from '../../services/GetDataSet';
+import Loading from '../Loading';
 
 interface Props {
     datasetId: string;
@@ -31,8 +33,12 @@ interface State {}
 
 class SearchBody extends PureComponent<FullProps, State> {
     render () {
-        console.log(this.props.data);
         const { datasetId, collectionKeys } = this.props;
+        const collection = getCollection(this.props);
+
+        if (!collection) { return <Loading/>; }
+
+        console.log(collection);
 
         return (
             <section>

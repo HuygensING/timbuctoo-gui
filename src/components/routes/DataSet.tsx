@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { CollectionMetadata, DataSets } from '../../typings/timbuctoo/schema';
-import GetDataSet from '../../services/GetDataSet';
+import { getDataSet } from '../../services/GetDataSet';
 import DataSetBody from '../dataSet/DataSetBody';
 import QUERY_DATASET from '../../graphql/queries/DataSet';
 import connectQuery from '../../services/ConnectQuery';
+import Loading from '../Loading';
 
 interface Props {}
 
@@ -29,8 +30,8 @@ class DataSet extends Component<FullProps, State> {
     }
 
     render () {
-        const dataSet = GetDataSet(this.props);
-        if ( !dataSet ) { return null; }
+        const dataSet = getDataSet(this.props);
+        if ( !dataSet ) { return <Loading />; }
 
         const { datasetId, title, description, imageUrl, collections } = dataSet.metadata;
 

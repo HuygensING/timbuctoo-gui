@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 
 import { RouteComponentProps } from 'react-router';
 import { CollectionMetadata } from '../../typings/timbuctoo/schema';
-import GetDataSet from '../../services/GetDataSet';
+import { getDataSet } from '../../services/GetDataSet';
 import SearchBody from '../search/SearchBody';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import connectQuery from '../../services/ConnectQuery';
+import Loading from '../Loading';
 
 interface Props {
 }
@@ -39,8 +40,8 @@ class Search extends Component<FullProps, State> {
     }
 
     render () {
-        const dataSet = GetDataSet(this.props);
-        if ( !dataSet ) { return null; }
+        const dataSet = getDataSet(this.props);
+        if ( !dataSet ) { return <Loading />; }
 
         const { datasetId, title, description, imageUrl, collections } = dataSet.metadata;
 
