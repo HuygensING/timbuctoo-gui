@@ -4,24 +4,12 @@ import { store } from '../index';
 import { State } from '../typings/store';
 import { NextFunction } from 'express';
 
+import { ComponentFragmentSchema } from '../graphql/fragments/Components';
+
 const fragmentMatcher = new IntrospectionFragmentMatcher({
     introspectionQueryResultData: {
         __schema: {
-            types: [{
-                kind: 'UNION',
-                name: 'Component',
-                possibleTypes: [
-                    {
-                        name: 'ValueString'
-                    },
-                    {
-                        name: 'DataTable'
-                    },
-                    {
-                        name: 'DataKeyValue'
-                    }
-                ]
-            }]
+            types: [ComponentFragmentSchema]
         }
     }
 });

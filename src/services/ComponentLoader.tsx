@@ -1,39 +1,53 @@
 import React from 'react';
 
-export const VALUE_STRING = 'ValueString';
-export const DATA_KEY_VALUE = 'DataKeyValue';
-export const DATA_TABLE = 'DataTable';
+import { Title, Link } from '../components/layout/StyledCopy';
+import Image from '../components/layout/Image';
+import KeyValue from '../components/entry/KeyValue';
+import Divider from '../components/entry/Divider';
 
-const ComponentLoader = ({ component }) => {
+import { COMPONENTS } from '../constants/global';
+
+/**
+ * TODO: Set new component types as discussed yesterday with Ian
+ * Old types:
+ * - ValueString
+ * - DataKeyValue
+ * - DataTable
+ * 
+ * New Types:
+ * - ValueComponent
+ * - LinkComponent
+ * - ImageComponent
+ * - KeyValueComponent
+ * - TableComponent
+ * - DividerComponent
+ */
+
+interface ComponentLoaderProps {
+    component: any;
+    data: any;
+}
+
+const ComponentLoader = ({ component, data }: ComponentLoaderProps) => {
+
+    const getValue = (key) => data[key].value || '';
 
     const renderComponent = () => {
         switch (component.__typename) {
-            case VALUE_STRING:
-                console.log('rendering ValueString component');
-                return (
-                    <div style={{borderBottom: '4px solid red'}}>
-                        Component: {component.__typename}
-                        <pre>{JSON.stringify(component, null, 4)}</pre>
-                    </div>
-                );
-                
-            case DATA_KEY_VALUE:
-                console.log('rendering Data Key Value component');
-                return (
-                    <div style={{borderBottom: '4px solid red'}}>
-                        Component: {component.__typename}
-                        <pre>{JSON.stringify(component, null, 4)}</pre>
-                    </div>
-                );
-                
-            case DATA_TABLE:
-                console.log('rendering Data Table component');
-                return (
-                    <div style={{borderBottom: '4px solid red'}}>
-                        Component: {component.__typename}
-                        <pre>{JSON.stringify(component, null, 4)}</pre>
-                    </div>
-                );
+            case COMPONENTS.value:
+                return <Title>{getValue(component.valueKey)}</Title>;
+
+            case COMPONENTS.image:
+                return <Image src={getValue(component.urlKey)} alt={getValue(component.altKey)} ratio={16 / 9} />;
+
+            case COMPONENTS.link:
+                return <Link to={getValue(component.urlKey)}>{getValue(component.valueKey)}</Link>;
+
+            case COMPONENTS.divider:
+                return <Divider title={getValue(component.valueKey)} />;
+
+            case COMPONENTS.keyValue:
+                return <KeyValue label={component.key} values={component.values} data={data}/>;
 
             default:
                 break;

@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
 import { RouteComponentProps } from 'react-router';
 
-import { DataSets, DataKeyValue, DataTable } from '../../typings/timbuctoo/schema';
+import { DataSets, KeyValueComponent, TableComponent } from '../../typings/timbuctoo/schema';
 import connectQuery from '../../services/ConnectQuery';
 import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
+
+import { COMPONENTS } from '../../constants/global';
 
 import { getDataSet } from '../../services/GetDataSet';
 import EntryBody from '../entry/EntryBody';
@@ -22,11 +24,13 @@ type FullProps = Props & ApolloProps & RouteComponentProps<any>;
 
 interface State {}
 
-const VALUE_STRING: string = 'ValueString';
-const DATA_TABLE: string = 'DataTable';
-const DATA_KEY_VALUE: string = 'DataKeyValue';
-
 class Entry extends PureComponent<FullProps, State> {
+
+    static addUnique(value: string, values: Array<string>) {
+        if (value && values.indexOf(value) < 0) {
+            values.push( value );
+        }
+    }
 
     static getValues(components: Array<any>): Array<string> {
         let values: Array<string> = [];
@@ -36,22 +40,26 @@ class Entry extends PureComponent<FullProps, State> {
 
     static getValue(component: any, values: Array<string>) {
         switch (component.__typename) {
-            case VALUE_STRING:
-                if (values.indexOf(component.valueKey) < 0) { values.push(component.valueKey); }
-                if (values.indexOf(component.urlKey) < 0) { values.push(component.urlKey); }
+            case COMPONENTS.value:
+            case COMPONENTS.image:
+            case COMPONENTS.link:
+            case COMPONENTS.divider:
+                Entry.addUnique(component.valueKey, values);
+                Entry.addUnique(component.urlKey, values);
+                Entry.addUnique(component.altKey, values);
                 break;
 
-            case DATA_KEY_VALUE:
+            case COMPONENTS.keyValue:
                 if (component.values) {
-                    component.values.forEach((_component: DataKeyValue) => Entry.getValue(_component, values));
+                    component.values.forEach((_component: KeyValueComponent) => Entry.getValue(_component, values));
                 }
                 break;
 
-            case DATA_TABLE:
+            case COMPONENTS.table:
                 if (component.tableColumns) {
                     component.tableColumns.forEach(column => {
                         if (column.cells) {
-                            column.cells.forEach((_component: DataTable) => Entry.getValue(_component, values));
+                            column.cells.forEach((_component: TableComponent) => Entry.getValue(_component, values));
                         }
                     });
                 }
@@ -65,8 +73,11 @@ class Entry extends PureComponent<FullProps, State> {
     render () {
         const dataSet = getDataSet(this.props);
         if ( !dataSet ) { return <Loading />; }
+        
+        const collections = dataSet.metadata.collections.items;
+        if (!collections.length) { return null; }
 
-        const components = dataSet.metadata.collections.items[0].components.items;
+        const components = collections[0].components.items;
         const values: Array<string> = Entry.getValues(components);
 
         return (

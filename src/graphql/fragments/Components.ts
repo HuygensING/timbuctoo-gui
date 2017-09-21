@@ -1,50 +1,122 @@
 import { gql } from 'react-apollo';
 
-const valueStringFragment = gql`
-    fragment ValueStringFragment on ValueString {
-        ...on ValueString {
-            type
+const valueComponentFragment = gql`
+    fragment ValueComponentFragment on ValueComponent {
+        ...on ValueComponent {
             valueKey
-            urlKey
         }
     }  
 `;
 
-const dataTableFragment = gql`
-    fragment DataTableFragment on DataTable{
-        ...on DataTable {
-            hasHeading
-            tableColumns {
-                columnName
-                cells {
-                    __typename
-                    ...ValueStringFragment
+const linkComponentFragment = gql`
+    fragment LinkComponentFragment on LinkComponent {
+        ...on LinkComponent {
+            valueKey
+            urlKey
+        }
+    }
+`;
+
+const imageComponentFragment = gql`
+    fragment ImageComponentFragment on ImageComponent {
+        ...on ImageComponent {
+            urlKey
+            altKey
+        }
+    }
+`;
+
+const dividerComponentFragment = gql`
+    fragment DividerComponentFragment on DividerComponent {
+        ...on DividerComponent {
+            valueKey
+        }
+    }
+`;
+
+const valueFragments = gql`
+    fragment ValueFragments on Component {
+        ...ValueComponentFragment
+        ...LinkComponentFragment
+        ...ImageComponentFragment
+        ...DividerComponentFragment
+    }
+    ${valueComponentFragment}
+    ${linkComponentFragment}
+    ${imageComponentFragment}
+    ${dividerComponentFragment}
+`;
+
+const keyValueComponentFragment = gql`
+    fragment KeyValueComponentFragment on KeyValueComponent {
+        ...on KeyValueComponent {
+            key
+            values {
+                ...ValueFragments
+                ...on KeyValueComponent {
+                    key
+                    values {
+                        __typename
+                        ...ValueFragments
+                    }
                 }
             }
         }
     }  
+    ${valueFragments}
 `;
 
-const keyValueFragment = gql`
-    fragment KeyValueFragment on DataKeyValue {
-        key
-        values {
-            __typename
-            ...ValueStringFragment
-        }
-    }  
-`;
+// const tableComponentFragment = gql`
+//     fragment TableComponentFragment on TableComponent{
+//         ...on TableComponent {
+//             hasHeading
+//             tableColumns {
+//                 columnName
+//                 cells {
+//                     ...ValueFragments
+//                     ...KeyValueComponentFragment
+//                 }
+//             }
+//         }
+//     }  
+//     ${valueFragments}
+// `;
 
 const componentsFragment = gql`
     fragment ComponentsFragment on Component {
-        __typename
-        ...ValueStringFragment
-        ...DataTableFragment
-        ...KeyValueFragment
+        ...ValueFragments
+        ...KeyValueComponentFragment
     }
-    ${valueStringFragment}
-    ${dataTableFragment}
-    ${keyValueFragment}
+    ${valueFragments}
+    ${keyValueComponentFragment}
 `;
 
-export { componentsFragment };
+/**
+ * This needs to be passed down to the ApolloClient for introspection of fragments
+ */
+const ComponentFragmentSchema = {
+    kind: 'UNION',
+    name: 'Component',
+    possibleTypes: [
+        {
+            name: 'ValueComponent'
+        },
+        {
+            name: 'LinkComponent'
+        },
+        {
+            name: 'ImageComponent'
+        },
+        {
+            name: 'DividerComponent'
+        },
+        {
+            name: 'TableComponent'
+        },
+        {
+            name: 'KeyValueComponent'
+        }
+    ]
+};
+
+export { componentsFragment, ComponentFragmentSchema };

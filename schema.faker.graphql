@@ -173,14 +173,14 @@ type Option {
 }
 
 # Different types for entryData
-union Component = ValueString | DataTable | DataKeyValue #| Header FIXME I removed header as hero. Do I need to add it heare?
+union Component = ValueComponent | LinkComponent | ImageComponent | KeyValueComponent | DividerComponent # | TableComponent # out of scope
 
-type DataKeyValue {
+type KeyValueComponent {
   key: Key! 							@fake(type: productName)
   values: [Component!]!
 }
 
-type DataTable {
+type TableComponent {
   hasHeading: Boolean!
   tableColumns: [TableColumn!]!
 }
@@ -190,16 +190,25 @@ type TableColumn {
   cells: [Component!]!
 }
 
-type DataDivider {
-  title: String						@fake(type:words)
+type DividerComponent {
+  valueKey: String!				@examples(values:["schema_org_name"])
+}
+
+type ValueComponent {
+	valueKey: String! 			@examples(values:["schema_org_name", "schema_org_birthPlace", "schema_org_description"])
+}
+
+type LinkComponent {
+  valueKey: String!				@examples(values:["schema_org_name", "schema_org_birthPlace", "schema_org_description"])
+  urlKey: Url!						@examples(values:["schema_org_url"])
+}
+
+type ImageComponent {
+  urlKey: Url!						@examples(values:["schema_org_imageUrl"])
+  altKey: String					@examples(values:["schema_org_name", "schema_org_birthPlace"])
 }
 
 # Different kinds of values supported by the different Elements
-type ValueString {
-	type: ValueTypes! 				
-	valueKey: String! 				 	@examples(values:["schema_org_name", "schema_org_birthPlace", "schema_org_description"])
-	urlKey: Url								@examples(values:["schema_org_url", "schema_org_imageUrl"])
-}
 
 type ContactInfo {
   name: String! 					@fake(type:fullName)
@@ -224,10 +233,4 @@ enum DataSetPermission {
   EDIT_ENTRIES					#Is allowed to edit entries using the REST endpoint
   EDIT_DATASET					#Is allowed to upload rdf data/change dataset metadata/upload files etc.
   EDIT_ROLES						#Is allowed to assign roles to users
-}
-
-enum ValueTypes {
-  STRING
-  LINK
-  IMAGE
 }

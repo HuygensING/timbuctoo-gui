@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 import { match } from 'react-router';
 import FullHelmet from '../FullHelmet';
 
+import { Col, FullSection } from '../layout/Grid';
+
 import { DataSets } from '../../typings/timbuctoo/schema';
 import { getCollection } from '../../services/GetDataSet';
 import connectQuery from '../../services/ConnectQuery';
@@ -35,12 +37,14 @@ class EntryBody extends PureComponent<FullProps, State> {
         
         if (!currentCollection) { return <Loading/>; }
 
-        console.log( 'currentCollection', currentCollection );
-
         return (
             <section>
                 <FullHelmet pageName={`Entry - ${match.params.entry}`} />
-                {components && components.map( (component: Component, index: number) => <ComponentLoader key={index} component={component} />)}
+                <FullSection>
+                    <Col>
+                        {components && components.map( (component: Component, index: number) => <ComponentLoader key={index} component={component} data={currentCollection} />)}
+                    </Col>
+                </FullSection>
             </section>
         );
     }
