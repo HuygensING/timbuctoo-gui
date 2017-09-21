@@ -47,23 +47,25 @@ const valueFragments = gql`
     ${dividerComponentFragment}
 `;
 
+const nestedValueFragments = gql`
+    fragment NestedValueFragments on Component {
+        ...ValueComponentFragment
+        ...LinkComponentFragment
+    }
+    ${valueComponentFragment}
+    ${linkComponentFragment}
+`;
+
 const keyValueComponentFragment = gql`
     fragment KeyValueComponentFragment on KeyValueComponent {
         ...on KeyValueComponent {
             key
             values {
-                ...ValueFragments
-                ...on KeyValueComponent {
-                    key
-                    values {
-                        __typename
-                        ...ValueFragments
-                    }
-                }
+                ...NestedValueFragments
             }
         }
     }  
-    ${valueFragments}
+    ${nestedValueFragments}
 `;
 
 // const tableComponentFragment = gql`

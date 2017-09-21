@@ -30,7 +30,7 @@ interface ComponentLoaderProps {
 
 const ComponentLoader = ({ component, data }: ComponentLoaderProps) => {
 
-    const getValue = (key) => data[key].value || '';
+    const getValue = (key) => data && data[key] && data[key].value || '';
 
     const renderComponent = () => {
         switch (component.__typename) {

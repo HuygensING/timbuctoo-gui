@@ -23,10 +23,10 @@ const anim = keyframes`
 
 const EmptyStyle = css`
     &:empty {
-        width: 100%;
+        width: ${props => `${Math.random()*200}px`};
         display: block;
         background: ${props => lighten(.2, props.theme.colors.shade.light)};
-        height: 1.5rem;
+        height: 1rem;
         
         &:before {
             content: '';

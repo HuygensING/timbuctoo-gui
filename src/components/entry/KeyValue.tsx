@@ -1,9 +1,27 @@
 import React from 'react';
+import styled from '../../styled-components';
 
 import ComponentLoader from '../../services/ComponentLoader';
 import { Component } from '../../typings/timbuctoo/schema';
 import { Subtitle } from '../layout/StyledCopy';
-// import { Col } from '../layout/Grid';
+
+const KeyValueWrapper = styled.div`
+    margin: 1rem 0;
+`;
+
+const Key = styled(Subtitle)`
+    display: inline-block;
+    width: 25%;
+    margin: 0;
+    vertical-align: top;
+`;
+    
+const Values = styled.div`
+    display: inline-block;
+    width: 75%;
+    padding-left: 1rem;
+    vertical-align: top;
+`;
 
 const KeyValue = (props) => {
     const { label, values, data } = props;
@@ -13,14 +31,10 @@ const KeyValue = (props) => {
     };
 
     return (
-        <div>
-            
-            <Subtitle>{label}</Subtitle>
-            <div>
-                Values:
-                {renderValues(values)}
-            </div>
-        </div>      
+        <KeyValueWrapper>
+            <Key>{label}</Key>
+            <Values>{renderValues(values)}</Values>
+        </KeyValueWrapper>      
     );
 };
 
