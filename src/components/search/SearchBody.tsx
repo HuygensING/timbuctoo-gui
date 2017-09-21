@@ -46,18 +46,18 @@ class SearchBody extends PureComponent<FullProps, State> {
                     <SearchForm onSubmit={this.props.onSubmit} />
                 </Col>
 
-                <Col sm={42} smOffset={3} smPaddingTop={1}>
-                    <CollectionTags colKeys={collectionKeys} datasetId={datasetId}/>
+                <Col sm={42} smOffset={3} smPaddingTop={.5}>
+                    <CollectionTags colKeys={collectionKeys} datasetId={datasetId} currentCollectionListId={currentCollection.collectionListId}/>
                 </Col>
 
                 <FullSection>
 
                     {/* Filter functionality */}
-                    <Col sm={12} smPaddingTop={2}>
+                    <Col sm={12} smPaddingY={1}>
                         <Filters facets={collection.facets} />
                     </Col>
 
-                    <Col sm={27} smOffset={3}>
+                    <Col sm={27} smOffset={3} smPaddingY={1}>
                         {/* Filter functionality */}
 
                         <SearchResults

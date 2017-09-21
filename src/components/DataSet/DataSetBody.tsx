@@ -41,7 +41,7 @@ class DataSetBody extends PureComponent<FullProps, State> {
                 />
 
                 <Col sm={42} smOffset={3} smPaddingBottom={.5}>
-                    {collectionKeys.length > 0 && <CollectionTags colKeys={collectionKeys} datasetId={datasetId}/>}
+                    {collectionKeys.length > 0 && <CollectionTags colKeys={collectionKeys} datasetId={datasetId} />}
                 </Col>
 
                 <Col sm={48}>

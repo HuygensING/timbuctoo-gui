@@ -4,10 +4,12 @@ import { ROUTE_PATHS } from '../constants/routeNaming';
 import Button from './layout/Button';
 import styled from 'styled-components';
 import { encode } from '../services/UrlStringCreator';
+import { BUTTON_TYPES } from '../constants/global';
 
 interface Props {
     colKeys: CollectionMetadata[];
     datasetId: string;
+    currentCollectionListId?: string;
 }
 
 const ListItem = styled.li`
@@ -15,13 +17,20 @@ const ListItem = styled.li`
   margin-right: 1rem;
 `;
 
-const CollectionTags: SFC<Props> = ({ colKeys, datasetId }) => {
+const CollectionTags: SFC<Props> = ({ colKeys, datasetId, currentCollectionListId }) => {
 
-    const renderButton = (name: string, collectionListId) => (
-        <ListItem key={name}>
-            <Button to={`${ROUTE_PATHS.details}/${datasetId}/${encode(collectionListId)}`}>{name}</Button>
-        </ListItem>
-    );
+    const renderButton = (name: string, collectionListId) => {
+
+        const type = currentCollectionListId && currentCollectionListId === collectionListId
+            ? BUTTON_TYPES.dark
+            : BUTTON_TYPES.inverted;
+
+        return (
+            <ListItem key={name}>
+                <Button type={type} to={`${ROUTE_PATHS.details}/${datasetId}/${encode(collectionListId)}`}>{name}</Button>
+            </ListItem>
+        );
+    };
 
     return (
         <ul>

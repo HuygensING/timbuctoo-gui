@@ -28,7 +28,6 @@ class Filters extends PureComponent<Props, State> {
     }
 
     static renderFilter (facet: Facet, idx: number) {
-        console.log(facet);
         return <MultiSelectForm key={idx} title={facet.caption} options={facet.options} />;
     }
 

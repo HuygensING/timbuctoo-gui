@@ -59,7 +59,10 @@ export interface LinkProps {
 
 export interface ButtonProps extends LinkProps { 
     small?: boolean;
+    type?: ButtonType;
 }
+
+export type ButtonType = 'normal' | 'inverted' | 'dark';
 
 export interface GridProps {
     innerRef?: Function;
