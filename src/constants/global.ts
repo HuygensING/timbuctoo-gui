@@ -1,10 +1,8 @@
 import { ButtonType } from '../typings/layout';
 
 export const HSID: string = 'hsid';
-export const QUERY = 'query';
-export const INTROSPECTION = 'introspection';
 
-export const COMPONENTS = {
+export const COMPONENTS: {[name: string]: string} = {
     value: 'ValueComponent',
     image: 'ImageComponent',
     link: 'LinkComponent',
