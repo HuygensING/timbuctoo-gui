@@ -6,7 +6,7 @@ import { lighten } from 'polished';
 
 const setColor = props => (props.theme.colors[props.color] && props.theme.colors[props.color].medium)
     || props.color
-    || props.theme.colors.shade.dark;
+    || props.theme.colors.black;
 const setCaps = props => props.isCaps ? 'uppercase' : 'initial';
 const setLetterSpacing = props => props.isCaps ? '0.13em' : '0';
 const setAlignment = props => props.align ? props.align : 'left';

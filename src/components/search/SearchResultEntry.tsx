@@ -4,7 +4,7 @@ import styled from '../../styled-components';
 import { Url } from '../../typings/timbuctoo/schema';
 
 import Translations from '../../services/Translations';
-import { Subtitle } from '../layout/StyledCopy';
+import { Content, Subtitle } from '../layout/StyledCopy';
 import Image from '../layout/Image';
 import Button from '../layout/Button';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
@@ -20,30 +20,39 @@ export interface ResultDataSetMetadata {
 }
 
 const SearchItem = styled.section`
-    height: 80px;
-    border-left: 2px solid ${props => props.theme.colors.shade.light};
-    padding-left: 10px;
+    position: relative;
+    min-height: 80px;
 `;
 
 const ImageWrapper = styled.figure`
     position: absolute; 
     top: 0;
     right: 0;
-    width: 80px;
+    width: 40%;
+    height: 100%;
 `;
 
-const SearchResultEntry = ({ title, imageUrl, collectionId, datasetId, uri }: ResultDataSetMetadata) => {
+const SearchTitle = styled(Subtitle)`
+  margin: 0;
+`;
+
+const SearchDescription = styled(Content)`
+  margin-bottom: 1rem;
+`;
+
+const SearchResultEntry = ({ title, imageUrl, description, collectionId, datasetId, uri }: ResultDataSetMetadata) => {
     const url = `${ROUTE_PATHS.details}/${datasetId}/${collectionId}/${encode(uri)}`;
 
     return (
         <SearchItem>
-            <Subtitle tag="h1">
+            <SearchTitle tag="h1">
                 {title}
-            </Subtitle>
+            </SearchTitle>
+            <SearchDescription>{ description }</SearchDescription>
             <Button to={url} small={true}>{Translations.translate('search.view_entry')}</Button>
             {imageUrl && imageUrl.indexOf('http') > -1 &&
                 <ImageWrapper>
-                    <Image src={imageUrl} ratio={1}/>
+                    <Image src={imageUrl} ratio={1} fill={true}/>
                 </ImageWrapper>
             }
         </SearchItem>

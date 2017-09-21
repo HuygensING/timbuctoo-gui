@@ -64,7 +64,7 @@ class Home extends Component<Props & ApolloProps, State> {
                 <Hero
                     title={Translations.translate('home.hero.title')}
                     content={Translations.translate('home.hero.content')}
-                    searchPath={`${ROUTE_PATHS.search}/jauco_leaders/Leaders`}
+                    searchPath={`${ROUTE_PATHS.search}/jauco_leaders/LeadersList`}
                     buttonText={Translations.translate('home.hero.button')}
                 />
 
