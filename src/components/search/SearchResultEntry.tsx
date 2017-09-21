@@ -48,7 +48,7 @@ const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataset
             <SearchTitle tag="h1">
                 {title}
             </SearchTitle>
-            <SearchDescription>{ description }</SearchDescription>
+            <SearchDescription>{description}</SearchDescription>
             <Button to={url} small={true}>{Translations.translate('search.view_entry')}</Button>
             {imageUrl && imageUrl.indexOf('http') > -1 &&
                 <ImageWrapper>

@@ -36,7 +36,7 @@ const SearchResults: SFC<Props> = ({ results, properties, collectionId, datasetI
     };
 
     return (
-        <GridSection title={Translations.translate('globals.results')} cols={1} gridSize={27} gridOffset={0} colSizeOffset={1} gridSpacing={2}>
+        <GridSection title={Translations.translate('globals.results')} cols={1} gridSize={27} gridOffset={0} colSizeOffset={1}>
             {results.map(renderEntries)}
         </GridSection>
     );

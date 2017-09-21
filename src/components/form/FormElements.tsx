@@ -1,11 +1,12 @@
 import styled, { withProps, css } from '../../styled-components';
 import { BaseFieldProps, Field } from 'redux-form';
-import { BaseButtonStyling } from '../layout/Button';
+import { BaseButtonStyling, setBackgroundColor, setColor } from '../layout/Button';
 
 const checkMark = require('../../assets/icons/checkmark.svg');
 
 import SelectField from './fields/Select';
 import { srOnly } from '../layout/StyledCopy';
+import { BUTTON_TYPES } from '../../constants/global';
 
 /**
  * Base styling of fields
@@ -84,6 +85,8 @@ const ResetButton = styled.button`
  */
 const SubmitButton = styled.button`
     ${BaseButtonStyling};
+    background-color: ${props => setBackgroundColor(props, BUTTON_TYPES.normal)};
+    color: ${props => setColor(props, BUTTON_TYPES.normal)};
     margin: 0;
     width: 100%;
     height: 100%;
