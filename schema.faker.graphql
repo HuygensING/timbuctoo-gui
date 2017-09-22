@@ -148,14 +148,18 @@ type Jauco_Leaders_LeaderCollection {
 type Jauco_Leaders_Leader {
   uri: Uri! 						@fake(type:url)
   schema_org_name: ValueObject # Added ValueObject to show that these need a {value}
-  schema_org_description: ValueObject
+  schema_org_description: DescriptionObject
   schema_org_birthPlace: ValueObject
   schema_org_imageUrl: UrlObject
   schema_org_url: ValueObject
 }
 
+type DescriptionObject {
+  value: String  @fake(type: lorem)
+}
+
 type UrlObject {
-  value: Url @fake(type:imageUrl, options:{ imageCategory: cats })
+  value: Url @fake(type:imageUrl, options:{ imageCategory: cats, randomizeImageUrl: true })
 }
 
 type ValueObject {

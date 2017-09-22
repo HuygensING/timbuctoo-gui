@@ -43,7 +43,6 @@ class Entry extends PureComponent<FullProps, State> {
             case COMPONENTS.value:
             case COMPONENTS.image:
             case COMPONENTS.link:
-            case COMPONENTS.divider:
                 Entry.addUnique(component.valueKey, values);
                 Entry.addUnique(component.urlKey, values);
                 Entry.addUnique(component.altKey, values);
@@ -77,7 +76,39 @@ class Entry extends PureComponent<FullProps, State> {
         const collections = dataSet.metadata.collections.items;
         if (!collections.length) { return null; }
 
-        const components = collections[0].components.items;
+        // const components = collections[0].components.items;
+        const keys = {
+            name: 'schema_org_name',
+            description: 'schema_org_description',
+            image: 'schema_org_imageUrl',
+            birthplace: 'schema_org_birthPlace'
+        };
+        const components = [{
+            __typename: COMPONENTS.title,
+            valueKey: keys.name
+        }, {
+            __typename: COMPONENTS.image,
+            urlKey: keys.image,
+            altKey: keys.image
+        }, {
+            __typename: COMPONENTS.keyValue,
+            key: 'Name',
+            values: [{
+                __typename: COMPONENTS.value,
+                valueKey: keys.name
+            }]
+        }, {
+            __typename: COMPONENTS.keyValue,
+            key: 'Born',
+            values: [{
+                __typename: COMPONENTS.value,
+                valueKey: keys.name
+            }, {
+                __typename: COMPONENTS.value,
+                valueKey: keys.birthplace
+            }]
+        }];
+        
         const values: Array<string> = Entry.getValues(components);
 
         return (

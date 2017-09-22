@@ -6,6 +6,12 @@ import ComponentLoader from '../../services/ComponentLoader';
 import { ComponentType } from '../../typings';
 import { Subtitle } from '../layout/StyledCopy';
 
+interface Props {
+    label: string;
+    values: Array<ComponentType>;
+    data: any;
+}
+
 const ALLOWED_COMPONENT = [
     COMPONENTS.value,
     COMPONENTS.link
@@ -13,12 +19,14 @@ const ALLOWED_COMPONENT = [
 
 const KeyValueWrapper = styled.div`
     margin: 1rem 0;
+    padding-bottom: 1rem;
     border-bottom: 1px solid ${props => props.theme.colors.shade.light};
 `;
 
 const Key = styled(Subtitle)`
     display: inline-block;
-    width: 20%;
+    width: 10%;
+    min-width: 100px;
     margin: 0;
     vertical-align: top;
 `;
@@ -30,20 +38,20 @@ const Values = styled.div`
     vertical-align: top;
 `;
 
-const ContentKeyValue = (props) => {
+const ContentKeyValue = (props: Props) => {
     const { label, values, data } = props;
 
-    const renderValues = (values) => {
+    const renderValues = () => {
         return values && values.map( (component: ComponentType, index: number) => {
-            if (ALLOWED_COMPONENT.indexOf( component.__typename ) < 0) return null;
-            return <ComponentLoader key={index} component={component} data={data} />
+            if (ALLOWED_COMPONENT.indexOf( component.__typename ) < 0) { return null; }
+            return <ComponentLoader key={index} component={component} data={data} />;
         });
     };
 
     return (
         <KeyValueWrapper>
             <Key>{label}</Key>
-            <Values>{renderValues(values)}</Values>
+            <Values>{renderValues()}</Values>
         </KeyValueWrapper>      
     );
 };

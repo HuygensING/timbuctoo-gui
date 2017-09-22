@@ -31,15 +31,15 @@ interface State {}
 
 class EntryBody extends PureComponent<FullProps, State> {
     render() {
-        const { match, components } = this.props;
+        const { components } = this.props;
 
-        const currentCollection = getCollection(this.props, match.params.collection);
+        const currentCollection = getCollection(this.props, this.props.match.params.collection);
         
         if (!currentCollection) { return <Loading/>; }
 
         return (
             <section>
-                <FullHelmet pageName={`Entry - ${match.params.entry}`} />
+                <FullHelmet pageName={`Entry - ${this.props.match.params.entry}`} />
                 <FullSection>
                     <Col>
                         {components && components.map( (component: Component, index: number) => <ComponentLoader key={index} component={component} data={currentCollection} />)}

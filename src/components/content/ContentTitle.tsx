@@ -1,8 +1,10 @@
 import React from 'react';
 
+import { Heading } from '../layout/StyledCopy';
+
 const ContentValue = (props) => {
     return (
-        <div>Content Title: {props.children}</div>  
+        <Heading>{props.children}</Heading>  
     );
 };
 

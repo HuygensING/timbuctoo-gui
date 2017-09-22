@@ -43,7 +43,7 @@ const ComponentLoader = ({ component, data }: ComponentLoaderProps) => {
                 return <ContentValue>{getValue(component.valueKey)}</ContentValue>;
 
             case COMPONENTS.image:
-                return <ContentImage src={getValue(component.urlKey)} alt={getValue(component.altKey)} ratio={16 / 9} />;
+                return <ContentImage src={getValue(component.urlKey)} alt={getValue(component.altKey)} />;
 
             case COMPONENTS.link:
                 return <ContentLink to={getValue(component.urlKey)}>{getValue(component.valueKey)}</ContentLink>;
