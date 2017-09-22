@@ -173,7 +173,11 @@ type Option {
 }
 
 # Different types for entryData
-union Component = ValueComponent | LinkComponent | ImageComponent | KeyValueComponent | DividerComponent # | TableComponent # out of scope
+union Component = TitleComponent | ValueComponent | LinkComponent | ImageComponent | KeyValueComponent | DividerComponent # | TableComponent # out of scope
+
+type TitleComponent {
+  valueKey: String! @examples(values:["schema_org_name"])
+}
 
 type KeyValueComponent {
   key: Key! 							@fake(type: productName)

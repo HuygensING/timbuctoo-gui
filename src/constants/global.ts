@@ -3,6 +3,7 @@ import { ButtonType } from '../typings/layout';
 export const HSID: string = 'hsid';
 
 export const COMPONENTS: {[name: string]: string} = {
+    title: 'TitleComponent',
     value: 'ValueComponent',
     image: 'ImageComponent',
     link: 'LinkComponent',

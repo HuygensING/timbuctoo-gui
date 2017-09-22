@@ -24,7 +24,7 @@ interface Props {
     title: string;
 }
 
-const Divider = ({title}: Props) => {
+const ContentDivider = ({title}: Props) => {
     return (
         <DividerLine>
             {title && <DividerTitle>{title}</DividerTitle>}
@@ -32,4 +32,4 @@ const Divider = ({title}: Props) => {
     );
 };
 
-export default Divider;
+export default ContentDivider;

@@ -1,9 +1,11 @@
 import React from 'react';
 
-import { Title, Link } from '../components/layout/StyledCopy';
-import Image from '../components/layout/Image';
-import KeyValue from '../components/entry/KeyValue';
-import Divider from '../components/entry/Divider';
+import ContentTitle from '../components/content/ContentTitle';
+import ContentImage from '../components/content/ContentImage';
+import ContentValue from '../components/content/ContentValue';
+import ContentLink from '../components/content/ContentLink';
+import ContentKeyValue from '../components/content/ContentKeyValue';
+import ContentDivider from '../components/content/ContentDivider';
 
 import { COMPONENTS } from '../constants/global';
 
@@ -34,20 +36,23 @@ const ComponentLoader = ({ component, data }: ComponentLoaderProps) => {
 
     const renderComponent = () => {
         switch (component.__typename) {
+            case COMPONENTS.title:
+                return <ContentTitle>{getValue(component.valueKey)}</ContentTitle>;
+
             case COMPONENTS.value:
-                return <Title>{getValue(component.valueKey)}</Title>;
+                return <ContentValue>{getValue(component.valueKey)}</ContentValue>;
 
             case COMPONENTS.image:
-                return <Image src={getValue(component.urlKey)} alt={getValue(component.altKey)} ratio={16 / 9} />;
+                return <ContentImage src={getValue(component.urlKey)} alt={getValue(component.altKey)} ratio={16 / 9} />;
 
             case COMPONENTS.link:
-                return <Link to={getValue(component.urlKey)}>{getValue(component.valueKey)}</Link>;
+                return <ContentLink to={getValue(component.urlKey)}>{getValue(component.valueKey)}</ContentLink>;
 
             case COMPONENTS.divider:
-                return <Divider title={getValue(component.valueKey)} />;
+                return <ContentDivider title={getValue(component.valueKey)} />;
 
             case COMPONENTS.keyValue:
-                return <KeyValue label={component.key} values={component.values} data={data}/>;
+                return <ContentKeyValue label={component.key} values={component.values} data={data}/>;
 
             default:
                 break;

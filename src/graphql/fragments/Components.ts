@@ -1,5 +1,13 @@
 import { gql } from 'react-apollo';
 
+const titleComponentFragment = gql`
+    fragment TitleComponentFragment on TitleComponent {
+        ...on TitleComponent {
+            valueKey
+        }
+    }  
+`;
+
 const valueComponentFragment = gql`
     fragment ValueComponentFragment on ValueComponent {
         ...on ValueComponent {
@@ -36,24 +44,17 @@ const dividerComponentFragment = gql`
 
 const valueFragments = gql`
     fragment ValueFragments on Component {
+        ...TitleComponentFragment
         ...ValueComponentFragment
         ...LinkComponentFragment
         ...ImageComponentFragment
         ...DividerComponentFragment
     }
+    ${titleComponentFragment}
     ${valueComponentFragment}
     ${linkComponentFragment}
     ${imageComponentFragment}
     ${dividerComponentFragment}
-`;
-
-const nestedValueFragments = gql`
-    fragment NestedValueFragments on Component {
-        ...ValueComponentFragment
-        ...LinkComponentFragment
-    }
-    ${valueComponentFragment}
-    ${linkComponentFragment}
 `;
 
 const keyValueComponentFragment = gql`
@@ -61,11 +62,11 @@ const keyValueComponentFragment = gql`
         ...on KeyValueComponent {
             key
             values {
-                ...NestedValueFragments
+                ...ValueFragments
             }
         }
-    }  
-    ${nestedValueFragments}
+    }
+    ${valueFragments}
 `;
 
 // const tableComponentFragment = gql`
@@ -100,6 +101,9 @@ const ComponentFragmentSchema = {
     kind: 'UNION',
     name: 'Component',
     possibleTypes: [
+        {
+            name: 'TitleComponent'
+        },
         {
             name: 'ValueComponent'
         },
