@@ -199,7 +199,7 @@ type TableColumn {
 }
 
 type DividerComponent {
-  valueKey: String!				@examples(values:["schema_org_name"])
+  title: String!				@fake(type: productCategory)
 }
 
 type ValueComponent {

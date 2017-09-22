@@ -4,7 +4,8 @@ import styled from '../../styled-components';
 import { COMPONENTS } from '../../constants/global';
 import ComponentLoader from '../../services/ComponentLoader';
 import { ComponentType } from '../../typings';
-import { Subtitle } from '../layout/StyledCopy';
+import { BREAKPOINT } from '../layout/Grid';
+import { Content } from '../layout/StyledCopy';
 
 interface Props {
     label: string;
@@ -14,21 +15,26 @@ interface Props {
 
 const ALLOWED_COMPONENT = [
     COMPONENTS.value,
-    COMPONENTS.link
+    COMPONENTS.link,
+    COMPONENTS.image,
+    COMPONENTS.keyValue,
+    COMPONENTS.divider
 ];
 
 const KeyValueWrapper = styled.div`
     margin: 1rem 0;
     padding-bottom: 1rem;
-    border-bottom: 1px solid ${props => props.theme.colors.shade.light};
 `;
 
-const Key = styled(Subtitle)`
+const Key = styled(Content)`
     display: inline-block;
-    width: 10%;
-    min-width: 100px;
+    width: 20%;
     margin: 0;
     vertical-align: top;
+
+    @media (max-width: ${BREAKPOINT.MOBILE}) {
+        width: 100%;
+    }
 `;
     
 const Values = styled.div`
@@ -36,6 +42,11 @@ const Values = styled.div`
     width: 80%;
     padding-left: 1rem;
     vertical-align: top;
+    
+    @media (max-width: ${BREAKPOINT.MOBILE}) {
+        width: 100%;
+        padding-left: 0;
+    }
 `;
 
 const ContentKeyValue = (props: Props) => {
@@ -50,7 +61,7 @@ const ContentKeyValue = (props: Props) => {
 
     return (
         <KeyValueWrapper>
-            <Key>{label}</Key>
+            <Key tag="h2">{label}:</Key>
             <Values>{renderValues()}</Values>
         </KeyValueWrapper>      
     );

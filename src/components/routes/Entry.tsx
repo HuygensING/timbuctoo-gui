@@ -75,21 +75,43 @@ class Entry extends PureComponent<FullProps, State> {
         
         const collections = dataSet.metadata.collections.items;
         if (!collections.length) { return null; }
+        
+        const components = collections[0].components.items || this.dummyComponents();
 
-        // const components = collections[0].components.items;
+        const values: Array<string> = Entry.getValues(components);
+
+        return (
+            <EntryBody
+                components={components}
+                values={values}
+                match={this.props.match}
+            />
+        );
+    }
+
+    private dummyComponents () {
         const keys = {
             name: 'schema_org_name',
             description: 'schema_org_description',
             image: 'schema_org_imageUrl',
-            birthplace: 'schema_org_birthPlace'
+            birthplace: 'schema_org_birthPlace',
+            url: 'schema_org_url'
         };
-        const components = [{
+        return [{
             __typename: COMPONENTS.title,
             valueKey: keys.name
         }, {
             __typename: COMPONENTS.image,
             urlKey: keys.image,
-            altKey: keys.image
+            altKey: keys.image,
+            options: {
+                width: '50%',
+                type: 'rounded',
+                ratio: 1
+            }
+        }, {
+            __typename: COMPONENTS.divider,
+            title: 'Personal info'
         }, {
             __typename: COMPONENTS.keyValue,
             key: 'Name',
@@ -107,17 +129,83 @@ class Entry extends PureComponent<FullProps, State> {
                 __typename: COMPONENTS.value,
                 valueKey: keys.birthplace
             }]
+        }, {
+            __typename: COMPONENTS.keyValue,
+            key: 'Beroep',
+            values: [{
+                __typename: COMPONENTS.value,
+                valueKey: keys.name
+            }, {
+                __typename: COMPONENTS.link,
+                valueKey: keys.url
+            }, {
+                __typename: COMPONENTS.link,
+                valueKey: keys.url
+            }]
+        }, {
+            __typename: COMPONENTS.divider,
+            title: 'More info'
+        }, {
+            __typename: COMPONENTS.keyValue,
+            key: 'Description',
+            values: [{
+                __typename: COMPONENTS.value,
+                valueKey: keys.description
+            }, {
+                __typename: COMPONENTS.image,
+                urlKey: keys.image,
+                altKey: keys.image
+            }, {
+                __typename: COMPONENTS.divider,
+                valueKey: 'Sub-info'
+            }, {
+                __typename: COMPONENTS.keyValue,
+                key: 'Cat name',
+                values: [{
+                    __typename: COMPONENTS.value,
+                    valueKey: keys.description
+                }, {
+                    __typename: COMPONENTS.image,
+                    urlKey: keys.image,
+                    altKey: keys.image
+                }]
+            }]
+        }, {
+            __typename: COMPONENTS.divider,
+            title: 'Other info'
+        }, {
+            __typename: COMPONENTS.value,
+            valueKey: keys.description
+        }, {
+            __typename: COMPONENTS.image,
+            urlKey: keys.image,
+            altKey: keys.image,
+            options: {
+                ratio: 16 / 9
+            }
+        }, {
+            __typename: COMPONENTS.keyValue,
+            key: 'Bio',
+            values: [{
+                __typename: COMPONENTS.value,
+                valueKey: keys.name
+            }, {
+                __typename: COMPONENTS.value,
+                valueKey: keys.birthplace
+            }]
+        }, {
+            __typename: COMPONENTS.value,
+            valueKey: keys.description
+        }, {
+            __typename: COMPONENTS.value,
+            valueKey: keys.description
+        }, {
+            __typename: COMPONENTS.value,
+            valueKey: keys.description
+        }, {
+            __typename: COMPONENTS.value,
+            valueKey: keys.description
         }];
-        
-        const values: Array<string> = Entry.getValues(components);
-
-        return (
-            <EntryBody
-                components={components}
-                values={values}
-                match={this.props.match}
-            />
-        );
     }
 }
 

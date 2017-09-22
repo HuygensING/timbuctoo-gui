@@ -4,7 +4,7 @@ import { Heading } from '../layout/StyledCopy';
 
 const ContentValue = (props) => {
     return (
-        <Heading>{props.children}</Heading>  
+        <Heading align={'center'}>{props.children}</Heading>  
     );
 };
 

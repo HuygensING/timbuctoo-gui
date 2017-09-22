@@ -9,22 +9,6 @@ import ContentDivider from '../components/content/ContentDivider';
 
 import { COMPONENTS } from '../constants/global';
 
-/**
- * TODO: Set new component types as discussed yesterday with Ian
- * Old types:
- * - ValueString
- * - DataKeyValue
- * - DataTable
- * 
- * New Types:
- * - ValueComponent
- * - LinkComponent
- * - ImageComponent
- * - KeyValueComponent
- * - TableComponent
- * - DividerComponent
- */
-
 interface ComponentLoaderProps {
     component: any;
     data: any;
@@ -43,13 +27,13 @@ const ComponentLoader = ({ component, data }: ComponentLoaderProps) => {
                 return <ContentValue>{getValue(component.valueKey)}</ContentValue>;
 
             case COMPONENTS.image:
-                return <ContentImage src={getValue(component.urlKey)} alt={getValue(component.altKey)} />;
+                return <ContentImage src={getValue(component.urlKey)} alt={getValue(component.altKey)} options={component.options} />;
 
             case COMPONENTS.link:
                 return <ContentLink to={getValue(component.urlKey)}>{getValue(component.valueKey)}</ContentLink>;
 
             case COMPONENTS.divider:
-                return <ContentDivider title={getValue(component.valueKey)} />;
+                return <ContentDivider title={component.title} />;
 
             case COMPONENTS.keyValue:
                 return <ContentKeyValue label={component.key} values={component.values} data={data}/>;

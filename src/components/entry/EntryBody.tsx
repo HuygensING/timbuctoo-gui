@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { match } from 'react-router';
 import FullHelmet from '../FullHelmet';
 
-import { Col, FullSection } from '../layout/Grid';
+import { Grid, Col } from '../layout/Grid';
 
 import { DataSets } from '../../typings/timbuctoo/schema';
 import { getCollection } from '../../services/GetDataSet';
@@ -40,11 +40,11 @@ class EntryBody extends PureComponent<FullProps, State> {
         return (
             <section>
                 <FullHelmet pageName={`Entry - ${this.props.match.params.entry}`} />
-                <FullSection>
-                    <Col>
+                <Grid xs={36} sm={24} xsOffset={6} smOffset={12}>
+                    <Col xs={36} sm={24}>
                         {components && components.map( (component: Component, index: number) => <ComponentLoader key={index} component={component} data={currentCollection} />)}
                     </Col>
-                </FullSection>
+                </Grid>
             </section>
         );
     }

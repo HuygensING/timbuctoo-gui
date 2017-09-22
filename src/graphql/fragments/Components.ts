@@ -37,7 +37,7 @@ const imageComponentFragment = gql`
 const dividerComponentFragment = gql`
     fragment DividerComponentFragment on DividerComponent {
         ...on DividerComponent {
-            valueKey
+            title
         }
     }
 `;
@@ -63,6 +63,12 @@ const keyValueComponentFragment = gql`
             key
             values {
                 ...ValueFragments
+                ...on KeyValueComponent {
+                    key
+                    values {
+                        ...ValueFragments
+                    }
+                }
             }
         }
     }
