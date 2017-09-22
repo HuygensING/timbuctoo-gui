@@ -3,7 +3,7 @@ import styled from '../../styled-components';
 import { GridProps, ColProps } from '../../typings/layout';
 import CreateElementWithTag from '../../services/CreateElementWithTag';
 
-const BREAKPOINT = {
+export const BREAKPOINT = {
     MOBILE: '767px',
     TABLET: '1024px'
 };
