@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import FullHelmet from '../FullHelmet';
 import Hero from '../hero/Hero';
 import { Col } from '../layout/Grid';
@@ -9,6 +10,9 @@ import GridSection from '../layout/GridSection';
 import { Dummy } from '../Dummy';
 import { CollectionMetadata } from '../../typings/timbuctoo/schema';
 import { match } from 'react-router';
+import { UserReducer } from '../../typings/store';
+import EditCollectionBar from './EditCollectionBar';
+import { Title } from '../layout/StyledCopy';
 
 interface Props {
     title: string;
@@ -18,6 +22,7 @@ interface Props {
     collectionKeys: CollectionMetadata[];
     currentCollection: CollectionMetadata;
     match: match<any>;
+    user: UserReducer;
 }
 
 type FullProps = Props;
@@ -25,8 +30,14 @@ type FullProps = Props;
 interface State {}
 
 class DataSetBody extends PureComponent<FullProps, State> {
+    constructor(props: FullProps) {
+        super(props);
+
+        this.renderCollectionBar = this.renderCollectionBar.bind(this);
+    }
+
     render () {
-        const { title, description, imageUrl, datasetId, collectionKeys } = this.props;
+        const { title, description, imageUrl, datasetId, collectionKeys, user } = this.props;
 
         return (
             <section>
@@ -43,6 +54,18 @@ class DataSetBody extends PureComponent<FullProps, State> {
                 <Col sm={42} smOffset={3} smPaddingBottom={.5}>
                     {collectionKeys.length > 0 && <CollectionTags colKeys={collectionKeys} datasetId={datasetId} />}
                 </Col>
+
+                {
+                    user.loggedIn &&
+                    <Col sm={42} smOffset={3} smPaddingBottom={.5}>
+                        <section>
+                            <Title>Collection</Title>
+                            <ul>
+                            {collectionKeys.map(this.renderCollectionBar)}
+                            </ul>>
+                        </section>
+                    </Col>
+                }
 
                 <Col sm={48}>
                     <GridSection gridSize={48} gridOffset={0} cols={2} colSizeOffset={2} gridSpacing={2}>
@@ -61,6 +84,18 @@ class DataSetBody extends PureComponent<FullProps, State> {
             </section>
         );
     }
+
+    private renderCollectionBar (collection: CollectionMetadata, idx: number) {
+        return (
+            <li key={idx}>
+                <EditCollectionBar key={idx} collection={collection} datasetId={this.props.datasetId} />
+            </li>
+        );
+    }
 }
 
-export default DataSetBody;
+const mapStateToProps = (state) => ({
+    user: state.user
+});
+
+export default connect(mapStateToProps)(DataSetBody);

@@ -4,9 +4,9 @@ import { UserReducer } from '../typings/store';
 import { Action } from '../typings/index';
 import retrieveId from '../services/RetrieveId';
 import { HSID } from '../constants/global';
-import Client from '../services/ApolloClient';
 
 import Translations from '../services/Translations';
+import Client from '../services/ApolloClient';
 
 const loggedOutState = {
     hsid: '',
@@ -29,12 +29,14 @@ const SWITCH_LANGUAGE = 'SWITCH_LANGUAGE';
 export default (state: UserReducer = initialState, action: Action) => {
     switch (action.type) {
         case LOG_IN:
-            Cookies.set(HSID, state.hsid);
-            return {
-                ...state,
-                loggedIn: true
-            };
-
+            if (state.hsid.length > 0) {
+                Cookies.set(HSID, state.hsid);
+                return {
+                    ...state,
+                    loggedIn: true
+                };
+            }
+            return state;
         case LOG_OUT:
             return loggedOutState;
 

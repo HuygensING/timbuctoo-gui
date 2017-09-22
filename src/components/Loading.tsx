@@ -1,6 +1,6 @@
 import React, { SFC } from 'react';
 import { Title } from './layout/StyledCopy';
-import styled from 'styled-components';
+import styled from '../styled-components';
 
 interface Props {}
 

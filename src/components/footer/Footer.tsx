@@ -18,6 +18,7 @@ interface Props {
 }
 
 const FooterContainer = styled(Grid)`
+    flex-shrink: 0;
     padding: ${calcColWidth(1)} ${calcColWidth(3)};
     background-color: ${(props) => props.theme.colors.black};
 `;

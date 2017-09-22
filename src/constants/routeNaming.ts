@@ -31,6 +31,7 @@ const ROUTE_KEYS: KeyValueObject = {
     dataSet: 'dataSet',
     entry: 'entry',
     collection: 'collection',
+    collectionList: 'collectionList',
     sheet: 'sheet'
 };
 

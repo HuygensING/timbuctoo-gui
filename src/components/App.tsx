@@ -15,11 +15,19 @@ import { Grid } from './layout/Grid';
 import { AboutMe } from '../typings/timbuctoo/schema';
 import { UserReducer } from '../typings/store';
 import { LogInUser } from '../reducers/user';
+import Loading from './Loading';
 
 const headerHeight: string = '4rem';
 
 const GridWithMargin = styled(Grid)`
     padding-top: ${headerHeight};
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+`;
+
+const Main = styled.div`
+  flex: 1;
 `;
 
 interface Props {
@@ -37,25 +45,48 @@ interface State {
 }
 
 class App extends Component<ChildProps<Props, Response>, State> {
+    renderLoad: boolean = true;
+
+    componentWillMount () {
+        this.checkRenderLoad(this.props.user);
+    }
+
     componentWillReceiveProps ({data, user}: Props) {
         if (!user.loggedIn && data.aboutMe && data.aboutMe.id && this.props.data.aboutMe !== data.aboutMe) {
             this.props.logInUser();
         }
     }
 
+    componentWillUpdate (nextProps: Props) {
+        this.checkRenderLoad(nextProps.user);
+    }
+
     render () {
+        // TODO: switch <Loading/> for an <Authenticating /> component
         return (
             <ThemeProvider theme={theme}>
-                <BrowserRouter>
-                    <GridWithMargin>
-                        <Header height={headerHeight}/>
-                        <Router/>
-                        <Footer/>
-                        <PoweredBy/>
-                    </GridWithMargin>
-                </BrowserRouter>
+                {
+                    this.renderLoad
+                        ? <Loading/>
+                        : <BrowserRouter>
+                            <GridWithMargin>
+                                <Header height={headerHeight}/>
+                                <Main>
+                                    <Router/>
+                                </Main>
+                                <Footer/>
+                                <PoweredBy/>
+                            </GridWithMargin>
+                        </BrowserRouter>
+                }
             </ThemeProvider>
         );
+    }
+
+    private checkRenderLoad (user: UserReducer) {
+        if (!user.hsid || user.loggedIn) {
+            this.renderLoad = false;
+        }
     }
 }
 

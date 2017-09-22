@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { CollectionMetadata, DataSets } from '../../typings/timbuctoo/schema';
 import { getDataSet } from '../../services/GetDataSet';
@@ -33,6 +32,8 @@ class DataSet extends Component<FullProps, State> {
         const dataSet = getDataSet(this.props);
         if ( !dataSet ) { return <Loading />; }
 
+        console.log(dataSet);
+
         const { datasetId, title, description, imageUrl, collections } = dataSet.metadata;
 
         const collectionItems: CollectionMetadata[] = collections && collections.items
@@ -55,10 +56,4 @@ class DataSet extends Component<FullProps, State> {
     }
 }
 
-const mapStateToProps = (state) => ({
-    user: state.user
-});
-
-const connectedDataSet = connect(mapStateToProps)(DataSet);
-
-export default connectQuery(QUERY_DATASET)(connectedDataSet);
+export default connectQuery(QUERY_DATASET)(DataSet);
