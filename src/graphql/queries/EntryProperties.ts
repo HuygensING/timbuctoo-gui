@@ -7,7 +7,7 @@ const QUERY_ENTRY_PROPERTIES = ({ match }) => {
             dataSets {
                 ${match.params.dataSet} {
                     metadata {
-                        collections {
+                        collections(cursor: "${match.params.collection}") {
                             items {
                                 title
                                 collectionId

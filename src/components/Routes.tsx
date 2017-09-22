@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router-dom';
 import Home from './routes/Home';
 import NotFound from './routes/NotFound';
 import { ROUTE_PATHS } from '../constants/routeNaming';
-// import { Redirect } from 'react-router';
 import { RouteInfo, RouteObject, routes } from '../constants/routeStructure';
 import PrivateRoute from './PrivateRoute';
 

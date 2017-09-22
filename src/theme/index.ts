@@ -4,10 +4,11 @@ import { ThemeProps } from '../typings/layout';
 const COLORS = {
     timbuctooGreen: '#269075', /* Viridian */
     white: '#FFFFFF', /* white */
-    lightGrey: '#B2B2B2', /* Ash grey */
+    lightGrey: '#EBEBEB', /* Ash grey */
     grey: '#888888', /* Taupe gray */
     darkGrey: '#5C5C5C', /* Davy's grey */
-    black: '#323232' /* Olive Drab #7 */
+    black: '#323232', /* Olive Drab #7 */
+    red: '#D0021B'
 };
 
 const theme: ThemeProps = {
@@ -22,6 +23,7 @@ const theme: ThemeProps = {
             medium: COLORS.grey,
             dark: COLORS.darkGrey
         },
+        error: COLORS.red,
         white: COLORS.white,
         black: COLORS.black
     },

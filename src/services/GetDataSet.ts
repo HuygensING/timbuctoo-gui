@@ -17,7 +17,7 @@ const getDataSet = (props: Props) => {
     return dataSets[dataSet];
 };
 
-const getCollection = (props: Props, collectionId) =>  {
+const getCollection = (props: Props, collectionId: string) =>  {
     const dataSet = getDataSet(props);
 
     if (!dataSet || !collectionId) { return noContent; }

@@ -42,11 +42,11 @@ class SearchBody extends PureComponent<FullProps, State> {
                 <FullHelmet pageName={`search: datasetId`}/>
 
                 {/* Search functionality */}
-                <Col sm={42} smOffset={3} smPaddingTop={1}>
+                <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={1}>
                     <SearchForm onSubmit={this.props.onSubmit} />
                 </Col>
 
-                <Col sm={42} smOffset={3} smPaddingTop={.5}>
+                <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={.5}>
                     <CollectionTags colKeys={collectionKeys} datasetId={datasetId} currentCollectionListId={currentCollection.collectionListId}/>
                 </Col>
 

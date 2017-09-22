@@ -5,6 +5,7 @@ import { RouteComponentProps } from 'react-router';
 import DummyRoute from '../components/routes/DummyRoute';
 import Entry from '../components/routes/Entry';
 import DataSet from '../components/routes/DataSet';
+import ViewScreen from '../components/routes/ViewScreen';
 
 export interface RouteInfo {
     path?: string;
@@ -71,6 +72,7 @@ export const routes: RouteObject[] = [
     },
     {
         key: `${ROUTE_PATHS.edit}/:${ROUTE_KEYS.dataSet}`,
+        isPrivate: true,
         routes: [
             {
                 path: SUB_ROUTES.meta,
@@ -97,8 +99,8 @@ export const routes: RouteObject[] = [
                 component: DummyRoute
             },
             {
-                path: SUB_ROUTES.viewScreen,
-                component: DummyRoute
+                path: `${SUB_ROUTES.viewScreen}/:${ROUTE_KEYS.collection}`,
+                component: ViewScreen
             },
             {
                 path: SUB_ROUTES.editScreen,
