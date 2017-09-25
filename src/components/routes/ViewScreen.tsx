@@ -7,8 +7,7 @@ import FullHelmet from '../FullHelmet';
 import { Title } from '../layout/StyledCopy';
 import FormWrapper from '../form/FormWrapper';
 import Loading from '../Loading';
-import SortableList from '../SortableList';
-import DraggableAccordeon from '../DraggableAccordeon';
+import SortableList from '../DraggableList';
 
 import styled from '../../styled-components';
 import connectQuery from '../../services/ConnectQuery';
@@ -16,7 +15,6 @@ import { getDataSet } from '../../services/GetDataSet';
 
 import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
 
-// import { CollectionMetadata } from '../../typings/timbuctoo/schema';
 import { ComponentType } from '../../typings/index';
 
 interface ApolloProps {
@@ -50,6 +48,7 @@ class ViewScreen extends PureComponent<FullProps, State> {
         };
 
         this.openCloseFn = this.openCloseFn.bind(this);
+        this.deleteFn = this.deleteFn.bind(this);
         this.onSortEnd = this.onSortEnd.bind(this);
     }
 
@@ -72,8 +71,17 @@ class ViewScreen extends PureComponent<FullProps, State> {
     }
 
     openCloseFn (idx: number) {
-        console.log(idx);
+        console.log('toggling item:', idx);
         this.setState({openedIndex: idx});
+    }
+
+    deleteFn (idx: number) {
+        console.log('deleting item:', idx);
+        const openedIndex = null;
+        const items = this.state.items.slice();
+        items.splice(idx, 1);
+
+        this.setState({items, openedIndex});
     }
 
     render () {
@@ -94,13 +102,12 @@ class ViewScreen extends PureComponent<FullProps, State> {
                     <FormWrapper>
                         <SortableList
                             openCloseFn={this.openCloseFn}
+                            deleteFn={this.deleteFn}
                             items={items}
                             openedIndex={openedIndex}
-                            Component={DraggableAccordeon}
 
                             onSortEnd={this.onSortEnd}
-                            useDragHandle={false}
-                            axis={'y'}
+                            useDragHandle={true}
                         />
                     </FormWrapper>
                 </Section>

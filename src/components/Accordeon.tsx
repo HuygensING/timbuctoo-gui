@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
-import { SortableElement, SortableHandle } from 'react-sortable-hoc';
 import styled, { withProps } from '../styled-components';
-import Hamburger from './icons/Hamburger';
 import { ComponentType } from '../typings/index';
 import Cross from './icons/Cross';
-import theme from '../theme/index';
 
 interface Props {
+    index: number;
     item: ComponentType;
     isOpen: boolean;
+    onDeleteFn?: Function;
+    padding?: number;
     openCloseFn: Function;
 }
 
@@ -16,9 +16,7 @@ interface State {
     isActive: boolean;
 }
 
-const CONTAINER_PADDING = 1.5;
-
-const AccordeonBox = withProps<{ active: boolean }>(styled.li)`
+const AccordeonBox = withProps<{ active: boolean, padding: number }>(styled.li)`
   border: 1px solid ${props => props.theme.colors.shade.light};
   background: ${props => props.theme.colors.white};
   position: relative;
@@ -26,7 +24,7 @@ const AccordeonBox = withProps<{ active: boolean }>(styled.li)`
   width: 100%;
   border-radius: .25rem;
   margin-bottom: .5rem;
-  padding: ${CONTAINER_PADDING}rem ${CONTAINER_PADDING * 3}rem;
+  padding: ${props => props.padding}rem ${props => props.padding * 3}rem;
   ${props => props.active ? `box-shadow: 0 .125rem .5rem rgba(0,0,0,.05);` : ''}
 `;
 
@@ -46,21 +44,14 @@ const StyledTitle = styled.button`
   
 `;
 
-const DraggableIcon = styled(Hamburger)`
+const CloseIcon = withProps<{padding: number}>(styled(Cross))`
   position: absolute;
-  left: ${CONTAINER_PADDING}rem;
-  top: ${CONTAINER_PADDING}rem;
+  right: ${props => props.padding}rem;
+  top: ${props => props.padding}rem;
 `;
 
-const CloseIcon = styled(Cross)`
-  position: absolute;
-  right: ${CONTAINER_PADDING}rem;
-  top: ${CONTAINER_PADDING}rem;
-`;
+class Accordeon extends PureComponent<Props, State> {
 
-const DragHandle = SortableHandle(DraggableIcon);
-
-class DraggableAccordeon extends PureComponent<Props, State> {
     static renderForm (item: ComponentType) {
         return (
             <FormContainer>
@@ -76,27 +67,42 @@ class DraggableAccordeon extends PureComponent<Props, State> {
             isActive: false
         };
 
-        this.changeColor = this.changeColor.bind(this);
-    }
-
-    changeColor () {
-        this.setState({isActive: !this.state.isActive});
+        this.setActive = this.setActive.bind(this);
+        this.setInactive = this.setInactive.bind(this);
     }
 
     render () {
         const {isActive} = this.state;
-        const {isOpen, openCloseFn, item} = this.props;
+        const {isOpen, openCloseFn, item, children, padding = 1.5} = this.props;
+
         return (
-            <AccordeonBox active={isActive} onMouseEnter={this.changeColor} onMouseLeave={this.changeColor}>
+            <AccordeonBox padding={padding} active={isActive} onMouseEnter={this.setActive} onMouseLeave={this.setInactive}>
                 <StyledTitle type="button" onClick={() => openCloseFn()}>
                     {item.__typename}
                 </StyledTitle>
-                {isOpen && DraggableAccordeon.renderForm(item)}
-                <DragHandle/>
-                <CloseIcon color={isActive ? theme.colors.error : theme.colors.shade.medium}/>
+
+                {isOpen && Accordeon.renderForm(item)}
+
+                {children}
+
+                {this.renderCloseIcon(padding)}
             </AccordeonBox>
         );
     }
+
+    private setActive () {
+        this.setState({isActive: true});
+    }
+
+    private setInactive () {
+        this.setState({isActive: false});
+    }
+
+    private renderCloseIcon (padding: number) {
+        const {onDeleteFn} = this.props;
+        return onDeleteFn && this.state.isActive &&
+            <CloseIcon padding={padding} onClick={() => onDeleteFn()}/>;
+    }
 }
 
-export default SortableElement(DraggableAccordeon);
+export default Accordeon;
