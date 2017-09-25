@@ -1,13 +1,13 @@
 import { gql } from 'react-apollo';
 import { componentsFragment } from '../fragments/Components';
 
-const QUERY_ENTRY_PROPERTIES = ({ match }) => {
+const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
     const query = `
         query {
             dataSets {
                 ${match.params.dataSet} {
                     metadata {
-                        collections(cursor: "${match.params.collection}") {
+                        collections(cursor: "${collectionCursor ? collectionCursor : match.params.collection}") {
                             items {
                                 title
                                 collectionId
