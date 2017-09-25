@@ -22,7 +22,7 @@ const AccordeonBox = withProps<{ active: boolean }>(styled.li)`
   border: 1px solid ${props => props.theme.colors.shade.light};
   background: ${props => props.theme.colors.white};
   position: relative;
-  display: flex;
+  display: inline-block;
   width: 100%;
   border-radius: .25rem;
   margin-bottom: .5rem;
