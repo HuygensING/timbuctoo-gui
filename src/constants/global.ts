@@ -2,7 +2,26 @@ import { ButtonType } from '../typings/layout';
 
 export const HSID: string = 'hsid';
 
-export const COMPONENTS: {[name: string]: string} = {
+export const CONTAINER_PADDING = 1.5;
+
+interface ComponentTypes {
+    title: string;
+    value: string;
+    image: string;
+    link: string;
+    keyValue: string;
+    table: string;
+    divider: string;
+}
+
+interface ComponentFieldType {
+    valueKey: string;
+    urlKey: string;
+    altKey: string;
+    key: string;
+}
+
+export const COMPONENTS: ComponentTypes = {
     title: 'TitleComponent',
     value: 'ValueComponent',
     image: 'ImageComponent',
@@ -10,6 +29,13 @@ export const COMPONENTS: {[name: string]: string} = {
     keyValue: 'KeyValueComponent',
     table: 'TableComponent',
     divider: 'DividerComponent'
+};
+
+export const COMPONENT_FIELDS: ComponentFieldType = {
+    valueKey: 'valueKey',
+    urlKey: 'urlKey',
+    altKey: 'altKey',
+    key: 'key'
 };
 
 export const BUTTON_TYPES: {[name: string]: ButtonType} = {

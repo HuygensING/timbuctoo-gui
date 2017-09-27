@@ -1,19 +1,15 @@
 import React, { SFC } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
-import { ComponentType } from '../typings/index';
 import Hamburger from './icons/Hamburger';
 import styled from 'styled-components';
-import Accordeon from './Accordeon';
+import { CONTAINER_PADDING } from '../constants/global';
 
 interface Props {
-    items: ComponentType[];
-    openCloseFn: Function;
-    deleteFn: Function;
-    openedIndex: number;
+    listItems: any[];
+    Component: any;
+    componentProps: any;
     onSortEnd: (props: { oldIndex: number, newIndex: number }) => void;
 }
-
-const CONTAINER_PADDING = 1.5;
 
 const DraggableIcon = styled(Hamburger)`
   position: absolute;
@@ -22,31 +18,26 @@ const DraggableIcon = styled(Hamburger)`
 `;
 
 const DragHandle = SortableHandle(DraggableIcon);
-const DraggableElement = SortableElement(Accordeon);
 
-const DraggableList: SFC<Props> = ({items, openCloseFn, deleteFn, openedIndex}) => {
+const DraggableList: SFC<Props> = ({listItems, Component, componentProps}) => {
 
-    const renderListItem = (item: ComponentType, idx) => {
-        const isOpen = openedIndex === idx;
-        const openClose = () => openCloseFn(isOpen ? null : idx);
-        const onDeleteFn = () => deleteFn(idx);
+    const DraggableElement = SortableElement(Component);
 
+    const renderListItem = (listItem, idx) => {
         return (
                 <DraggableElement
                     key={idx}
                     index={idx}
-                    isOpen={openedIndex === idx}
-                    onDeleteFn={onDeleteFn}
-                    openCloseFn={openClose}
-                    padding={CONTAINER_PADDING}
-                    item={item}
+                    item={listItem}
+                    idx={idx}
+                    {...componentProps}
                 >
                     <DragHandle/>
                 </DraggableElement>
         );
     };
 
-    return <ul>{items.map(renderListItem)}</ul>;
+    return <ul>{listItems.map(renderListItem)}</ul>;
 };
 
 export default SortableContainer(DraggableList);
