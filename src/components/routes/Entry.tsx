@@ -1,13 +1,12 @@
 import React, { PureComponent } from 'react';
 import { RouteComponentProps } from 'react-router';
 
-import { DataSets, KeyValueComponent, TableComponent } from '../../typings/timbuctoo/schema';
+import { DataSetMetadata, KeyValueComponent, TableComponent } from '../../typings/timbuctoo/schema';
 import connectQuery from '../../services/ConnectQuery';
 import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
 
 import { COMPONENTS } from '../../constants/global';
 
-import { getDataSet } from '../../services/GetDataSet';
 import EntryBody from '../entry/EntryBody';
 import Loading from '../Loading';
 
@@ -16,7 +15,7 @@ interface Props {
 
 interface ApolloProps {
     data: {
-        dataSets: DataSets;
+        dataSetMetadata: DataSetMetadata;
     };
 }
 
@@ -70,15 +69,16 @@ class Entry extends PureComponent<FullProps, State> {
     }
 
     render () {
-        const dataSet = getDataSet(this.props);
-        if ( !dataSet ) { return <Loading />; }
+        const { dataSetMetadata } = this.props.data;
+        if ( !dataSetMetadata ) { return <Loading />; }
         
-        const collections = dataSet.metadata.collections.items;
-        if (!collections.length) { return null; }
+        const { collections } = dataSetMetadata;
+        if (!collections || !collections.items.length) { return null; }
         
-        const components = collections[0].components.items || this.dummyComponents();
+        const components = this.dummyComponents();
 
-        const values: Array<string> = Entry.getValues(components);
+        // const values: Array<string> = Entry.getValues(components);
+        const values: Array<string> = [];
 
         return (
             <EntryBody

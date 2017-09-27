@@ -1,6 +1,7 @@
 import { match } from 'react-router';
 import { CollectionMetadata } from '../typings/timbuctoo/schema';
 
+// TODO: Rename this file!
 interface Props {
     data: any;
     match: match<any>;
@@ -22,7 +23,9 @@ const getCollection = (props: Props, collectionId: string) =>  {
 
     if (!dataSet || !collectionId) { return noContent; }
 
-    return dataSet[collectionId];
+    // TODO remove replacing this stuff
+    const id = collectionId.replace(props.match.params.dataSet, '');
+    return dataSet[id];
 };
 
 const getCurrentCollection = (collectionItems: CollectionMetadata[], collection: string) => {

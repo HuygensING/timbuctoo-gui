@@ -34,6 +34,8 @@ class EntryBody extends PureComponent<FullProps, State> {
         const { components } = this.props;
 
         const currentCollection = getCollection(this.props, this.props.match.params.collection);
+
+        console.log( currentCollection );
         
         if (!currentCollection) { return <Loading/>; }
 

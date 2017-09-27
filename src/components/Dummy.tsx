@@ -14,7 +14,7 @@ const DummyContainer = styled((props: {mvp: boolean, height: string | number, wi
     width: ${props => typeof props.width === 'number' ? calcColWidth(props.width) : props.width};
     margin-bottom: ${props => typeof props.marginY === 'number' ? `${calcColWidth(props.marginY)}` : props.marginY};
     padding: .5rem 0;
-    border: 2px dashed ${props => props.mvp ? lighten(.5 , props.theme.colors.primary.medium) : lighten(.2, props.theme.colors.shade.light)};
+    border: 2px dashed ${props => props.mvp ? lighten(.5 , props.theme.colors.primary.medium) : props.theme.colors.shade.light};
 `;
 
 const DummyContent = styled(Subtitle)`

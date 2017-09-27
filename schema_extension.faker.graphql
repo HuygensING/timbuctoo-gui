@@ -5,6 +5,19 @@ scalar Key #FIXME: ID?
 scalar Email
 scalar Markdown
 
+extend type DUMMY_oberontestclusius_Residence_List { facets: [Facet!]! }
+extend type DUMMY_oberontestclusius_Provenance_List { facets: [Facet!]! }
+extend type DUMMY_oberontestclusius_Occupation_List { facets: [Facet!]! }
+extend type DUMMY_oberontestclusius_Persons_List { facets: [Facet!]! }
+extend type DUMMY_oberontestclusius_Fields_of_interest_List { facets: [Facet!]! }
+extend type DUMMY_oberontesthttp___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown_List { facets: [Facet!]! }
+extend type DUMMY_oberontestclusius_Places_List { facets: [Facet!]! }
+extend type DUMMY_oberontestclusius_Institutes_List { facets: [Facet!]! }
+extend type DUMMY_oberontestclusius_Provenance_type_List { facets: [Facet!]! }
+extend type DUMMY_oberontestclusius_Membership_List { facets: [Facet!]! }
+extend type DUMMY_oberontestclusius_Biography_List { facets: [Facet!]! }
+extend type DUMMY_oberontestclusius_Education_List { facets:[Facet!]! }
+
 schema {
   query: Query
 }
@@ -41,10 +54,6 @@ extend type DataSets {
 type MimeTypeDescription {
   name: String! @examples(values: ["json", "JSON-LD", "Gephi", "CSV"])
   description: String! @fake(type: lorem)
-}
-
-extend type DUMMY_oberontestclusius_Institutes_List {
-  facets: [Facet!]!
 }
 
 # type AboutMe {
