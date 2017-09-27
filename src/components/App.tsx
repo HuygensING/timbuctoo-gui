@@ -99,7 +99,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const query = gql`
-    query {
+    query App {
         aboutMe {
             id
         }

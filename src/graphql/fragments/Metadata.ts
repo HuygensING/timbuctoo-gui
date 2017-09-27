@@ -24,6 +24,17 @@ const collectionBase = gql`
     }
 `;
 
+const collectionProperties = gql`
+    fragment CollectionProperties on CollectionMetadata {
+        properties {
+            items {
+                name
+                density
+            }
+        }
+    }
+`;
+
 const collectionsFragment = gql`
     fragment CollectionsFragment on DataSetMetadata {
         collections {
@@ -56,12 +67,14 @@ const dataSetMetadataFragment = gql`
         collections {
             items {
                 ...CollectionBase
+                ...CollectionProperties
             }
         }
     }
     ${contactFragment}
     ${provenanceFragment}
     ${collectionBase}
+    ${collectionProperties}
 `;
 
 export { dataSetMetadataFragment, collectionsFragment };

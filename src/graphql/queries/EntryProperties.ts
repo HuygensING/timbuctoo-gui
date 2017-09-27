@@ -3,7 +3,7 @@ import { componentsFragment } from '../fragments/Components';
 
 const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
     const query = `
-        query {
+        query EntryProperties {
             dataSets {
                 ${match.params.dataSet} {
                     metadata {

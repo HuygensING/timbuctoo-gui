@@ -2,7 +2,7 @@ import { gql } from 'react-apollo';
 
 const QUERY_COLLECTION_VALUES = ({ match, queryString = '/all', currentCollection }) => {
     const query = `
-        query {
+        query CollectionValues {
             dataSets {
                 ${match.params.dataSet} {
                     ${currentCollection.collectionListId}(query: "${queryString}") {

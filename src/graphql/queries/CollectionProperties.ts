@@ -3,7 +3,7 @@ import { collectionsFragment } from '../fragments/Metadata';
 
 const QUERY_COLLECTION_PROPERTIES = ({ match }) => {
     const query = `
-        query {
+        query CollectionProperties {
             dataSets {
                 ${match.params.dataSet} {
                     metadata {

@@ -81,7 +81,7 @@ class Home extends Component<Props & ApolloProps, State> {
 }
 
 const query = gql`
-    query {
+    query Home {
         promotedDataSets {
             imageUrl
             title

@@ -6,7 +6,7 @@ scalar Email
 scalar Markdown
 
 schema {
-  query: QueryType
+  query: Query2
 }
 
 # - [x] check alle lists of ze gewrapped moeten worden
@@ -14,10 +14,10 @@ schema {
 # - [x] check alle fakes
 # - [x] Loop van boven naar beneden of alle properties en hun types kloppen
 
-extend type QueryType {
+extend type Query2 {
   #the datasets that are supposed to get extra attention
   # promotedDataSets: [DataSetMetadata!]!
-  dataSets: DataSets
+  # dataSets: DataSets
   #all mimetypes that you can use when downloading data from a dataSet
   availableExportMimetypes: [MimeType!]!
 
@@ -25,7 +25,7 @@ extend type QueryType {
   aboutMe: AboutMe
 }
 
-type DataSets {
+extend type DataSets {
   jauco_leaders: Jauco_Leaders
 }
 
