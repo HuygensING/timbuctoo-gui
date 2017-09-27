@@ -14,7 +14,7 @@ import PoweredBy from './PoweredBy';
 import { Grid } from './layout/Grid';
 import { AboutMe } from '../typings/timbuctoo/schema';
 import { UserReducer } from '../typings/store';
-import { LogInUser } from '../reducers/user';
+import { LogInUser, LogOutUser } from '../reducers/user';
 import Loading from './Loading';
 
 const headerHeight: string = '4rem';
@@ -38,6 +38,7 @@ interface Props {
     };
     user: UserReducer;
     logInUser: () => void;
+    logOutUser: () => void;
 }
 
 interface State {
@@ -55,6 +56,11 @@ class App extends Component<ChildProps<Props, Response>, State> {
         if (!user.loggedIn && data.aboutMe && data.aboutMe.id && this.props.data.aboutMe !== data.aboutMe) {
             this.props.logInUser();
         }
+
+        if (this.renderLoad && data.error) {
+            this.renderLoad = false;
+            this.props.logOutUser();
+        }
     }
 
     componentWillUpdate (nextProps: Props) {
@@ -63,6 +69,7 @@ class App extends Component<ChildProps<Props, Response>, State> {
 
     render () {
         // TODO: switch <Loading/> for an <Authenticating /> component
+        console.log(this.props.data);
         return (
             <ThemeProvider theme={theme}>
                 {
@@ -95,7 +102,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    logInUser: () => dispatch(LogInUser())
+    logInUser: () => dispatch(LogInUser()),
+    logOutUser: () => dispatch(LogOutUser())
 });
 
 const query = gql`
