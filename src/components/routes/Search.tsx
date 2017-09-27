@@ -44,8 +44,6 @@ class Search extends Component<FullProps, State> {
 
         const currentCollection = getCurrentCollection(collectionItems, this.props.match.params.collectionList);
 
-        console.log(currentCollection);
-
         return (
             <SearchBody
                 title={title}

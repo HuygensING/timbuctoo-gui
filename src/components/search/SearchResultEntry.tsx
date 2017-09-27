@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from '../../styled-components';
+import styled, { css } from '../../styled-components';
 
 import { Url } from '../../typings/timbuctoo/schema';
 
@@ -32,12 +32,19 @@ const ImageWrapper = styled.figure`
     height: 100%;
 `;
 
+const MaxWidth = css`
+    max-width: 60%;
+    padding-right: 1rem;
+`;
+
 const SearchTitle = styled(Subtitle)`
-  margin: 0;
+    margin: 0;
+    ${MaxWidth}
 `;
 
 const SearchDescription = styled(Content)`
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
+    ${MaxWidth}
 `;
 
 const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataSetId, uri }: ResultDataSetMetadata) => {

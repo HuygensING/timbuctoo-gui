@@ -40,6 +40,7 @@ const collectionsFragment = gql`
         collections {
             items {
                 ...CollectionBase
+                ...CollectionProperties
                 summaryProperties {
                     title
                     description
@@ -49,6 +50,8 @@ const collectionsFragment = gql`
         }
     }
     ${collectionBase}
+    ${collectionProperties}
+
 `;
 
 const dataSetMetadataFragment = gql`
