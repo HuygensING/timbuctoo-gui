@@ -4,7 +4,7 @@ import { collectionsFragment } from '../fragments/Metadata';
 const QUERY_COLLECTION_PROPERTIES = ({ match }) => {
     const query = `
         query CollectionProperties {
-            metadata(cursor: "${match.params.dataSet}") {
+            metadata(dataSetId: "${match.params.dataSet}") {
                 ...CollectionsFragment
             }
         }
