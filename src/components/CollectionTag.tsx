@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { SFC } from 'react';
 import styled from 'styled-components';
 
 import { CollectionMetadata, Property } from '../typings/timbuctoo/schema';
@@ -10,13 +10,12 @@ import { BUTTON_TYPES } from '../constants/global';
 import ProgressBar from './ProgressBar';
 
 interface Props {
-    datasetId: string;
+    isOpen: boolean;
+    index: number;
+    dataSetId: string;
     currentCollectionListId: string | undefined;
     collection: CollectionMetadata;
-}
-
-interface State {
-    isActive: boolean;
+    toggleOpen: Function;
 }
 
 const ListItem = styled.li`
@@ -55,62 +54,41 @@ const PropertiesPanel = styled.div`
     }
 `;
 
-class CollectionTag extends PureComponent<Props, State> {
+const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, currentCollectionListId, dataSetId }) => {
+    const { title, collectionListId, properties } = collection;
 
-    constructor(props: Props) {
-        super(props);
+    const type = currentCollectionListId && currentCollectionListId === collectionListId
+        ? BUTTON_TYPES.dark
+        : BUTTON_TYPES.inverted;
 
-        this.state = {
-            isActive: false
-        };
+    const renderPropertyDensity = (property: Property, idx: number) => {
+        return (
+            <ProgressBar
+                key={idx}
+                label={property.name}
+                width={'100px'}
+                progress={property.density}
+            />
+        );
+    };
 
-        this.onMouseEnter = this.onMouseEnter.bind(this);
-        this.onMouseLeave = this.onMouseLeave.bind(this);
-    }
-
-    onMouseEnter() {
-        this.setState({
-            isActive: true
-        });
-    }
-
-    onMouseLeave() {
-        this.setState({
-            isActive: false
-        });
-    }
-
-    renderPropertiesPanel() {
-        if (!this.state.isActive) { return null; }
-        const { properties } = this.props.collection;
+    const renderPropertiesPanel = () => {
         return (
             <PropertiesPanel>
-                {properties.items.map(this.renderPropertyDensity)}
+                {properties.items.map(renderPropertyDensity)}
             </PropertiesPanel>
         );
-    }
+    };
 
-    renderPropertyDensity(property: Property, idx: number) {
-        return <ProgressBar key={idx} label={property.name} width={'100px'} progress={property.density} />;
-    }
-
-    render() {
-        const { collection, currentCollectionListId, datasetId } = this.props;
-        const { title, collectionListId } = collection;
-
-        const type = currentCollectionListId && currentCollectionListId === collectionListId
-            ? BUTTON_TYPES.dark
-            : BUTTON_TYPES.inverted;
-        return (
-            <ListItem
-                onMouseEnter={this.onMouseEnter}
-                onMouseLeave={this.onMouseLeave}
-            >
-                <Button type={type} to={`${ROUTE_PATHS.details}/${datasetId}/${encode(collectionListId)}`}>{title}</Button>
-                {this.renderPropertiesPanel()}
-            </ListItem>
-        );
-    }
-}
+    return (
+        <ListItem
+            onMouseEnter={() => toggleOpen(index)}
+            onMouseLeave={() => toggleOpen(null)}
+        >
+            <Button type={type} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>{title}</Button>
+            {isOpen && renderPropertiesPanel()}
+        </ListItem>
+    );
+};
 
 export default CollectionTag;
