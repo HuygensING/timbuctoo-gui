@@ -14,56 +14,60 @@ schema {
 # - [x] check alle fakes
 # - [x] Loop van boven naar beneden of alle properties en hun types kloppen
 
-extend type Query2 {
-  #the datasets that are supposed to get extra attention
-  # promotedDataSets: [DataSetMetadata!]!
-  # dataSets: DataSets
-  #all mimetypes that you can use when downloading data from a dataSet
-  availableExportMimetypes: [MimeType!]!
-
-  #information about the logged in user, or null of no user is logged in
-  aboutMe: AboutMe
+extend type Query {
+  metadata: DataSetMetadata
 }
+
+# extend type Query2 {
+#   #the datasets that are supposed to get extra attention
+#   # promotedDataSets: [DataSetMetadata!]!
+#   # dataSets: DataSets
+#   #all mimetypes that you can use when downloading data from a dataSet
+#   availableExportMimetypes: [MimeType!]!
+
+#   #information about the logged in user, or null of no user is logged in
+#   aboutMe: AboutMe
+# }
 
 extend type DataSets {
   jauco_leaders: Jauco_Leaders
 }
 
-type MimeType {
-  value: String! @examples(values: ["application/json", "application/ld+json", "application/xml", "text/csv"])
-  en: MimeTypeDescription
-}
+# type MimeType {
+#   value: String! @examples(values: ["application/json", "application/ld+json", "application/xml", "text/csv"])
+#   en: MimeTypeDescription
+# }
 
 type MimeTypeDescription {
   name: String! @examples(values: ["json", "JSON-LD", "Gephi", "CSV"])
   description: String! @fake(type: lorem)
 }
 
-type AboutMe {
-  #datasets that this user has some specific permissions on
-  dataSets: [DataSetMetadata!]!
+# type AboutMe {
+#   #datasets that this user has some specific permissions on
+#   dataSets: [DataSetMetadata!]!
 
-  #The unique identifier of this user
-  id: ID! @examples(values: ["1234"])
+#   #The unique identifier of this user
+#   id: ID! @examples(values: ["1234"])
 
-  #a human readable name (or empty string if not available)
-  name: String! @fake(type: fullName)
+#   #a human readable name (or empty string if not available)
+#   name: String! @fake(type: fullName)
 
-  #a url to a page with personal information on this user
-  personalInfo: Url! @fake(type: url)
+#   #a url to a page with personal information on this user
+#   personalInfo: Url! @fake(type: url)
 
-  #This user may create a new dataset on this timbuctoo instance
-  canCreateDataSet: Boolean!
-}
+#   #This user may create a new dataset on this timbuctoo instance
+#   canCreateDataSet: Boolean!
+# }
 
 extend type DataSetMetadata {
   # datasetId: ID! 	@examples(values: ["jauco_leaders"])
   # title: String!					@fake(type:county)
   # description: String			@fake(type:lorem)
   # imageUrl: Url						@fake(type:imageUrl options: {imageCategory: cats, randomizeImageUrl: true})
-  owner: ContactInfo!
-  contact: ContactInfo!
-  provenanceInfo: ProvenanceInfo!
+  # owner: ContactInfo!
+  # contact: ContactInfo!
+  # provenanceInfo: ProvenanceInfo!
   contributors: [RoleWithMembers!]!
 
   licence: Licence!
@@ -103,7 +107,7 @@ type SummaryProperties {
 
 type RoleWithMembers {
   name: String
-  members: [MemberInfo!]!
+  # members: [MemberInfo!]!
 }
 
 type ComponentList {
@@ -218,20 +222,20 @@ type ImageComponent {
 
 # Different kinds of values supported by the different Elements
 
-type ContactInfo {
-  name: String! 					@fake(type:fullName)
-  email: Email 						@fake(type:email)
-}
+# type ContactInfo {
+#   name: String! 					@fake(type:fullName)
+#   email: Email 						@fake(type:email)
+# }
 
 type MemberInfo {
   name: String! 					@fake(type:fullName)
   url: Url 								@fake(type:url)
 }
 
-type ProvenanceInfo {
-  title: String!					@fake(type:state)
-  body: Markdown!					@fake(type:lorem) #FIXME: limit size
-}
+# type ProvenanceInfo {
+#   title: String!					@fake(type:state)
+#   body: Markdown!					@fake(type:lorem) #FIXME: limit size
+# }
 
 enum DataSetPermission {
   SEARCH_AND_VIEW				#Is allowed to search the dataset and query it using graphql

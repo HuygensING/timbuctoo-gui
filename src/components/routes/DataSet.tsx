@@ -40,8 +40,6 @@ class DataSet extends Component<FullProps, State> {
             ? collections.items
             : [];
 
-        const currentCollection = DataSet.getCurrentCollectionName(collectionItems, this.props.match.params.collection);
-
         return (
             <DataSetBody
                 title={title}
@@ -49,7 +47,6 @@ class DataSet extends Component<FullProps, State> {
                 imageUrl={imageUrl}
                 datasetId={datasetId}
                 collectionKeys={collectionItems}
-                currentCollection={currentCollection}
                 match={this.props.match}
             />
         );

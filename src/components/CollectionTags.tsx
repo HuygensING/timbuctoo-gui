@@ -1,10 +1,7 @@
 import React, { SFC } from 'react';
 import { CollectionMetadata } from '../typings/timbuctoo/schema';
-import { ROUTE_PATHS } from '../constants/routeNaming';
-import Button from './layout/Button';
-import styled from 'styled-components';
-import { encode } from '../services/UrlStringCreator';
-import { BUTTON_TYPES } from '../constants/global';
+
+import CollectionTag from './CollectionTag';
 
 interface Props {
     colKeys: CollectionMetadata[];
@@ -12,30 +9,25 @@ interface Props {
     currentCollectionListId?: string;
 }
 
-const ListItem = styled.li`
-  display: inline-block;
-  margin-right: 1rem;
-`;
+const CollectionTags: SFC<Props> = ({ colKeys, currentCollectionListId, datasetId }) => {
 
-const CollectionTags: SFC<Props> = ({ colKeys, datasetId, currentCollectionListId }) => {
-
-    const renderButton = (name: string, collectionListId) => {
-
-        const type = currentCollectionListId && currentCollectionListId === collectionListId
-            ? BUTTON_TYPES.dark
-            : BUTTON_TYPES.inverted;
-
+    const renderButton = (collection: CollectionMetadata, idx: number) => {
         return (
-            <ListItem key={name}>
-                <Button type={type} to={`${ROUTE_PATHS.details}/${datasetId}/${encode(collectionListId)}`}>{name}</Button>
-            </ListItem>
+            <CollectionTag
+                key={idx}
+                currentCollectionListId={currentCollectionListId}
+                datasetId={datasetId}
+                collection={collection}
+            />
         );
-    };
-
+    }
+    
     return (
-        <ul>
-            {colKeys.map((col, idx) => renderButton(col.title, col.collectionListId))}
-        </ul>
+        <div>
+            <ul>
+                {colKeys.map((col, idx) => renderButton(col, idx))}
+            </ul>
+        </div>
     );
 };
 

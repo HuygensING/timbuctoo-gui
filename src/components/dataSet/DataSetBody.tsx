@@ -20,7 +20,6 @@ interface Props {
     imageUrl?: string;
     datasetId: string;
     collectionKeys: CollectionMetadata[];
-    currentCollection: CollectionMetadata;
     match: match<any>;
     user: UserReducer;
 }
@@ -32,7 +31,7 @@ interface State {}
 class DataSetBody extends PureComponent<FullProps, State> {
     constructor(props: FullProps) {
         super(props);
-
+        
         this.renderCollectionBar = this.renderCollectionBar.bind(this);
     }
 
@@ -62,7 +61,7 @@ class DataSetBody extends PureComponent<FullProps, State> {
                             <Title>Collection</Title>
                             <ul>
                             {collectionKeys.map(this.renderCollectionBar)}
-                            </ul>>
+                            </ul>
                         </section>
                     </Col>
                 }
