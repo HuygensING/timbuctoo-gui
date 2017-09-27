@@ -53,7 +53,7 @@ const collectionsFragment = gql`
 
 const dataSetMetadataFragment = gql`
     fragment DataSetMetadataFragment on DataSetMetadata {
-        datasetId
+        dataSetId
         title
         description
         imageUrl

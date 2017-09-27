@@ -23,7 +23,7 @@ class DataSet extends Component<FullProps, State> {
         const { metadata } = this.props.data;
         if ( !metadata ) { return <Loading />; }
 
-        const { datasetId, title, description, imageUrl, collections } = metadata;
+        const { dataSetId, title, description, imageUrl, collections } = metadata;
 
         const collectionItems: CollectionMetadata[] = collections && collections.items
             ? collections.items
@@ -34,7 +34,7 @@ class DataSet extends Component<FullProps, State> {
                 title={title}
                 description={description}
                 imageUrl={imageUrl}
-                datasetId={datasetId}
+                dataSetId={dataSetId}
                 collectionKeys={collectionItems}
                 match={this.props.match}
             />

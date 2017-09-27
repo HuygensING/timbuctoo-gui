@@ -50,7 +50,7 @@ class Search extends Component<FullProps, State> {
                 title={title}
                 description={description}
                 imageUrl={imageUrl}
-                datasetId={this.props.match.params.dataSet}
+                dataSetId={this.props.match.params.dataSet}
                 collectionKeys={collectionItems}
                 currentCollection={currentCollection}
                 match={this.props.match}

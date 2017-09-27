@@ -8,7 +8,7 @@ import { ROUTE_PATHS, SUB_ROUTES } from '../../constants/routeNaming';
 
 interface Props {
     collection: CollectionMetadata;
-    datasetId: string;
+    dataSetId: string;
 }
 
 const Bar = styled.section`
@@ -50,12 +50,12 @@ const TitleBox = styled(Title)`
     width: 300px;
 `;
 
-const EditCollectionBar: SFC<Props> = ({ collection, datasetId }) => {
+const EditCollectionBar: SFC<Props> = ({ collection, dataSetId }) => {
     return (
         <Bar>
             <TitleBox>{collection.title}</TitleBox>
             <LinkBox to={'#'}>Edit facets<EditIcon/></LinkBox>
-            <LinkBox to={`${ROUTE_PATHS.edit}/${datasetId}${SUB_ROUTES.viewScreen}/${collection.collectionId}`}>Edit screen<EditIcon/></LinkBox>
+            <LinkBox to={`${ROUTE_PATHS.edit}/${dataSetId}${SUB_ROUTES.viewScreen}/${collection.collectionId}`}>Edit screen<EditIcon/></LinkBox>
         </Bar>
     );
 };

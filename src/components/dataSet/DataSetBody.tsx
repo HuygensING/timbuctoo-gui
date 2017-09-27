@@ -18,7 +18,7 @@ interface Props {
     title: string;
     description?: string;
     imageUrl?: string;
-    datasetId: string;
+    dataSetId: string;
     collectionKeys: CollectionMetadata[];
     match: match<any>;
     user: UserReducer;
@@ -36,7 +36,7 @@ class DataSetBody extends PureComponent<FullProps, State> {
     }
 
     render () {
-        const { title, description, imageUrl, datasetId, collectionKeys, user } = this.props;
+        const { title, description, imageUrl, dataSetId, collectionKeys, user } = this.props;
 
         return (
             <section>
@@ -46,12 +46,12 @@ class DataSetBody extends PureComponent<FullProps, State> {
                     title={title}
                     content={description}
                     imgUrl={imageUrl}
-                    searchPath={`${ROUTE_PATHS.details}/${datasetId}/${encode(collectionKeys[0].title)}`}
+                    searchPath={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionKeys[0].title)}`}
                     buttonText={'Search this dataset'}
                 />
 
                 <Col sm={42} smOffset={3} smPaddingBottom={.5}>
-                    {collectionKeys.length > 0 && <CollectionTags colKeys={collectionKeys} datasetId={datasetId} />}
+                    {collectionKeys.length > 0 && <CollectionTags colKeys={collectionKeys} dataSetId={dataSetId} />}
                 </Col>
 
                 {
@@ -87,7 +87,7 @@ class DataSetBody extends PureComponent<FullProps, State> {
     private renderCollectionBar (collection: CollectionMetadata, idx: number) {
         return (
             <li key={idx}>
-                <EditCollectionBar key={idx} collection={collection} datasetId={this.props.datasetId} />
+                <EditCollectionBar key={idx} collection={collection} dataSetId={this.props.dataSetId} />
             </li>
         );
     }

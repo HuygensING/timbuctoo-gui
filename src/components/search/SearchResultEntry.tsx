@@ -15,7 +15,7 @@ export interface ResultDataSetMetadata {
     title: string;
     description: string;
     collectionId: string;
-    datasetId: string;
+    dataSetId: string;
     uri: string;
 }
 
@@ -40,8 +40,8 @@ const SearchDescription = styled(Content)`
   margin-bottom: 1rem;
 `;
 
-const SearchResultEntry = ({ title, imageUrl, description, collectionId, datasetId, uri }: ResultDataSetMetadata) => {
-    const url = `${ROUTE_PATHS.details}/${datasetId}/${collectionId}/${encode(uri)}`;
+const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataSetId, uri }: ResultDataSetMetadata) => {
+    const url = `${ROUTE_PATHS.details}/${dataSetId}/${collectionId}/${encode(uri)}`;
 
     return (
         <SearchItem>

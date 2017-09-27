@@ -8,7 +8,7 @@ import { BUTTON_TYPES } from '../constants/global';
 
 interface Props {
     colKeys: CollectionMetadata[];
-    datasetId: string;
+    dataSetId: string;
     currentCollectionListId?: string;
 }
 
@@ -17,7 +17,7 @@ const ListItem = styled.li`
   margin-right: 1rem;
 `;
 
-const CollectionTags: SFC<Props> = ({ colKeys, datasetId, currentCollectionListId }) => {
+const CollectionTags: SFC<Props> = ({ colKeys, dataSetId, currentCollectionListId }) => {
 
     const renderButton = (name: string, collectionListId) => {
 
@@ -27,7 +27,7 @@ const CollectionTags: SFC<Props> = ({ colKeys, datasetId, currentCollectionListI
 
         return (
             <ListItem key={name}>
-                <Button type={type} to={`${ROUTE_PATHS.details}/${datasetId}/${encode(collectionListId)}`}>{name}</Button>
+                <Button type={type} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>{name}</Button>
             </ListItem>
         );
     };

@@ -86,7 +86,7 @@ const query = gql`
             imageUrl
             title
             description
-            datasetId
+            dataSetId
         }
         aboutMe {
             id

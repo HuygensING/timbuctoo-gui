@@ -34,7 +34,7 @@ const ListContentItem = (props: DataSetProps) => {
     return (
         <ListItem>
             <Subtitle>{props.title}</Subtitle>
-            <Content>{props.description && props.description.substr(0, 20)} in <StyledLink to={`${ROUTE_PATHS.details}/userId/${props.datasetId}`}>{Datasets[Math.floor(Math.random() * Datasets.length)]}</StyledLink></Content>
+            <Content>{props.description && props.description.substr(0, 20)} in <StyledLink to={`${ROUTE_PATHS.details}/userId/${props.dataSetId}`}>{Datasets[Math.floor(Math.random() * Datasets.length)]}</StyledLink></Content>
             <DateLabel>{Translations.translate('globals.today')}</DateLabel>
         </ListItem>
     );

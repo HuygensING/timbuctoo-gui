@@ -16,7 +16,7 @@ export interface Action {
 export type ComponentType = Component & { __typename: string };
 
 export interface DataSetProps {
-    datasetId: string;
+    dataSetId: string;
     title: string;
     description: string;
     imageUrl?: string;
