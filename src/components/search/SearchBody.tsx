@@ -13,7 +13,7 @@ import Loading from '../Loading';
 import SearchResults from './SearchResults';
 
 interface Props {
-    datasetId: string;
+    dataSetId: string;
     collectionKeys: CollectionMetadata[];
     currentCollection: CollectionMetadata;
     match: match<any>;
@@ -32,14 +32,14 @@ interface State {}
 
 class SearchBody extends PureComponent<FullProps, State> {
     render () {
-        const { datasetId, collectionKeys, currentCollection } = this.props;
+        const { dataSetId, collectionKeys, currentCollection } = this.props;
         const collection = getCollection(this.props, currentCollection.collectionListId);
 
         if (!collection) { return <Loading/>; }
 
         return (
             <section>
-                <FullHelmet pageName={`search: datasetId`}/>
+                <FullHelmet pageName={`search: dataSetId`}/>
 
                 {/* Search functionality */}
                 <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={1}>
@@ -47,7 +47,7 @@ class SearchBody extends PureComponent<FullProps, State> {
                 </Col>
 
                 <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={.5}>
-                    <CollectionTags colKeys={collectionKeys} datasetId={datasetId} currentCollectionListId={currentCollection.collectionListId}/>
+                    <CollectionTags colKeys={collectionKeys} dataSetId={dataSetId} currentCollectionListId={currentCollection.collectionListId}/>
                 </Col>
 
                 <FullSection>
@@ -61,7 +61,7 @@ class SearchBody extends PureComponent<FullProps, State> {
                         {/* Filter functionality */}
 
                         <SearchResults
-                            datasetId={datasetId}
+                            dataSetId={dataSetId}
                             collectionId={currentCollection.collectionId}
                             properties={currentCollection.summaryProperties}
                             results={collection.items}

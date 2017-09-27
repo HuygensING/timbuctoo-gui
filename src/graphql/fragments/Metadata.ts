@@ -36,7 +36,7 @@ const collectionProperties = gql`
 `;
 
 const collectionsFragment = gql`
-    fragment CollectionsFragment on DataSetMetadata {
+    fragment CollectionsFragment on CollectionMetadata {
         collections {
             items {
                 ...CollectionBase
@@ -53,7 +53,7 @@ const collectionsFragment = gql`
 
 const dataSetMetadataFragment = gql`
     fragment DataSetMetadataFragment on DataSetMetadata {
-        datasetId
+        dataSetId
         title
         description
         imageUrl

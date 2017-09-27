@@ -9,7 +9,7 @@ import { DataSetMetadata } from '../../typings/timbuctoo/schema';
 const FeaturedContentBlock = (props: DataSetMetadata & UserReducer) => {
     return (
         <section>
-            <Link to={`${ROUTE_PATHS.details}/${props.datasetId}`}>
+            <Link to={`${ROUTE_PATHS.details}/${props.dataSetId}`}>
                 <Image src={props.imageUrl} ratio={1} />
                 <Subtitle>{props.title}</Subtitle>
                 <Content>{props.description && props.description.substr(0, 100)}...</Content>

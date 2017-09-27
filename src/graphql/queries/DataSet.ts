@@ -4,12 +4,8 @@ import { dataSetMetadataFragment } from '../fragments/Metadata';
 const QUERY_DATASET = ({ match }) => {
     const query = `
         query DataSet {
-            dataSets {
-                ${match.params.dataSet} {
-                    metadata {
-                        ...DataSetMetadataFragment
-                    }
-                }
+            dataSetMetadata(dataSetId: "${match.params.dataSet}") {
+                ...DataSetMetadataFragment
             }
         }
     `;

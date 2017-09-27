@@ -9,7 +9,7 @@ export interface QueryType {
 }
 
 export interface DataSetMetadata {
-  datasetId: string;
+  dataSetId: string;
   title: string;
   description: string | null;
   imageUrl: Url | null;

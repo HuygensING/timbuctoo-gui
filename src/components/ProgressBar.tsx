@@ -9,7 +9,8 @@ const ProgressWrapper = styled.div`
 
 const ProgressLabel = styled(Label)`
     display: inline-block;
-    width: 100px;
+    overflow: hidden;
+    width: 150px;
     padding-right: 1rem;
 `;
 
@@ -30,7 +31,7 @@ const ProgressAnimation = keyframes`
 
 const Progress = withProps<Props>(styled.figure)`
     position: relative;
-    width: ${props => `${props.progress && props.progress / 1000}%`};
+    width: ${props => `${props.progress}%`};
     height: 100%;
     background: ${props => props.theme.colors.shade.dark};
     transform-origin: left;
@@ -45,7 +46,7 @@ interface Props {
 
 const ProgressBar: SFC<Props> = ({label, width, progress}) => (
     <ProgressWrapper>
-        <ProgressLabel>{label} {progress}</ProgressLabel>
+        <ProgressLabel>{label}</ProgressLabel>
         <Bar width={width}>
             <Progress progress={progress} />
         </Bar>

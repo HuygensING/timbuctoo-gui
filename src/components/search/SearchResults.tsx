@@ -5,7 +5,7 @@ import GridSection from '../layout/GridSection';
 import SearchResultEntry from './SearchResultEntry';
 
 interface Props {
-    datasetId: string;
+    dataSetId: string;
     collectionId: string;
     properties: {
         title: string;
@@ -15,7 +15,7 @@ interface Props {
     results: any[]; // Object with uri and the three variable fields for title, image and description
 }
 
-const SearchResults: SFC<Props> = ({ results, properties, collectionId, datasetId }) => {
+const SearchResults: SFC<Props> = ({ results, properties, collectionId, dataSetId }) => {
 
     const renderEntries = (result: any, idx: number) => {
         const imageUrl = properties.image && result[properties.image].value;
@@ -30,7 +30,7 @@ const SearchResults: SFC<Props> = ({ results, properties, collectionId, datasetI
                 uri={result.uri}
                 description={description}
                 collectionId={collectionId}
-                datasetId={datasetId}
+                dataSetId={dataSetId}
             />
         );
     };

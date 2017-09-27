@@ -5,22 +5,22 @@ import CollectionTag from './CollectionTag';
 
 interface Props {
     colKeys: CollectionMetadata[];
-    datasetId: string;
+    dataSetId: string;
     currentCollectionListId?: string;
 }
 
-const CollectionTags: SFC<Props> = ({ colKeys, currentCollectionListId, datasetId }) => {
+const CollectionTags: SFC<Props> = ({ colKeys, currentCollectionListId, dataSetId }) => {
 
     const renderButton = (collection: CollectionMetadata, idx: number) => {
         return (
             <CollectionTag
                 key={idx}
                 currentCollectionListId={currentCollectionListId}
-                datasetId={datasetId}
+                datasetId={dataSetId}
                 collection={collection}
             />
         );
-    }
+    };
     
     return (
         <div>

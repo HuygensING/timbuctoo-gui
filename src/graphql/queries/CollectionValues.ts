@@ -5,7 +5,7 @@ const QUERY_COLLECTION_VALUES = ({ match, queryString = '/all', currentCollectio
         query CollectionValues {
             dataSets {
                 ${match.params.dataSet} {
-                    ${currentCollection.collectionListId}(query: "${queryString}") {
+                    ${currentCollection.collectionListId.replace(match.params.dataSet, '')} {
                         facets {
                             caption
                             options {

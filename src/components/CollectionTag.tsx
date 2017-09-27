@@ -57,7 +57,7 @@ const PropertiesPanel = styled.div`
 
 class CollectionTag extends PureComponent<Props, State> {
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
 
         this.state = {
@@ -91,7 +91,7 @@ class CollectionTag extends PureComponent<Props, State> {
     }
 
     renderPropertyDensity(property: Property, idx: number) {
-        return <ProgressBar key={idx} label={property.name} width={'100px'} progress={property.density} />
+        return <ProgressBar key={idx} label={property.name} width={'100px'} progress={property.density} />;
     }
 
     render() {
@@ -109,7 +109,7 @@ class CollectionTag extends PureComponent<Props, State> {
                 <Button type={type} to={`${ROUTE_PATHS.details}/${datasetId}/${encode(collectionListId)}`}>{title}</Button>
                 {this.renderPropertiesPanel()}
             </ListItem>
-        )
+        );
     }
 }
 

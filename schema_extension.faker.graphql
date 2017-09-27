@@ -70,7 +70,6 @@ extend type DataSetMetadata {
   # provenanceInfo: ProvenanceInfo!
   contributors: [RoleWithMembers!]!
 
-  licence: Licence!
   roles: [DataSetPermission!]!
 
   # collections(count: Int = 20, cursor: ID = ""): CollectionMetadataList
