@@ -33,7 +33,6 @@ class Search extends Component<FullProps, State> {
     }
 
     render () {
-        console.log(this.props.data);
         const { metadata } = this.props.data;
         if ( !metadata ) { return <Loading />; }
 
@@ -50,6 +49,7 @@ class Search extends Component<FullProps, State> {
                 title={title}
                 description={description}
                 imageUrl={imageUrl}
+                onSubmit={Search.onSearch}
                 dataSetId={this.props.match.params.dataSet}
                 collectionKeys={collectionItems}
                 currentCollection={currentCollection}

@@ -1,22 +1,30 @@
 import React, { PureComponent } from 'react';
-import styled, { withProps } from '../styled-components';
-import { ComponentType } from '../typings/index';
+import styled from '../styled-components';
 import Cross from './icons/Cross';
+import VariableFormFieldRenderer from './form/VariableFieldRenderer';
+import { Fieldset } from '../typings/Forms';
+import { CONTAINER_PADDING } from '../constants/global';
 
 interface Props {
-    index: number;
-    item: ComponentType;
-    isOpen: boolean;
+    item: Fieldset;
+    idx: number;
+    openedIndex: number | null;
+    resolveChange: Function;
     onDeleteFn?: Function;
-    padding?: number;
     openCloseFn: Function;
 }
 
 interface State {
-    isActive: boolean;
 }
 
-const AccordeonBox = withProps<{ active: boolean, padding: number }>(styled.li)`
+const FieldContainer = styled.section`
+  display: flex;
+  padding: ${CONTAINER_PADDING}rem .5rem 0;
+  margin-top: 1rem;
+  border-top: 1px solid ${props => props.theme.colors.shade.light}
+`;
+
+const AccordeonBox = styled.li`
   border: 1px solid ${props => props.theme.colors.shade.light};
   background: ${props => props.theme.colors.white};
   position: relative;
@@ -24,68 +32,66 @@ const AccordeonBox = withProps<{ active: boolean, padding: number }>(styled.li)`
   width: 100%;
   border-radius: .25rem;
   margin-bottom: .5rem;
-  padding: ${props => props.padding}rem ${props => props.padding * 3}rem;
-  ${props => props.active ? `box-shadow: 0 .125rem .5rem rgba(0,0,0,.05);` : ''}
-`;
-
-const FormContainer = styled.div`
-  width: 100%;
-  float: left;
+  padding: ${CONTAINER_PADDING}rem 1rem;
 `;
 
 const StyledTitle = styled.button`
   cursor: pointer;
+  padding: 0 ${CONTAINER_PADDING * 3 - 1}rem;
   width: 100%;
   font: ${props => props.theme.fonts.subTitle};
   
   &:focus {
   outline: none;
   }
-  
 `;
 
-const CloseIcon = withProps<{padding: number}>(styled(Cross))`
+const CloseIcon = styled.button`
   position: absolute;
-  right: ${props => props.padding}rem;
-  top: ${props => props.padding}rem;
+  right: ${CONTAINER_PADDING}rem;
+  top: ${CONTAINER_PADDING}rem;
 `;
 
 class Accordeon extends PureComponent<Props, State> {
 
-    static renderForm (item: ComponentType) {
+    static renderForm (fieldset: Fieldset, resolve: Function) {
         return (
-            <FormContainer>
-                <p>{JSON.stringify(item)}</p>
-            </FormContainer>
+            <FieldContainer>
+                <VariableFormFieldRenderer fieldset={fieldset} resolveChange={resolve}/>
+            </FieldContainer>
         );
     }
 
-    constructor () {
-        super();
-
-        this.state = {
-            isActive: false
-        };
+    constructor (props: Props) {
+        super(props);
 
         this.setActive = this.setActive.bind(this);
         this.setInactive = this.setInactive.bind(this);
     }
 
     render () {
-        const {isActive} = this.state;
-        const {isOpen, openCloseFn, item, children, padding = 1.5} = this.props;
+        const {openCloseFn, item, openedIndex, resolveChange, onDeleteFn, idx, children} = this.props;
+
+        const isOpen = openedIndex === idx;
+        const openClose = () => openCloseFn(isOpen ? null : idx);
+        const resolve = (val: Fieldset) => {
+            resolveChange(val, idx);
+        };
 
         return (
-            <AccordeonBox padding={padding} active={isActive} onMouseEnter={this.setActive} onMouseLeave={this.setInactive}>
-                <StyledTitle type="button" onClick={() => openCloseFn()}>
-                    {item.__typename}
+            <AccordeonBox>
+                <StyledTitle type="button" onClick={openClose}>
+                    {item.type}
                 </StyledTitle>
 
-                {isOpen && Accordeon.renderForm(item)}
-
+                {isOpen && Accordeon.renderForm(item, resolve)}
                 {children}
 
-                {this.renderCloseIcon(padding)}
+                {onDeleteFn &&
+                    <CloseIcon onClick={() => onDeleteFn(idx)}>
+                        <Cross />
+                    </CloseIcon>
+                }
             </AccordeonBox>
         );
     }
@@ -96,12 +102,6 @@ class Accordeon extends PureComponent<Props, State> {
 
     private setInactive () {
         this.setState({isActive: false});
-    }
-
-    private renderCloseIcon (padding: number) {
-        const {onDeleteFn} = this.props;
-        return onDeleteFn && this.state.isActive &&
-            <CloseIcon padding={padding} onClick={() => onDeleteFn()}/>;
     }
 }
 
