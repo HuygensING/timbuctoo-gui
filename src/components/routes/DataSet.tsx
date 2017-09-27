@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { CollectionMetadata, DataSets } from '../../typings/timbuctoo/schema';
-import { getDataSet } from '../../services/GetDataSet';
+import { CollectionMetadata, DataSetMetadata } from '../../typings/timbuctoo/schema';
 import DataSetBody from '../dataSet/DataSetBody';
 import QUERY_DATASET from '../../graphql/queries/DataSet';
 import connectQuery from '../../services/ConnectQuery';
@@ -11,7 +10,7 @@ interface Props {}
 
 interface ApolloProps {
     data: {
-        dataSets: DataSets;
+        metadata: DataSetMetadata;
     };
 }
 
@@ -19,28 +18,16 @@ type FullProps = Props & ApolloProps & RouteComponentProps<any>;
 interface State {}
 
 class DataSet extends Component<FullProps, State> {
-    static getCurrentCollectionName (collectionItems: CollectionMetadata[], collection: string) {
-        const fallBack = collectionItems[0];
-
-        if ( !location ) { return fallBack; }
-        const currentCollection = collectionItems.find(item => item.title === collection);
-
-        return currentCollection ? currentCollection : fallBack;
-    }
 
     render () {
-        const dataSet = getDataSet(this.props);
-        if ( !dataSet ) { return <Loading />; }
+        const { metadata } = this.props.data;
+        if ( !metadata ) { return <Loading />; }
 
-        console.log(dataSet);
-
-        const { datasetId, title, description, imageUrl, collections } = dataSet.metadata;
+        const { datasetId, title, description, imageUrl, collections } = metadata;
 
         const collectionItems: CollectionMetadata[] = collections && collections.items
             ? collections.items
             : [];
-
-        const currentCollection = DataSet.getCurrentCollectionName(collectionItems, this.props.match.params.collection);
 
         return (
             <DataSetBody
@@ -49,7 +36,6 @@ class DataSet extends Component<FullProps, State> {
                 imageUrl={imageUrl}
                 datasetId={datasetId}
                 collectionKeys={collectionItems}
-                currentCollection={currentCollection}
                 match={this.props.match}
             />
         );

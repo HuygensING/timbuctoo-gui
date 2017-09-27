@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 import { RouteComponentProps } from 'react-router';
-import { CollectionMetadata } from '../../typings/timbuctoo/schema';
-import { getDataSet, getCurrentCollection } from '../../services/GetDataSet';
+import { CollectionMetadata, DataSetMetadata } from '../../typings/timbuctoo/schema';
+import { getCurrentCollection } from '../../services/GetDataSet';
 import SearchBody from '../search/SearchBody';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import connectQuery from '../../services/ConnectQuery';
@@ -12,7 +12,9 @@ interface Props {
 }
 
 interface ApolloProps {
-    data: any;
+    data: {
+        metadata: DataSetMetadata;
+    };
 }
 
 type FullProps = Props & ApolloProps & RouteComponentProps<any>;
@@ -31,10 +33,11 @@ class Search extends Component<FullProps, State> {
     }
 
     render () {
-        const dataSet = getDataSet(this.props);
-        if ( !dataSet ) { return <Loading />; }
+        console.log(this.props.data);
+        const { metadata } = this.props.data;
+        if ( !metadata ) { return <Loading />; }
 
-        const { title, description, imageUrl, collections } = dataSet.metadata;
+        const { title, description, imageUrl, collections } = metadata;
 
         const collectionItems: CollectionMetadata[] = collections && collections.items
             ? collections.items

@@ -20,7 +20,6 @@ interface Props {
     imageUrl?: string;
     datasetId: string;
     collectionKeys: CollectionMetadata[];
-    currentCollection: CollectionMetadata;
     match: match<any>;
     user: UserReducer;
 }
