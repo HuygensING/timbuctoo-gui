@@ -28,8 +28,8 @@ const getCollection = (props: Props, collectionId: string) =>  {
 const getCurrentCollection = (collectionItems: CollectionMetadata[], collection: string) => {
     const fallBack = collectionItems[0];
 
-    if ( !location ) { return fallBack; }
-    const currentCollection = collectionItems.find(item => item.title === collection);
+    if ( !collection ) { return fallBack; }
+    const currentCollection = collectionItems.find(item => item.collectionListId === collection);
 
     return currentCollection ? currentCollection : fallBack;
 };

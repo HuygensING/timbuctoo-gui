@@ -6,7 +6,7 @@ scalar Email
 scalar Markdown
 
 schema {
-  query: Query2
+  query: Query
 }
 
 # - [x] check alle lists of ze gewrapped moeten worden
@@ -41,6 +41,10 @@ extend type DataSets {
 type MimeTypeDescription {
   name: String! @examples(values: ["json", "JSON-LD", "Gephi", "CSV"])
   description: String! @fake(type: lorem)
+}
+
+extend type DUMMY_oberontestclusius_Institutes_List {
+  facets: [Facet!]!
 }
 
 # type AboutMe {
@@ -99,9 +103,9 @@ extend type CollectionMetadata {
 }
 
 type SummaryProperties {
-  title: String! @examples(values:["schema_org_name"])
-  description: String @examples(values:["schema_org_description"])
-  image: String @examples(values:["schema_org_imageUrl"])
+  title: String! @examples(values:["tim_original_id"])
+  description: String @examples(values:["tim_original_id"])
+  image: String @examples(values:["tim_original_id"])
 }
 
 type RoleWithMembers {

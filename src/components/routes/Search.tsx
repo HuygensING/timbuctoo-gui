@@ -42,7 +42,9 @@ class Search extends Component<FullProps, State> {
             ? collections.items
             : [];
 
-        const currentCollection = getCurrentCollection(collectionItems, this.props.match.params.collection);
+        const currentCollection = getCurrentCollection(collectionItems, this.props.match.params.collectionList);
+
+        console.log( currentCollection );
 
         return (
             <SearchBody
