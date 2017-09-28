@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router';
 import { Grid } from '../layout/Grid';
 import FullHelmet from '../FullHelmet';
 import { Title } from '../layout/StyledCopy';
-import Loading from '../Loading';
+// import Loading from '../Loading';
 
 import styled from '../../styled-components';
 import connectQuery from '../../services/ConnectQuery';
@@ -14,6 +14,7 @@ import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
 import { ComponentType } from '../../typings/index';
 import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
+import { COMPONENTS } from '../../constants/global';
 
 interface ApolloProps {
     data: {
@@ -27,6 +28,45 @@ interface State {}
 const Section = styled.div`
   width: 100%;
 `;
+
+const fakeItems: any[] = [
+    {
+        __typename: COMPONENTS.title,
+        valueKey: {isKey: false, value: 'tim_hasLocation.skos_altLabel.items.value'}
+    },
+    {
+        __typename: COMPONENTS.keyValue,
+        key: {
+            isKey: true,
+            value: 'from'
+        },
+        values: [
+            {
+                __typename: COMPONENTS.value,
+                valueKey: {
+                    isKey: false,
+                    value: 'tim_beginDate.value'
+                }
+            }
+        ]
+    },
+    {
+        __typename: COMPONENTS.keyValue,
+        key: {
+            isKey: true,
+            value: 'to'
+        },
+        values: [
+            {
+                __typename: COMPONENTS.value,
+                valueKey: {
+                    isKey: false,
+                    value: 'tim_endDate.value'
+                }
+            }
+        ]
+    }
+];
 
 class ViewScreen extends PureComponent<FullProps, State> {
     collectionsAvailable: boolean;
@@ -51,13 +91,15 @@ class ViewScreen extends PureComponent<FullProps, State> {
     }
 
     render () {
-        if (!this.collectionsAvailable) {
-            return <Loading />;
-        }
+        console.log(fakeItems);
+        // TODO: add when Components are available
+        // if (!this.collectionsAvailable) {
+        //     return <Loading />;
+        // }
 
-        if (this.items.length === 0) {
-            return <Title>No collections available :'(</Title>;
-        }
+        // if (this.items.length === 0) {
+        //     return <Title>No collections available :'(</Title>;
+        // }
 
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
@@ -66,7 +108,7 @@ class ViewScreen extends PureComponent<FullProps, State> {
                     <Title>View screen</Title>
                     <DraggableForm
                         form={'view_screen'}
-                        items={this.items}
+                        items={fakeItems}
                         onSend={this.onSubmit}
                     />
                 </Section>

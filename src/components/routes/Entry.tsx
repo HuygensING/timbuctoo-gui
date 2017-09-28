@@ -82,6 +82,7 @@ class Entry extends PureComponent<FullProps, State> {
 
         return (
             <EntryBody
+                collectionCursor={this.props.match.params.collection}
                 components={components}
                 values={values}
                 match={this.props.match}

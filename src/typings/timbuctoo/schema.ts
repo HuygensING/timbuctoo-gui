@@ -102,30 +102,33 @@ export interface ComponentList {
 
 export type Component = TitleComponent | ValueComponent | LinkComponent | ImageComponent | KeyValueComponent | DividerComponent;
 
+export interface ComponentValue {
+  isKey: boolean;
+  value: string;
+}
+
 export interface TitleComponent {
-  valueKey: string;
+  valueKey: ComponentValue;
 }
 
 export interface ValueComponent {
-  valueKey: string;
+  valueKey: ComponentValue;
 }
 
 export interface LinkComponent {
-  valueKey: string;
-  urlKey: Url;
+  valueKey: ComponentValue;
+  urlKey: ComponentValue;
 }
 
 export interface ImageComponent {
-  urlKey: Url;
-  altKey: string | null;
+  urlKey: ComponentValue;
+  altKey: ComponentValue | null;
 }
 
 export interface KeyValueComponent {
-  key: Key;
+  key: ComponentValue;
   values: Array<Component>;
 }
-
-export type Key = any;
 
 export interface DividerComponent {
   valueKey: string;
