@@ -57,7 +57,7 @@ class App extends Component<ChildProps<Props, Response>, State> {
             this.props.logInUser();
         }
 
-        if (this.renderLoad && data.error) {
+        if (this.renderLoad && (data.error || data.aboutMe === null)) {
             this.renderLoad = false;
             this.props.logOutUser();
         }
