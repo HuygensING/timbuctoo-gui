@@ -1,3 +1,5 @@
+import { ComponentValue } from './timbuctoo/schema';
+
 export interface FormWrapperProps {
     handleSubmit?: (val: any) => void;
     pristine?: boolean;
@@ -13,6 +15,6 @@ export interface Fieldset {
 
 export interface Field {
     name: string;
-    value: string;
+    value: ComponentValue;
     title: string;
 }

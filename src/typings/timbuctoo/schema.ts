@@ -104,25 +104,25 @@ export type Component = TitleComponent | ValueComponent | LinkComponent | ImageC
 
 export interface ComponentValue {
   isKey: boolean;
-  value: string;
+  fields: string[];
 }
 
 export interface TitleComponent {
-  valueKey: ComponentValue;
+  value: ComponentValue;
 }
 
 export interface ValueComponent {
-  valueKey: ComponentValue;
+  value: ComponentValue;
 }
 
 export interface LinkComponent {
-  valueKey: ComponentValue;
-  urlKey: ComponentValue;
+  value: ComponentValue;
+  url: ComponentValue;
 }
 
 export interface ImageComponent {
-  urlKey: ComponentValue;
-  altKey: ComponentValue | null;
+  url: ComponentValue;
+  alt: ComponentValue | null;
 }
 
 export interface KeyValueComponent {
@@ -131,7 +131,7 @@ export interface KeyValueComponent {
 }
 
 export interface DividerComponent {
-  valueKey: string;
+  value: ComponentValue | null;
 }
 
 export interface PropertyList {

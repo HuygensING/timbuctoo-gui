@@ -2,11 +2,11 @@ import React, { PureComponent } from 'react';
 import styled from '../styled-components';
 import Cross from './icons/Cross';
 import VariableFormFieldRenderer from './form/VariableFieldRenderer';
-import { Fieldset } from '../typings/Forms';
 import { CONTAINER_PADDING } from '../constants/global';
+import { ComponentFormType } from '../typings/index';
 
 interface Props {
-    item: Fieldset;
+    item: ComponentFormType;
     idx: number;
     openedIndex: number | null;
     resolveChange: Function;
@@ -54,10 +54,10 @@ const CloseIcon = styled.button`
 
 class Accordeon extends PureComponent<Props, State> {
 
-    static renderForm (fieldset: Fieldset, resolve: Function) {
+    static renderForm (item: ComponentFormType, resolve: Function) {
         return (
             <FieldContainer>
-                <VariableFormFieldRenderer fieldset={fieldset} resolveChange={resolve}/>
+                <VariableFormFieldRenderer item={item} resolveChange={resolve}/>
             </FieldContainer>
         );
     }
@@ -74,14 +74,14 @@ class Accordeon extends PureComponent<Props, State> {
 
         const isOpen = openedIndex === idx;
         const openClose = () => openCloseFn(isOpen ? null : idx);
-        const resolve = (val: Fieldset) => {
+        const resolve = (val: ComponentFormType) => {
             resolveChange(val, idx);
         };
 
         return (
             <AccordeonBox>
                 <StyledTitle type="button" onClick={openClose}>
-                    {item.type}
+                    {item.__typename}
                 </StyledTitle>
 
                 {isOpen && Accordeon.renderForm(item, resolve)}

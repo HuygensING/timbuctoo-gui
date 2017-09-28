@@ -23,29 +23,35 @@ interface ApolloProps {
 }
 
 type FullProps = ApolloProps & RouteComponentProps<any> & FormWrapperProps;
-interface State {}
+
+interface State {
+}
 
 const Section = styled.div`
   width: 100%;
+  padding-bottom: 3rem;
 `;
 
 const fakeItems: any[] = [
     {
         __typename: COMPONENTS.title,
-        valueKey: {isKey: false, value: 'tim_hasLocation.skos_altLabel.items.value'}
+        value: {
+            isKey: true,
+            fields: ['tim_hasLocation', 'skos_altLabel', 'items', 'value']
+        }
     },
     {
         __typename: COMPONENTS.keyValue,
         key: {
-            isKey: true,
-            value: 'from'
+            isKey: false,
+            fields: ['from']
         },
         values: [
             {
                 __typename: COMPONENTS.value,
-                valueKey: {
-                    isKey: false,
-                    value: 'tim_beginDate.value'
+                value: {
+                    isKey: true,
+                    fields: ['tim_beginDate.value']
                 }
             }
         ]
@@ -53,15 +59,15 @@ const fakeItems: any[] = [
     {
         __typename: COMPONENTS.keyValue,
         key: {
-            isKey: true,
-            value: 'to'
+            isKey: false,
+            fields: ['to']
         },
         values: [
             {
                 __typename: COMPONENTS.value,
-                valueKey: {
-                    isKey: false,
-                    value: 'tim_endDate.value'
+                value: {
+                    isKey: true,
+                    fields: ['tim_endDate.value']
                 }
             }
         ]
@@ -91,7 +97,6 @@ class ViewScreen extends PureComponent<FullProps, State> {
     }
 
     render () {
-        console.log(fakeItems);
         // TODO: add when Components are available
         // if (!this.collectionsAvailable) {
         //     return <Loading />;
@@ -101,13 +106,14 @@ class ViewScreen extends PureComponent<FullProps, State> {
         //     return <Title>No collections available :'(</Title>;
         // }
 
+        console.log(fakeItems);
+
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
                 <Section>
                     <FullHelmet pageName="View screen"/>
                     <Title>View screen</Title>
                     <DraggableForm
-                        form={'view_screen'}
                         items={fakeItems}
                         onSend={this.onSubmit}
                     />

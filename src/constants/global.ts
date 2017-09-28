@@ -32,9 +32,9 @@ export const COMPONENTS: ComponentTypes = {
 };
 
 export const COMPONENT_FIELDS: ComponentFieldType = {
-    valueKey: 'valueKey',
-    urlKey: 'urlKey',
-    altKey: 'altKey',
+    valueKey: 'value',
+    urlKey: 'url',
+    altKey: 'alt',
     key: 'key'
 };
 
