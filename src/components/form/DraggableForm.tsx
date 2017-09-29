@@ -3,7 +3,7 @@ import { arrayMove } from 'react-sortable-hoc';
 
 import DraggableList from '../DraggableList';
 import { ComponentFormType, ComponentType } from '../../typings/index';
-import { addExtraInfo, removeExtraInfo, renderName } from '../../services/FormValuesConverter';
+import { addExtraInfo, renderEmptyViewComponent } from '../../services/FormValueManipulator';
 import { SubmitButton } from './FormElements';
 import Accordeon from '../Accordeon';
 import styled from '../../styled-components';
@@ -42,20 +42,6 @@ const StyledSubmitButton = styled(SubmitButton)`
 `;
 
 class DraggableForm extends PureComponent<Props, State> {
-    static newComponent (idx: number) {
-        return {
-            __typename: COMPONENTS.value,
-            componentInfo: {
-                name: renderName(COMPONENTS.value, idx),
-                value: {isKey: false, fields: [COMPONENTS.value]},
-                index: idx
-            },
-            value: {
-                isKey: true,
-                fields: ['...']
-            }
-        };
-    };
 
     constructor (props: Props) {
         super(props);
@@ -71,6 +57,13 @@ class DraggableForm extends PureComponent<Props, State> {
         this.openCloseFn = this.openCloseFn.bind(this);
         this.deleteFn = this.deleteFn.bind(this);
         this.onSortEnd = this.onSortEnd.bind(this);
+    }
+
+    componentWillReceiveProps (newProps: Props) {
+        if (this.props.items !== newProps.items) {
+            const listItems = addExtraInfo(newProps.items);
+            this.setState({listItems});
+        }
     }
 
     onSortEnd ({oldIndex, newIndex}: { oldIndex: number, newIndex: number }) {
@@ -97,20 +90,6 @@ class DraggableForm extends PureComponent<Props, State> {
     resolveChange (listItem: ComponentFormType, idx: number) {
         const listItems = this.state.listItems.slice();
         listItems[idx] = listItem;
-
-        this.setState({listItems});
-    }
-
-    onSubmit (e: any) {
-        e.preventDefault();
-
-        const list = removeExtraInfo(this.state.listItems);
-        this.props.onSend(list);
-    }
-
-    addListItem () {
-        const listItems: any = this.state.listItems.slice();
-        listItems.push(DraggableForm.newComponent(this.state.listItems.length));
 
         this.setState({listItems});
     }
@@ -146,12 +125,26 @@ class DraggableForm extends PureComponent<Props, State> {
                     useDragHandle={true}
                 />
                 <AddListButton type={'button'} onClick={this.addListItem}>+</AddListButton>
-                { this.props.noForm
+                {this.props.noForm
                     ? <StyledSubmitButton type={'button'} onClick={this.onSubmit}>save</StyledSubmitButton>
                     : <StyledSubmitButton type="submit">save</StyledSubmitButton>
                 }
             </div>
         );
+    }
+
+    private addListItem () {
+        const listItems: any = this.state.listItems.slice();
+
+        const newListItem = renderEmptyViewComponent(COMPONENTS.value, this.state.listItems.length);
+        listItems.push(newListItem);
+
+        this.setState({listItems});
+    }
+
+    private onSubmit (e: any) {
+        e.preventDefault();
+        this.props.onSend(this.state.listItems);
     }
 }
 

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { RouteComponentProps } from 'react-router';
 
-import { DataSetMetadata, KeyValueComponent, TableComponent } from '../../typings/timbuctoo/schema';
+import { DataSetMetadata, KeyValueComponent } from '../../typings/timbuctoo/schema';
 import connectQuery from '../../services/ConnectQuery';
 import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
 
@@ -52,17 +52,6 @@ class Entry extends PureComponent<FullProps, State> {
                     component.values.forEach((_component: KeyValueComponent) => Entry.getValue(_component, values));
                 }
                 break;
-
-            case COMPONENTS.table:
-                if (component.tableColumns) {
-                    component.tableColumns.forEach(column => {
-                        if (column.cells) {
-                            column.cells.forEach((_component: TableComponent) => Entry.getValue(_component, values));
-                        }
-                    });
-                }
-                break;
-            
             default:
                 break;
         }

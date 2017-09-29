@@ -4,6 +4,7 @@ import { StandardStyledFormElements } from './FormElements';
 import { COMPONENT_FIELDS } from '../../constants/global';
 import { ComponentValue } from '../../typings/timbuctoo/schema';
 import DraggableForm from './DraggableForm';
+import { removeExtraInfo, renderEmptyViewComponent } from '../../services/FormValueManipulator';
 
 const Label = styled.label`
   display: inline-block;
@@ -52,36 +53,39 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
 
         this.onAddHandler = this.onAddHandler.bind(this);
         this.renderSubFields = this.renderSubFields.bind(this);
+        this.onChangeSubForm = this.onChangeSubForm.bind(this);
+        this.onChangeHeadHandler = this.onChangeHeadHandler.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
     }
 
-    onChangeHead (e: any) {
+    onChangeSubForm (values: any) {
+        const { resolveChange, item } = this.props;
+        const newValues = removeExtraInfo(values);
 
+        const newFieldset = {...item};
+        newFieldset.values = newValues;
+
+        resolveChange(newFieldset);
     }
 
     renderSubForm () {
         const { values } = this.props.item;
-
-        console.log('subform is rendering');
-        console.log(values);
-
         return (
             <DraggableForm
                 items={values}
                 noForm={true}
-                onSend={(e) => null}
+                onSend={this.onChangeSubForm}
             />
         );
     }
 
     render () {
-        const {url, alt, value, values, componentInfo} = this.props.item;
-
-        console.log(this.props.item);
+        const {url, alt, value, key, values, componentInfo} = this.props.item;
 
         const valueList = [
             {value: url, name: COMPONENT_FIELDS.urlKey},
             {value: alt, name: COMPONENT_FIELDS.altKey},
+            {value: key, name: COMPONENT_FIELDS.key},
             {value: value, name: COMPONENT_FIELDS.valueKey}];
 
         return (
@@ -94,13 +98,11 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                         title={this.props.item.__typename}
                         name={componentInfo.name}
                         defaultValue={this.props.item.__typename}
-                        onBlur={(e) => this.onChangeHead(e)}
+                        onBlur={(e) => this.onChangeHeadHandler(e)}
                     />
                 </StyledDivider>
-                {values && values.length > 0
-                    ? this.renderSubForm()
-                    : valueList.map(this.renderSubFields)
-                }
+                {valueList.map(this.renderSubFields)}
+                {values && values.length > 0 && this.renderSubForm()}
             </StyledFieldset>
         );
     }
@@ -128,7 +130,10 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                             />
                         ))
                     }
-                    <button type={'button'} onClick={(e) => this.onAddHandler(valueItem.name)}>+</button>
+                    {
+                        valueItem.value.isKey &&
+                        <button type={'button'} onClick={(e) => this.onAddHandler(valueItem.name)}>+</button>
+                    }
                 </StyledInputWrapper>
             </StyledDivider>
         );
@@ -149,11 +154,29 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         }
     }
 
+    private onChangeHeadHandler (e: any) {
+        e.preventDefault();
+        const { resolveChange, item } = this.props;
+        const componentKey = e.target.value;
+
+        if (componentKey === item.__typename) { return null; }
+
+        const newFieldset = renderEmptyViewComponent(componentKey, item.componentInfo.index);
+
+        if (item.values && newFieldset.values) {
+            newFieldset.values = item.values;
+        }
+
+        return newFieldset
+            ? resolveChange(newFieldset)
+            : console.log('"' + componentKey + '" : this is not an existing component!');
+    }
+
     private onAddHandler (fieldName: string) {
         const { resolveChange, item } = this.props;
 
         const newFieldset = {...item};
-        newFieldset[fieldName].fields.push('Vul in...');
+        newFieldset[fieldName].fields.push('');
 
         resolveChange(newFieldset);
     }

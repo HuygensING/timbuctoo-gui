@@ -8,9 +8,6 @@ const mapStateToProps = (state) => ({
 });
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-
-    !rest.loggedIn ? console.log('is private => do redirect') : console.log('good to go!');
-
     const renderRoute = props => (
         rest.loggedIn
             ? <Component {...props}/>

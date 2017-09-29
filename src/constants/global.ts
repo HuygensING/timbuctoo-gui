@@ -10,7 +10,6 @@ interface ComponentTypes {
     image: string;
     link: string;
     keyValue: string;
-    table: string;
     divider: string;
 }
 
@@ -27,7 +26,6 @@ export const COMPONENTS: ComponentTypes = {
     image: 'ImageComponent',
     link: 'LinkComponent',
     keyValue: 'KeyValueComponent',
-    table: 'TableComponent',
     divider: 'DividerComponent'
 };
 

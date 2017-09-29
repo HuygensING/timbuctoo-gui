@@ -73,7 +73,6 @@ class App extends Component<ChildProps<Props, Response>, State> {
 
     render () {
         // TODO: switch <Loading/> for an <Authenticating /> component
-        console.log(this.props.data);
         return (
             <ThemeProvider theme={theme}>
                 {

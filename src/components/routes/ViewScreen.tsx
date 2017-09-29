@@ -106,8 +106,6 @@ class ViewScreen extends PureComponent<FullProps, State> {
         //     return <Title>No collections available :'(</Title>;
         // }
 
-        console.log(fakeItems);
-
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
                 <Section>

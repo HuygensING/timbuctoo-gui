@@ -24,7 +24,6 @@ export interface ComponentInfo {
 export type ComponentType = Component & { __typename: string };
 export type ComponentFormType = Component & { __typename: string } & ComponentInfo;
 
-
 export interface DataSetProps {
     dataSetId: string;
     title: string;
