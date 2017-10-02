@@ -8,6 +8,10 @@ const ContentWrapper = styled(Content)`
 `;
 
 const ContentValue = (props) => {
+    if (!props.children) {
+        return null;
+    }
+
     return (
         <ContentWrapper>
             {props.children}

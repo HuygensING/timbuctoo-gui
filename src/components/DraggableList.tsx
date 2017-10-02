@@ -1,12 +1,16 @@
-import React, { SFC } from 'react';
+import React, { PureComponent } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import Hamburger from './icons/Hamburger';
 import styled from 'styled-components';
-import { CONTAINER_PADDING } from '../constants/global';
+import { CONTAINER_PADDING, DRAGGABLE_COMPONENTS } from '../constants/global';
+import Accordeon from './Accordeon';
 
+// TODO: Abstractify rendering components into the DraggableList.
+// If we pass a component as prop, which then needs to be dynamically wrapped into
+// a SortableElement, that component will destroy and create a new instance every time
 interface Props {
     listItems: any[];
-    Component: any;
+    componentType: 'accordeon' | 'block';
     componentProps: any;
     onSortEnd: (props: { oldIndex: number, newIndex: number }) => void;
 }
@@ -18,13 +22,21 @@ const DraggableIcon = styled(Hamburger)`
 `;
 
 const DragHandle = SortableHandle(DraggableIcon);
+const DraggableElement = SortableElement(Accordeon);
 
-const DraggableList: SFC<Props> = ({listItems, Component, componentProps}) => {
+class DraggableList extends PureComponent<Props> {
 
-    const DraggableElement = SortableElement(Component);
+    constructor () {
+        super();
 
-    const renderListItem = (listItem, idx) => {
-        return (
+        this.renderListItem = this.renderListItem.bind(this);
+    }
+
+    renderListItem ( listItem: any, idx: number) {
+        const { componentType, componentProps } = this.props;
+
+        if (componentType === DRAGGABLE_COMPONENTS.accordeon) {
+            return (
                 <DraggableElement
                     key={idx}
                     index={idx}
@@ -34,10 +46,19 @@ const DraggableList: SFC<Props> = ({listItems, Component, componentProps}) => {
                 >
                     <DragHandle/>
                 </DraggableElement>
-        );
-    };
+            );
+        }
 
-    return <ul>{listItems.map(renderListItem)}</ul>;
-};
+        return null;
+    }
+
+    render () {
+        const { listItems } = this.props;
+
+        return (
+            <ul>{listItems.map(this.renderListItem)}</ul>
+        );
+    }
+}
 
 export default SortableContainer(DraggableList);

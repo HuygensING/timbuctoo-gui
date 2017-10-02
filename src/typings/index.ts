@@ -1,5 +1,5 @@
 import { Permissions } from './permissions';
-import { Component, ComponentValue } from './timbuctoo/schema';
+import { Component } from './timbuctoo/schema';
 
 export interface KeyValueObject {
     [name: string]: string;
@@ -16,13 +16,19 @@ export interface Action {
 export interface ComponentInfo {
     componentInfo: {
         name: string;
-        value: ComponentValue,
         index: number
     };
 }
 
-export type ComponentType = Component & { __typename: string };
-export type ComponentFormType = Component & { __typename: string } & ComponentInfo;
+export type ComponentFormType = Component & ComponentInfo;
+
+export type valueField = {
+    field: string;
+};
+
+export type valueFields = {
+    fields: string[];
+};
 
 export interface DataSetProps {
     dataSetId: string;

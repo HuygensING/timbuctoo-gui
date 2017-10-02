@@ -9,6 +9,15 @@ const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
                     items {
                         title
                         collectionId
+                        ${!collectionCursor && `
+                            properties {
+                                items {
+                                    name
+                                    referenceTypes { items }
+                                    valueTypes { items }
+                                }
+                            }
+                        `}
                         components {
                             items {
                                 ...ComponentsFragment

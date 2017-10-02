@@ -11,14 +11,15 @@ import connectQuery from '../../services/ConnectQuery';
 
 import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
 
-import { ComponentType } from '../../typings/index';
 import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
 import { COMPONENTS } from '../../constants/global';
+import { CollectionMetadata } from '../../typings/timbuctoo/schema';
+import Loading from '../Loading';
 
 interface ApolloProps {
     data: {
-        metadata: any;
+        dataSetMetadata: any;
     };
 }
 
@@ -34,40 +35,35 @@ const Section = styled.div`
 
 const fakeItems: any[] = [
     {
-        __typename: COMPONENTS.title,
+        type: COMPONENTS.title,
         value: {
-            isKey: true,
             fields: ['tim_hasLocation', 'skos_altLabel', 'items', 'value']
         }
     },
     {
-        __typename: COMPONENTS.keyValue,
+        type: COMPONENTS.keyValue,
         key: {
-            isKey: false,
-            fields: ['from']
+            field: 'from'
         },
         values: [
             {
-                __typename: COMPONENTS.value,
+                type: COMPONENTS.value,
                 value: {
-                    isKey: true,
-                    fields: ['tim_beginDate.value']
+                    fields: ['tim_beginDate']
                 }
             }
         ]
     },
     {
-        __typename: COMPONENTS.keyValue,
+        type: COMPONENTS.keyValue,
         key: {
-            isKey: false,
-            fields: ['to']
+            field: 'to'
         },
         values: [
             {
-                __typename: COMPONENTS.value,
+                type: COMPONENTS.value,
                 value: {
-                    isKey: true,
-                    fields: ['tim_endDate.value']
+                    fields: ['tim_endDate']
                 }
             }
         ]
@@ -76,20 +72,22 @@ const fakeItems: any[] = [
 
 class ViewScreen extends PureComponent<FullProps, State> {
     collectionsAvailable: boolean;
-    items: ComponentType[];
+    collection: CollectionMetadata | null;
 
     constructor (props: FullProps) {
         super(props);
 
         this.collectionsAvailable = false;
-        this.items = [];
+        this.collection = null;
 
         this.onSubmit = this.onSubmit.bind(this);
     }
 
     componentWillReceiveProps (newProps: FullProps) {
-        const knowsMetadata = this.props.data && this.props.data.metadata || newProps.data && newProps.data.metadata;
-        const metadataDoesNotMatch = this.props.data.metadata !== newProps.data.metadata;
+        console.log(newProps.data.dataSetMetadata);
+
+        const knowsMetadata = this.props.data && this.props.data.dataSetMetadata || newProps.data && newProps.data.dataSetMetadata;
+        const metadataDoesNotMatch = this.props.data.dataSetMetadata !== newProps.data.dataSetMetadata;
 
         if (knowsMetadata && metadataDoesNotMatch) {
             this.onNewDataLoaded(newProps);
@@ -98,6 +96,7 @@ class ViewScreen extends PureComponent<FullProps, State> {
 
     render () {
         // TODO: add when Components are available
+        if (!this.collection) { return <Loading />; }
         // if (!this.collectionsAvailable) {
         //     return <Loading />;
         // }
@@ -106,6 +105,8 @@ class ViewScreen extends PureComponent<FullProps, State> {
         //     return <Title>No collections available :'(</Title>;
         // }
 
+        console.log(this.collection.properties.items);
+        // replace fakeItems with this.collection.components.items;
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
                 <Section>
@@ -125,9 +126,9 @@ class ViewScreen extends PureComponent<FullProps, State> {
     }
 
     private onNewDataLoaded (props: FullProps) {
-        if (props.data && props.data.metadata && props.data.metadata.collections && props.data.metadata.collections.items) {
+        if (props.data && props.data.dataSetMetadata && props.data.dataSetMetadata.collections && props.data.dataSetMetadata.collections.items) {
             this.collectionsAvailable = true;
-            this.items = props.data.metadata.collections.items[0].components.items;
+            this.collection = props.data.dataSetMetadata.collections.items[0];
         } else {
             this.collectionsAvailable = false;
         }

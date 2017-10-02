@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled, { withProps } from '../../../styled-components';
-import { BaseFieldProps, Field } from 'redux-form';
 import { StandardStyledFormElements } from '../FormElements';
 import onClickOutside from 'react-onclickoutside';
 
@@ -12,11 +11,7 @@ export interface OptionProps {
 export interface SelectProps {
     name: string;
     options: OptionProps[];
-    onChange: (form: Form) => void;
-}
-
-interface Form {
-    [name: string]: string;
+    onChange: (e: any) => void;
 }
 
 interface State {
@@ -32,7 +27,7 @@ interface StyledOptionProps {
     selected: boolean;
 }
 
-const SelectHiddenFieldInput = withProps<BaseFieldProps>(styled(Field))`
+const SelectHiddenFieldInput = styled.select`
     display: none;
     appearance: none;
 	line-height: normal;
@@ -50,7 +45,7 @@ const Arrow = styled.figure`
     position: absolute;
     display: block;
     top: 50%;
-    right: 1rem;
+    right: .5rem;
 
     width: 0.8rem;
     height: 0.8rem;
@@ -68,8 +63,19 @@ const SelectWrapper = styled.div`
 `;
 
 const StyledSelect = styled.button`
-    position: relative;
-    ${StandardStyledFormElements};
+    background: ${props => props.theme.colors.white};
+    min-width: 10rem;
+    border-radius: .25rem;
+    padding: .5rem 2rem .5rem 1rem;
+    width: 100%;
+    font: ${props => props.theme.fonts.body};
+    color: ${props => props.theme.colors.shade.dark};
+    border: 1px solid ${props => props.theme.colors.shade.medium};
+    
+    &:focus {
+        outline: none;
+        border-color: ${props => props.theme.colors.primary.medium};
+    }
     
     @media (max-width: 767px) {
         display: none;
@@ -111,6 +117,7 @@ class SelectField extends Component<SelectProps, State> {
 
     constructor(props: SelectProps) {
         super(props);
+
         this.state = {
             isOpen: false,
             selectedOption: {
@@ -152,11 +159,9 @@ class SelectField extends Component<SelectProps, State> {
 
     onOptionClick(e: any, option: OptionProps) {
         e.preventDefault();
-        
+
         // // TODO: Try to update the actual select options so we trigger the default onChange handler
-        // this.props.onChange({
-        //     [this.props.name]: option.value
-        // });
+        this.props.onChange(option.value);
 
         this.setState({
             isOpen: false,
@@ -166,16 +171,16 @@ class SelectField extends Component<SelectProps, State> {
 
     render() {
         const { name, options } = this.props;
-        const { isOpen } = this.state;
+        const { isOpen, selectedOption } = this.state;
 
         return (
             <SelectWrapper>
-                <SelectHiddenFieldInput component={'select'} name={name} value={this.state.selectedOption.value}>
+                <SelectHiddenFieldInput name={name} value={this.state.selectedOption.value}>
                     {options.map(this.renderOptionField)}
                 </SelectHiddenFieldInput>
                 
                 <StyledSelect onClick={this.onSelectClick}>
-                    {this.state.selectedOption.key || name} <Arrow />
+                    {selectedOption.key || name} <Arrow />
                 </StyledSelect>
                 <StyledOptions isOpen={isOpen}>
                     {options.map(this.renderStyledOptionField)}

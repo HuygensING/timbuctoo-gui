@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '../../styled-components';
 
 import { Title } from '../layout/StyledCopy';
+import { valueField } from '../../typings/index';
 
 const DividerLine = styled.figure`
     position: relative;
@@ -21,7 +22,7 @@ const DividerTitle = styled(Title)`
 `;
 
 interface Props {
-    title: string;
+    title: valueField;
 }
 
 const ContentDivider = ({title}: Props) => {

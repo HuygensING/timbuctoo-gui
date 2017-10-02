@@ -2,15 +2,15 @@ import React, { PureComponent } from 'react';
 import { arrayMove } from 'react-sortable-hoc';
 
 import DraggableList from '../DraggableList';
-import { ComponentFormType, ComponentType } from '../../typings/index';
+import { ComponentFormType } from '../../typings/index';
 import { addExtraInfo, renderEmptyViewComponent } from '../../services/FormValueManipulator';
 import { SubmitButton } from './FormElements';
-import Accordeon from '../Accordeon';
 import styled from '../../styled-components';
-import { COMPONENTS } from '../../constants/global';
+import { COMPONENTS, DRAGGABLE_COMPONENTS } from '../../constants/global';
+import { Component } from '../../typings/timbuctoo/schema';
 
 interface Props {
-    items: ComponentType[];
+    items: Component[];
     onSend: (e: {}) => void;
     noForm?: boolean;
 }
@@ -50,6 +50,8 @@ class DraggableForm extends PureComponent<Props, State> {
             listItems: addExtraInfo(props.items),
             openedIndex: null
         };
+
+        console.log('constructing draggable form');
 
         this.addListItem = this.addListItem.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -117,7 +119,7 @@ class DraggableForm extends PureComponent<Props, State> {
         return (
             <div>
                 <DraggableList
-                    Component={Accordeon}
+                    componentType={DRAGGABLE_COMPONENTS.accordeon}
                     componentProps={componentProps}
 
                     listItems={listItems}

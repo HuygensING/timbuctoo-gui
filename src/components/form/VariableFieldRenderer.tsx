@@ -2,9 +2,11 @@ import React, { PureComponent } from 'react';
 import styled from '../../styled-components';
 import { StandardStyledFormElements } from './FormElements';
 import { COMPONENT_FIELDS } from '../../constants/global';
-import { ComponentValue } from '../../typings/timbuctoo/schema';
 import DraggableForm from './DraggableForm';
 import { removeExtraInfo, renderEmptyViewComponent } from '../../services/FormValueManipulator';
+import Select from './fields/Select';
+import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
+import { ComponentValue } from '../../typings/timbuctoo/schema';
 
 const Label = styled.label`
   display: inline-block;
@@ -43,16 +45,19 @@ interface Props {
     resolveChange: Function;
 }
 
+interface ValueItem {
+    value: ComponentValue;
+    name: string;
+}
+
 class VariableFormFieldRenderer extends PureComponent<Props> {
-    fieldValues: string[][];
 
     constructor () {
         super();
 
-        this.fieldValues = [];
-
         this.onAddHandler = this.onAddHandler.bind(this);
         this.renderSubFields = this.renderSubFields.bind(this);
+        this.renderComponentSelector = this.renderComponentSelector.bind(this);
         this.onChangeSubForm = this.onChangeSubForm.bind(this);
         this.onChangeHeadHandler = this.onChangeHeadHandler.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -80,35 +85,89 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     }
 
     render () {
-        const {url, alt, value, key, values, componentInfo} = this.props.item;
+        const {url, alt, value, key, title, values, componentInfo} = this.props.item;
 
-        const valueList = [
-            {value: url, name: COMPONENT_FIELDS.urlKey},
-            {value: alt, name: COMPONENT_FIELDS.altKey},
-            {value: key, name: COMPONENT_FIELDS.key},
-            {value: value, name: COMPONENT_FIELDS.valueKey}];
+        const valueList: ValueItem[] = [
+            {value: url,    name: COMPONENT_FIELDS.urlKey},
+            {value: alt,    name: COMPONENT_FIELDS.altKey},
+            {value: key,    name: COMPONENT_FIELDS.key},
+            {value: title,  name: COMPONENT_FIELDS.title},
+            {value: value,  name: COMPONENT_FIELDS.valueKey}
+        ];
 
         return (
             <StyledFieldset>
-                <StyledDivider>
-                    <Label htmlFor={componentInfo.name}>Component</Label>
-                    <StyledInput
-                        key={componentInfo.name}
-                        type={'text'}
-                        title={this.props.item.__typename}
-                        name={componentInfo.name}
-                        defaultValue={this.props.item.__typename}
-                        onBlur={(e) => this.onChangeHeadHandler(e)}
-                    />
-                </StyledDivider>
+                {componentInfo && this.renderComponentSelector()}
                 {valueList.map(this.renderSubFields)}
                 {values && values.length > 0 && this.renderSubForm()}
             </StyledFieldset>
         );
     }
 
-    private renderSubFields (valueItem: {value: ComponentValue, name: string}, idx: number) {
-        if (!valueItem.value) {
+    private renderComponentSelector () {
+        const { name } = this.props.item.componentInfo;
+
+        return (
+            <StyledDivider>
+                <Label htmlFor={name}>Component</Label>
+                <Select
+                    name={'Component'}
+                    options={SELECT_COMPONENT_TYPES}
+                    selected={name}
+                    onChange={e => this.onChangeHeadHandler(e)}
+                />
+            </StyledDivider>
+        );
+    }
+
+    private renderTextField (valueItem: ValueItem) {
+        const { componentInfo } = this.props.item;
+
+        if (!valueItem.value.field) {
+            return null;
+        }
+
+        return (
+            <StyledInputWrapper>
+                <StyledInput
+                    type={'text'}
+                    title={`${valueItem.name}_${0}`}
+                    name={componentInfo.name}
+                    defaultValue={valueItem.value.field}
+                    onBlur={(e) => this.onChangeHandler(e, valueItem.name, 0)}
+                />
+            </StyledInputWrapper>
+        );
+    }
+
+    private renderKeyFields (valueItem: ValueItem) {
+        const { componentInfo } = this.props.item;
+
+        if (!valueItem.value.fields || valueItem.value.fields.length === 0) {
+            return null;
+        }
+
+        return (
+            <StyledInputWrapper>
+                {
+                    valueItem.value.fields.map((field: string, childIdx: number) => (
+                        <StyledInput
+                            key={childIdx}
+                            type={'text'}
+                            title={`${valueItem.name}_${childIdx}`}
+                            name={componentInfo.name}
+                            defaultValue={field}
+                            onBlur={(e) => this.onChangeHandler(e, valueItem.name, childIdx)}
+                        />
+                    ))
+                }
+                <button type={'button'} onClick={(e) => this.onAddHandler(valueItem.name)}>+</button>
+            </StyledInputWrapper>
+        );
+    }
+
+    private renderSubFields (valueItem: ValueItem, idx: number) {
+        if (!valueItem || !valueItem.value) {
             return null;
         }
 
@@ -117,24 +176,11 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         return (
             <StyledDivider key={idx}>
                 <Label htmlFor={`${componentInfo.name}_${valueItem.name}_0`}>{valueItem.name}</Label>
-                <StyledInputWrapper>
-                    {
-                        valueItem.value.fields.map((field: string, childIdx: number) => (
-                            <StyledInput
-                                key={childIdx}
-                                type={'text'}
-                                title={`${valueItem.name}_${childIdx}`}
-                                name={componentInfo.name}
-                                defaultValue={field}
-                                onBlur={(e) => this.onChangeHandler(e, valueItem.name, childIdx)}
-                            />
-                        ))
-                    }
-                    {
-                        valueItem.value.isKey &&
-                        <button type={'button'} onClick={(e) => this.onAddHandler(valueItem.name)}>+</button>
-                    }
-                </StyledInputWrapper>
+                {
+                    valueItem.value.fields && valueItem.value.fields.length > 0
+                     ? this.renderKeyFields(valueItem)
+                     : this.renderTextField(valueItem)
+                }
             </StyledDivider>
         );
     }
@@ -154,18 +200,12 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         }
     }
 
-    private onChangeHeadHandler (e: any) {
-        e.preventDefault();
+    private onChangeHeadHandler (componentKey: string) {
         const { resolveChange, item } = this.props;
-        const componentKey = e.target.value;
 
-        if (componentKey === item.__typename) { return null; }
+        if (componentKey === item.type) { return null; }
 
         const newFieldset = renderEmptyViewComponent(componentKey, item.componentInfo.index);
-
-        if (item.values && newFieldset.values) {
-            newFieldset.values = item.values;
-        }
 
         return newFieldset
             ? resolveChange(newFieldset)

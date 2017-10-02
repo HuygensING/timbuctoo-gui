@@ -1,5 +1,6 @@
-import { ComponentFormType, ComponentType } from '../typings/index';
+import { ComponentFormType } from '../typings/index';
 import EMPTY_VIEW_COMPONENTS from '../constants/emptyViewComponents';
+import { Component } from '../typings/timbuctoo/schema';
 
 const addExtraInfo = (items: any[]): ComponentFormType[] => {
     const newItems: any = [];
@@ -11,7 +12,7 @@ const addExtraInfo = (items: any[]): ComponentFormType[] => {
     return newItems;
 };
 
-const removeExtraInfo = (items: ComponentFormType[]): ComponentType[] => {
+const removeExtraInfo = (items: ComponentFormType[]): Component[] => {
     const newItems = items.slice();
     newItems.forEach(item => delete item.componentInfo);
 
@@ -22,8 +23,7 @@ const setComponentInfo = (item: any, idx: number) => {
     const newItem = {...item};
 
     newItem.componentInfo = {
-        name: renderName(item.__typename, idx),
-        value: {isKey: false, fields: [item.__typename]},
+        name: renderName(item.type, idx),
         index: idx
     };
 

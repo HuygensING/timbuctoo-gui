@@ -81,7 +81,7 @@ class Accordeon extends PureComponent<Props, State> {
         return (
             <AccordeonBox>
                 <StyledTitle type="button" onClick={openClose}>
-                    {item.__typename}
+                    {item.type}
                 </StyledTitle>
 
                 {isOpen && Accordeon.renderForm(item, resolve)}
