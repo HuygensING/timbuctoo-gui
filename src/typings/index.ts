@@ -13,7 +13,22 @@ export interface Action {
     error: any;
 }
 
-export type ComponentType = Component & { __typename: string };
+export interface ComponentInfo {
+    componentInfo: {
+        name: string;
+        index: number
+    };
+}
+
+export type ComponentFormType = Component & ComponentInfo;
+
+export type valueField = {
+    field: string;
+};
+
+export type valueFields = {
+    fields: string[];
+};
 
 export interface DataSetProps {
     dataSetId: string;

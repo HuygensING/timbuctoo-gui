@@ -7,12 +7,35 @@ scalar Markdown
 
 schema {
   query: QueryType
+  mutation: RootMutation
 }
 
-# - [x] check alle lists of ze gewrapped moeten worden
-# - [x] check alle scalars of ze goed staan
-# - [x] check alle fakes
-# - [x] Loop van boven naar beneden of alle properties en hun types kloppen
+type RootMutation {
+    setViewComponents(input: ViewComponentsInput): Boolean
+    setFacets(input: FacetsInput): Boolean
+}
+
+# -------- Components (mutation inputs)
+
+input ViewComponentsInput {
+    components: [ComponentInput]
+    query: 			String! #graphql syntax like string
+}
+
+input ComponentInput {
+    type: 	ComponentType # depending on this type, you can expect an x amount of fields => this can be traced back in the GUI, which is in charge of the view configuration
+    value: 	ComponentValueInput
+    key:		ComponentValueInput
+    title: 	ComponentValueInput
+    url: 		ComponentValueInput
+    alt: 		ComponentValueInput
+    values: [ ComponentInput ]
+}
+
+input ComponentValueInput {
+    field: String # Can hold either a field or a fields object. Inputs do not get along with unions, that's why this is not more typesafe
+    fields: String
+}
 
 type QueryType {
   #the datasets that are supposed to get extra attention
@@ -57,7 +80,7 @@ type AboutMe {
 }
 
 type DataSetMetadata {
-  datasetId: ID! 	@examples(values: ["jauco_leaders"])
+  dataSetId: ID! 	@examples(values: ["jauco_leaders"])
   title: String!					@fake(type:county)
   description: String			@fake(type:lorem)
   imageUrl: Url						@fake(type:imageUrl options: {imageCategory: cats, randomizeImageUrl: true})
@@ -166,55 +189,61 @@ type ValueObject {
   value:String @fake(type:productName)
 }
 
+# -------- Facets (mutation inputs)
+
+input FacetsInput {
+    facets: [FacetInput]
+}
+
+input FacetInput {
+    caption: String!
+    options: [OptionInput!]!
+}
+
+input OptionInput {
+    name: String!
+}
+
+# -------- Facets (Query)
+
 type Facet {
-  caption: String!	@fake(type: productCategory)
-  options: [Option!]!
+    caption: String!	@fake(type: productCategory)
+    options: [Option!]!
 }
 
 type Option {
-  name: String!	@fake(type: productName)
-  count: Int! @fake(type:money)
+    name: String!	@fake(type: productName)
+    count: Int! @fake(type:money)
 }
 
-# Different types for entryData
-union Component = TitleComponent | ValueComponent | LinkComponent | ImageComponent | KeyValueComponent | DividerComponent # | TableComponent # out of scope
+# -------- Components (Query)
 
-type TitleComponent {
-  valueKey: String! @examples(values:["schema_org_name"])
+type Component {
+    type: 	ComponentType! # depending on this type, you can expect an x amount of fields => this can be traced back in the GUI, which is in charge of the view configuration
+    value: 	ComponentValue
+    key:		ComponentValue
+    title: 	ComponentValue
+    url: 		ComponentValue
+    alt: 		ComponentValue
+    tree:		String @examples(values: ["{'a':{'b':'1','c':{'d':'2','e':'3'}},'f':'4'}"]) # a stringified object to ensure we do not have to know how many levels deep we need to go
+    values: [ Component ]
 }
 
-type KeyValueComponent {
-  key: Key! 							@fake(type: productName)
-  values: [Component!]!
+type ComponentValue {
+    field: 	String @examples(values: ["Hardcoded example string"])
+    fields: [ String ] @examples(values:[["level one", "level two", "level three", "level four"]])
 }
 
-type TableComponent {
-  hasHeading: Boolean!
-  tableColumns: [TableColumn!]!
+enum ComponentType {
+    TITLE
+    VALUE
+    IMAGE
+    LINK
+    DIVIDER
+    KEYVALUE
+    TREE
 }
 
-type TableColumn {
-  columnName: String 			@fake(type:productCategory)
-  cells: [Component!]!
-}
-
-type DividerComponent {
-  title: String!				@fake(type: productCategory)
-}
-
-type ValueComponent {
-	valueKey: String! 			@examples(values:["schema_org_name", "schema_org_birthPlace", "schema_org_description"])
-}
-
-type LinkComponent {
-  valueKey: String!				@examples(values:["schema_org_name", "schema_org_birthPlace", "schema_org_description"])
-  urlKey: Url!						@examples(values:["schema_org_url"])
-}
-
-type ImageComponent {
-  urlKey: Url!						@examples(values:["schema_org_imageUrl"])
-  altKey: String					@examples(values:["schema_org_name", "schema_org_birthPlace"])
-}
 
 # Different kinds of values supported by the different Elements
 

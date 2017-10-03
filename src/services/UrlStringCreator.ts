@@ -1,4 +1,4 @@
-const encode = (str: string) => encodeURI(str);
-const decode = (uri: string) => decodeURI(uri);
+const encode = (str: string) => encodeURIComponent(str);
+const decode = (uri: string) => decodeURIComponent(uri);
 
 export { encode, decode };

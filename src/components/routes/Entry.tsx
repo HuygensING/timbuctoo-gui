@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { RouteComponentProps } from 'react-router';
 
-import { DataSetMetadata, KeyValueComponent, TableComponent } from '../../typings/timbuctoo/schema';
+import { Component, DataSetMetadata } from '../../typings/timbuctoo/schema';
 import connectQuery from '../../services/ConnectQuery';
 import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
 
@@ -38,7 +38,7 @@ class Entry extends PureComponent<FullProps, State> {
     }
 
     static getValue(component: any, values: Array<string>) {
-        switch (component.__typename) {
+        switch (component.type) {
             case COMPONENTS.value:
             case COMPONENTS.image:
             case COMPONENTS.link:
@@ -49,20 +49,9 @@ class Entry extends PureComponent<FullProps, State> {
 
             case COMPONENTS.keyValue:
                 if (component.values) {
-                    component.values.forEach((_component: KeyValueComponent) => Entry.getValue(_component, values));
+                    component.values.forEach((_component: Component) => Entry.getValue(_component, values));
                 }
                 break;
-
-            case COMPONENTS.table:
-                if (component.tableColumns) {
-                    component.tableColumns.forEach(column => {
-                        if (column.cells) {
-                            column.cells.forEach((_component: TableComponent) => Entry.getValue(_component, values));
-                        }
-                    });
-                }
-                break;
-            
             default:
                 break;
         }
@@ -70,18 +59,18 @@ class Entry extends PureComponent<FullProps, State> {
 
     render () {
         const { dataSetMetadata } = this.props.data;
+
         if ( !dataSetMetadata ) { return <Loading />; }
         
         const { collections } = dataSetMetadata;
         if (!collections || !collections.items.length) { return null; }
         
         const components = this.dummyComponents();
-
-        // const values: Array<string> = Entry.getValues(components);
         const values: Array<string> = [];
 
         return (
             <EntryBody
+                collectionCursor={this.props.match.params.collection}
                 components={components}
                 values={values}
                 match={this.props.match}
@@ -98,113 +87,117 @@ class Entry extends PureComponent<FullProps, State> {
             url: 'schema_org_url'
         };
         return [{
-            __typename: COMPONENTS.title,
-            valueKey: keys.name
+            type: COMPONENTS.title,
+            value: {
+                fields: [keys.name]
+            }
         }, {
-            __typename: COMPONENTS.image,
-            urlKey: keys.image,
-            altKey: keys.image,
+            type: COMPONENTS.image,
+            url: { fields: [keys.image] },
+            alt: { fields: [keys.image] },
             options: {
                 width: '50%',
                 type: 'rounded',
                 ratio: 1
             }
         }, {
-            __typename: COMPONENTS.divider,
-            title: 'Personal info'
+            type: COMPONENTS.divider,
+            title: { field: 'Personal info'}
         }, {
-            __typename: COMPONENTS.keyValue,
-            key: 'Name',
+            type: COMPONENTS.keyValue,
+            key: { field: 'Name'},
             values: [{
-                __typename: COMPONENTS.value,
-                valueKey: keys.name
+                type: COMPONENTS.value,
+                value: { fields: [keys.name] }
             }]
         }, {
-            __typename: COMPONENTS.keyValue,
-            key: 'Born',
+            type: COMPONENTS.keyValue,
+            key: { field: 'Born'},
             values: [{
-                __typename: COMPONENTS.value,
-                valueKey: keys.name
+                type: COMPONENTS.value,
+                value: { fields: [keys.name] }
             }, {
-                __typename: COMPONENTS.value,
-                valueKey: keys.birthplace
+                type: COMPONENTS.value,
+                value: { fields: [keys.birthplace] }
             }]
         }, {
-            __typename: COMPONENTS.keyValue,
-            key: 'Beroep',
+            type: COMPONENTS.keyValue,
+            key: { field: 'Beroep' },
             values: [{
-                __typename: COMPONENTS.value,
-                valueKey: keys.name
+                type: COMPONENTS.value,
+                value: { fields: [keys.name] }
             }, {
-                __typename: COMPONENTS.link,
-                valueKey: keys.url
+                type: COMPONENTS.link,
+                url: { fields: [keys.url] },
+                value: { fields: [keys.name]}
             }, {
-                __typename: COMPONENTS.link,
-                valueKey: keys.url
+                type: COMPONENTS.link,
+                url: { fields: [keys.url] },
+                value: { fields: [keys.name]}
             }]
         }, {
-            __typename: COMPONENTS.divider,
-            title: 'More info'
+            type: COMPONENTS.divider,
+            title: { field: 'More info' }
         }, {
-            __typename: COMPONENTS.keyValue,
-            key: 'Description',
+            type: COMPONENTS.keyValue,
+            key: { field: 'Description' },
             values: [{
-                __typename: COMPONENTS.value,
-                valueKey: keys.description
+                type: COMPONENTS.value,
+                value: { fields: [keys.description] }
             }, {
-                __typename: COMPONENTS.image,
-                urlKey: keys.image,
-                altKey: keys.image
+                type: COMPONENTS.image,
+                url: { fields: [keys.image] },
+                alt: { fields: [keys.image] }
             }, {
-                __typename: COMPONENTS.divider,
-                valueKey: 'Sub-info'
+                type: COMPONENTS.divider,
+                value: { field: 'Sub-info' }
             }, {
-                __typename: COMPONENTS.keyValue,
-                key: 'Cat name',
+                type: COMPONENTS.keyValue,
+                key: { field: 'Cat name' },
                 values: [{
-                    __typename: COMPONENTS.value,
-                    valueKey: keys.description
+                    type: COMPONENTS.value,
+                    value: { fields: [keys.description] }
                 }, {
-                    __typename: COMPONENTS.image,
-                    urlKey: keys.image,
-                    altKey: keys.image
+                    type: COMPONENTS.image,
+                    url: { fields: keys.image },
+                    alt: { fields: keys.image }
                 }]
             }]
         }, {
-            __typename: COMPONENTS.divider,
-            title: 'Other info'
+            type: COMPONENTS.divider,
+            title: { field: 'Other info'}
         }, {
-            __typename: COMPONENTS.value,
-            valueKey: keys.description
+            type: COMPONENTS.value,
+            value:  { fields: [keys.description] }
         }, {
-            __typename: COMPONENTS.image,
-            urlKey: keys.image,
-            altKey: keys.image,
+            type: COMPONENTS.image,
+            url: { fields: [keys.image] },
+            alt: { fields: [keys.image] },
             options: {
                 ratio: 16 / 9
             }
         }, {
-            __typename: COMPONENTS.keyValue,
-            key: 'Bio',
+            type: COMPONENTS.keyValue,
+            key: { field: 'Bio' },
             values: [{
-                __typename: COMPONENTS.value,
-                valueKey: keys.name
+                type: COMPONENTS.value,
+                value: { fields: [keys.name] }
             }, {
-                __typename: COMPONENTS.value,
-                valueKey: keys.birthplace
+                type: COMPONENTS.value,
+                value: { fields: [keys.birthplace] }
             }]
         }, {
-            __typename: COMPONENTS.value,
-            valueKey: keys.description
+            type: COMPONENTS.value,
+            value: { fields: [keys.description] }
         }, {
-            __typename: COMPONENTS.value,
-            valueKey: keys.description
+            type: COMPONENTS.value,
+            value: { fields: [keys.description] }
         }, {
-            __typename: COMPONENTS.value,
-            valueKey: keys.description
+            type: COMPONENTS.value,
+            value: { fields: [keys.description] }
         }, {
-            __typename: COMPONENTS.value,
-            valueKey: keys.description
+            type: COMPONENTS.value,
+            value: { fields: [keys.description] }
         }];
     }
 }

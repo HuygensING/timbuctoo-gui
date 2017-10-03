@@ -55,7 +55,7 @@ const EditCollectionBar: SFC<Props> = ({ collection, dataSetId }) => {
         <Bar>
             <TitleBox>{collection.title}</TitleBox>
             <LinkBox to={'#'}>Edit facets<EditIcon/></LinkBox>
-            <LinkBox to={`${ROUTE_PATHS.edit}/${dataSetId}${SUB_ROUTES.viewScreen}/${collection.collectionId}`}>Edit screen<EditIcon/></LinkBox>
+            <LinkBox to={`${ROUTE_PATHS.edit}/${dataSetId}${SUB_ROUTES.viewScreen}/${collection.collectionListId}`}>Edit screen<EditIcon/></LinkBox>
         </Bar>
     );
 };

@@ -3,13 +3,13 @@ import styled from '../../styled-components';
 
 import { COMPONENTS } from '../../constants/global';
 import ComponentLoader from '../../services/ComponentLoader';
-import { ComponentType } from '../../typings';
 import { BREAKPOINT } from '../layout/Grid';
 import { Content } from '../layout/StyledCopy';
+import { Component } from '../../typings/timbuctoo/schema';
 
 interface Props {
     label: string;
-    values: Array<ComponentType>;
+    values: Array<Component>;
     data: any;
 }
 
@@ -53,8 +53,8 @@ const ContentKeyValue = (props: Props) => {
     const { label, values, data } = props;
 
     const renderValues = () => {
-        return values && values.map( (component: ComponentType, index: number) => {
-            if (ALLOWED_COMPONENT.indexOf( component.__typename ) < 0) { return null; }
+        return values && values.map( (component: Component, index: number) => {
+            if (ALLOWED_COMPONENT.indexOf( component.type ) < 0) { return null; }
             return <ComponentLoader key={index} component={component} data={data} />;
         });
     };

@@ -34,6 +34,7 @@ const ContentImage = (props) => {
         ratio: IMAGE_RATIO.landscape
     };
     const { src, alt, options = defaultOptions } = props;
+
     return (
         <ImageWrapper {...options}>
             <Image src={src} alt={alt} ratio={options.ratio}/>

@@ -14,6 +14,7 @@ const BaseButtonStyling = css`
     text-align: center;
     padding: 0.5rem 1rem;
     border-radius: .25rem;
+    cursor: pointer;
     
     &:hover {
         color: ${props => props.theme.colors.white};

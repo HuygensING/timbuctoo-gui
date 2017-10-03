@@ -1,41 +1,30 @@
 import { ButtonType } from '../typings/layout';
+import { ComponentFieldType, ComponentTypes } from '../typings/viewComponents';
 
 export const HSID: string = 'hsid';
 
 export const CONTAINER_PADDING = 1.5;
 
-interface ComponentTypes {
-    title: string;
-    value: string;
-    image: string;
-    link: string;
-    keyValue: string;
-    table: string;
-    divider: string;
-}
-
-interface ComponentFieldType {
-    valueKey: string;
-    urlKey: string;
-    altKey: string;
-    key: string;
-}
+export const DRAGGABLE_COMPONENTS = {
+    accordeon: 'accordeon'
+};
 
 export const COMPONENTS: ComponentTypes = {
-    title: 'TitleComponent',
-    value: 'ValueComponent',
-    image: 'ImageComponent',
-    link: 'LinkComponent',
-    keyValue: 'KeyValueComponent',
-    table: 'TableComponent',
-    divider: 'DividerComponent'
+    title: 'TITLE',
+    value: 'VALUE',
+    image: 'IMAGE',
+    link: 'LINK',
+    keyValue: 'KEYVALUE',
+    divider: 'DIVIDER',
+    tree: 'TREE'
 };
 
 export const COMPONENT_FIELDS: ComponentFieldType = {
-    valueKey: 'valueKey',
-    urlKey: 'urlKey',
-    altKey: 'altKey',
-    key: 'key'
+    valueKey: 'value',
+    urlKey: 'url',
+    altKey: 'alt',
+    key: 'key',
+    title: 'title'
 };
 
 export const BUTTON_TYPES: {[name: string]: ButtonType} = {

@@ -4,46 +4,90 @@ import { RouteComponentProps } from 'react-router';
 import { Grid } from '../layout/Grid';
 import FullHelmet from '../FullHelmet';
 import { Title } from '../layout/StyledCopy';
-import Loading from '../Loading';
+// import Loading from '../Loading';
 
 import styled from '../../styled-components';
 import connectQuery from '../../services/ConnectQuery';
 
 import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
 
-import { ComponentType } from '../../typings/index';
 import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
+import { COMPONENTS } from '../../constants/global';
+import { CollectionMetadata } from '../../typings/timbuctoo/schema';
+import Loading from '../Loading';
 
 interface ApolloProps {
     data: {
-        metadata: any;
+        dataSetMetadata: any;
     };
 }
 
 type FullProps = ApolloProps & RouteComponentProps<any> & FormWrapperProps;
-interface State {}
+
+interface State {
+}
 
 const Section = styled.div`
   width: 100%;
+  padding-bottom: 3rem;
 `;
+
+const fakeItems: any[] = [
+    {
+        type: COMPONENTS.title,
+        value: {
+            fields: ['tim_hasLocation', 'skos_altLabel', 'items', 'value']
+        }
+    },
+    {
+        type: COMPONENTS.keyValue,
+        key: {
+            field: 'from'
+        },
+        values: [
+            {
+                type: COMPONENTS.value,
+                value: {
+                    fields: ['tim_beginDate']
+                }
+            }
+        ]
+    },
+    {
+        type: COMPONENTS.keyValue,
+        key: {
+            field: 'to'
+        },
+        values: [
+            {
+                type: COMPONENTS.value,
+                value: {
+                    fields: ['tim_endDate']
+                }
+            }
+        ]
+    }
+];
 
 class ViewScreen extends PureComponent<FullProps, State> {
     collectionsAvailable: boolean;
-    items: ComponentType[];
+    collection: CollectionMetadata | null;
 
     constructor (props: FullProps) {
         super(props);
 
         this.collectionsAvailable = false;
-        this.items = [];
+        this.collection = null;
 
         this.onSubmit = this.onSubmit.bind(this);
     }
 
     componentWillReceiveProps (newProps: FullProps) {
-        const knowsMetadata = this.props.data && this.props.data.metadata || newProps.data && newProps.data.metadata;
-        const metadataDoesNotMatch = this.props.data.metadata !== newProps.data.metadata;
+        console.log(newProps.data.dataSetMetadata);
+
+        const knowsMetadata = this.props.data && this.props.data.dataSetMetadata || newProps.data && newProps.data.dataSetMetadata;
+        const metadataDoesNotMatch = this.props.data.dataSetMetadata !== newProps.data.dataSetMetadata;
 
         if (knowsMetadata && metadataDoesNotMatch) {
             this.onNewDataLoaded(newProps);
@@ -51,22 +95,25 @@ class ViewScreen extends PureComponent<FullProps, State> {
     }
 
     render () {
-        if (!this.collectionsAvailable) {
-            return <Loading />;
-        }
+        // TODO: add when Components are available
+        if (!this.collection) { return <Loading />; }
+        // if (!this.collectionsAvailable) {
+        //     return <Loading />;
+        // }
 
-        if (this.items.length === 0) {
-            return <Title>No collections available :'(</Title>;
-        }
+        // if (this.items.length === 0) {
+        //     return <Title>No collections available :'(</Title>;
+        // }
 
+        console.log(this.collection.properties.items);
+        // replace fakeItems with this.collection.components.items;
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
                 <Section>
                     <FullHelmet pageName="View screen"/>
                     <Title>View screen</Title>
                     <DraggableForm
-                        form={'view_screen'}
-                        items={this.items}
+                        items={fakeItems}
                         onSend={this.onSubmit}
                     />
                 </Section>
@@ -79,9 +126,9 @@ class ViewScreen extends PureComponent<FullProps, State> {
     }
 
     private onNewDataLoaded (props: FullProps) {
-        if (props.data && props.data.metadata && props.data.metadata.collections && props.data.metadata.collections.items) {
+        if (props.data && props.data.dataSetMetadata && props.data.dataSetMetadata.collections && props.data.dataSetMetadata.collections.items) {
             this.collectionsAvailable = true;
-            this.items = props.data.metadata.collections.items[0].components.items;
+            this.collection = props.data.dataSetMetadata.collections.items[0];
         } else {
             this.collectionsAvailable = false;
         }

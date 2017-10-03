@@ -59,7 +59,11 @@ class App extends Component<ChildProps<Props, Response>, State> {
 
         if (this.renderLoad && (data.error || data.aboutMe === null)) {
             this.renderLoad = false;
-            this.props.logOutUser();
+
+            // TODO: Switch back when actually using!!
+            this.props.logInUser();
+            // this.props.logOutUser();
+            //
         }
     }
 
@@ -69,7 +73,6 @@ class App extends Component<ChildProps<Props, Response>, State> {
 
     render () {
         // TODO: switch <Loading/> for an <Authenticating /> component
-        console.log(this.props.data);
         return (
             <ThemeProvider theme={theme}>
                 {

@@ -5,14 +5,3 @@ export interface FormWrapperProps {
     reset?: () => void;
     onSubmit: (val: any) => void;
 }
-
-export interface Fieldset {
-    fields: Field[];
-    type: string;
-}
-
-export interface Field {
-    name: string;
-    value: string;
-    title: string;
-}
