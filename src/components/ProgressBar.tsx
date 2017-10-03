@@ -3,6 +3,8 @@ import styled, { withProps, keyframes } from '../styled-components';
 
 import { Label } from './layout/StyledCopy';
 
+const FILTERED_LABELS = ['_inverse'];
+
 const ProgressWrapper = styled.div`
     white-space: nowrap;
 `;
@@ -11,7 +13,7 @@ const ProgressLabel = styled(Label)`
     display: inline-block;
     overflow: hidden;
     width: 150px;
-    padding-right: 1rem;
+    margin-right: 1rem;
 `;
 
 const Bar = styled.figure`
@@ -35,22 +37,41 @@ const Progress = withProps<Props>(styled.figure)`
     height: 100%;
     background: ${props => props.theme.colors.shade.dark};
     transform-origin: left;
-    animation: ${ProgressAnimation} 1s ease-in-out;
+    // animation: ${ProgressAnimation} 1s ease-in-out;
 `;
 
 interface Props {
     label?: string | null;
     width?: number | string;
     progress: number | null;
+    filter?: string[];
 }
 
-const ProgressBar: SFC<Props> = ({label, width, progress}) => (
-    <ProgressWrapper>
-        <ProgressLabel>{label}</ProgressLabel>
-        <Bar width={width}>
-            <Progress progress={progress} />
-        </Bar>
-    </ProgressWrapper>
-);
+const ProgressBar: SFC<Props> = ({label, width, progress, filter = FILTERED_LABELS}) => {
+
+    // Check if label exists, if not don't render component
+    if (!label) {
+        return null;
+    }
+
+    // If filter exists check if label contains any of the filters
+    // If so then don't render component
+    if (filter) {
+        for (let i = 0, limit = filter.length; i < limit; i++) {
+            if (!label || label.indexOf(filter[i]) !== -1) {
+                return null;
+            }
+        }
+    }
+
+    return (
+        <ProgressWrapper>
+            <ProgressLabel>{label}</ProgressLabel>
+            <Bar width={width}>
+                <Progress progress={progress} />
+            </Bar>
+        </ProgressWrapper>
+    );
+};
 
 export default ProgressBar;
