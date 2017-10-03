@@ -74,6 +74,7 @@ export interface CollectionMetadata {
   components: ComponentList;
   properties: PropertyList;
   archeType: string | null;
+  total: number;
 }
 
 export interface ComponentsCollectionMetadataArgs {

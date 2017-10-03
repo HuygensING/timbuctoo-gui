@@ -19,6 +19,7 @@ const provenanceFragment = gql`
 const collectionBase = gql`
     fragment CollectionBase on CollectionMetadata {
         title
+        total
         collectionId
         collectionListId
     }

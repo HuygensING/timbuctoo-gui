@@ -51,7 +51,7 @@ class DataSetBody extends PureComponent<FullProps, State> {
                 />
 
                 <Col sm={42} smOffset={3} smPaddingBottom={.5}>
-                    {collectionKeys.length > 0 && <CollectionTags colKeys={collectionKeys} dataSetId={dataSetId} />}
+                    {this.renderCollectionTags(collectionKeys, dataSetId)}
                 </Col>
 
                 {
@@ -60,7 +60,7 @@ class DataSetBody extends PureComponent<FullProps, State> {
                         <section>
                             <Title>Collection</Title>
                             <ul>
-                            {collectionKeys.map(this.renderCollectionBar)}
+                                {collectionKeys.map(this.renderCollectionBar)}
                             </ul>
                         </section>
                     </Col>
@@ -82,6 +82,24 @@ class DataSetBody extends PureComponent<FullProps, State> {
                 </Col>
             </section>
         );
+    }
+
+    private reOrderCollection (collections: CollectionMetadata[], reOrderKey: string) {
+        const collectionsCopy: CollectionMetadata[] = collections.slice();
+        const invalidCollections: any[] = [];
+        let col;
+        for (let i = 0, limit = collectionsCopy.length; i < limit; i++) {
+            col = collectionsCopy[i];
+            if (col && col.collectionId.indexOf(reOrderKey) !== -1) {
+                invalidCollections.push( collectionsCopy.splice(i, 1)[0] );
+            }
+        }
+        return collectionsCopy.concat(invalidCollections);
+    }
+
+    private renderCollectionTags (collections: CollectionMetadata[], dataSetId: string) {
+        const reorderedCollections = this.reOrderCollection(collections, 'vocabulary_unknown');
+        return <CollectionTags colKeys={reorderedCollections} dataSetId={dataSetId} />;
     }
 
     private renderCollectionBar (collection: CollectionMetadata, idx: number) {

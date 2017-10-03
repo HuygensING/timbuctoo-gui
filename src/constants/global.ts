@@ -30,5 +30,6 @@ export const COMPONENT_FIELDS: ComponentFieldType = {
 export const BUTTON_TYPES: {[name: string]: ButtonType} = {
     normal: 'normal',
     inverted: 'inverted',
-    dark: 'dark'
+    dark: 'dark',
+    disabled: 'disabled'
 };

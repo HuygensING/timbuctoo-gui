@@ -35,6 +35,7 @@ const setBackgroundColor = (props: ElementProps, type: ButtonType) => {
     switch (type) {
         case BUTTON_TYPES.normal: return props.theme.colors.shade.medium;
         case BUTTON_TYPES.dark: return props.theme.colors.black;
+        case BUTTON_TYPES.disabled: return props.theme.colors.error;
         case BUTTON_TYPES.inverted:
         default: return props.theme.colors.white;
     }

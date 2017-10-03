@@ -3,9 +3,9 @@ import { COMPONENTS } from './global';
 const EMPTY_VIEW_COMPONENTS = {
     [COMPONENTS.title]: {
         type: COMPONENTS.title,
-         value: {
-             fields: ['']
-         }
+        value: {
+            fields: ['']
+        }
     },
     [COMPONENTS.value]: {
         type: COMPONENTS.value,

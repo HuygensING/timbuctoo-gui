@@ -1,9 +1,12 @@
 import React, { SFC } from 'react';
+import { lighten } from 'polished/lib';
 import styled from 'styled-components';
 
+import Translations from '../services/Translations';
 import { CollectionMetadata, Property } from '../typings/timbuctoo/schema';
 import { ROUTE_PATHS } from '../constants/routeNaming';
 import { encode } from '../services/UrlStringCreator';
+import { Subtitle, Label } from './layout/StyledCopy';
 import Button from './layout/Button';
 import { BUTTON_TYPES } from '../constants/global';
 
@@ -33,7 +36,7 @@ const PropertiesPanel = styled.div`
     padding: 1rem;
 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    background: ${props => props.theme.colors.shade.light};
+    background: ${props => props.theme.colors.white};
     
     // transform: translateX(-50%);
     
@@ -47,19 +50,40 @@ const PropertiesPanel = styled.div`
         width: 1rem;
         height: 1rem;
         
-        background: ${props => props.theme.colors.shade.light};
+        border-top: 1px solid ${props => lighten(0.04, props.theme.colors.shade.light)};
+        border-right: 1px solid ${props => props.theme.colors.shade.light};
+        background: ${props => props.theme.colors.white};
 
-        transform: translateY(-50%) rotate(45deg);
+        transform: translateY(-50%) rotate(-45deg);
         content: '';
     }
 `;
 
-const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, currentCollectionListId, dataSetId }) => {
-    const { title, collectionListId, properties } = collection;
+const PropertiesHeader = styled.div`
+    position: relative;
+    display: block;
+    padding-bottom: 0.5rem;
+`;
 
-    const type = currentCollectionListId && currentCollectionListId === collectionListId
+const PropertyLabel = styled(Label)`
+    display: inline-block;
+    width: 10rem;
+    margin-right: 1rem;
+`;
+
+const DensityLabel = styled(Label)`
+`;
+
+const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, currentCollectionListId, dataSetId }) => {
+    const { title, total, collectionId, collectionListId, properties } = collection;
+
+    let buttonType = currentCollectionListId && currentCollectionListId === collectionListId
         ? BUTTON_TYPES.dark
         : BUTTON_TYPES.inverted;
+    
+    if (collectionId.indexOf('vocabulary_unknown') !== -1) {
+        buttonType = BUTTON_TYPES.disabled;
+    }
 
     const renderPropertyDensity = (property: Property, idx: number) => {
         return (
@@ -75,6 +99,10 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
     const renderPropertiesPanel = () => {
         return (
             <PropertiesPanel>
+                <PropertiesHeader>
+                    <Subtitle>{collectionId} ({`${total}`})</Subtitle>
+                    <PropertyLabel>{Translations.translate('details.collection.property')}</PropertyLabel><DensityLabel>{Translations.translate('details.collection.density')}</DensityLabel>
+                </PropertiesHeader>
                 {properties.items.map(renderPropertyDensity)}
             </PropertiesPanel>
         );
@@ -85,7 +113,7 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
             onMouseEnter={() => toggleOpen(index)}
             onMouseLeave={() => toggleOpen(null)}
         >
-            <Button type={type} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>{title}</Button>
+            <Button type={buttonType} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>{title}</Button>
             {isOpen && renderPropertiesPanel()}
         </ListItem>
     );

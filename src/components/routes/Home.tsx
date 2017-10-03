@@ -19,8 +19,8 @@ import Translations from '../../services/Translations';
 
 interface ApolloProps {
     data: {
-      promotedDataSets: DataSetMetadata[];
-      aboutMe: AboutMe;
+        promotedDataSets: DataSetMetadata[];
+        aboutMe: AboutMe;
     };
 }
 
@@ -33,13 +33,13 @@ interface State {
 
 class Home extends Component<Props & ApolloProps, State> {
     static defaultProps = {
-      data: {
-          promotedDataSets: [],
-          aboutMe: {
-              name:  null,
-              personalInfo: null
-          }
-      }
+        data: {
+            promotedDataSets: [],
+            aboutMe: {
+                name:  null,
+                personalInfo: null
+            }
+        }
     };
 
     renderFeatured (promoted: DataSetMetadata[]) {

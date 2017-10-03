@@ -12,7 +12,7 @@ const ProgressWrapper = styled.div`
 const ProgressLabel = styled(Label)`
     display: inline-block;
     overflow: hidden;
-    width: 150px;
+    width: 10rem;
     margin-right: 1rem;
 `;
 
@@ -23,6 +23,7 @@ const Bar = styled.figure`
     width: ${props => props.width || '100%'};
     height: 0.5rem;
     vertical-align: middle;
+    border: 1px solid ${props => props.theme.colors.shade.medium};
     background: ${props => props.theme.colors.white};
 `;
 
@@ -35,7 +36,7 @@ const Progress = withProps<Props>(styled.figure)`
     position: relative;
     width: ${props => `${props.progress}%`};
     height: 100%;
-    background: ${props => props.theme.colors.shade.dark};
+    background: ${props => props.theme.colors.shade.medium};
     transform-origin: left;
     // animation: ${ProgressAnimation} 1s ease-in-out;
 `;

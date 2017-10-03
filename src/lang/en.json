@@ -22,6 +22,12 @@
             "title": "Most Popular"
         }
     },
+    "details": {
+        "collection": {
+            "property": "Property",
+            "density": "Density"
+        }
+    },
     "search": {
         "placeholder": "Type to search...",
         "reset": "Reset",
