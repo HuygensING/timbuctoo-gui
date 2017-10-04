@@ -4,40 +4,41 @@ import { StandardStyledFormElements } from './FormElements';
 import { COMPONENT_FIELDS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
 import { removeExtraInfo, renderEmptyViewComponent } from '../../services/FormValueManipulator';
-import Select from './fields/Select';
+import ConnectedSelect from './fields/ConnectedSelect';
+import Select, { OptionProps } from './fields/Select';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
-import { ComponentValue } from '../../typings/timbuctoo/schema';
+import { ComponentValue, ComponentValueField } from '../../typings/timbuctoo/schema';
 
 const Label = styled.label`
-  display: inline-block;
-  clear: left;
-  min-width: 5rem;
+    display: inline-block;
+    clear: left;
+    min-width: 5rem;
 `;
 
 const StyledFieldset = styled.fieldset`
-  width: 100%;
+    width: 100%;
 `;
 
 const StyledInput = styled.input`
-  display: inline-block;
-  margin-bottom: .5rem;
-  width: auto;
-  margin-right: .5rem;
-  max-width: 10rem;
-  ${StandardStyledFormElements};
+    display: inline-block;
+    margin-bottom: .5rem;
+    width: auto;
+    margin-right: .5rem;
+    max-width: 10rem;
+    ${StandardStyledFormElements};
 `;
 
 const StyledInputWrapper = styled.div`
-  display: inline-block;
+    display: inline-block;
 `;
 
 const StyledDivider = styled.div`
-  margin-bottom: 1rem;
-  display: flex;
-  
-  &:last-child {
-    margin-bottom: 0;
-  }
+    margin-bottom: 1rem;
+    display: flex;
+    
+    &:last-child {
+        margin-bottom: 0;
+    }
 `;
 
 interface Props {
@@ -164,16 +165,18 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         return (
             <StyledInputWrapper>
                 {
-                    valueItem.value.fields.map((field: string, childIdx: number) => (
-                        <StyledInput
-                            key={childIdx}
-                            type={'text'}
-                            title={`${valueItem.name}_${childIdx}`}
-                            name={componentInfo.name}
-                            defaultValue={field}
-                            onBlur={(e) => this.onChangeHandler(e, valueItem.name)}
-                        />
-                    ))
+                    valueItem.value.fields.map((field: ComponentValueField, childIdx: number) => {
+                        const { value, referenceType } = field;
+                        return (
+                            <ConnectedSelect
+                                key={childIdx}
+                                name={componentInfo.name}
+                                selected={{key: value, value: value}}
+                                collection={referenceType}
+                                onChange={({option, reference}) => this.onSelectChangeHandler(option, reference, valueItem.name, childIdx)}
+                            />
+                        );
+                    })
                 }
                 {/* <button type={'button'} onClick={(e) => this.onAddHandler(valueItem.name)}>+</button> */}
             </StyledInputWrapper>
@@ -212,8 +215,34 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         }
     }
 
-    private onChangeHeadHandler (componentKey: string) {
+    private onSelectChangeHandler (option: OptionProps, reference: string, fieldName: string, childIndex: number) {
         const { resolveChange, item } = this.props;
+        
+        const newValue = {
+            value: option.value,
+            referenceType: reference
+        };
+        const oldValue = item[fieldName].fields[childIndex];
+
+        if (newValue !== oldValue) {
+            const newFieldset = {...item};
+            newFieldset[fieldName].fields[childIndex] = newValue;
+            resolveChange( newFieldset );
+
+            if (newValue.referenceType) {
+                const nextFieldSet = {...item};
+                nextFieldSet[fieldName].fields[childIndex + 1] = newValue;
+                resolveChange( nextFieldSet );
+            }
+        }
+
+        console.log('newValue', newValue);
+        console.log('oldValue', oldValue);
+    }
+
+    private onChangeHeadHandler (option: OptionProps) {
+        const { resolveChange, item } = this.props;
+        const componentKey = option.value;
 
         if (componentKey === item.type) { return null; }
 

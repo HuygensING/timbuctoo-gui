@@ -116,7 +116,12 @@ export type ComponentType = "TITLE" | "VALUE" | "IMAGE" | "LINK" | "DIVIDER" | "
 
 export interface ComponentValue {
   field: string | null;
-  fields: Array<string> | null;
+  fields: Array<ComponentValueField> | null;
+}
+
+export interface ComponentValueField {
+    value: string;
+    referenceType: string;
 }
 
 export interface PropertyList {

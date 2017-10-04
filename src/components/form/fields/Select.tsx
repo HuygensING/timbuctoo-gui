@@ -10,6 +10,7 @@ export interface OptionProps {
 
 export interface SelectProps {
     name: string;
+    selected: OptionProps;
     options: OptionProps[];
     onChange: (e: any) => void;
 }
@@ -60,6 +61,7 @@ const Arrow = styled.figure`
 
 const SelectWrapper = styled.div`
     position: relative;
+    display: inline-block;
 `;
 
 const StyledSelect = styled.button`
@@ -115,15 +117,19 @@ class SelectField extends Component<SelectProps, State> {
 
     input: JSX.Element;
 
+    defaults: {
+        selectedOption: {
+            value: '',
+            key: ''
+        }
+    };
+
     constructor(props: SelectProps) {
         super(props);
 
         this.state = {
             isOpen: false,
-            selectedOption: {
-                value: '',
-                key: ''
-            }
+            selectedOption: props.selected
         };
 
         this.renderStyledOptionField = this.renderStyledOptionField.bind(this);
@@ -161,7 +167,7 @@ class SelectField extends Component<SelectProps, State> {
         e.preventDefault();
 
         // // TODO: Try to update the actual select options so we trigger the default onChange handler
-        this.props.onChange(option.value);
+        this.props.onChange(option);
 
         this.setState({
             isOpen: false,
@@ -175,15 +181,15 @@ class SelectField extends Component<SelectProps, State> {
 
         return (
             <SelectWrapper>
-                <SelectHiddenFieldInput name={name} value={this.state.selectedOption.value}>
-                    {options.map(this.renderOptionField)}
+                <SelectHiddenFieldInput name={name} defaultValue={selectedOption && selectedOption.value}>
+                    {options && options.map(this.renderOptionField)}
                 </SelectHiddenFieldInput>
                 
                 <StyledSelect onClick={this.onSelectClick}>
-                    {selectedOption.key || name} <Arrow />
+                    {selectedOption && selectedOption.key || name} <Arrow />
                 </StyledSelect>
                 <StyledOptions isOpen={isOpen}>
-                    {options.map(this.renderStyledOptionField)}
+                    {options && options.map(this.renderStyledOptionField)}
                 </StyledOptions>
             </SelectWrapper>
         );

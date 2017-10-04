@@ -10,8 +10,6 @@ class NotFound extends Component<Props, State> {
             <section>
                 <FullHelmet pageName="404" />
                 <h1>404, ik denk een foutje</h1>
-
-                <h1>Temp dropdown</h1>
             </section>
         );
     }

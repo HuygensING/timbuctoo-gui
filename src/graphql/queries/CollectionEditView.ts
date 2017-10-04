@@ -1,12 +1,13 @@
 import { gql } from 'react-apollo';
 
-const QUERY_COLLECTION_EDIT_VIEW = ({ match }) => {
+const QUERY_COLLECTION_EDIT_VIEW = ({ match, collectionId }) => {
     const { collection, dataSet } = match.params;
-    console.log( dataSet, collection );
+    const selectedCollectionId = collectionId || collection;
+    console.log( selectedCollectionId );
     const query = `
         query QUERY_COLLECTION_EDIT_VIEW {
             dataSetMetadata(dataSetId:"${dataSet}") {
-                collectionList {
+                collection(collectionId:"${selectedCollectionId}") {
                     items {
                         properties {
                             items {

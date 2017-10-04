@@ -5,7 +5,7 @@ const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
     const query = `
         query EntryProperties {
             dataSetMetadata(dataSetId: "${match.params.dataSet}") {
-                collections(cursor: "${collectionCursor ? collectionCursor : match.params.collectionList}") {
+                collectionList(cursor: "${collectionCursor ? collectionCursor : match.params.collectionList}") {
                     items {
                         title
                         collectionId

@@ -30,15 +30,21 @@ interface State {
 }
 
 const Section = styled.div`
-  width: 100%;
-  padding-bottom: 3rem;
+    width: 100%;
+    padding-bottom: 3rem;
 `;
 
 const fakeItems: any[] = [
     {
         type: COMPONENTS.title,
         value: {
-            fields: ['tim_hasLocation', 'skos_altLabel', 'items']
+            fields: [{
+                value: 'tim_hasLocation',
+                referenceType: 'clusius_Residence'
+            }, {
+                value: 'tim_name',
+                referenceType: null
+            }]
         }
     },
     {
@@ -50,7 +56,13 @@ const fakeItems: any[] = [
             {
                 type: COMPONENTS.value,
                 value: {
-                    fields: ['tim_beginDate']
+                    fields: [{
+                        value: 'tim_hasResident',
+                        referenceType: 'clusius_Persons'
+                    }, {
+                        value: 'tim_gender',
+                        referenceType: null
+                    }]
                 }
             }
         ]
@@ -64,7 +76,16 @@ const fakeItems: any[] = [
             {
                 type: COMPONENTS.value,
                 value: {
-                    fields: ['tim_endDate']
+                    fields: [{
+                        value: 'tim_hasResident',
+                        referenceType: 'clusius_Persons'
+                    }, {
+                        value: 'tim_hasBirthPlace',
+                        referenceType: 'clusius_Places'
+                    }, {
+                        value: 'tim_country',
+                        referenceType: null
+                    }]
                 }
             }
         ]
@@ -101,10 +122,11 @@ class ViewScreen extends PureComponent<FullProps, State> {
         // }
 
         // if (this.items.length === 0) {
-        //     return <Title>No collections available :'(</Title>;
+        //     return <Title>No collections available : '(</Title>;
         // }
 
         // replace fakeItems with this.collection.components.items;
+        
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
                 <Section>
