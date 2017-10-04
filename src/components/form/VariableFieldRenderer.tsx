@@ -63,10 +63,6 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                     name
                 };
 
-                console.group(name);
-                console.log(obj);
-                console.groupEnd();
-
                 if (item[name]) {
                     arr.push(obj);
                 }
@@ -217,7 +213,6 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     }
 
     private onChangeHeadHandler (componentKey: string) {
-        console.log(componentKey);
         const { resolveChange, item } = this.props;
 
         if (componentKey === item.type) { return null; }

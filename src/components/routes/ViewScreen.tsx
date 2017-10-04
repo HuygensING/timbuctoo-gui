@@ -85,8 +85,6 @@ class ViewScreen extends PureComponent<FullProps, State> {
     }
 
     componentWillReceiveProps (newProps: FullProps) {
-        console.log(newProps.data.dataSetMetadata);
-
         const knowsMetadata = this.props.data && this.props.data.dataSetMetadata || newProps.data && newProps.data.dataSetMetadata;
         const metadataDoesNotMatch = this.props.data.dataSetMetadata !== newProps.data.dataSetMetadata;
 
@@ -106,7 +104,6 @@ class ViewScreen extends PureComponent<FullProps, State> {
         //     return <Title>No collections available :'(</Title>;
         // }
 
-        console.log(this.collection.properties.items);
         // replace fakeItems with this.collection.components.items;
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
