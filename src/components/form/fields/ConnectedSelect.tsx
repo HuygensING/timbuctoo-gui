@@ -82,7 +82,6 @@ class SelectField extends Component<FullProps, State> {
     private getOptionsFromQuery({ dataSetMetadata }: ApolloDataProps, options: OptionProps[] = []) {
         if (dataSetMetadata && dataSetMetadata.collection) {
             const collection = dataSetMetadata.collection;
-            console.log( this.referenceTypes, this );
             collection.properties.items.forEach((field) => {
                 const referenceType = field.referencedCollections && field.referencedCollections.items[0];
                 // const valueType = field.valueTypes && field.valueTypes.items[0];
@@ -94,10 +93,10 @@ class SelectField extends Component<FullProps, State> {
                 //     console.log( 'valueType', valueType );
                 // }
 
-
                 if (field.name && this.referenceTypes && referenceType) {
                     this.referenceTypes[field.name] = referenceType;
                 }
+                console.log( this.referenceTypes );
 
                 options.push({
                     key: field.name || '',
