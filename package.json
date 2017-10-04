@@ -5,7 +5,7 @@
   "scripts": {
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
-    "gql-ts": "graphql-to-typescript schema.faker.graphql src/typings/timbuctoo/schema.ts",
+    "gql-ts": "graphql-to-typescript schema.graphql src/typings/timbuctoo/schema.ts",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },

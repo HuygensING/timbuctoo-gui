@@ -62,8 +62,8 @@ class Entry extends PureComponent<FullProps, State> {
 
         if ( !dataSetMetadata ) { return <Loading />; }
         
-        const { collections } = dataSetMetadata;
-        if (!collections || !collections.items.length) { return null; }
+        const { collection } = dataSetMetadata;
+        if (!collection) { return null; }
         
         const components = this.dummyComponents();
         const values: Array<string> = [];

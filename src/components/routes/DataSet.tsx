@@ -23,17 +23,17 @@ class DataSet extends Component<FullProps, State> {
         const { dataSetMetadata } = this.props.data;
         if ( !dataSetMetadata ) { return <Loading />; }
 
-        const { dataSetId, title, description, imageUrl, collections } = dataSetMetadata;
+        const { dataSetId, title, description, imageUrl, collectionList } = dataSetMetadata;
 
-        const collectionItems: CollectionMetadata[] = collections && collections.items
-            ? collections.items
+        const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
+            ? collectionList.items
             : [];
 
         return (
             <DataSetBody
-                title={title}
-                description={description}
-                imageUrl={imageUrl}
+                title={title ? title.value : ''}
+                description={description ? description.value : ''}
+                imageUrl={imageUrl ? imageUrl.value : ''}
                 dataSetId={dataSetId}
                 collectionKeys={collectionItems}
                 match={this.props.match}

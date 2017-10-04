@@ -36,10 +36,10 @@ class Search extends Component<FullProps, State> {
         const { dataSetMetadata } = this.props.data;
         if ( !dataSetMetadata ) { return <Loading />; }
 
-        const { title, description, imageUrl, collections } = dataSetMetadata;
+        const { title, description, imageUrl, collectionList } = dataSetMetadata;
 
-        const collectionItems: CollectionMetadata[] = collections && collections.items
-            ? collections.items
+        const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
+            ? collectionList.items
             : [];
 
         const currentCollection = getCurrentCollection(collectionItems, this.props.match.params.collectionList);

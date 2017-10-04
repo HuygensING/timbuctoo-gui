@@ -13,11 +13,12 @@ import { match } from 'react-router';
 import { UserReducer } from '../../typings/store';
 import EditCollectionBar from './EditCollectionBar';
 import { Title } from '../layout/StyledCopy';
+import getValue from '../../services/getValue';
 
 interface Props {
     title: string;
-    description?: string;
-    imageUrl?: string;
+    description: string;
+    imageUrl: string;
     dataSetId: string;
     collectionKeys: CollectionMetadata[];
     match: match<any>;
@@ -37,6 +38,7 @@ class DataSetBody extends PureComponent<FullProps, State> {
 
     render () {
         const { title, description, imageUrl, dataSetId, collectionKeys, user } = this.props;
+        const highlightKey = getValue(collectionKeys[0].title);
 
         return (
             <section>
@@ -46,7 +48,7 @@ class DataSetBody extends PureComponent<FullProps, State> {
                     title={title}
                     content={description}
                     imgUrl={imageUrl}
-                    searchPath={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionKeys[0].title)}`}
+                    searchPath={highlightKey ? `${ROUTE_PATHS.details}/${dataSetId}/${encode(highlightKey)}` : highlightKey}
                     buttonText={'Search this dataset'}
                 />
 

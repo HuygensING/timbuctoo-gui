@@ -4,7 +4,6 @@ import FullHelmet from '../FullHelmet';
 
 import { Grid, Col } from '../layout/Grid';
 
-import { DataSets } from '../../typings/timbuctoo/schema';
 import { getCollection } from '../../services/GetDataSet';
 import connectQuery from '../../services/ConnectQuery';
 import QUERY_ENTRY_VALUES from '../../graphql/queries/EntryValues';
@@ -21,7 +20,9 @@ interface Props {
 
 interface ApolloProps {
     data: {
-        dataSets: DataSets;
+        dataSets: {
+            [name: string]: any
+        };
     };
 }
 
