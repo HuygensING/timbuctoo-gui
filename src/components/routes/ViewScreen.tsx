@@ -16,6 +16,7 @@ import DraggableForm from '../form/DraggableForm';
 import { COMPONENTS } from '../../constants/global';
 import { CollectionMetadata } from '../../typings/timbuctoo/schema';
 import Loading from '../Loading';
+import { createQueryStringFromFormFields } from '../../services/CreateQueryFromValues';
 
 interface ApolloProps {
     data: {
@@ -37,7 +38,7 @@ const fakeItems: any[] = [
     {
         type: COMPONENTS.title,
         value: {
-            fields: ['tim_hasLocation', 'skos_altLabel', 'items', 'value']
+            fields: ['tim_hasLocation', 'skos_altLabel', 'items']
         }
     },
     {
@@ -121,8 +122,9 @@ class ViewScreen extends PureComponent<FullProps, State> {
         );
     }
 
-    private onSubmit (e: any) {
-        console.log(e);
+    private onSubmit (formValues: any[]) {
+        const query = createQueryStringFromFormFields(formValues);
+        console.log(query);
     }
 
     private onNewDataLoaded (props: FullProps) {
