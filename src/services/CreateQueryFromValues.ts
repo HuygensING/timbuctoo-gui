@@ -1,14 +1,17 @@
 import _ from 'lodash';
+import { ComponentValueField } from '../typings/timbuctoo/schema';
 import { COMPONENT_FIELDS } from '../constants/global';
 
-const createValuesObject = (fields: string[]) => {
+const createValuesObject = (fields: ComponentValueField[]) => {
     const object = {};
     fields.reduce(
-        (obj, key: string) => (
-            key.length > 0
-                ? obj[key] = {}
-                : {}
-        ),
+        (obj, { value }: ComponentValueField) => {
+            return (
+                value.length > 0
+                    ? obj[value] = {}
+                    : {}
+            )
+        },
         object
     );
     return object;

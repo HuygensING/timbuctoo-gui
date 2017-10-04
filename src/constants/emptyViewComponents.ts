@@ -4,31 +4,31 @@ const EMPTY_VIEW_COMPONENTS = {
     [COMPONENTS.title]: {
         type: COMPONENTS.title,
         value: {
-            fields: ['']
+            fields: [{value: '', referenceType: null}]
         }
     },
     [COMPONENTS.value]: {
         type: COMPONENTS.value,
         value: {
-            fields: ['']
+            fields: [{value: '', referenceType: null}]
         }
     },
     [COMPONENTS.image]: {
         type: COMPONENTS.image,
         url: {
-            fields: ['']
+            fields: [{value: '', referenceType: null}]
         },
         alt: {
-            fields: ['']
+            fields: [{value: '', referenceType: null}]
         }
     },
     [COMPONENTS.link]: {
         type: COMPONENTS.link,
         value: {
-            fields: ['']
+            fields: [{value: '', referenceType: null}]
         },
         url: {
-            fields: ['']
+            fields: [{value: '', referenceType: null}]
         }
     },
     [COMPONENTS.keyValue]: {
@@ -40,7 +40,7 @@ const EMPTY_VIEW_COMPONENTS = {
             {
                 type: COMPONENTS.value,
                 value: {
-                    fields: ['']
+                    fields: [{value: '', referenceType: null}]
                 }
             }
         ]

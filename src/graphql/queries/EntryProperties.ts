@@ -2,7 +2,6 @@ import { gql } from 'react-apollo';
 import { componentsFragment } from '../fragments/Components';
 
 const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
-    console.log( match );
     const query = `
         query EntryProperties {
             dataSetMetadata(dataSetId: "${match.params.dataSet}") {
