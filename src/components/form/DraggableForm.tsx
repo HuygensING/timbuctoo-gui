@@ -51,8 +51,6 @@ class DraggableForm extends PureComponent<Props, State> {
             openedIndex: null
         };
 
-        console.log('constructing draggable form');
-
         this.addListItem = this.addListItem.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.resolveChange = this.resolveChange.bind(this);

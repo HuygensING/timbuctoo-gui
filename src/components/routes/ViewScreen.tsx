@@ -16,6 +16,7 @@ import DraggableForm from '../form/DraggableForm';
 import { COMPONENTS } from '../../constants/global';
 import { CollectionMetadata } from '../../typings/timbuctoo/schema';
 import Loading from '../Loading';
+import { createQueryStringFromFormFields } from '../../services/CreateQueryFromValues';
 
 interface ApolloProps {
     data: {
@@ -37,7 +38,7 @@ const fakeItems: any[] = [
     {
         type: COMPONENTS.title,
         value: {
-            fields: ['tim_hasLocation', 'skos_altLabel', 'items', 'value']
+            fields: ['tim_hasLocation', 'skos_altLabel', 'items']
         }
     },
     {
@@ -84,8 +85,6 @@ class ViewScreen extends PureComponent<FullProps, State> {
     }
 
     componentWillReceiveProps (newProps: FullProps) {
-        console.log(newProps.data.dataSetMetadata);
-
         const knowsMetadata = this.props.data && this.props.data.dataSetMetadata || newProps.data && newProps.data.dataSetMetadata;
         const metadataDoesNotMatch = this.props.data.dataSetMetadata !== newProps.data.dataSetMetadata;
 
@@ -105,7 +104,6 @@ class ViewScreen extends PureComponent<FullProps, State> {
         //     return <Title>No collections available :'(</Title>;
         // }
 
-        console.log(this.collection.properties.items);
         // replace fakeItems with this.collection.components.items;
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
@@ -121,8 +119,9 @@ class ViewScreen extends PureComponent<FullProps, State> {
         );
     }
 
-    private onSubmit (e: any) {
-        console.log(e);
+    private onSubmit (formValues: any[]) {
+        const query = createQueryStringFromFormFields(formValues);
+        console.log(query);
     }
 
     private onNewDataLoaded (props: FullProps) {
