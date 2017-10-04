@@ -9,6 +9,8 @@ export const DRAGGABLE_COMPONENTS = {
     accordeon: 'accordeon'
 };
 
+export const UNKNOWN_VOCABULARY = 'vocabulary_unknown';
+
 export const COMPONENTS: ComponentTypes = {
     title: 'TITLE',
     value: 'VALUE',

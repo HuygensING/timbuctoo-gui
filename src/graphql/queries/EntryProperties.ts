@@ -5,23 +5,22 @@ const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
     const query = `
         query EntryProperties {
             dataSetMetadata(dataSetId: "${match.params.dataSet}") {
-                collectionList(cursor: "${collectionCursor ? collectionCursor : match.params.collectionList}") {
-                    items {
-                        title
-                        collectionId
-                        ${!collectionCursor && `
-                            properties {
-                                items {
-                                    name
-                                    referenceTypes { items }
-                                    valueTypes { items }
-                                }
-                            }
-                        `}
-                        components {
+                collection(collectionId: "${collectionCursor ? collectionCursor : match.params.collection}") {
+                    title { value }
+                    collectionId
+                    ${!collectionCursor && `
+                        properties {
                             items {
-                                ...ComponentsFragment
-                            }
+                                name
+                                referencedCollections { items }
+                                isList
+                                isValueType
+                            }   
+                        }
+                    `}
+                    components {
+                        items {
+                            ...ComponentsFragment
                         }
                     }
                 }

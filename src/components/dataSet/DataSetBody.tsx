@@ -14,6 +14,7 @@ import { UserReducer } from '../../typings/store';
 import EditCollectionBar from './EditCollectionBar';
 import { Title } from '../layout/StyledCopy';
 import getValue from '../../services/getValue';
+import { UNKNOWN_VOCABULARY } from '../../constants/global';
 
 interface Props {
     title: string;
@@ -30,6 +31,8 @@ type FullProps = Props;
 interface State {}
 
 class DataSetBody extends PureComponent<FullProps, State> {
+    static isKnown = (col) => col.collectionId.indexOf(UNKNOWN_VOCABULARY) === -1;
+
     constructor(props: FullProps) {
         super(props);
         
@@ -62,7 +65,9 @@ class DataSetBody extends PureComponent<FullProps, State> {
                         <section>
                             <Title>Collection</Title>
                             <ul>
-                                {collectionKeys.map(this.renderCollectionBar)}
+                            {collectionKeys
+                                .filter(DataSetBody.isKnown)
+                                .map(this.renderCollectionBar)}
                             </ul>
                         </section>
                     </Col>
@@ -92,7 +97,7 @@ class DataSetBody extends PureComponent<FullProps, State> {
         let col;
         for (let i = 0, limit = collectionsCopy.length; i < limit; i++) {
             col = collectionsCopy[i];
-            if (col && col.collectionId.indexOf(reOrderKey) !== -1) {
+            if (col && DataSetBody.isKnown(col)) {
                 invalidCollections.push( collectionsCopy.splice(i, 1)[0] );
             }
         }
@@ -100,7 +105,7 @@ class DataSetBody extends PureComponent<FullProps, State> {
     }
 
     private renderCollectionTags (collections: CollectionMetadata[], dataSetId: string) {
-        const reorderedCollections = this.reOrderCollection(collections, 'vocabulary_unknown');
+        const reorderedCollections = this.reOrderCollection(collections, UNKNOWN_VOCABULARY);
         return <CollectionTags colKeys={reorderedCollections} dataSetId={dataSetId} />;
     }
 

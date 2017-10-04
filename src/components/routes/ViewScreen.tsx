@@ -116,6 +116,7 @@ class ViewScreen extends PureComponent<FullProps, State> {
 
     render () {
         // TODO: add when Components are available
+        console.log(this.props.data);
         if (!this.collection) { return <Loading />; }
         // if (!this.collectionsAvailable) {
         //     return <Loading />;
@@ -147,9 +148,9 @@ class ViewScreen extends PureComponent<FullProps, State> {
     }
 
     private onNewDataLoaded (props: FullProps) {
-        if (props.data && props.data.dataSetMetadata && props.data.dataSetMetadata.collections && props.data.dataSetMetadata.collections.items) {
+        if (props.data && props.data.dataSetMetadata && props.data.dataSetMetadata.collection) {
             this.collectionsAvailable = true;
-            this.collection = props.data.dataSetMetadata.collections.items[0];
+            this.collection = props.data.dataSetMetadata.collection;
         } else {
             this.collectionsAvailable = false;
         }

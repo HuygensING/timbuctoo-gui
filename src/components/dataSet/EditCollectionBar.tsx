@@ -5,6 +5,7 @@ import { Link , Title } from '../layout/StyledCopy';
 import { lighten } from 'polished';
 import Edit from '../icons/Edit';
 import { ROUTE_PATHS, SUB_ROUTES } from '../../constants/routeNaming';
+import getValue from '../../services/getValue';
 
 interface Props {
     collection: CollectionMetadata;
@@ -53,7 +54,7 @@ const TitleBox = styled(Title)`
 const EditCollectionBar: SFC<Props> = ({ collection, dataSetId }) => {
     return (
         <Bar>
-            <TitleBox>{collection.title}</TitleBox>
+            <TitleBox>{getValue(collection.title) || collection.collectionId}</TitleBox>
             <LinkBox to={'#'}>Edit facets<EditIcon/></LinkBox>
             <LinkBox to={`${ROUTE_PATHS.edit}/${dataSetId}${SUB_ROUTES.viewScreen}/${collection.collectionId}`}>Edit screen<EditIcon/></LinkBox>
         </Bar>
