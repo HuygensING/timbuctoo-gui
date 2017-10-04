@@ -2,24 +2,23 @@ import { gql } from 'react-apollo';
 
 const contactFragment = gql`
     fragment ContactFragment on ContactInfo {
-        name
-        email
+        name { value }
+        email { value }
     }
 `;
 
 const provenanceFragment = gql`
     fragment ProvenanceInfoFragment on DataSetMetadata {
         provenanceInfo {
-            title
-            body   
+            title { value }
+            body { value }
         }
     }
 `;
 
 const collectionBase = gql`
     fragment CollectionBase on CollectionMetadata {
-        title
-        total
+        title { value }
         collectionId
         collectionListId
     }
@@ -38,14 +37,14 @@ const collectionProperties = gql`
 
 const collectionsFragment = gql`
     fragment CollectionsFragment on DataSetMetadata {
-        collections {
+        collectionList {
             items {
                 ...CollectionBase
                 ...CollectionProperties
                 summaryProperties {
-                    title
-                    description
-                    image
+                    title { value }
+                    description { value }
+                    image { value }
                 }
             }   
         }
@@ -57,9 +56,9 @@ const collectionsFragment = gql`
 const dataSetMetadataFragment = gql`
     fragment DataSetMetadataFragment on DataSetMetadata {
         dataSetId
-        title
-        description
-        imageUrl
+        title { value }
+        description { value }
+        imageUrl { value }
         owner {
             ...ContactFragment
         }
@@ -67,7 +66,7 @@ const dataSetMetadataFragment = gql`
             ...ContactFragment
         }
         ...ProvenanceInfoFragment
-        collections {
+        collectionList {
             items {
                 ...CollectionBase
                 ...CollectionProperties

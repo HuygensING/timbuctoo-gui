@@ -13,7 +13,7 @@ input ViewComponentsInput {
   components: [ComponentInput]
   dataSetId: String!
   collectionId: String!
-	query: 			String! #graphql syntax like string
+  query: 			String! #graphql syntax like string
 }
 
 input ComponentInput {
@@ -29,6 +29,11 @@ input ComponentInput {
 input ComponentValueInput {
   field: String # Can hold either a field or a fields object. Inputs do not get along with unions, that's why this is not more typesafe
   fields: [ComponentValueFieldInput]
+}
+
+input ComponentValueFieldInput {
+  value: String
+  referenceType: String
 }
   
 input ComponentValueFieldInput {
@@ -57,7 +62,7 @@ type ComponentValue {
 type ComponentValueField {
   value: String
   referenceType: String
-}  
+}
 
 enum ComponentType {
   TITLE
@@ -97,21 +102,6 @@ type Option {
   count: Int! @fake(type:money)
 }
 
-# -------- Extends for Facets (Query)
-
-# extend type DUMMY_oberontestclusius_Residence_List { facets: [Facet!]! }
-# extend type DUMMY_oberontestclusius_Provenance_List { facets: [Facet!]! }
-# extend type DUMMY_oberontestclusius_Occupation_List { facets: [Facet!]! }
-# extend type DUMMY_oberontestclusius_Persons_List { facets: [Facet!]! }
-# extend type DUMMY_oberontestclusius_Fields_of_interest_List { facets: [Facet!]! }
-# extend type DUMMY_oberontesthttp___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown_List { facets: [Facet!]! }
-# extend type DUMMY_oberontestclusius_Places_List { facets: [Facet!]! }
-# extend type DUMMY_oberontestclusius_Institutes_List { facets: [Facet!]! }
-# extend type DUMMY_oberontestclusius_Provenance_type_List { facets: [Facet!]! }
-# extend type DUMMY_oberontestclusius_Membership_List { facets: [Facet!]! }
-# extend type DUMMY_oberontestclusius_Biography_List { facets: [Facet!]! }
-# extend type DUMMY_oberontestclusius_Education_List { facets:[Facet!]! }
-
 # -------- Metadata (Query)
 
 extend type DataSetMetadata {
@@ -123,7 +113,6 @@ extend type DataSetMetadata {
 }
 
 extend type CollectionMetadata {
-  # summaryProperties: SummaryProperties!
   components(count: Int = 20, cursor: ID = ""): ComponentList!
 }
 
@@ -133,12 +122,6 @@ type ComponentList {
   query: String # this is the graphql syntax like string from the ViewComponentsInput
   items: [Component!]!
 }
-
-# type SummaryProperties {
-#   title: String! @examples(values:["tim_original_id"])
-#   description: String @examples(values:["tim_original_id"])
-#   image: String @examples(values:["tim_original_id"])
-# }
 
 type RoleWithMembers {
   name: String

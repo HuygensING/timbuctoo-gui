@@ -1,8 +1,6 @@
 import React from 'react';
 import styled, { css } from '../../styled-components';
 
-import { Url } from '../../typings/timbuctoo/schema';
-
 import Translations from '../../services/Translations';
 import { Content, Subtitle } from '../layout/StyledCopy';
 import Image from '../layout/Image';
@@ -11,9 +9,9 @@ import { ROUTE_PATHS } from '../../constants/routeNaming';
 import { encode } from '../../services/UrlStringCreator';
 
 export interface ResultDataSetMetadata {
-    imageUrl: Url | null;
-    title: string;
-    description: string;
+    imageUrl: string | null;
+    title: string | null;
+    description: string | null;
     collectionId: string;
     dataSetId: string;
     uri: string;

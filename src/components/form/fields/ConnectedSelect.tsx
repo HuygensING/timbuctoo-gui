@@ -23,7 +23,7 @@ interface State {
 }
 
 interface ReferenceTypesProps {
-    [name: string]: string
+    [name: string]: string;
 }
 
 interface SelectDefaultsProps {
@@ -80,11 +80,11 @@ class SelectField extends Component<FullProps, State> {
     }
 
     private getOptionsFromQuery({ dataSetMetadata }: ApolloDataProps, options: OptionProps[] = []) {
-        if (dataSetMetadata && dataSetMetadata.collections) {
-            const collection = dataSetMetadata.collections.items[0];
+        if (dataSetMetadata && dataSetMetadata.collection) {
+            const collection = dataSetMetadata.collection;
             console.log( this.referenceTypes, this );
             collection.properties.items.forEach((field) => {
-                const referenceType = field.referenceTypes && field.referenceTypes.items[0];
+                const referenceType = field.referencedCollections && field.referencedCollections.items[0];
                 // const valueType = field.valueTypes && field.valueTypes.items[0];
                 // if (referenceType) {
                 //     console.log( 'referenceType', referenceType );
@@ -95,7 +95,7 @@ class SelectField extends Component<FullProps, State> {
                 // }
 
 
-                if (field.name && this.referenceTypes) {
+                if (field.name && this.referenceTypes && referenceType) {
                     this.referenceTypes[field.name] = referenceType;
                 }
 

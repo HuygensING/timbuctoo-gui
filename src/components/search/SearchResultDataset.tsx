@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '../../styled-components';
 
-import { Url, Licence, CollectionMetadataList } from '../../typings/timbuctoo/schema';
+import { CollectionMetadataList } from '../../typings/timbuctoo/schema';
 
 import Translations from '../../services/Translations';
 import { Subtitle, Content, Label } from '../layout/StyledCopy';
@@ -9,10 +9,10 @@ import Image from '../layout/Image';
 import Button from '../layout/Button';
 
 export interface ResultDataSetMetadata {
-    imageUrl: Url | null;
+    imageUrl: string | null;
     title: string;
     description: string;
-    licence: Licence;
+    licence: { uri: string };
     collections: CollectionMetadataList;
 }
 
@@ -43,9 +43,11 @@ const SearchResulDataset = (props: ResultDataSetMetadata) => {
         ))
     );
 
+    const imageSrc = imageUrl ? imageUrl : '';
+
     return (
         <SearchItem>
-            <Image src={imageUrl} ratio={4 / 2}/>
+            <Image src={imageSrc} ratio={4 / 2}/>
             <Subtitle tag="h1">{title}</Subtitle>
             <CollectionList>
                 {renderCollections()}

@@ -2,7 +2,7 @@ import { PureComponent, default as React } from 'react';
 import FullHelmet from '../FullHelmet';
 import { Col, FullSection } from '../layout/Grid';
 import CollectionTags from '../CollectionTags';
-import { CollectionMetadata, DataSets } from '../../typings/timbuctoo/schema';
+import { CollectionMetadata } from '../../typings/timbuctoo/schema';
 import { match } from 'react-router';
 import Filters from '../Filters';
 import SearchForm from '../form/SearchForm';
@@ -22,7 +22,9 @@ interface Props {
 
 interface ApolloProps {
     data: {
-        dataSets: DataSets;
+        dataSets: {
+            [name: string]: any
+        };
     };
 }
 

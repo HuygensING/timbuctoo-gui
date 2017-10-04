@@ -1,0 +1,745 @@
+# source: http://localhost:9002/graphql
+# timestamp: Wed Oct 04 2017 14:57:58 GMT+0200 (CEST)
+
+directive @fake(type: fake__Types!, options: fake__options = {}, locale: fake__Locale) on FIELD_DEFINITION | SCALAR
+
+directive @examples(values: [examples__JSON]!) on FIELD_DEFINITION | SCALAR
+
+type AboutMe {
+  # datasets that this user has some specific permissions on
+  dataSets: [DataSetMetadata!]!
+
+  # The unique identifier of this user
+  id: ID!
+
+  # a human readable name (or empty string if not available)
+  name: String!
+
+  # a url to a page with personal information on this user
+  personalInfo: String!
+
+  # This user may create a new dataset on this timbuctoo instance
+  canCreateDataSet: Boolean!
+}
+
+type Archetypes {
+  persons: PersonArchetypeList
+}
+
+type CollectionIdList {
+  prevCursor: ID
+  nextCursor: ID
+  items: [String!]!
+}
+
+type CollectionMetadata {
+  uri: String!
+  collectionId: ID!
+  collectionListId: ID!
+  properties(count: Int = 20, cursor: ID): PropertyList!
+  total: Int!
+  title: Value
+  archeType: Entity
+  indexerConfig: IndexerConfig
+  summaryProperties: SummaryProperties!
+  components(count: Int = 20, cursor: ID = ""): ComponentList!
+}
+
+type CollectionMetadataList {
+  prevCursor: ID
+  nextCursor: ID
+  items: [CollectionMetadata!]!
+}
+
+type Component {
+  type: ComponentType!
+  value: ComponentValue
+  key: ComponentValue
+  title: ComponentValue
+  url: ComponentValue
+  alt: ComponentValue
+  tree: String
+  values: [Component]
+}
+
+input ComponentInput {
+  type: ComponentType!
+  value: ComponentValueInput
+  key: ComponentValueInput
+  title: ComponentValueInput
+  url: ComponentValueInput
+  alt: ComponentValueInput
+  values: [ComponentInput]
+}
+
+type ComponentList {
+  prevCursor: ID
+  nextCursor: ID
+  query: String
+  items: [Component!]!
+}
+
+enum ComponentType {
+  TITLE
+  VALUE
+  IMAGE
+  LINK
+  DIVIDER
+  KEYVALUE
+  TREE
+}
+
+type ComponentValue {
+  field: String
+  fields: [String]
+}
+
+type ComponentValueField {
+  value: String
+  referenceType: String
+}
+
+input ComponentValueFieldInput {
+  value: String
+  referenceType: String
+}
+
+input ComponentValueInput {
+  field: String
+  fields: [ComponentValueFieldInput]
+}
+
+type ContactInfo {
+  name: Value
+  email: Value
+}
+
+type DataSetMetadata {
+  uri: String!
+  dataSetId: ID!
+  title: Value
+  description: Value
+  imageUrl: Value
+  owner: ContactInfo
+  contact: ContactInfo
+  provenanceInfo: ProvenanceInfo
+  license: License
+
+  # archetypes: Archetypes! @passThrough (added by the RootQuery based on the config)
+  collection(collectionId: ID!): CollectionMetadata
+  collectionList(count: Int = 20, cursor: ID): CollectionMetadataList
+  archetypes: Archetypes!
+  contributors: [RoleWithMembers!]!
+  roles: [DataSetPermission!]!
+}
+
+enum DataSetPermission {
+  SEARCH_AND_VIEW
+  DOWNLOAD_DUMP
+  FORK
+  PUBLISH
+  EDIT_ENTRIES
+  EDIT_DATASET
+  EDIT_ROLES
+}
+
+type DataSets {
+  DUMMY__oberon2: DUMMY__oberon2
+}
+
+type DUMMY__oberon2 {
+  metadata: DataSetMetadata!
+  clusius_Residence(uri: String!): DUMMY__oberon2_clusius_Residence
+  clusius_ResidenceList(cursor: ID, count: Int): DUMMY__oberon2_clusius_Residence_List
+  clusius_Provenance(uri: String!): DUMMY__oberon2_clusius_Provenance
+  clusius_ProvenanceList(cursor: ID, count: Int): DUMMY__oberon2_clusius_Provenance_List
+  clusius_Occupation(uri: String!): DUMMY__oberon2_clusius_Occupation
+  clusius_OccupationList(cursor: ID, count: Int): DUMMY__oberon2_clusius_Occupation_List
+  clusius_Persons(uri: String!): DUMMY__oberon2_clusius_Persons
+  clusius_PersonsList(cursor: ID, count: Int): DUMMY__oberon2_clusius_Persons_List
+  clusius_Fields_of_interest(uri: String!): DUMMY__oberon2_clusius_Fields_of_interest
+  clusius_Fields_of_interestList(cursor: ID, count: Int): DUMMY__oberon2_clusius_Fields_of_interest_List
+  clusius_Education(uri: String!): DUMMY__oberon2_clusius_Education
+  clusius_EducationList(cursor: ID, count: Int): DUMMY__oberon2_clusius_Education_List
+  http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown(uri: String!): DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknownList(cursor: ID, count: Int): DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown_List
+  clusius_Places(uri: String!): DUMMY__oberon2_clusius_Places
+  clusius_PlacesList(cursor: ID, count: Int): DUMMY__oberon2_clusius_Places_List
+  clusius_Institutes(uri: String!): DUMMY__oberon2_clusius_Institutes
+  clusius_InstitutesList(cursor: ID, count: Int): DUMMY__oberon2_clusius_Institutes_List
+  clusius_Provenance_type(uri: String!): DUMMY__oberon2_clusius_Provenance_type
+  clusius_Provenance_typeList(cursor: ID, count: Int): DUMMY__oberon2_clusius_Provenance_type_List
+  clusius_Membership(uri: String!): DUMMY__oberon2_clusius_Membership
+  clusius_MembershipList(cursor: ID, count: Int): DUMMY__oberon2_clusius_Membership_List
+  clusius_Biography(uri: String!): DUMMY__oberon2_clusius_Biography
+  clusius_BiographyList(cursor: ID, count: Int): DUMMY__oberon2_clusius_Biography_List
+}
+
+# Subjects that are a [clusius:Biography](http://timbuctoo.huygens.knaw.nl/datasets/clusius/Biography)
+type DUMMY__oberon2_clusius_Biography implements Entity {
+  uri: String!
+  rdf_type: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  tim_isScientistBioOf: DUMMY__oberon2_clusius_Persons
+  tim_original_id: DUMMY__oberon2_value_xsd_string
+  tim_hasFieldOfInterest(cursor: ID, count: Int): DUMMY__oberon2_clusius_Fields_of_interest_List
+  tim_highest_degree: DUMMY__oberon2_value_xsd_string
+  tim_biography: DUMMY__oberon2_value_xsd_string
+}
+
+type DUMMY__oberon2_clusius_Biography_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_clusius_Biography!]!
+}
+
+# Subjects that are a [clusius:Education](http://timbuctoo.huygens.knaw.nl/datasets/clusius/Education)
+type DUMMY__oberon2_clusius_Education implements Entity {
+  uri: String!
+  rdf_type: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  tim_beginDate: DUMMY__oberon2_value_custom_datable
+  tim_description: DUMMY__oberon2_value_xsd_string
+  tim_endDate: DUMMY__oberon2_value_custom_datable
+  tim_isEducationOf: DUMMY__oberon2_clusius_Persons
+  tim_original_id: DUMMY__oberon2_value_xsd_string
+}
+
+type DUMMY__oberon2_clusius_Education_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_clusius_Education!]!
+}
+
+# Subjects that are a [clusius:Fields_of_interest](http://timbuctoo.huygens.knaw.nl/datasets/clusius/Fields_of_interest)
+type DUMMY__oberon2_clusius_Fields_of_interest implements Entity {
+  uri: String!
+  rdf_type: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  _inverse_tim_hasFieldOfInterest(cursor: ID, count: Int): DUMMY__oberon2_clusius_Biography_List
+  tim_original_id: DUMMY__oberon2_value_xsd_string
+  tim_value: DUMMY__oberon2_value_xsd_string
+}
+
+type DUMMY__oberon2_clusius_Fields_of_interest_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_clusius_Fields_of_interest!]!
+}
+
+# Subjects that are a [clusius:Institutes](http://timbuctoo.huygens.knaw.nl/datasets/clusius/Institutes)
+type DUMMY__oberon2_clusius_Institutes implements Entity {
+  uri: String!
+  rdf_type: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  skos_altLabel(cursor: ID, count: Int): DUMMY__oberon2_value_xsd_string_List
+  tim_hasLocation: DUMMY__oberon2_clusius_Places
+  _inverse_tim_hasInstitute: DUMMY__oberon2_clusius_Membership
+  tim_original_id: DUMMY__oberon2_value_xsd_string
+}
+
+type DUMMY__oberon2_clusius_Institutes_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_clusius_Institutes!]!
+}
+
+# Subjects that are a [clusius:Membership](http://timbuctoo.huygens.knaw.nl/datasets/clusius/Membership)
+type DUMMY__oberon2_clusius_Membership implements Entity {
+  uri: String!
+  tim_hasMember: DUMMY__oberon2_clusius_Persons
+  rdf_type: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  tim_beginDate: DUMMY__oberon2_value_custom_datable
+  tim_hasLocation: DUMMY__oberon2_clusius_Places
+  tim_description: DUMMY__oberon2_value_xsd_string
+  tim_endDate: DUMMY__oberon2_value_custom_datable
+  tim_original_id: DUMMY__oberon2_value_xsd_string
+  tim_hasInstitute: DUMMY__oberon2_clusius_Institutes
+}
+
+type DUMMY__oberon2_clusius_Membership_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_clusius_Membership!]!
+}
+
+# Subjects that are a [clusius:Occupation](http://timbuctoo.huygens.knaw.nl/datasets/clusius/Occupation)
+type DUMMY__oberon2_clusius_Occupation implements Entity {
+  uri: String!
+  rdf_type: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  tim_beginDate: DUMMY__oberon2_value_custom_datable
+  tim_description: DUMMY__oberon2_value_xsd_string
+  tim_isOccupationOf: DUMMY__oberon2_clusius_Persons
+  tim_endDate: DUMMY__oberon2_value_custom_datable
+  tim_original_id: DUMMY__oberon2_value_xsd_string
+}
+
+type DUMMY__oberon2_clusius_Occupation_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_clusius_Occupation!]!
+}
+
+# Subjects that are a [clusius:Persons](http://timbuctoo.huygens.knaw.nl/datasets/clusius/Persons)
+type DUMMY__oberon2_clusius_Persons implements Entity {
+  uri: String!
+  _inverse_tim_hasResident(cursor: ID, count: Int): DUMMY__oberon2_clusius_Residence_List
+  rdf_type: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  tim_deathDate: DUMMY__oberon2_value_custom_datable
+  tim_names(cursor: ID, count: Int): DUMMY__oberon2_value_custom_person_name_List
+  _inverse_tim_isProvenanceAboutPerson(cursor: ID, count: Int): DUMMY__oberon2_clusius_Provenance_List
+  tim_gender: DUMMY__oberon2_value_xsd_string
+  tim_hasDeathPlace: DUMMY__oberon2_clusius_Places
+  _inverse_tim_isScientistBioOf: DUMMY__oberon2_clusius_Biography
+  tim_birthDate: DUMMY__oberon2_value_custom_datable
+  tim_hasBirthPlace: DUMMY__oberon2_clusius_Places
+  _inverse_tim_isOccupationOf(cursor: ID, count: Int): DUMMY__oberon2_clusius_Occupation_List
+  _inverse_tim_isEducationOf(cursor: ID, count: Int): DUMMY__oberon2_clusius_Education_List
+  tim_original_id: DUMMY__oberon2_value_xsd_string
+  _inverse_tim_hasMember: DUMMY__oberon2_clusius_Membership
+}
+
+type DUMMY__oberon2_clusius_Persons_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_clusius_Persons!]!
+}
+
+# Subjects that are a [clusius:Places](http://timbuctoo.huygens.knaw.nl/datasets/clusius/Places)
+type DUMMY__oberon2_clusius_Places implements Entity {
+  uri: String!
+  rdf_type: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  skos_altLabel(cursor: ID, count: Int): DUMMY__oberon2_value_xsd_string_List
+  _inverse_tim_hasDeathPlace(cursor: ID, count: Int): DUMMY__oberon2_clusius_Persons_List
+  tim_name: DUMMY__oberon2_value_xsd_string
+  tim_country: DUMMY__oberon2_value_xsd_string
+  _inverse_tim_hasBirthPlace(cursor: ID, count: Int): DUMMY__oberon2_clusius_Persons_List
+  tim_original_id: DUMMY__oberon2_value_xsd_string
+  _inverse_tim_hasLocation(cursor: ID, count: Int): Union_DUMMY__oberon2_clusius_Membership__DUMMY__oberon2_clusius_Residence__DUMMY__oberon2_clusius_Institutes___List
+  tim_latitude: DUMMY__oberon2_value_schema_latitude
+  tim_longitude: DUMMY__oberon2_value_schema_longitude
+  tim_remarks: DUMMY__oberon2_value_xsd_string
+}
+
+type DUMMY__oberon2_clusius_Places_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_clusius_Places!]!
+}
+
+# Subjects that are a [clusius:Provenance](http://timbuctoo.huygens.knaw.nl/datasets/clusius/Provenance)
+type DUMMY__oberon2_clusius_Provenance implements Entity {
+  uri: String!
+  rdf_type: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  tim_original_id: DUMMY__oberon2_value_xsd_string
+  tim_hasProvenanceType: DUMMY__oberon2_clusius_Provenance_type
+  tim_title: DUMMY__oberon2_value_xsd_string
+  tim_isProvenanceAboutPerson: DUMMY__oberon2_clusius_Persons
+}
+
+type DUMMY__oberon2_clusius_Provenance_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_clusius_Provenance!]!
+}
+
+# Subjects that are a [clusius:Provenance_type](http://timbuctoo.huygens.knaw.nl/datasets/clusius/Provenance_type)
+type DUMMY__oberon2_clusius_Provenance_type implements Entity {
+  uri: String!
+  rdf_type: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  _inverse_tim_hasProvenanceType(cursor: ID, count: Int): DUMMY__oberon2_clusius_Provenance_List
+  tim_value: DUMMY__oberon2_value_xsd_string
+}
+
+type DUMMY__oberon2_clusius_Provenance_type_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_clusius_Provenance_type!]!
+}
+
+# Subjects that are a [clusius:Residence](http://timbuctoo.huygens.knaw.nl/datasets/clusius/Residence)
+type DUMMY__oberon2_clusius_Residence implements Entity {
+  uri: String!
+  rdf_type: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  tim_beginDate: DUMMY__oberon2_value_custom_datable
+  tim_hasLocation: DUMMY__oberon2_clusius_Places
+  tim_endDate: DUMMY__oberon2_value_custom_datable
+  tim_original_id: DUMMY__oberon2_value_xsd_string
+  tim_hasResident: DUMMY__oberon2_clusius_Persons
+}
+
+type DUMMY__oberon2_clusius_Residence_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_clusius_Residence!]!
+}
+
+# Subjects that are a [http://timbuctoo.huygens.knaw.nl/static/v5/vocabulary#unknown](http://timbuctoo.huygens.knaw.nl/static/v5/vocabulary#unknown)
+type DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown implements Entity {
+  uri: String!
+  _inverse_dcterms_abstract: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  dcterms_abstract: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  _inverse_dcterms_license: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  rdfs_subClassOf: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  schema_ContactPoint: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  dcterms_description: DUMMY__oberon2_value_xsd_string
+  foaf_depiction: DUMMY__oberon2_value_xsd_string
+  dcterms_rightsHolder: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  dcterms_provenance: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  _inverse_dcterms_provenance: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  _inverse_rdfs_subClassOf(cursor: ID, count: Int): DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown_List
+  dcterms_title: DUMMY__oberon2_value_xsd_string
+  dcterms_license: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  _inverse_schema_ContactPoint: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+  schema_email: DUMMY__oberon2_value_xsd_string
+  http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_summaryTitlePredicate: DUMMY__oberon2_value_xsd_string
+  schema_name: DUMMY__oberon2_value_xsd_string
+  _inverse_dcterms_rightsHolder: DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown
+}
+
+type DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_http___timbuctoo_huygens_knaw_nl_static_v5_vocabulary_unknown!]!
+}
+
+type DUMMY__oberon2_value_custom_datable implements Value {
+  value: String!
+  type: String!
+}
+
+type DUMMY__oberon2_value_custom_person_name implements Value {
+  value: String!
+  type: String!
+}
+
+type DUMMY__oberon2_value_custom_person_name_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_value_custom_person_name!]!
+}
+
+type DUMMY__oberon2_value_schema_latitude implements Value {
+  value: String!
+  type: String!
+}
+
+type DUMMY__oberon2_value_schema_longitude implements Value {
+  value: String!
+  type: String!
+}
+
+type DUMMY__oberon2_value_xsd_string implements Value {
+  value: String!
+  type: String!
+}
+
+type DUMMY__oberon2_value_xsd_string_List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [DUMMY__oberon2_value_xsd_string!]!
+}
+
+interface Entity {
+  uri: String!
+}
+
+scalar examples__JSON
+
+type Facet {
+  caption: String!
+  options: [Option!]!
+}
+
+input FacetInput {
+  caption: String!
+  options: [OptionInput!]!
+}
+
+input FacetsInput {
+  facets: [FacetInput]
+}
+
+enum fake__imageCategory {
+  abstract
+  animals
+  business
+  cats
+  city
+  food
+  nightlife
+  fashion
+  people
+  nature
+  sports
+  technics
+  transport
+}
+
+enum fake__Locale {
+  az
+  cz
+  de
+  de_AT
+  de_CH
+  en
+  en_AU
+  en_BORK
+  en_CA
+  en_GB
+  en_IE
+  en_IND
+  en_US
+  en_au_ocker
+  es
+  es_MX
+  fa
+  fr
+  fr_CA
+  ge
+  id_ID
+  it
+  ja
+  ko
+  nb_NO
+  nep
+  nl
+  pl
+  pt_BR
+  ru
+  sk
+  sv
+  tr
+  uk
+  vi
+  zh_CN
+  zh_TW
+}
+
+enum fake__loremSize {
+  word
+  words
+  sentence
+  sentences
+  paragraph
+  paragraphs
+}
+
+input fake__options {
+  # Only for `type: streetAddress`
+  useFullAddress: Boolean
+
+  # Only for type `money`
+  minMoney: Float
+
+  # Only for type `money`
+  maxMoney: Float
+
+  # Only for type `imageUrl`
+  imageWidth: Int
+
+  # Only for type `imageUrl`
+  imageHeight: Int
+
+  # Only for type `imageUrl`
+  imageCategory: fake__imageCategory
+
+  # Only for type `imageUrl`
+  randomizeImageUrl: Boolean
+
+  # Only for type `email`
+  emailProvider: String
+
+  # Only for type `password`
+  passwordLength: Int
+
+  # Only for type `lorem`
+  loremSize: fake__loremSize
+}
+
+enum fake__Types {
+  zipCode
+  city
+  streetName
+
+  # Configure address with option `useFullAddress`
+  streetAddress
+  secondaryAddress
+  county
+  country
+  countryCode
+  state
+  stateAbbr
+  latitude
+  longitude
+  colorName
+  productCategory
+  productName
+
+  # Sum of money. Configure with options `minMoney` and `maxMoney`
+  money
+  productMaterial
+  product
+  companyName
+  companyCatchPhrase
+  companyBS
+  dbColumn
+  dbType
+  dbCollation
+  dbEngine
+  pastDate
+  futureDate
+  recentDate
+  financeAccountName
+  financeTransactionType
+  currencyCode
+  currencyName
+  currencySymbol
+  bitcoinAddress
+  internationalBankAccountNumber
+  bankIdentifierCode
+  hackerAbbr
+  hackerPhrase
+
+  # An image url. Configure image with options: `imageCategory`,
+  # `imageWidth`, `imageHeight` and `randomizeImageUrl`
+  imageUrl
+
+  # An URL for an avatar
+  avatarUrl
+
+  # Configure email provider with option: `emailProvider`
+  email
+  url
+  domainName
+  ipv4Address
+  ipv6Address
+  userAgent
+  colorHex
+  macAddress
+
+  # Configure password with option `passwordLength`
+  password
+
+  # Lorem Ipsum text. Configure size with option `loremSize`
+  lorem
+  firstName
+  lastName
+  fullName
+  jobTitle
+  uuid
+  word
+  words
+  locale
+  filename
+  mimeType
+  fileExtension
+  semver
+}
+
+type IndexerConfig {
+  path: Value
+  type: Value
+  fullTextSearch: Value
+  next: IndexerConfig
+}
+
+type License {
+  uri: String!
+}
+
+type MimeType {
+  name: String!
+}
+
+type Option {
+  name: String!
+  count: Int!
+}
+
+input OptionInput {
+  name: String!
+  value: String!
+}
+
+type PersonArchetype {
+  names: Value
+}
+
+type PersonArchetypeList {
+  prevCursor: ID
+  nextCursor: ID
+  items: [PersonArchetype!]!
+}
+
+type Property {
+  name: String
+  density: Int
+  isList: Boolean
+  referencedCollections(count: Int = 20, cursor: ID): CollectionIdList
+  isValueType: Boolean
+}
+
+type PropertyList {
+  prevCursor: ID
+  nextCursor: ID
+  items: [Property!]!
+}
+
+type ProvenanceInfo {
+  title: Value
+  body: Value
+}
+
+type Query {
+  # the datasets that are supposed to get extra attention
+  promotedDataSets: [DataSetMetadata!]!
+
+  # all the dataSets, with and without the promoted ones
+  allDataSets: [DataSetMetadata!]!
+
+  # The actual dataSets
+  # dataSets: DataSets (Added using extends if there is actually a dataSet available)
+  # metadata for a specific dataset
+  dataSetMetadata(dataSetId: ID): DataSetMetadata
+
+  # information about the logged in user, or null of no user is logged in
+  aboutMe: AboutMe
+
+  # all mimetypes that you can use when downloading data from a dataSet
+  availableExportMimetypes: [MimeType!]!
+
+  # The actual dataSets
+  dataSets: DataSets
+}
+
+type RoleWithMembers {
+  name: String
+}
+
+type RootMutation {
+  setViewComponents(input: ViewComponentsInput): Boolean
+  setFacets(input: FacetsInput): Boolean
+}
+
+type SummaryProperties {
+  title: Value
+  description: Value
+  image: Value
+}
+
+union Union_DUMMY__oberon2_clusius_Membership__DUMMY__oberon2_clusius_Residence__DUMMY__oberon2_clusius_Institutes__ = DUMMY__oberon2_clusius_Membership | DUMMY__oberon2_clusius_Residence | DUMMY__oberon2_clusius_Institutes
+
+type Union_DUMMY__oberon2_clusius_Membership__DUMMY__oberon2_clusius_Residence__DUMMY__oberon2_clusius_Institutes___List {
+  prevCursor: ID
+  nextCursor: ID
+  items: [Union_DUMMY__oberon2_clusius_Membership__DUMMY__oberon2_clusius_Residence__DUMMY__oberon2_clusius_Institutes__!]!
+}
+
+interface Value {
+  value: String!
+  type: String!
+}
+
+input ViewComponentsInput {
+  components: [ComponentInput]
+  dataSetId: String!
+  collectionId: String!
+  query: String!
+}
