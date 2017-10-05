@@ -235,7 +235,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                 value: newValue.value
             };
 
-            fields.splice(childIndex+1, fields.length - childIndex);
+            fields.splice(childIndex + 1, fields.length - childIndex);
 
             if (newValue.referenceType) {
                 fields[childIndex + 1] = {

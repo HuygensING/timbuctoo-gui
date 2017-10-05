@@ -10,7 +10,7 @@ const createValuesObject = (fields: ComponentValueField[]) => {
                 value.length > 0
                     ? obj[value] = {}
                     : {}
-            )
+            );
         },
         object
     );
