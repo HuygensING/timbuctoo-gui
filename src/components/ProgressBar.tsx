@@ -36,7 +36,7 @@ const Progress = withProps<Props>(styled.figure)`
     position: relative;
     width: ${props => `${props.progress}%`};
     height: 100%;
-    background: ${props => props.theme.colors.shade.medium};
+    background: ${props => props.progress && props.progress >= 100 ? props.theme.colors.primary.light : props.theme.colors.shade.medium};
     transform-origin: left;
     // animation: ${ProgressAnimation} 1s ease-in-out;
 `;
