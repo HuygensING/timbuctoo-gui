@@ -62,7 +62,7 @@ const Arrow = styled.figure`
 const SelectWrapper = styled.div`
     position: relative;
     display: inline-block;
-    margin-right: 10px;
+    margin: 0 10px 10px 0;
 `;
 
 const StyledSelect = styled.button`

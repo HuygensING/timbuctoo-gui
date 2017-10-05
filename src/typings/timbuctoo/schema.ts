@@ -149,7 +149,8 @@ export interface ComponentValue {
 
 export interface ComponentValueField {
     value: string;
-    referenceType: string;
+    reference: string;
+    isList?: boolean | null;
 }
 
 export interface CollectionMetadataList {

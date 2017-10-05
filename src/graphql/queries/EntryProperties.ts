@@ -1,4 +1,5 @@
 import { gql } from 'react-apollo';
+import { collectionPropertiesReference } from '../fragments/Metadata';
 import { componentsFragment } from '../fragments/Components';
 
 const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
@@ -9,14 +10,7 @@ const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
                     title { value }
                     collectionId
                     ${!collectionCursor && `
-                        properties {
-                            items {
-                                name
-                                isList
-                                isValueType
-                                referencedCollections { items }
-                            }
-                        }
+                        ...CollectionPropertiesReference
                     `}
                     components {
                         items {
@@ -28,7 +22,7 @@ const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
         }
     `;
 
-    return gql`${query}${componentsFragment}`;
+    return gql`${query}${componentsFragment}${collectionPropertiesReference}`;
 };
 
 export default QUERY_ENTRY_PROPERTIES;

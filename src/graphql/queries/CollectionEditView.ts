@@ -1,3 +1,4 @@
+import { collectionPropertiesReference } from '../fragments/Metadata';
 import { gql } from 'react-apollo';
 
 const QUERY_COLLECTION_EDIT_VIEW = ({ match, collectionId }) => {
@@ -6,20 +7,13 @@ const QUERY_COLLECTION_EDIT_VIEW = ({ match, collectionId }) => {
         query QUERY_COLLECTION_EDIT_VIEW {
             dataSetMetadata(dataSetId:"${dataSet}") {
                 collection(collectionId:"${collectionId}") {
-                    properties {
-                        items {
-                            name
-                            isList
-                            isValueType
-                            referencedCollections { items }
-                        }
-                    }
+                    ...CollectionPropertiesReference
                 }
             }
         }
     `;
 
-    return gql`${query}`;
+    return gql`${query}${collectionPropertiesReference}`;
 };
 
 export default QUERY_COLLECTION_EDIT_VIEW;
