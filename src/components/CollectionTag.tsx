@@ -11,6 +11,7 @@ import Button from './layout/Button';
 import { BUTTON_TYPES } from '../constants/global';
 
 import ProgressBar from './ProgressBar';
+import { getValue } from '../services/getValue';
 
 interface Props {
     isOpen: boolean;
@@ -75,7 +76,7 @@ const DensityLabel = styled(Label)`
 `;
 
 const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, currentCollectionListId, dataSetId }) => {
-    const { title, total, collectionId, collectionListId, properties } = collection;
+    const { title, collectionId, collectionListId, properties } = collection;
 
     let buttonType = currentCollectionListId && currentCollectionListId === collectionListId
         ? BUTTON_TYPES.dark
@@ -100,7 +101,7 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
         return (
             <PropertiesPanel>
                 <PropertiesHeader>
-                    <Subtitle>{collectionId} ({`${total}`})</Subtitle>
+                    <Subtitle>{collectionId}</Subtitle>
                     <PropertyLabel>{Translations.translate('details.collection.property')}</PropertyLabel><DensityLabel>{Translations.translate('details.collection.density')}</DensityLabel>
                 </PropertiesHeader>
                 {properties.items.map(renderPropertyDensity)}
@@ -113,7 +114,7 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
             onMouseEnter={() => toggleOpen(index)}
             onMouseLeave={() => toggleOpen(null)}
         >
-            <Button type={buttonType} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>{title}</Button>
+            <Button type={buttonType} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>{getValue(title) || collectionId}</Button>
             {isOpen && renderPropertiesPanel()}
         </ListItem>
     );

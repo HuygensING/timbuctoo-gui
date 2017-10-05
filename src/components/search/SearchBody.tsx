@@ -11,6 +11,8 @@ import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
 import { getCollection } from '../../services/GetDataSet';
 import Loading from '../Loading';
 import SearchResults from './SearchResults';
+import { reorderUnknownsInList } from '../../services/HandleUnknowns';
+import { getValuesFromObject } from '../../services/getValue';
 
 interface Props {
     dataSetId: string;
@@ -35,9 +37,13 @@ interface State {}
 class SearchBody extends PureComponent<FullProps, State> {
     render () {
         const { dataSetId, collectionKeys, currentCollection } = this.props;
-        const collection = getCollection(this.props, currentCollection.collectionListId);
 
-        if (!collection) { return <Loading/>; }
+        if (!currentCollection || !this.props.data.dataSets) { return <Loading/>; }
+
+        const collectionValues = getCollection(this.props, currentCollection.collectionListId);
+        const fields = getValuesFromObject(currentCollection.summaryProperties);
+
+        const { summaryProperties, collectionId, collectionListId } = currentCollection;
 
         return (
             <section>
@@ -49,14 +55,18 @@ class SearchBody extends PureComponent<FullProps, State> {
                 </Col>
 
                 <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={.5}>
-                    <CollectionTags colKeys={collectionKeys} dataSetId={dataSetId} currentCollectionListId={currentCollection.collectionListId}/>
+                    <CollectionTags
+                        colKeys={reorderUnknownsInList(collectionKeys)}
+                        dataSetId={dataSetId}
+                        currentCollectionListId={collectionListId}
+                    />
                 </Col>
 
                 <FullSection>
 
                     {/* Filter functionality */}
                     <Col sm={12} smPaddingY={1}>
-                        <Filters facets={collection.facets} />
+                        <Filters facets={null} />
                     </Col>
 
                     <Col sm={27} smOffset={3} smPaddingY={1}>
@@ -64,9 +74,10 @@ class SearchBody extends PureComponent<FullProps, State> {
 
                         <SearchResults
                             dataSetId={dataSetId}
-                            collectionId={currentCollection.collectionId}
-                            properties={currentCollection.summaryProperties}
-                            results={collection.items}
+                            collectionId={collectionId}
+                            properties={summaryProperties}
+                            results={collectionValues.items}
+                            fields={fields}
                         />
                     </Col>
 

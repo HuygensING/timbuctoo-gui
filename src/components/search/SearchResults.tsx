@@ -4,21 +4,31 @@ import Translations from '../../services/Translations';
 import GridSection from '../layout/GridSection';
 import SearchResultEntry from './SearchResultEntry';
 import { SummaryProperties } from '../../typings/timbuctoo/schema';
-import getValue from '../../services/getValue';
+import { getValue } from '../../services/getValue';
 
 interface Props {
     dataSetId: string;
     collectionId: string;
     properties: SummaryProperties;
+    fields: {[name: string]: string | null};
     results: any[]; // Object with uri and the three variable fields for title, image and description
 }
 
-const SearchResults: SFC<Props> = ({ results, properties, collectionId, dataSetId }) => {
+const SearchResults: SFC<Props> = ({ results, properties, collectionId, dataSetId, fields }) => {
+
+    const setValue = (val: string | null, result: any): string | null => {
+        if (val && result && result[val]) {
+            const valueObj = result[val];
+            return getValue(valueObj);
+        }
+
+        return null;
+    };
 
     const renderEntries = (result: any, idx: number) => {
-        const imageUrl = getValue(properties.image);
-        const title = getValue(properties.title);
-        const description = getValue(properties.description);
+        const imageUrl = setValue(fields.image, result);
+        const description = setValue(fields.description, result);
+        const title = setValue(fields.title, result);
 
         return  (
             <SearchResultEntry

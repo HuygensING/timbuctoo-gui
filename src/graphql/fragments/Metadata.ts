@@ -30,40 +30,33 @@ const collectionPropertiesDensity = gql`
             items {
                 name
                 density
+                isList
             }
         }
     }
 `;
 
 const collectionPropertiesReference = gql`
-fragment CollectionPropertiesReference on CollectionMetadata {
-    properties {
-        items {
-            name
-            isList
-            isValueType
-            referencedCollections { items }
+    fragment CollectionPropertiesReference on CollectionMetadata {
+        properties {
+            items {
+                name
+                isList
+                isValueType
+                referencedCollections { items }
+            }
         }
     }
-}
 `;
 
-const collectionsFragment = gql`
-    fragment CollectionsFragment on DataSetMetadata {
-        collectionList {
-            items {
-                ...CollectionBase
-                ...CollectionPropertiesDensity
-                summaryProperties {
-                    title { value }
-                    description { value }
-                    image { value }
-                }
-            }   
+const collectionSummaryProperties = gql`
+    fragment CollectionSummaryProperties on CollectionMetadata {
+        summaryProperties {
+            title { value }
+            description { value }
+            image { value }
         }
     }
-    ${collectionBase}
-    ${collectionPropertiesDensity}
 `;
 
 const dataSetMetadataFragment = gql`
@@ -92,4 +85,4 @@ const dataSetMetadataFragment = gql`
     ${collectionPropertiesDensity}
 `;
 
-export { dataSetMetadataFragment, collectionsFragment, collectionPropertiesReference };
+export { dataSetMetadataFragment, collectionBase, collectionPropertiesDensity, collectionPropertiesReference, collectionSummaryProperties };

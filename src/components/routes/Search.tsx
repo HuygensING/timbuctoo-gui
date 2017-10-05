@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import { RouteComponentProps } from 'react-router';
 import { CollectionMetadata, DataSetMetadata } from '../../typings/timbuctoo/schema';
-import { getCurrentCollection } from '../../services/GetDataSet';
 import SearchBody from '../search/SearchBody';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import connectQuery from '../../services/ConnectQuery';
@@ -36,13 +35,11 @@ class Search extends Component<FullProps, State> {
         const { dataSetMetadata } = this.props.data;
         if ( !dataSetMetadata ) { return <Loading />; }
 
-        const { title, description, imageUrl, collectionList } = dataSetMetadata;
+        const { title, description, imageUrl, collectionList, collection } = dataSetMetadata;
 
         const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
             ? collectionList.items
             : [];
-
-        const currentCollection = getCurrentCollection(collectionItems, this.props.match.params.collectionList);
 
         return (
             <SearchBody
@@ -52,7 +49,7 @@ class Search extends Component<FullProps, State> {
                 onSubmit={Search.onSearch}
                 dataSetId={this.props.match.params.dataSet}
                 collectionKeys={collectionItems}
-                currentCollection={currentCollection}
+                currentCollection={collection}
                 match={this.props.match}
             />
         );

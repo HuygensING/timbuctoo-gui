@@ -5,7 +5,7 @@ import { Link , Title } from '../layout/StyledCopy';
 import { lighten } from 'polished';
 import Edit from '../icons/Edit';
 import { ROUTE_PATHS, SUB_ROUTES } from '../../constants/routeNaming';
-import getValue from '../../services/getValue';
+import { getValue } from '../../services/getValue';
 
 interface Props {
     collection: CollectionMetadata;
