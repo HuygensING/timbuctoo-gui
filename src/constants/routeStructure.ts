@@ -40,7 +40,7 @@ export const routes: RouteObject[] = [
                 component: Entry
             },
             {
-                path: `/:${ROUTE_KEYS.dataSet}/:${ROUTE_KEYS.collectionList}`,
+                path: `/:${ROUTE_KEYS.dataSet}/:${ROUTE_KEYS.collection}`,
                 component: Search
             },
             {

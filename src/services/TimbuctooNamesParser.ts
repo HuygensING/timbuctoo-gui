@@ -15,15 +15,15 @@ interface NameObjectProps {
     value: string;
 }
 
-interface Name {
-    firstName?: string;
-    middleName?: string;
-    lastName?: string;
+export interface Name {
+    firstName: string | null;
+    middleName: string | null;
+    lastName: string | null;
 }
 
 const TimbuctooNamesParser = {
 
-    _MapNames( names: NameObjectProps[] ) {
+    _MapNames( names: NameObjectProps[] ): Name {
         let name = {
             firstName: null,
             middleName: null,
@@ -52,25 +52,33 @@ const TimbuctooNamesParser = {
         return name;
     },
 
-    getFullNames( items: TypeValue[], limit?: Number ): void | Name[] {
-        if (!items) { return; }
+    parseName (value: string): Name {
+        const components = JSON.parse(value).components;
+        return this._MapNames(components);
+    },
 
-        limit = limit || items.length;
-        let names = new Array();
-        let name = {};
-        for (let i = 0; i < limit; i++) {
-            name = this._MapNames( JSON.parse(items[i].value).components );
-            names.push(name);
-        }
+    getFullNames( items: TypeValue[] ): Name[] {
+        if (!items) { return []; }
+
+        const names: Name[] = [];
+
+        items.forEach(item => {
+            names.push(
+                this.parseName(item.value)
+            );
+        });
 
         return names;
     },
     
-    getFullName( {items}: TimNames ): void | Name {
-        const fullNames = this.getFullNames( items, 1 );
-        return fullNames && fullNames[0];
+    getFullName( {items}: TimNames ): Name {
+        return this.parseName(items[0].value);
+    },
+
+    getFullNameString(obj: TimNames): string {
+        const {firstName, middleName, lastName} = this.getFullName(obj);
+        return `${firstName ? firstName : ''} ${middleName ? middleName : ''} ${lastName ? lastName : ''}`;
     }
-    
 };
 
 export default TimbuctooNamesParser;

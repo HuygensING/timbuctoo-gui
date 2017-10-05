@@ -13,8 +13,7 @@ import { match } from 'react-router';
 import { UserReducer } from '../../typings/store';
 import EditCollectionBar from './EditCollectionBar';
 import { Title } from '../layout/StyledCopy';
-import getValue from '../../services/getValue';
-import { UNKNOWN_VOCABULARY } from '../../constants/global';
+import { isKnown, reorderUnknownsInList } from '../../services/HandleUnknowns';
 
 interface Props {
     title: string;
@@ -31,8 +30,6 @@ type FullProps = Props;
 interface State {}
 
 class DataSetBody extends PureComponent<FullProps, State> {
-    static isKnown = (col) => col.collectionId.indexOf(UNKNOWN_VOCABULARY) === -1;
-
     constructor(props: FullProps) {
         super(props);
         
@@ -41,7 +38,6 @@ class DataSetBody extends PureComponent<FullProps, State> {
 
     render () {
         const { title, description, imageUrl, dataSetId, collectionKeys, user } = this.props;
-        const highlightKey = getValue(collectionKeys[0].title);
 
         return (
             <section>
@@ -51,12 +47,12 @@ class DataSetBody extends PureComponent<FullProps, State> {
                     title={title}
                     content={description}
                     imgUrl={imageUrl}
-                    searchPath={highlightKey ? `${ROUTE_PATHS.details}/${dataSetId}/${encode(highlightKey)}` : highlightKey}
+                    searchPath={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionKeys[0].collectionId)}`}
                     buttonText={'Search this dataset'}
                 />
 
                 <Col sm={42} smOffset={3} smPaddingBottom={.5}>
-                    {this.renderCollectionTags(collectionKeys, dataSetId)}
+                    <CollectionTags colKeys={reorderUnknownsInList(collectionKeys)} dataSetId={dataSetId} />;
                 </Col>
 
                 {
@@ -66,7 +62,7 @@ class DataSetBody extends PureComponent<FullProps, State> {
                             <Title>Collection</Title>
                             <ul>
                             {collectionKeys
-                                .filter(DataSetBody.isKnown)
+                                .filter(isKnown)
                                 .map(this.renderCollectionBar)}
                             </ul>
                         </section>
@@ -89,24 +85,6 @@ class DataSetBody extends PureComponent<FullProps, State> {
                 </Col>
             </section>
         );
-    }
-
-    private reOrderCollection (collections: CollectionMetadata[], reOrderKey: string) {
-        const collectionsCopy: CollectionMetadata[] = collections.slice();
-        const invalidCollections: any[] = [];
-        let col;
-        for (let i = 0, limit = collectionsCopy.length; i < limit; i++) {
-            col = collectionsCopy[i];
-            if (col && DataSetBody.isKnown(col)) {
-                invalidCollections.push( collectionsCopy.splice(i, 1)[0] );
-            }
-        }
-        return collectionsCopy.concat(invalidCollections);
-    }
-
-    private renderCollectionTags (collections: CollectionMetadata[], dataSetId: string) {
-        const reorderedCollections = this.reOrderCollection(collections, UNKNOWN_VOCABULARY);
-        return <CollectionTags colKeys={reorderedCollections} dataSetId={dataSetId} />;
     }
 
     private renderCollectionBar (collection: CollectionMetadata, idx: number) {

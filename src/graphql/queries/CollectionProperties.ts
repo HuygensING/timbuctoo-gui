@@ -1,16 +1,26 @@
 import { gql } from 'react-apollo';
-import { collectionsFragment } from '../fragments/Metadata';
+import { collectionBase, collectionProperties, collectionSummaryProperties } from '../fragments/Metadata';
 
 const QUERY_COLLECTION_PROPERTIES = ({ match }) => {
     const query = `
         query CollectionProperties {
             dataSetMetadata(dataSetId: "${match.params.dataSet}") {
-                ...CollectionsFragment
+                collection(collectionId: "${match.params.collection}") {
+                    ...CollectionBase
+                    ...CollectionProperties
+                    ...CollectionSummaryProperties
+                }
+                collectionList {
+                    items {
+                        ...CollectionBase
+                        ...CollectionProperties
+                    }
+                }
             }
         }
     `;
 
-    return gql`${query}${collectionsFragment}`;
+    return gql`${query}${collectionBase}${collectionProperties}${collectionSummaryProperties}`;
 };
 
 export default QUERY_COLLECTION_PROPERTIES;

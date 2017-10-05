@@ -50,7 +50,7 @@ class Filters extends PureComponent<Props, State> {
                 <SpecialDiv>
                     <Title>{Translations.translate('globals.filters')}</Title>
                     <Dummy text={'search-filter'} height={1} marginY={.5}/>
-                    {this.renderFilters()}
+                    {this.props.facets && this.renderFilters()}
                     <Dummy text={'filter hierarchy'} height={2} marginY={.5}/>
                     <Dummy text={'filter range'} height={5} marginY={.5}/>
                 </SpecialDiv>

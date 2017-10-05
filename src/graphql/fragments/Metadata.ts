@@ -30,27 +30,20 @@ const collectionProperties = gql`
             items {
                 name
                 density
+                isList
             }
         }
     }
 `;
 
-const collectionsFragment = gql`
-    fragment CollectionsFragment on DataSetMetadata {
-        collectionList {
-            items {
-                ...CollectionBase
-                ...CollectionProperties
-                summaryProperties {
-                    title { value }
-                    description { value }
-                    image { value }
-                }
-            }   
+const collectionSummaryProperties = gql`
+    fragment CollectionSummaryProperties on CollectionMetadata {
+        summaryProperties {
+            title { value }
+            description { value }
+            image { value }
         }
     }
-    ${collectionBase}
-    ${collectionProperties}
 `;
 
 const dataSetMetadataFragment = gql`
@@ -79,4 +72,4 @@ const dataSetMetadataFragment = gql`
     ${collectionProperties}
 `;
 
-export { dataSetMetadataFragment, collectionsFragment };
+export { dataSetMetadataFragment, collectionBase, collectionProperties, collectionSummaryProperties };

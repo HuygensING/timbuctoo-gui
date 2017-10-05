@@ -1,25 +1,21 @@
 import { gql } from 'react-apollo';
+import { createQueryFromValue } from '../../services/getValue';
 
 const QUERY_COLLECTION_VALUES = ({ match, queryString = '/all', currentCollection }) => {
-    const listId = currentCollection.collectionListId.replace(match.params.dataSet, '');
+    const {properties, summaryProperties, collectionListId} = currentCollection;
+    const { title, description, image } = summaryProperties;
+
     const query = `
         query CollectionValues {
         
             dataSets {
                 ${match.params.dataSet} {
-                    ${listId} {
-                        facets {
-                            caption
-                            options {
-                                name
-                                count
-                            }
-                        }
+                    ${collectionListId} {
                         items {
                             uri
-                            ${currentCollection.summaryProperties.title} { value }
-                            ${currentCollection.summaryProperties.description} { value }
-                            ${currentCollection.summaryProperties.image} { value }
+                            ${createQueryFromValue(title, properties)}
+                            ${createQueryFromValue(description, properties)}
+                            ${createQueryFromValue(image, properties)}
                         }
                     }
                 }

@@ -1,17 +1,31 @@
 import React, { SFC } from 'react';
-import { Title } from './layout/StyledCopy';
-import styled from '../styled-components';
+import styled, { keyframes } from '../styled-components';
+import Logo from './icons/Logo';
+import theme from '../theme/index';
 
 interface Props {}
 
-const LoadingTitle = styled(Title)`
-  height: 100vh;
-  position: relative;
-  padding: 20vh;
-  left: 50%;
-  transform: translateX(-50%);
+const rotate360 = keyframes`
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
 `;
 
-const Loading: SFC<Props> = () => (<LoadingTitle>Loading</LoadingTitle>);
+const LoadingView = styled(Logo)`
+  	animation: ${rotate360} 2s linear infinite;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    margin-top: -2.5rem;
+    margin-left: -2.5rem;
+`;
+
+const Loading: SFC<Props> = () => (
+    <LoadingView
+        color={theme.colors.shade.dark}
+        width={'5rem'}
+        height={'5rem'}
+    />
+);
 
 export default Loading;

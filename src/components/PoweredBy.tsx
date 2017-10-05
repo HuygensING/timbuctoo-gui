@@ -2,8 +2,7 @@ import React from 'react';
 import styled from '../styled-components';
 
 import { Label } from './layout/StyledCopy';
-
-const logo = require('../assets/logo.svg');
+import Logo from './icons/Logo';
 
 const tagWidth: number = 30;
 
@@ -22,15 +21,15 @@ const Tag = styled(Label)`
     z-index: 100;
 `;
 
-const Logo = styled.img`
+const LogoImg = styled(Logo)`
     position: relative;
     vertical-align: middle;
 `;
 
-const PoweredBy = (props) => {
+const PoweredBy = () => {
     return (
         <Tag>
-            Powered by <Logo src={logo} />
+            Powered by <LogoImg />
         </Tag>
     );
 };
