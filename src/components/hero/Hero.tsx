@@ -46,12 +46,15 @@ interface HeroProps {
     imgUrl?: string;
 }
 
-const Hero = ({ title, content, searchPath, buttonText, imgUrl = '/assets/_tmp/header--library.jpg' }: HeroProps) => {
-
+const defaultImgUrl = '/assets/_tmp/header--library.jpg';
+const Hero = ({ title, content, searchPath, buttonText, imgUrl = defaultImgUrl }: HeroProps) => {
     return (
         <Col>
             <HeroImageWrapper>
-                <Image src={imgUrl} fill={true} />
+                <Image
+                    src={imgUrl} fill={true}
+                    defaultSrc={defaultImgUrl}
+                />
                 <DarkenImage />
             </HeroImageWrapper>
             <CenteredContent>

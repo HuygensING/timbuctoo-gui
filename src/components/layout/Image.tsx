@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import styled from '../../styled-components';
 import { ImageProps } from '../../typings/layout';
 
+interface State {
+    src: string | null | undefined;
+    src2x: string | null | undefined;
+}
+
 const ImageWrapper = styled.figure`
     position: relative;
     overflow: hidden;
@@ -48,13 +53,17 @@ const Img = styled.img`
     background-color: grey;
 `;
 
-class Image extends Component {
-    
-    props: ImageProps;
+class Image extends Component<ImageProps, State> {
+
     image: HTMLImageElement;
 
     constructor(props: ImageProps) {
         super(props);
+
+        this.state = {
+            src: props.src,
+            src2x: props.src2x
+        };
 
         this.onLoad = this.onLoad.bind(this);
         this.onError = this.onError.bind(this);
@@ -75,13 +84,19 @@ class Image extends Component {
     }
 
     onError() {
-        if (this.props.onError) {
-            this.props.onError();
+        const { onError, defaultSrc, defaultSrc2x } = this.props;
+        this.setState({
+            src: defaultSrc,
+            src2x: defaultSrc2x || defaultSrc
+        });
+        if (onError) {
+            onError();
         }
     }
 
     render() {
-        const { src, src2x, ratio, fill, alt, contain, hover } = this.props;
+        const { ratio, fill, alt, contain, hover } = this.props;
+        const { src, src2x } = this.state;
         return (
             <ImageWrapper ratio={ratio} fill={fill} hover={hover}>
                 <Img

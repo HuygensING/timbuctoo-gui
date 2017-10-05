@@ -185,7 +185,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
             valueItem.value.fields.push({
                 value: '',
                 reference: match && match.params.collection
-            })
+            });
         }
 
         return (

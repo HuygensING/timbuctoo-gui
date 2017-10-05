@@ -129,6 +129,8 @@ export interface ColProps {
 export interface ImageProps {
     src?: string | null;
     src2x?: string | null;
+    defaultSrc?: string | null;
+    defaultSrc2x?: string | null;
     alt?: string;
     ratio?: number;
     fill?: boolean;
