@@ -24,7 +24,8 @@ const setComponentInfo = (item: any, idx: number) => {
 
     newItem.componentInfo = {
         name: renderName(item.type, idx),
-        index: idx
+        index: idx,
+        referenceType: 'clusius_Residence'
     };
 
     return newItem;

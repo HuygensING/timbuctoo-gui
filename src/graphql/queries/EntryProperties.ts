@@ -12,10 +12,10 @@ const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
                         properties {
                             items {
                                 name
-                                referencedCollections { items }
                                 isList
                                 isValueType
-                            }   
+                                referencedCollections { items }
+                            }
                         }
                     `}
                     components {

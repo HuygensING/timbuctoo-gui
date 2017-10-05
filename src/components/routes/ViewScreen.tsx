@@ -39,11 +39,8 @@ const fakeItems: any[] = [
         type: COMPONENTS.title,
         value: {
             fields: [{
-                value: 'tim_hasLocation',
+                value: '',
                 referenceType: 'clusius_Residence'
-            }, {
-                value: 'tim_name',
-                referenceType: null
             }]
         }
     },
@@ -116,7 +113,6 @@ class ViewScreen extends PureComponent<FullProps, State> {
 
     render () {
         // TODO: add when Components are available
-        console.log(this.props.data);
         if (!this.collection) { return <Loading />; }
         // if (!this.collectionsAvailable) {
         //     return <Loading />;
@@ -144,7 +140,7 @@ class ViewScreen extends PureComponent<FullProps, State> {
 
     private onSubmit (formValues: any[]) {
         const query = createQueryStringFromFormFields(formValues);
-        console.log(query);
+        console.log('query', query);
     }
 
     private onNewDataLoaded (props: FullProps) {

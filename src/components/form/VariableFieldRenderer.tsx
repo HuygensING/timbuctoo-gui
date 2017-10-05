@@ -110,6 +110,8 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         const {values, componentInfo} = this.props.item;
         const valueList = VariableFormFieldRenderer.renderFieldList(this.props.item);
 
+        console.log( this.props );
+
         return (
             <StyledFieldset>
                 {componentInfo && this.renderComponentSelector()}
@@ -156,7 +158,8 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     }
 
     private renderKeyFields (valueItem: ValueItem) {
-        const { componentInfo } = this.props.item;
+        const { item } = this.props;
+        const { componentInfo } = item;
 
         if (!valueItem.value.fields || valueItem.value.fields.length === 0) {
             return null;
@@ -167,18 +170,18 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                 {
                     valueItem.value.fields.map((field: ComponentValueField, childIdx: number) => {
                         const { value, referenceType } = field;
+                        console.log( field );
                         return (
                             <ConnectedSelect
                                 key={childIdx}
                                 name={componentInfo.name}
                                 selected={{key: value, value: value}}
-                                collection={referenceType}
+                                collectionId={referenceType}
                                 onChange={({option, reference}) => this.onSelectChangeHandler(option, reference, valueItem.name, childIdx)}
                             />
                         );
                     })
                 }
-                {/* <button type={'button'} onClick={(e) => this.onAddHandler(valueItem.name)}>+</button> */}
             </StyledInputWrapper>
         );
     }
@@ -226,18 +229,25 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
 
         if (newValue !== oldValue) {
             const newFieldset = {...item};
-            newFieldset[fieldName].fields[childIndex] = newValue;
-            resolveChange( newFieldset );
+            const fields = newFieldset[fieldName].fields;
+            fields[childIndex] = {
+                ...oldValue,
+                value: newValue.value
+            };
+
+            fields.splice(childIndex+1, fields.length - childIndex);
 
             if (newValue.referenceType) {
-                const nextFieldSet = {...item};
-                nextFieldSet[fieldName].fields[childIndex + 1] = newValue;
-                resolveChange( nextFieldSet );
+                fields[childIndex + 1] = {
+                    value: '',
+                    referenceType: newValue.referenceType
+                };
             }
-        }
 
-        console.log('newValue', newValue);
-        console.log('oldValue', oldValue);
+            console.log( 'newFieldset', newFieldset );
+
+            resolveChange( newFieldset );
+        }
     }
 
     private onChangeHeadHandler (option: OptionProps) {

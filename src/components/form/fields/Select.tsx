@@ -62,6 +62,7 @@ const Arrow = styled.figure`
 const SelectWrapper = styled.div`
     position: relative;
     display: inline-block;
+    margin-right: 10px;
 `;
 
 const StyledSelect = styled.button`
@@ -150,9 +151,10 @@ class SelectField extends Component<SelectProps, State> {
     }
 
     renderStyledOptionField(option: OptionProps, idx: number): JSX.Element {
-        const { key } = option;
+        const { key, value } = option;
+        const { selected } = this.props;
         return (
-            <StyledOption selected={option === this.state.selectedOption} onClick={(e: any) => this.onOptionClick(e, option)} key={`${key}-${idx}`}>{key}</StyledOption>
+            <StyledOption selected={value === selected.value} onClick={(e: any) => this.onOptionClick(e, option)} key={`${key}-${idx}`}>{key}</StyledOption>
         );
     }
 
@@ -176,17 +178,17 @@ class SelectField extends Component<SelectProps, State> {
     }
 
     render() {
-        const { name, options } = this.props;
+        const { name, options, selected } = this.props;
         const { isOpen, selectedOption } = this.state;
 
         return (
             <SelectWrapper>
-                <SelectHiddenFieldInput name={name} defaultValue={selectedOption && selectedOption.value}>
+                <SelectHiddenFieldInput name={name} defaultValue={selected && selected.value || selectedOption && selectedOption.value}>
                     {options && options.map(this.renderOptionField)}
                 </SelectHiddenFieldInput>
                 
                 <StyledSelect onClick={this.onSelectClick}>
-                    {selectedOption && selectedOption.key || name} <Arrow />
+                    {selected && selected.value || selectedOption && selectedOption.key || name} <Arrow />
                 </StyledSelect>
                 <StyledOptions isOpen={isOpen}>
                     {options && options.map(this.renderStyledOptionField)}

@@ -54,6 +54,8 @@ class SelectField extends Component<FullProps, State> {
         const { name, data, selected } = this.props;
         const options: OptionProps[] = this.getOptionsFromQuery(data);
 
+        console.log( 'Get options', options );
+
         if (!options || options.length === 0) {
             return null;
         }
@@ -82,19 +84,8 @@ class SelectField extends Component<FullProps, State> {
     private getOptionsFromQuery({ dataSetMetadata }: ApolloDataProps, options: OptionProps[] = []) {
         if (dataSetMetadata && dataSetMetadata.collection) {
             const collection = dataSetMetadata.collection;
-            console.log( this.referenceTypes, this );
             collection.properties.items.forEach((field) => {
                 const referenceType = field.referencedCollections && field.referencedCollections.items[0];
-                // const valueType = field.valueTypes && field.valueTypes.items[0];
-                // if (referenceType) {
-                //     console.log( 'referenceType', referenceType );
-                // }
-                
-                // if (valueType) {
-                //     console.log( 'valueType', valueType );
-                // }
-
-
                 if (field.name && this.referenceTypes && referenceType) {
                     this.referenceTypes[field.name] = referenceType;
                 }
