@@ -36,8 +36,7 @@ const setColor = (props: ElementProps, type: ButtonType) => {
         case BUTTON_TYPES.inverted:
         default: return props.theme.colors.black;
     }
-    // type === BUTTON_TYPES.inverted ? props.theme.colors.black : props.theme.colors.white;
-}
+};
 
 const setBackgroundColor = (props: ElementProps, type: ButtonType) => {
     switch (type) {
@@ -57,9 +56,7 @@ const Button: SFC<ButtonProps> = ({type = BUTTON_TYPES.normal, small, to, childr
         background-color: ${props => setBackgroundColor(props, type)};
         ${small ? SmallButtonStyling : ''};
 
-        opacity: ${props => {
-            return (type === BUTTON_TYPES.disabled) ? 0.4 : 1;
-        }};
+        opacity: ${props => (type === BUTTON_TYPES.disabled) ? 0.4 : 1 };
     `;
 
     return (

@@ -100,16 +100,15 @@ class ViewScreen extends PureComponent<FullProps, State> {
     }
 
     componentWillReceiveProps (newProps: FullProps) {
-        const knowsMetadata = this.props.data && this.props.data.dataSetMetadata || newProps.data && newProps.data.dataSetMetadata;
-        const metadataDoesNotMatch = this.props.data.dataSetMetadata !== newProps.data.dataSetMetadata;
+        // const knowsMetadata = this.props.data && this.props.data.dataSetMetadata || newProps.data && newProps.data.dataSetMetadata;
+        // const metadataDoesNotMatch = this.props.data.dataSetMetadata !== newProps.data.dataSetMetadata;
 
-        if (knowsMetadata && metadataDoesNotMatch) {
-            this.onNewDataLoaded(newProps);
-        }
+        this.onNewDataLoaded(newProps);
     }
 
     render () {
         // TODO: add when Components are available
+        console.log( this.collection );
         if (!this.collection) { return <Loading />; }
         // if (!this.collectionsAvailable) {
         //     return <Loading />;
