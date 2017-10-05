@@ -1,5 +1,4 @@
-import styled, { withProps, css } from '../../styled-components';
-import { BaseFieldProps, Field } from 'redux-form';
+import styled, { css } from '../../styled-components';
 import { BaseButtonStyling, setBackgroundColor, setColor } from '../layout/Button';
 
 const checkMark = require('../../assets/icons/checkmark.svg');
@@ -29,14 +28,14 @@ const StandardStyledFormElements = css`
 /**
  * text field
  */
-const InputField = withProps<BaseFieldProps>(styled(Field))`
+const InputField = styled.input`
     ${StandardStyledFormElements}
 `;
 
 /**
  * Checkbox
  */
-const HiddenField = withProps<BaseFieldProps>(styled(Field))`
+const HiddenField = styled.input`
     ${srOnly}
     ~ label {
         font: ${props => props.theme.fonts.body};  
