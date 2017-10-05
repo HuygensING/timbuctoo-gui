@@ -5,14 +5,25 @@ import { UserReducer } from '../../typings/store';
 import { Subtitle, Content, Link } from '../layout/StyledCopy';
 import Image from '../layout/Image';
 import { DataSetMetadata } from '../../typings/timbuctoo/schema';
+import { getValue } from '../../services/getValue';
 
-const FeaturedContentBlock = (props: DataSetMetadata & UserReducer) => {
+const FeaturedContentBlock = ({ imageUrl, title, description, dataSetId }: DataSetMetadata & UserReducer) => {
+    const imageUrlField = getValue(imageUrl);
+    const titleField = getValue(title);
+    const descrField = getValue(description);
+
     return (
         <section>
-            <Link to={`${ROUTE_PATHS.details}/${props.dataSetId}`}>
-                <Image src={props.imageUrl ? props.imageUrl.value : ''} ratio={1} />
-                <Subtitle>{props.title}</Subtitle>
-                <Content>{props.description && props.description.value.substr(0, 100)}...</Content>
+            <Link to={`${ROUTE_PATHS.details}/${dataSetId}`}>
+                {imageUrlField &&
+                    <Image src={imageUrlField} ratio={1} />
+                }
+                {titleField &&
+                    <Subtitle>{titleField}</Subtitle>
+                }
+                {descrField &&
+                    <Content>{descrField.substr(0, 100)}...</Content>
+                }
             </Link>
         </section>
     );
