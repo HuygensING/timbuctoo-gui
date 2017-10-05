@@ -180,11 +180,10 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         }
 
         // If fields does exist but is empty, add a default field with current collection as reference
-        const { match } = this.props;
         if (valueItem.value.fields && valueItem.value.fields.length === 0) {
             valueItem.value.fields.push({
                 value: '',
-                reference: match && match.params.collection
+                reference: this.props.match && this.props.match.params.collection
             });
         }
 
