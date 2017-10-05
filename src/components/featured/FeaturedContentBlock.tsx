@@ -12,6 +12,10 @@ const FeaturedContentBlock = ({ imageUrl, title, description, dataSetId }: DataS
     const titleField = getValue(title);
     const descrField = getValue(description);
 
+    if (!imageUrlField && !titleField && !descrField) {
+        return null;
+    }
+
     return (
         <section>
             <Link to={`${ROUTE_PATHS.details}/${dataSetId}`}>

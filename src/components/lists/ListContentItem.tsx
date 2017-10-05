@@ -7,6 +7,7 @@ import { calcColWidth } from '../layout/Grid';
 import { Subtitle, Content, Link, Label } from '../layout/StyledCopy';
 
 import Translations from '../../services/Translations';
+import { getValue } from '../../services/getValue';
 
 const Datasets = ['World Leaders', 'German Royalty', '18th century literature'];
 
@@ -30,11 +31,24 @@ const DateLabel = styled(Label)`
     margin: auto;
 `;
 
-const ListContentItem = (props: DataSetProps) => {
+const ListContentItem = ({title, description, dataSetId}: DataSetProps) => {
+    const titleField = getValue(title);
+    const descrField = getValue(description);
+
+    if (!titleField && !descrField) {
+        return null;
+    }
+
     return (
         <ListItem>
-            <Subtitle>{props.title}</Subtitle>
-            <Content>{props.description && props.description.substr(0, 20)} in <StyledLink to={`${ROUTE_PATHS.details}/userId/${props.dataSetId}`}>{Datasets[Math.floor(Math.random() * Datasets.length)]}</StyledLink></Content>
+            {titleField && <Subtitle>{titleField}</Subtitle>}
+            {descrField &&
+                <Content>{descrField} in
+                    <StyledLink to={`${ROUTE_PATHS.details}/userId/${dataSetId}`}>
+                        {Datasets[Math.floor(Math.random() * Datasets.length)]}
+                    </StyledLink>
+                </Content>
+            }
             <DateLabel>{Translations.translate('globals.today')}</DateLabel>
         </ListItem>
     );
