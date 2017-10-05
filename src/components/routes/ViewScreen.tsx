@@ -110,15 +110,6 @@ class ViewScreen extends PureComponent<FullProps, State> {
         // TODO: add when Components are available
         console.log( this.collection );
         if (!this.collection) { return <Loading />; }
-        // if (!this.collectionsAvailable) {
-        //     return <Loading />;
-        // }
-
-        // if (this.items.length === 0) {
-        //     return <Title>No collections available : '(</Title>;
-        // }
-
-        // replace fakeItems with this.collection.components.items;
         
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>

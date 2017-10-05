@@ -137,7 +137,7 @@ class Entry extends PureComponent<FullProps, State> {
             }]
         }, {
             type: COMPONENTS.divider,
-            title: { field: 'More info' }
+            title: { field: 'More information' }
         }, {
             type: COMPONENTS.keyValue,
             key: { field: 'Description' },
@@ -153,7 +153,7 @@ class Entry extends PureComponent<FullProps, State> {
                 value: { field: 'Sub-info' }
             }, {
                 type: COMPONENTS.keyValue,
-                key: { field: 'Cat name' },
+                key: { field: 'Name' },
                 values: [{
                     type: COMPONENTS.value,
                     value: { fields: [keys.description] }
@@ -165,7 +165,7 @@ class Entry extends PureComponent<FullProps, State> {
             }]
         }, {
             type: COMPONENTS.divider,
-            title: { field: 'Other info'}
+            title: { field: 'Relatives'}
         }, {
             type: COMPONENTS.value,
             value:  { fields: [keys.description] }
@@ -178,7 +178,7 @@ class Entry extends PureComponent<FullProps, State> {
             }
         }, {
             type: COMPONENTS.keyValue,
-            key: { field: 'Bio' },
+            key: { field: 'Biography' },
             values: [{
                 type: COMPONENTS.value,
                 value: { fields: [keys.name] }
