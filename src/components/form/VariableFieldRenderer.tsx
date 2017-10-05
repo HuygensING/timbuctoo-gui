@@ -140,9 +140,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     private renderTextField (valueItem: ValueItem) {
         const { componentInfo } = this.props.item;
 
-        console.log( 'renderTextField' );
-
-        if (!valueItem.value.field) {
+        if (typeof valueItem.value.field !== 'string') {
             return null;
         }
 
@@ -211,8 +209,8 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         return (
             <StyledDivider key={idx}>
                 <Label htmlFor={`${componentInfo.name}_${valueItem.name}_0`}>{valueItem.name}</Label>
-                {valueItem.value.fields && this.renderKeyFields(valueItem)}
-                {valueItem.value.field && this.renderTextField(valueItem)}
+                {this.renderKeyFields(valueItem)}
+                {this.renderTextField(valueItem)}
             </StyledDivider>
         );
     }
