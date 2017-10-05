@@ -58,13 +58,14 @@ class Home extends Component<Props & ApolloProps, State> {
     render () {
         const {promotedDataSets, aboutMe} = this.props.data;
 
+        const heroDataSetPath = this.selectFirstSet();
         return (
             <Grid>
                 <FullHelmet pageName="home"/>
                 <Hero
                     title={Translations.translate('home.hero.title')}
                     content={Translations.translate('home.hero.content')}
-                    searchPath={`${ROUTE_PATHS.search}/jauco_leaders/LeadersList`}
+                    searchPath={heroDataSetPath}
                     buttonText={Translations.translate('home.hero.button')}
                 />
 
@@ -77,6 +78,21 @@ class Home extends Component<Props & ApolloProps, State> {
                 </Col>
             </Grid>
         );
+    }
+
+    private selectFirstSet () {
+        const { promotedDataSets } = this.props.data;
+
+        if (promotedDataSets && promotedDataSets.length > 0) {
+            const set = promotedDataSets[0];
+
+            if (set.collectionList && set.collectionList.items.length > 0) {
+                const collection = set.collectionList.items[0];
+                return `${ROUTE_PATHS.search}/${set.dataSetId}/${collection.collectionId}`;
+            }
+        }
+
+        return null;
     }
 }
 
