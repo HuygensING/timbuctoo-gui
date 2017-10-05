@@ -59,7 +59,7 @@ class SearchBody extends PureComponent<FullProps, State> {
                         colKeys={reorderUnknownsInList(collectionKeys)}
                         dataSetId={dataSetId}
                         currentCollectionListId={collectionListId}
-                    />;
+                    />
                 </Col>
 
                 <FullSection>
