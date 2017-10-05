@@ -1,4 +1,4 @@
-import React, { SFC } from 'react';
+import React, { PureComponent } from 'react';
 
 import { Subtitle } from '../layout/StyledCopy';
 import { HiddenField } from './FormElements';
@@ -7,9 +7,6 @@ import { Dummy } from '../Dummy';
 import { Option } from '../../typings/timbuctoo/schema';
 
 interface Props {
-    pristine?: boolean;
-    submitting?: boolean;
-    reset?: () => void;
     title: string;
     options: Option[];
 }
@@ -30,32 +27,38 @@ const Amount = styled.span`
    float: right;
 `;
 
-const MultiSelectForm: SFC<Props> = ({title, options}) => {
-    const renderCheckBox = (option: Option) => {
+class MultiSelectForm extends PureComponent<Props> {
+    render () {
+        const { title, options } = this.props;
+        return (
+            <Section>
+                <Sub>{title}</Sub>
+                <Dummy absolute={true} height={'1.5rem'} width={'3.5rem'} text={'toggle'}/>
+                <ul>
+                    {options.map(this.renderCheckBox)}
+                </ul>
+            </Section>
+        );
+    }
+
+    private renderCheckBox (option: Option) {
         return (
             <li key={option.name}>
                 <fieldset>
                     <HiddenField
                         name={option.name}
                         id={option.name}
-                        component={'input'}
+                        value={option.name}
                         type={'checkbox'}
                     />
-                    <label htmlFor={option.name}>{option.name}<Amount>{option.count}</Amount></label>
+                    <label htmlFor={option.name}>
+                        {option.name}
+                        <Amount>{option.count}</Amount>
+                    </label>
                 </fieldset>
             </li>
         );
-    };
-
-    return (
-        <Section>
-            <Sub>{title}</Sub>
-            <Dummy absolute={true} height={'1.5rem'} width={'3.5rem'} text={'toggle'}/>
-            <ul>
-                {options.map(renderCheckBox)}
-            </ul>
-        </Section>
-    );
-};
+    }
+}
 
 export default MultiSelectForm;

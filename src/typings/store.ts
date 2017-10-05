@@ -7,3 +7,9 @@ export interface UserReducer {
     language: string;
     loggedIn: boolean;
 }
+
+export interface SearchReducer {
+    dataset: string;
+    collection: string;
+    filter: string;
+}

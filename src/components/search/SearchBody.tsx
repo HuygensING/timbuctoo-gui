@@ -51,7 +51,10 @@ class SearchBody extends PureComponent<FullProps, State> {
 
                 {/* Search functionality */}
                 <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={1}>
-                    <SearchForm onSubmit={this.props.onSubmit} />
+                    <SearchForm
+                        submit={this.props.onSubmit}
+                        type={'collection'}
+                    />
                 </Col>
 
                 <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={.5}>
