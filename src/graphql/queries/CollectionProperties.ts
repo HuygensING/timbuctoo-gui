@@ -1,5 +1,5 @@
 import { gql } from 'react-apollo';
-import { collectionBase, collectionProperties, collectionSummaryProperties } from '../fragments/Metadata';
+import { collectionBase, collectionPropertiesDensity, collectionSummaryProperties } from '../fragments/Metadata';
 
 const QUERY_COLLECTION_PROPERTIES = ({ match }) => {
     const query = `
@@ -7,20 +7,20 @@ const QUERY_COLLECTION_PROPERTIES = ({ match }) => {
             dataSetMetadata(dataSetId: "${match.params.dataSet}") {
                 collection(collectionId: "${match.params.collection}") {
                     ...CollectionBase
-                    ...CollectionProperties
+                    ...CollectionPropertiesDensity
                     ...CollectionSummaryProperties
                 }
                 collectionList {
                     items {
                         ...CollectionBase
-                        ...CollectionProperties
+                        ...CollectionPropertiesDensity
                     }
                 }
             }
         }
     `;
 
-    return gql`${query}${collectionBase}${collectionProperties}${collectionSummaryProperties}`;
+    return gql`${query}${collectionBase}${collectionPropertiesDensity}${collectionSummaryProperties}`;
 };
 
 export default QUERY_COLLECTION_PROPERTIES;

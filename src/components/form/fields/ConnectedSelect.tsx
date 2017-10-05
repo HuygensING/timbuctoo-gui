@@ -22,8 +22,12 @@ interface State {
     selectedOption: OptionProps;
 }
 
-interface ReferenceTypesProps {
-    [name: string]: string;
+interface OptionSettingProps {
+    [name: string]: {
+        reference: string | null;
+        isList: boolean | null;
+        isValue: boolean | null;
+    };
 }
 
 interface SelectDefaultsProps {
@@ -33,7 +37,7 @@ interface SelectDefaultsProps {
 class SelectField extends Component<FullProps, State> {
 
     defaults: SelectDefaultsProps;
-    referenceTypes: ReferenceTypesProps;
+    optionSettings: OptionSettingProps;
 
     constructor(props: FullProps) {
         super(props);
@@ -44,7 +48,7 @@ class SelectField extends Component<FullProps, State> {
                 key: ''
             }
         };
-        this.referenceTypes = {};
+        this.optionSettings = {};
 
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.getOptionsFromQuery = this.getOptionsFromQuery.bind(this);
@@ -53,8 +57,6 @@ class SelectField extends Component<FullProps, State> {
     render() {
         const { name, data, selected } = this.props;
         const options: OptionProps[] = this.getOptionsFromQuery(data);
-
-        console.log( 'Get options', options );
 
         if (!options || options.length === 0) {
             return null;
@@ -76,7 +78,9 @@ class SelectField extends Component<FullProps, State> {
         if (onChange) {
             onChange({
                 option: option,
-                reference: this.referenceTypes[option.value]
+                settings: {
+                    ...this.optionSettings[option.value]
+                }
             });
         }
     }
@@ -85,9 +89,14 @@ class SelectField extends Component<FullProps, State> {
         if (dataSetMetadata && dataSetMetadata.collection) {
             const collection = dataSetMetadata.collection;
             collection.properties.items.forEach((field) => {
-                const referenceType = field.referencedCollections && field.referencedCollections.items[0];
-                if (field.name && this.referenceTypes && referenceType) {
-                    this.referenceTypes[field.name] = referenceType;
+                // Now references only the first item.
+                const reference = field.referencedCollections && field.referencedCollections.items[0];
+                if (field.name) {
+                    this.optionSettings[field.name] = {
+                        reference,
+                        isList: field.isList,
+                        isValue: field.isValueType
+                    };
                 }
 
                 options.push({

@@ -5,13 +5,11 @@ import { COMPONENT_FIELDS } from '../constants/global';
 const createValuesObject = (fields: ComponentValueField[]) => {
     const object = {};
     fields.reduce(
-        (obj, { value }: ComponentValueField) => {
-            return (
-                value.length > 0
-                    ? obj[value] = {}
-                    : {}
-            );
-        },
+        (obj, { value }: ComponentValueField) => (
+            value.length > 0
+                ? obj[value] = {}
+                : {}
+        ),
         object
     );
     return object;
@@ -25,6 +23,7 @@ const mutateQueryObject = (item, queryObject) => {
 
             if (field && field.fields) {
                 const obj = createValuesObject(item.value.fields);
+                console.log( queryObject, obj );
                 _.merge(queryObject, obj);
             }
         }

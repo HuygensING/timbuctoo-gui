@@ -38,10 +38,7 @@ const fakeItems: any[] = [
     {
         type: COMPONENTS.title,
         value: {
-            fields: [{
-                value: '',
-                referenceType: 'clusius_Residence'
-            }]
+            fields: []
         }
     },
     {
@@ -55,10 +52,10 @@ const fakeItems: any[] = [
                 value: {
                     fields: [{
                         value: 'tim_hasResident',
-                        referenceType: 'clusius_Persons'
+                        reference: 'clusius_Persons'
                     }, {
                         value: 'tim_gender',
-                        referenceType: null
+                        reference: null
                     }]
                 }
             }
@@ -75,13 +72,13 @@ const fakeItems: any[] = [
                 value: {
                     fields: [{
                         value: 'tim_hasResident',
-                        referenceType: 'clusius_Persons'
+                        reference: 'clusius_Persons'
                     }, {
                         value: 'tim_hasBirthPlace',
-                        referenceType: 'clusius_Places'
+                        reference: 'clusius_Places'
                     }, {
                         value: 'tim_country',
-                        referenceType: null
+                        reference: null
                     }]
                 }
             }

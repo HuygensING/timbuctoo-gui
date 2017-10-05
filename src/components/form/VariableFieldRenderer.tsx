@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { withRouter, match } from 'react-router';
 import styled from '../../styled-components';
 import { StandardStyledFormElements } from './FormElements';
 import { COMPONENT_FIELDS } from '../../constants/global';
@@ -44,6 +45,7 @@ const StyledDivider = styled.div`
 interface Props {
     item: any;
     resolveChange: Function;
+    match?: match<any>;
 }
 
 interface ValueItem {
@@ -110,8 +112,6 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         const {values, componentInfo} = this.props.item;
         const valueList = VariableFormFieldRenderer.renderFieldList(this.props.item);
 
-        console.log( this.props );
-
         return (
             <StyledFieldset>
                 {componentInfo && this.renderComponentSelector()}
@@ -140,6 +140,8 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     private renderTextField (valueItem: ValueItem) {
         const { componentInfo } = this.props.item;
 
+        console.log( 'renderTextField' );
+
         if (!valueItem.value.field) {
             return null;
         }
@@ -157,30 +159,43 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         );
     }
 
-    private renderKeyFields (valueItem: ValueItem) {
-        const { item } = this.props;
-        const { componentInfo } = item;
+    private renderConnectedSelect = (valueItem: ValueItem, field: ComponentValueField, childIdx: number = 0) => {
+        // const { item } = this.props;
+        // const { componentInfo } = item;
+        const { value, reference } = field;
+        return (
+            <ConnectedSelect
+                key={childIdx}
+                name={'Select'}
+                selected={{key: value, value: value}}
+                collectionId={reference}
+                onChange={({option, settings}) => this.onSelectChangeHandler(option, settings, valueItem.name, childIdx)}
+            />
+        );
+    }
 
-        if (!valueItem.value.fields || valueItem.value.fields.length === 0) {
+    private renderKeyFields (valueItem: ValueItem) {
+
+        // If fields does not exist return null
+        if (!valueItem.value.fields) {
             return null;
+        }
+
+        // If fields does exist but is empty, add a default field with current collection as reference
+        const { match } = this.props;
+        if (valueItem.value.fields && valueItem.value.fields.length === 0) {
+            valueItem.value.fields.push({
+                value: '',
+                reference: match && match.params.collection
+            })
         }
 
         return (
             <StyledInputWrapper>
                 {
-                    valueItem.value.fields.map((field: ComponentValueField, childIdx: number) => {
-                        const { value, referenceType } = field;
-                        console.log( field );
-                        return (
-                            <ConnectedSelect
-                                key={childIdx}
-                                name={componentInfo.name}
-                                selected={{key: value, value: value}}
-                                collectionId={referenceType}
-                                onChange={({option, reference}) => this.onSelectChangeHandler(option, reference, valueItem.name, childIdx)}
-                            />
-                        );
-                    })
+                    valueItem.value.fields.map((field: ComponentValueField, childIdx: number) => (
+                        this.renderConnectedSelect(valueItem, field, childIdx))
+                    )
                 }
             </StyledInputWrapper>
         );
@@ -196,11 +211,8 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         return (
             <StyledDivider key={idx}>
                 <Label htmlFor={`${componentInfo.name}_${valueItem.name}_0`}>{valueItem.name}</Label>
-                {
-                    valueItem.value.fields && valueItem.value.fields.length > 0
-                        ? this.renderKeyFields(valueItem)
-                        : this.renderTextField(valueItem)
-                }
+                {valueItem.value.fields && this.renderKeyFields(valueItem)}
+                {valueItem.value.field && this.renderTextField(valueItem)}
             </StyledDivider>
         );
     }
@@ -218,15 +230,19 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         }
     }
 
-    private onSelectChangeHandler (option: OptionProps, reference: string, fieldName: string, childIndex: number) {
+    private onSelectChangeHandler (option: OptionProps, settings: any, fieldName: string, childIndex: number) {
         const { resolveChange, item } = this.props;
         
+        // Set the newValue object
         const newValue = {
             value: option.value,
-            referenceType: reference
+            reference: settings.reference
         };
+
+        // Create reference for the oldValue
         const oldValue = item[fieldName].fields[childIndex];
 
+        // Only update when newValue and oldValue are not matching
         if (newValue !== oldValue) {
             const newFieldset = {...item};
             const fields = newFieldset[fieldName].fields;
@@ -234,18 +250,29 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                 ...oldValue,
                 value: newValue.value
             };
-
+            
+            // Remove all items behind last changed index
             fields.splice(childIndex + 1, fields.length - childIndex);
 
-            if (newValue.referenceType) {
-                fields[childIndex + 1] = {
-                    value: '',
-                    referenceType: newValue.referenceType
-                };
+            // If isList boolean is true then push an items field to fields array
+            // This field is needed for the correct query
+            if (settings.isList) {
+                fields.push({
+                    value: 'items',
+                    reference: null
+                });
             }
 
-            console.log( 'newFieldset', newFieldset );
+            // If the newValue has a reference then create a new field at the end of the fields array
+            // This field will query based on the reference given
+            if (newValue.reference) {
+                fields.push({
+                    value: '',
+                    reference: newValue.reference
+                });
+            }
 
+            // Send a fieldSet change
             resolveChange( newFieldset );
         }
     }
@@ -273,4 +300,4 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     }
 }
 
-export default VariableFormFieldRenderer;
+export default withRouter(VariableFormFieldRenderer);
