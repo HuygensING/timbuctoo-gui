@@ -52,7 +52,10 @@ class DataSetBody extends PureComponent<FullProps, State> {
                 />
 
                 <Col sm={42} smOffset={3} smPaddingBottom={.5}>
-                    <CollectionTags colKeys={reorderUnknownsInList(collectionKeys)} dataSetId={dataSetId} />;
+                    <CollectionTags
+                        colKeys={reorderUnknownsInList(collectionKeys)}
+                        dataSetId={dataSetId}
+                    />
                 </Col>
 
                 {
