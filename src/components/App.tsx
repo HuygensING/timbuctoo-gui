@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -17,6 +17,19 @@ import { UserReducer } from '../typings/store';
 import { LogInUser, LogOutUser } from '../reducers/user';
 import Loading from './Loading';
 
+if (process.env.NODE_ENV !== 'production') {
+    // /* eslint-disable-next-line no-unused-vars,react/no-deprecated */
+    // let createClass = React.createClass;
+    // Object.defineProperty(React, 'createClass', {
+    //     set: (nextCreateClass) => {
+    //         createClass = nextCreateClass;
+    //     }
+    // });
+    // /* eslint-disable-next-line global-require */
+    // const { whyDidYouUpdate } = require('why-did-you-update');
+    // whyDidYouUpdate(React);
+}
+
 const headerHeight: string = '4rem';
 
 const GridWithMargin = styled(Grid)`
@@ -27,7 +40,7 @@ const GridWithMargin = styled(Grid)`
 `;
 
 const Main = styled.div`
-  flex: 1;
+    flex: 1;
 `;
 
 interface Props {
@@ -45,7 +58,7 @@ interface State {
 
 }
 
-class App extends Component<ChildProps<Props, Response>, State> {
+class App extends PureComponent<ChildProps<Props, Response>, State> {
     renderLoad: boolean = true;
 
     componentWillMount () {

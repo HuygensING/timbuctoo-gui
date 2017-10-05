@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import FullHelmet from '../FullHelmet';
 
@@ -31,7 +32,9 @@ interface Props {
 interface State {
 }
 
-class Home extends Component<Props & ApolloProps, State> {
+type FullProps = Props & ApolloProps & RouteComponentProps<any>;
+
+class Home extends Component<FullProps, State> {
     static defaultProps = {
         data: {
             promotedDataSets: [],
@@ -41,6 +44,17 @@ class Home extends Component<Props & ApolloProps, State> {
             }
         }
     };
+
+    shouldComponentUpdate( newProps: FullProps ) {
+        const _currProps = JSON.stringify(this.props.data);
+        const _newProps = JSON.stringify(newProps.data);
+            
+        if (_currProps !== _newProps) {
+            return true;
+        }
+
+        return false;
+    }
 
     renderFeatured (promoted: DataSetMetadata[]) {
         return (

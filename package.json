@@ -38,6 +38,7 @@
     "@types/react-dom": "^15.5.4",
     "@types/react-router-dom": "^4.0.7",
     "@types/redux-form": "^7.0.4",
-    "graphql-to-typescript": "^0.1.2"
+    "graphql-to-typescript": "^0.1.2",
+    "why-did-you-update": "0.0.8"
   }
 }

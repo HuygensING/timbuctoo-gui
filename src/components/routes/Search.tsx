@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { RouteComponentProps } from 'react-router';
 import { CollectionMetadata, DataSetMetadata } from '../../typings/timbuctoo/schema';
@@ -21,7 +21,7 @@ type FullProps = Props & ApolloProps & RouteComponentProps<any>;
 interface State {
 }
 
-class Search extends Component<FullProps, State> {
+class Search extends PureComponent<FullProps, State> {
     static onSearch (values: {search: string}) {
         // TODO: Do a refetch for results using this key
         console.log(values.search);

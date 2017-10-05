@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { CollectionMetadata, DataSetMetadata } from '../../typings/timbuctoo/schema';
 import DataSetBody from '../dataSet/DataSetBody';
@@ -17,7 +17,7 @@ interface ApolloProps {
 type FullProps = Props & ApolloProps & RouteComponentProps<any>;
 interface State {}
 
-class DataSet extends Component<FullProps, State> {
+class DataSet extends PureComponent<FullProps, State> {
 
     render () {
         const { dataSetMetadata } = this.props.data;

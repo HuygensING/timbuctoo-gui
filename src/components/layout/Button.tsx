@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { lighten } from 'polished/lib';
 import styled, { css } from '../../styled-components';
 
 import { ButtonProps, ButtonType, ElementProps } from '../../typings/layout';
@@ -28,14 +29,21 @@ const SmallButtonStyling = css`
     border-radius: .15rem;
 `;
 
-const setColor = (props: ElementProps, type: ButtonType) =>
-    type === BUTTON_TYPES.inverted ? props.theme.colors.black : props.theme.colors.white;
+const setColor = (props: ElementProps, type: ButtonType) => {
+    switch (type) {
+        case BUTTON_TYPES.normal: return props.theme.colors.white;
+        case BUTTON_TYPES.dark: return props.theme.colors.white;
+        case BUTTON_TYPES.inverted:
+        default: return props.theme.colors.black;
+    }
+    // type === BUTTON_TYPES.inverted ? props.theme.colors.black : props.theme.colors.white;
+}
 
 const setBackgroundColor = (props: ElementProps, type: ButtonType) => {
     switch (type) {
         case BUTTON_TYPES.normal: return props.theme.colors.shade.medium;
         case BUTTON_TYPES.dark: return props.theme.colors.black;
-        case BUTTON_TYPES.disabled: return props.theme.colors.error;
+        case BUTTON_TYPES.disabled: return lighten(0.1, props.theme.colors.shade.light);
         case BUTTON_TYPES.inverted:
         default: return props.theme.colors.white;
     }
@@ -48,6 +56,10 @@ const Button: SFC<ButtonProps> = ({type = BUTTON_TYPES.normal, small, to, childr
         color: ${props => setColor(props, type)};
         background-color: ${props => setBackgroundColor(props, type)};
         ${small ? SmallButtonStyling : ''};
+
+        opacity: ${props => {
+            return (type === BUTTON_TYPES.disabled) ? 0.4 : 1;
+        }};
     `;
 
     return (

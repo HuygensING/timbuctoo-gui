@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import styled from '../../styled-components';
 import { ImageProps } from '../../typings/layout';
 
@@ -53,7 +53,7 @@ const Img = styled.img`
     background-color: grey;
 `;
 
-class Image extends Component<ImageProps, State> {
+class Image extends PureComponent<ImageProps, State> {
 
     image: HTMLImageElement;
 

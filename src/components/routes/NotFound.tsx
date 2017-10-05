@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import FullHelmet from '../FullHelmet';
 
 interface Props {}
 interface State {}
 
-class NotFound extends Component<Props, State> {
+class NotFound extends PureComponent<Props, State> {
     render() {
         return (
             <section>

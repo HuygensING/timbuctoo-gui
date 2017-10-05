@@ -1,6 +1,6 @@
 import React, { SFC } from 'react';
 import { lighten } from 'polished/lib';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import Translations from '../services/Translations';
 import { CollectionMetadata, Property } from '../typings/timbuctoo/schema';
@@ -28,10 +28,19 @@ const ListItem = styled.li`
     margin-right: 1rem;
 `;
 
+const PropertiesPanelAnimation = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
+
 const PropertiesPanel = styled.div`
     position: absolute;
     pointer-events: none;
-    top: 4rem;
+    top: 3.5rem;
     left: 0;
 
     padding: 1rem;
@@ -39,9 +48,9 @@ const PropertiesPanel = styled.div`
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     background: ${props => props.theme.colors.white};
     
-    // transform: translateX(-50%);
-    
     z-index: 10;
+
+    animation: ${PropertiesPanelAnimation} 0.3s ease-in-out;
     
     &:before {
         position: absolute;
@@ -82,7 +91,9 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
         ? BUTTON_TYPES.dark
         : BUTTON_TYPES.inverted;
     
+    let tagTitle = collectionId;
     if (collectionId.indexOf('vocabulary_unknown') !== -1) {
+        tagTitle = 'Uknown';
         buttonType = BUTTON_TYPES.disabled;
     }
 
@@ -114,7 +125,7 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
             onMouseEnter={() => toggleOpen(index)}
             onMouseLeave={() => toggleOpen(null)}
         >
-            <Button type={buttonType} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>{getValue(title) || collectionId}</Button>
+            <Button type={buttonType} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>{getValue(title) || tagTitle}</Button>
             {isOpen && renderPropertiesPanel()}
         </ListItem>
     );
