@@ -23,7 +23,7 @@ class DataSet extends PureComponent<FullProps, State> {
         const { dataSetMetadata } = this.props.data;
         if ( !dataSetMetadata ) { return <Loading />; }
 
-        const { dataSetId, title, description, imageUrl, collectionList } = dataSetMetadata;
+        const { dataSetId, title, description, imageUrl, collectionList, provenanceInfo, owner, contact } = dataSetMetadata;
 
         const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
             ? collectionList.items
@@ -35,6 +35,9 @@ class DataSet extends PureComponent<FullProps, State> {
                 description={description ? description.value : ''}
                 imageUrl={imageUrl ? imageUrl.value : ''}
                 dataSetId={dataSetId}
+                owner={owner}
+                contact={contact}
+                provenanceInfo={provenanceInfo}
                 collectionKeys={collectionItems}
                 match={this.props.match}
             />

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled, { withProps } from '../../../styled-components';
-import { StandardStyledFormElements } from '../FormElements';
 import onClickOutside from 'react-onclickoutside';
+import { StandardStyledFormElements } from './Input';
 
 export interface OptionProps {
     key: string;
@@ -125,6 +125,12 @@ class SelectField extends Component<SelectProps, State> {
         }
     };
 
+    static renderOptionField({key, value}: OptionProps, idx: number): JSX.Element {
+        return (
+            <option key={`${key}-${idx}`} value={value}>{key}</option>
+        );
+    }
+
     constructor(props: SelectProps) {
         super(props);
 
@@ -142,12 +148,6 @@ class SelectField extends Component<SelectProps, State> {
         this.setState({
             isOpen: false
         });
-    }
-    
-    renderOptionField({key, value}: OptionProps, idx: number): JSX.Element {
-        return (
-            <option key={`${key}-${idx}`} value={value}>{key}</option>
-        );
     }
 
     renderStyledOptionField(option: OptionProps, idx: number): JSX.Element {
@@ -184,7 +184,7 @@ class SelectField extends Component<SelectProps, State> {
         return (
             <SelectWrapper>
                 <SelectHiddenFieldInput name={name} defaultValue={selected && selected.value || selectedOption && selectedOption.value}>
-                    {options && options.map(this.renderOptionField)}
+                    {options && options.map(SelectField.renderOptionField)}
                 </SelectHiddenFieldInput>
                 
                 <StyledSelect onClick={this.onSelectClick}>

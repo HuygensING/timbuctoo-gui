@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { withRouter, match } from 'react-router';
 import styled from '../../styled-components';
-import { StandardStyledFormElements } from './FormElements';
 import { COMPONENT_FIELDS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
 import { removeExtraInfo, renderEmptyViewComponent } from '../../services/FormValueManipulator';
@@ -9,6 +8,7 @@ import ConnectedSelect from './fields/ConnectedSelect';
 import Select, { OptionProps } from './fields/Select';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { ComponentValue, ComponentValueField } from '../../typings/timbuctoo/schema';
+import InputField from './fields/Input';
 
 const Label = styled.label`
     display: inline-block;
@@ -20,13 +20,12 @@ const StyledFieldset = styled.fieldset`
     width: 100%;
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled(InputField)`
     display: inline-block;
     margin-bottom: .5rem;
     width: auto;
     margin-right: .5rem;
     max-width: 10rem;
-    ${StandardStyledFormElements};
 `;
 
 const StyledInputWrapper = styled.div`
@@ -157,9 +156,8 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         );
     }
 
-    private renderConnectedSelect = (valueItem: ValueItem, field: ComponentValueField, childIdx: number = 0) => {
-        // const { item } = this.props;
-        // const { componentInfo } = item;
+    private renderConnectedSelect (valueItem: ValueItem, field: ComponentValueField, childIdx: number = 0) {
+
         const { value, reference } = field;
         return (
             <ConnectedSelect

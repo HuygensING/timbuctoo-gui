@@ -78,6 +78,10 @@ const dataSetMetadataFragment = gql`
                 ...CollectionPropertiesDensity
             }
         }
+        provenanceInfo {
+            title { value }
+            body { value }
+        }
     }
     ${contactFragment}
     ${provenanceFragment}

@@ -4,10 +4,10 @@ import { arrayMove } from 'react-sortable-hoc';
 import DraggableList from '../DraggableList';
 import { ComponentFormType } from '../../typings/index';
 import { addExtraInfo, renderEmptyViewComponent } from '../../services/FormValueManipulator';
-import { SubmitButton } from './FormElements';
 import styled from '../../styled-components';
 import { COMPONENTS, DRAGGABLE_COMPONENTS } from '../../constants/global';
 import { Component } from '../../typings/timbuctoo/schema';
+import { SubmitButton } from './fields/Buttons';
 
 interface Props {
     items: Component[];

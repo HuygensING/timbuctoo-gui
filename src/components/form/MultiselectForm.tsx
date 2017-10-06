@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 
 import { Subtitle } from '../layout/StyledCopy';
-import { HiddenField } from './FormElements';
 import styled from '../../styled-components';
 import { Dummy } from '../Dummy';
 import { Option } from '../../typings/timbuctoo/schema';
+import HiddenField from './fields/HiddenField';
 
 interface Props {
     title: string;

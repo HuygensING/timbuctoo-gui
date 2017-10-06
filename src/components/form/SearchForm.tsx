@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import Translations from '../../services/Translations';
-import { InputField, ResetButton, SubmitButton } from './FormElements';
 import { Col, Grid } from '../layout/Grid';
 import { submitSearch } from '../../reducers/search';
 import { SearchReducer } from '../../typings/store';
+import InputField from './fields/Input';
+import { ResetButton, SubmitButton } from './fields/Buttons';
 
 const mapStateToProps = state => ({
     defaultValues: state.search

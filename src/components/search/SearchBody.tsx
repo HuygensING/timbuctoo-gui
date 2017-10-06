@@ -35,10 +35,10 @@ type FullProps = Props & ApolloProps;
 interface State {}
 
 class SearchBody extends PureComponent<FullProps, State> {
+
     render () {
         const { dataSetId, collectionKeys, currentCollection } = this.props;
-
-        if (!currentCollection || !this.props.data.dataSets) { return <Loading/>; }
+        if (!currentCollection) { return <Loading/>; }
 
         const collectionValues = getCollection(this.props, currentCollection.collectionListId);
         const fields = getValuesFromObject(currentCollection.summaryProperties);
@@ -75,13 +75,15 @@ class SearchBody extends PureComponent<FullProps, State> {
                     <Col sm={27} smOffset={3} smPaddingY={1}>
                         {/* Filter functionality */}
 
-                        <SearchResults
-                            dataSetId={dataSetId}
-                            collectionId={collectionId}
-                            properties={summaryProperties}
-                            results={collectionValues.items}
-                            fields={fields}
-                        />
+                        {collectionValues &&
+                            <SearchResults
+                                dataSetId={dataSetId}
+                                collectionId={collectionId}
+                                properties={summaryProperties}
+                                results={collectionValues.items}
+                                fields={fields}
+                            />
+                        }
                     </Col>
 
                 </FullSection>
