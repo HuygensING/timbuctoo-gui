@@ -1,6 +1,5 @@
 import React, { SFC } from 'react';
-import { lighten } from 'polished/lib';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
 import Translations from '../services/Translations';
 import { CollectionMetadata, Property } from '../typings/timbuctoo/schema';
@@ -12,6 +11,8 @@ import { BUTTON_TYPES } from '../constants/global';
 
 import ProgressBar from './ProgressBar';
 import { getValue } from '../services/getValue';
+
+import Tooltip from './Tooltip';
 
 interface Props {
     isOpen: boolean;
@@ -25,48 +26,8 @@ interface Props {
 const ListItem = styled.li`
     position: relative;
     display: inline-block;
+    margin-top: 0.5rem;
     margin-right: 1rem;
-`;
-
-const PropertiesPanelAnimation = keyframes`
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-`;
-
-const PropertiesPanel = styled.div`
-    position: absolute;
-    pointer-events: none;
-    top: 3.5rem;
-    left: 0;
-
-    padding: 1rem;
-
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    background: ${props => props.theme.colors.white};
-    
-    z-index: 10;
-
-    animation: ${PropertiesPanelAnimation} 0.3s ease-in-out;
-    
-    &:before {
-        position: absolute;
-        top: 0;
-        left: 1rem;
-        
-        width: 1rem;
-        height: 1rem;
-        
-        border-top: 1px solid ${props => lighten(0.04, props.theme.colors.shade.light)};
-        border-right: 1px solid ${props => props.theme.colors.shade.light};
-        background: ${props => props.theme.colors.white};
-
-        transform: translateY(-50%) rotate(-45deg);
-        content: '';
-    }
 `;
 
 const PropertiesHeader = styled.div`
@@ -110,13 +71,13 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
 
     const renderPropertiesPanel = () => {
         return (
-            <PropertiesPanel>
+            <Tooltip>
                 <PropertiesHeader>
                     <Subtitle>{collectionId}</Subtitle>
                     <PropertyLabel>{Translations.translate('details.collection.property')}</PropertyLabel><DensityLabel>{Translations.translate('details.collection.density')}</DensityLabel>
                 </PropertiesHeader>
                 {properties.items.map(renderPropertyDensity)}
-            </PropertiesPanel>
+            </Tooltip>
         );
     };
 

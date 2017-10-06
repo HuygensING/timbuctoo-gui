@@ -1,12 +1,14 @@
 import React, { SFC } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import styled from '../../styled-components';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
-import { Link } from 'react-router-dom';
-import LoginLink from './LoginLink';
 import { LogOutUser } from '../../reducers/user';
+import { UserReducer } from '../../typings/store';
 import CreateElementWithTag from '../../services/CreateElementWithTag';
-import AccountToggle from './AccountToggle';
+import AccountMenu from './AccountMenu';
+// import LoginLink from './LoginLink';
+// import AccountToggle from './AccountToggle';
 
 const logo = require('../../assets/logo-timbuctoo.svg');
 
@@ -34,25 +36,21 @@ const StyledImg = styled.img`
 
 interface Props {
     height: string;
-    isLoggedIn: boolean;
+    user: UserReducer;
     onLogOut: () => void;
 }
 
-const Header: SFC<Props> = ({isLoggedIn, onLogOut, height}) => {
+const Header: SFC<Props> = ({user, onLogOut, height}) => {
     return (
         <StyledHeader height={height}>
             <StyledLink to={ROUTE_PATHS.root}><StyledImg src={logo} alt="timbuctoo"/></StyledLink>
-            {
-                isLoggedIn
-                    ? <AccountToggle onLogOut={onLogOut} />
-                    : <LoginLink />
-            }
+            <AccountMenu user={user} onLogOut={onLogOut} />
         </StyledHeader>
     );
 };
 
 const mapStateToProps = state => ({
-    isLoggedIn: state.user.loggedIn
+    user: state.user
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -43,3 +43,9 @@ export interface DataSetProps {
     roles?: Permissions[];
     collections?: any[];
 }
+
+export interface MenuItemProp {
+    path: string;
+    name: string;
+    icon: string;
+}

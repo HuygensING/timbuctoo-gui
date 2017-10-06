@@ -1,4 +1,6 @@
+import { SUB_ROUTES } from '../constants/routeNaming';
 import { ButtonType } from '../typings/layout';
+import { MenuItemProp } from '../typings';
 import { ComponentFieldType, ComponentTypes } from '../typings/viewComponents';
 
 export const HSID: string = 'hsid';
@@ -35,3 +37,26 @@ export const BUTTON_TYPES: {[name: string]: ButtonType} = {
     dark: 'dark',
     disabled: 'disabled'
 };
+
+export const MENU_ITEMS: MenuItemProp[] = [
+    {
+        path: '',
+        name: 'Account',
+        icon: 'user'
+    },
+    {
+        path: SUB_ROUTES.favorites,
+        name: 'Favorites',
+        icon: 'heart'
+    },
+    {
+        path: SUB_ROUTES.dataSets,
+        name: 'My datasets',
+        icon: 'book'
+    },
+    {
+        path: SUB_ROUTES.pullRequests,
+        name: 'Pull requests',
+        icon: 'git-branch'
+    }
+];

@@ -1,106 +1,125 @@
-import React, { SFC } from 'react';
-import { ROUTE_PATHS, SUB_ROUTES } from '../../constants/routeNaming';
-import styled, { css } from 'styled-components';
-import { Link } from '../layout/StyledCopy';
-import { lighten } from 'polished';
+import React, { PureComponent } from 'react';
+import styled from '../../styled-components';
 
-const menuList = [
-    {
-        path: '',
-        name: 'Account'
-    },
-    {
-        path: SUB_ROUTES.favorites,
-        name: 'Favorites'
-    },
-    {
-        path: SUB_ROUTES.dataSets,
-        name: 'My datasets'
-    },
-    {
-        path: SUB_ROUTES.pullRequests,
-        name: 'Pull requests'
-    }
-];
+import { UserReducer } from '../../typings/store';
+import { MenuItemProp } from '../../typings';
+
+import { LOGIN_URL } from '../../constants/api';
+
+import { Subtitle } from '../layout/StyledCopy';
+import AvatarButton from './AvatarButton';
+import Tooltip, { ALIGN } from '../Tooltip';
+
+import { MENU_ITEMS } from '../../constants/global';
+import AccountMenuItem from './AccountMenuItem';
+import Avatar, { SIZE } from './Avatar';
 
 interface Props {
+    user: UserReducer;
     onLogOut: () => void;
-    isFooter?: boolean;
 }
 
-const AccountMenu: SFC<Props> = ({ onLogOut, isFooter }) => {
+interface State {
+    isOpen: boolean;
+}
 
-    const MenuList = styled.ul` 
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        background: ${props => isFooter ? 'transparent' : props.theme.colors.shade.medium};
-
-    ${
-        !isFooter
-        ?  `position: absolute;
-            border-radius: .25rem;
-            overflow: hidden;
-            width: 100%;
-            max-width: 20rem;
-            z-index: 2;
-            right: 1rem;`
-        : ''
-    }
-`;
-    const MenuListItem = styled.li``;
-
-    const MenuLinkStyle = css`
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
-    width: 100%;
-    color: ${p => isFooter ? '#fff' : 'inherit'};
-    padding: ${p => isFooter ? '0' : '.5rem 1rem .5rem 3rem'};
+const LoginButton = styled.a`
+    margin-top: 0;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid ${props => props.theme.colors.white};
+    border-radius: .15rem;
+    font: ${props => props.theme.fonts.body};
+    color: ${props => props.theme.colors.white};
+    background-color: ${props => props.theme.colors.black};
     
-    &:before {
-        transition: background .2s ease;
-        box-shadow: 0 0 .25rem rgba(0,0,0,.2);
-        content: ${isFooter ? 'none' : '\'\''};
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: #fff;
-        border-radius: 50%;
-        border: 2px solid #fff;
-        display: block;
-        left: 1rem;
-        width: 1rem;
-        height: 1rem;
-    }
     &:hover {
-        background-color: ${props => isFooter ? 'transparent' : lighten(.5, props.theme.colors.shade.dark)};
-        color: ${ isFooter ? '#fff' : 'inherit' };
-        text-decoration: ${ isFooter ? 'underline' : 'none' };
-
-        &:before {
-            background: ${props => isFooter ? 'transparent' : props.theme.colors.primary.medium}
-        }
+        color: ${props => props.theme.colors.black};
+        background-color: ${props => props.theme.colors.shade.light};
     }
 `;
 
-    const MenuListItemLink = styled(Link)`${MenuLinkStyle}`;
-    const MenuListItemSpan = styled.span`${MenuLinkStyle}`;
+const AccountContainer = styled.div`
+    position: absolute;
+    top: 0;
+    right: 2rem;
+    height: 1.5rem;
+    bottom: 0;
+    margin: auto;
+`;
 
-    const renderListItem = ({path, name}) => (
-        <MenuListItem key={name}>
-            <MenuListItemLink to={ROUTE_PATHS.account + path}>{name}</MenuListItemLink>
-        </MenuListItem>
-    );
+const MenuHeader = styled.div`
+    position: relative;
+    padding: 1rem;
+`;
 
-    return (
-        <MenuList>
-            {menuList.map(renderListItem)}
-            <MenuListItem>
-                <MenuListItemSpan onClick={onLogOut}>Log out</MenuListItemSpan>
-            </MenuListItem>
-        </MenuList>
-    );
-};
+const AvatarContainer = styled.figure`
+    position: absolute;
+    top: 0;
+    right: 0;
+`;
+
+const MenuList = styled.ul`
+`;
+
+class AccountMenu extends PureComponent<Props, State> {
+
+    constructor() {
+        super();
+
+        this.state = {
+            isOpen: false
+        };
+
+        this.onAvatarClickHandler = this.onAvatarClickHandler.bind(this);
+    }
+    
+    renderLoginButton () {
+        return <LoginButton href={LOGIN_URL}>Login</LoginButton>;
+    }
+
+    renderAvatarButton () {
+        const { user } = this.props;
+        return <AvatarButton user={user} onClick={this.onAvatarClickHandler}/>;
+    }
+
+    renderMenu () {
+        const { user, onLogOut } = this.props;
+        return (
+            <Tooltip align={ALIGN.right} alignOffset={'-0.5rem'} interactable={true}>
+                <MenuHeader>
+                    <Subtitle>{user.name}</Subtitle>
+                    <AvatarContainer>
+                        <Avatar size={SIZE.large} src={user.avatar} />
+                    </AvatarContainer>
+                </MenuHeader>
+                <MenuList>
+                    {
+                        MENU_ITEMS.map((item: MenuItemProp, idx: number) => (
+                            <AccountMenuItem key={idx} to={item.path} icon={item.icon}>{item.name}</AccountMenuItem>
+                        ))
+                    }
+                    <AccountMenuItem icon={'logout'} onClick={onLogOut}>Log out</AccountMenuItem>
+                </MenuList>
+            </Tooltip>
+        );
+    }
+
+    render() {
+        const { loggedIn } = this.props.user;
+        const { isOpen } = this.state;
+        return (
+            <AccountContainer>
+                {loggedIn ? this.renderAvatarButton() : this.renderLoginButton()}
+                {loggedIn && isOpen && this.renderMenu()}
+            </AccountContainer>
+        );
+    }
+    
+    private onAvatarClickHandler (e: any) {
+        const isOpen = !this.state.isOpen;
+        this.setState({isOpen});
+    }
+
+}
 
 export default AccountMenu;
