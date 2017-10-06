@@ -65,6 +65,6 @@ class About extends PureComponent<Props, State> {
             </Grid>
         );
     }
-};
+}
 
 export default About;
