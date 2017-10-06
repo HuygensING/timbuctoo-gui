@@ -17,6 +17,7 @@ import About from '../About';
 import { AboutMe, DataSetMetadata } from '../../typings/timbuctoo/schema';
 
 import Translations from '../../services/Translations';
+import { getValue } from '../../services/getValue';
 
 interface ApolloProps {
     data: {
@@ -87,8 +88,9 @@ class Home extends Component<FullProps, State> {
 
                 <ListContent smOffset={3} sm={20} smPaddingY={1} title={Translations.translate('home.recently_modified.title')} data={promotedDataSets}/>
                 <ListContent smOffset={2} sm={20} smPaddingY={1} title={Translations.translate('home.most_popular.title')} data={promotedDataSets}/>
+
                 <Col sm={48}>
-                    {aboutMe && <About title={aboutMe ? aboutMe.name : null} body={aboutMe ? aboutMe.personalInfo : null} />}
+                    {aboutMe && <About title={aboutMe ? getValue(aboutMe.name) : null} body={aboutMe ? getValue(aboutMe.personalInfo) : null} />}
                 </Col>
             </Grid>
         );
