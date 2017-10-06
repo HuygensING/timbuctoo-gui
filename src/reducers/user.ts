@@ -10,20 +10,23 @@ import Client from '../services/ApolloClient';
 
 const loggedOutState = {
     hsid: '',
-    loggedIn: false
+    loggedIn: false,
+    loading: false
 };
 
 const hsid = retrieveId();
 const initialState: UserReducer = {
     hsid,
     language: 'en',
-    loggedIn: false
+    loggedIn: false,
+    loading: true
 };
 
 // actions
 const LOG_IN = 'LOG_IN';
 const LOG_OUT = 'LOG_OUT';
 const SWITCH_LANGUAGE = 'SWITCH_LANGUAGE';
+const SET_LOADING = 'SET_LOADING';
 
 // reducer
 export default (state: UserReducer = initialState, action: Action) => {
@@ -45,6 +48,12 @@ export default (state: UserReducer = initialState, action: Action) => {
             return {
                 ...state,
                 language: action.payload.language
+            };
+
+        case SET_LOADING:
+            return {
+                ...state,
+                loading: action.payload.isLoading
             };
             
         default:
@@ -73,6 +82,15 @@ export const SwitchLanguage = (language) => {
         type: SWITCH_LANGUAGE,
         payload: {
             language
+        }
+    };
+};
+
+export const SetLoading = (isLoading: boolean) => {
+    return {
+        type: SET_LOADING,
+        payload: {
+            isLoading
         }
     };
 };

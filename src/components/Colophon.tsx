@@ -6,8 +6,8 @@ import { calcColWidth } from './layout/Grid';
 import { srOnly, Subtitle, Title } from './layout/StyledCopy';
 
 interface Props {
-    owner: ContactInfo;
-    contact: ContactInfo;
+    owner: ContactInfo | null;
+    contact: ContactInfo | null;
 }
 
 const StyledSection = styled.section`
@@ -20,7 +20,11 @@ const HiddenDt = styled.dt`
 
 const Colophon: SFC<Props> = ({owner, contact}) => {
 
-    const renderItem = (title: string, item: ContactInfo) => {
+    const renderItem = (title: string, item: ContactInfo | null) => {
+        if (!item) {
+            return null;
+        }
+
         const name = getValue(item.name);
         const email = getValue(item.email);
 

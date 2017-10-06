@@ -5,14 +5,15 @@ import Home from './routes/Home';
 import NotFound from './routes/NotFound';
 import { ROUTE_PATHS } from '../constants/routeNaming';
 import { RouteInfo, RouteObject, routes } from '../constants/routeStructure';
+import ApolloRoute from './ApolloRoute';
 import PrivateRoute from './PrivateRoute';
 
-const renderRoutes = () => {
+const renderRoutes = (): JSX.Element[] => {
     let routeList: JSX.Element[] = [];
 
     routes.forEach(
         (routeItem: RouteObject) => {
-            const newRoutes = setRoutes(routeItem.key, routeItem.routes, routeItem.isPrivate);
+            const newRoutes = setRoutes(routeItem);
             routeList = routeList.concat(newRoutes);
         }
     );
@@ -20,32 +21,32 @@ const renderRoutes = () => {
     return routeList;
 };
 
-const setRoutes = (path: string, routeInfo: RouteInfo[], isPrivate?: boolean) => {
+const setRoutes = (routeItem: RouteObject): JSX.Element[] => {
     let routeList: JSX.Element[] = [];
 
-    routeInfo.forEach(
+    routeItem.routes.forEach(
         (route: RouteInfo, idx: number) => {
             const subRoute: string = route.path ? route.path : '';
+            const routePath: string = routeItem.key + subRoute;
+            const key: string = `route_${routePath}_${idx}`;
 
-            const routePath: string = path + subRoute;
-            const index: string = String(idx);
+            if (route.queryMetadata) {
+                const ApolloRouteComponent = ApolloRoute(route.component);
+                routeList.push(
+                    <Route key={key} path={routePath}>
+                        <ApolloRouteComponent route={route} routePath={routePath} isPrivate={routeItem.isPrivate} />
+                    </Route>
+                );
+            } else {
+                const newRoute = routeItem.isPrivate
+                    ? <PrivateRoute key={key} path={routePath} component={route.component} />
+                    : <Route key={key} path={routePath} component={route.component}/>;
 
-            // if (route.key) {
-            //     routeList.push(
-            //         <Route key={'redirect' + path + index} path={routePath} exact={true} >
-            //             <Redirect to={ROUTE_PATHS.root} />
-            //         </Route>
-            //     );
-            // }
-
-            const newRoute = isPrivate
-                ? <PrivateRoute key={'route' + path + index} path={routePath} component={route.component} />
-                : <Route key={'route' + path + index} path={routePath} component={route.component}/>;
-
-            routeList.push(newRoute);
+                routeList.push(newRoute);
+            }
         }
     );
-    
+
     return routeList;
 };
 
@@ -57,7 +58,7 @@ const Router = () => {
         <Switch>
             <Route path={ROUTE_PATHS.root} exact={true} component={Home}/>
             {renderedRoutes}
-            <Route component={NotFound} />
+            <Route component={NotFound}/>
         </Switch>
     );
 };

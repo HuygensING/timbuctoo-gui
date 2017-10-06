@@ -6,7 +6,7 @@ import CollectionTag from './CollectionTag';
 interface Props {
     colKeys: CollectionMetadata[];
     dataSetId: string;
-    currentCollectionListId?: string;
+    currentCollectionListId?: string | null;
 }
 
 interface State {
@@ -30,6 +30,11 @@ class CollectionTags extends PureComponent<Props, State> {
 
     renderButton (collection: CollectionMetadata, idx: number) {
         const { currentCollectionListId, dataSetId } = this.props;
+
+        if (!currentCollectionListId) {
+            return null;
+        }
+
         return (
             <CollectionTag
                 key={idx}

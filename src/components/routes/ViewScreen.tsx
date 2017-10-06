@@ -4,27 +4,24 @@ import { RouteComponentProps } from 'react-router';
 import { Grid } from '../layout/Grid';
 import FullHelmet from '../FullHelmet';
 import { Title } from '../layout/StyledCopy';
-// import Loading from '../Loading';
 
 import styled from '../../styled-components';
-import connectQuery from '../../services/ConnectQuery';
-
-import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
 
 import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
 import { COMPONENTS } from '../../constants/global';
-import { CollectionMetadata } from '../../typings/timbuctoo/schema';
+import { DataSetMetadata } from '../../typings/timbuctoo/schema';
 import Loading from '../Loading';
 import { createQueryStringFromFormFields } from '../../services/CreateQueryFromValues';
 
-interface ApolloProps {
-    data: {
-        dataSetMetadata: any;
+interface Props {
+    metadata: {
+        dataSetMetadata: DataSetMetadata;
     };
+    loading: boolean;
 }
 
-type FullProps = ApolloProps & RouteComponentProps<any> & FormWrapperProps;
+type FullProps = Props & RouteComponentProps<any> & FormWrapperProps;
 
 interface State {
 }
@@ -87,30 +84,19 @@ const fakeItems: any[] = [
 ];
 
 class ViewScreen extends PureComponent<FullProps, State> {
-    collectionsAvailable: boolean;
-    collection: CollectionMetadata | null;
 
     constructor (props: FullProps) {
         super(props);
 
-        this.collectionsAvailable = false;
-        this.collection = null;
-
         this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    componentWillReceiveProps (newProps: FullProps) {
-        // const knowsMetadata = this.props.data && this.props.data.dataSetMetadata || newProps.data && newProps.data.dataSetMetadata;
-        // const metadataDoesNotMatch = this.props.data.dataSetMetadata !== newProps.data.dataSetMetadata;
-
-        this.onNewDataLoaded(newProps);
     }
 
     render () {
         // TODO: add when Components are available
-        console.log( this.collection );
-        if (!this.collection) { return <Loading />; }
-        
+        if (this.props.loading) { return <Loading />; }
+
+        // const { collection } = this.props.metadata.dataSetMetadata;
+
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
                 <Section>
@@ -129,15 +115,6 @@ class ViewScreen extends PureComponent<FullProps, State> {
         const query = createQueryStringFromFormFields(formValues);
         console.log('query', query);
     }
-
-    private onNewDataLoaded (props: FullProps) {
-        if (props.data && props.data.dataSetMetadata && props.data.dataSetMetadata.collection) {
-            this.collectionsAvailable = true;
-            this.collection = props.data.dataSetMetadata.collection;
-        } else {
-            this.collectionsAvailable = false;
-        }
-    }
 }
 
-export default connectQuery(QUERY_ENTRY_PROPERTIES)(ViewScreen);
+export default ViewScreen;

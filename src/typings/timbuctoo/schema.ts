@@ -131,25 +131,25 @@ export interface ComponentList {
 
 export interface Component {
   type: ComponentType;
-  value: ComponentValue | null;
-  key: ComponentValue | null;
-  title: ComponentValue | null;
-  url: ComponentValue | null;
-  alt: ComponentValue | null;
-  tree: string | null;
-  values: Array<Component> | null;
+  value?: ComponentValue | null;
+  key?: ComponentValue | null;
+  title?: ComponentValue | null;
+  url?: ComponentValue | null;
+  alt?: ComponentValue | null;
+  tree?: string | null;
+  values?: Array<Component> | null;
 }
 
 export type ComponentType = "TITLE" | "VALUE" | "IMAGE" | "LINK" | "DIVIDER" | "KEYVALUE" | "TREE";
 
 export interface ComponentValue {
-  field: string | null;
-  fields: Array<ComponentValueField> | null;
+  field?: string | null;
+  fields?: Array<ComponentValueField> | null;
 }
 
 export interface ComponentValueField {
     value: string;
-    reference: string;
+    reference?: string;
     isList?: boolean | null;
 }
 
