@@ -31,17 +31,13 @@ class CollectionTags extends PureComponent<Props, State> {
     renderButton (collection: CollectionMetadata, idx: number) {
         const { currentCollectionListId, dataSetId } = this.props;
 
-        if (!currentCollectionListId) {
-            return null;
-        }
-
         return (
             <CollectionTag
                 key={idx}
                 index={idx}
                 toggleOpen={this.toggleOpen}
                 isOpen={this.state.isOpen === idx}
-                currentCollectionListId={currentCollectionListId}
+                currentCollectionListId={currentCollectionListId ? currentCollectionListId : null}
                 dataSetId={dataSetId}
                 collection={collection}
             />

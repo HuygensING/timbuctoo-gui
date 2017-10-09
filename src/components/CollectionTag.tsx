@@ -17,7 +17,7 @@ interface Props {
     isOpen: boolean;
     index: number;
     dataSetId: string;
-    currentCollectionListId: string | undefined;
+    currentCollectionListId: string | null;
     collection: CollectionMetadata;
     toggleOpen: Function;
 }

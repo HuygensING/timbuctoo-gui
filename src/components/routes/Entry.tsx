@@ -10,6 +10,9 @@ import FullHelmet from '../FullHelmet';
 import { Col, Grid } from '../layout/Grid';
 import ComponentLoader from '../../services/ComponentLoader';
 import { getCollectionValues } from '../../services/GetDataSetValues';
+import MetadataResolver from '../MetadataResolver';
+import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
+import QUERY_ENTRY_VALUES from '../../graphql/queries/EntryValues';
 
 interface Props {
     metadata: {
@@ -214,4 +217,4 @@ class Entry extends PureComponent<FullProps, State> {
     }
 }
 
-export default Entry;
+export default MetadataResolver(QUERY_ENTRY_PROPERTIES, QUERY_ENTRY_VALUES)(Entry);

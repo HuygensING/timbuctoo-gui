@@ -6,16 +6,9 @@ import DummyRoute from '../components/routes/DummyRoute';
 import Entry from '../components/routes/Entry';
 import DataSet from '../components/routes/DataSet';
 import ViewScreen from '../components/routes/ViewScreen';
-import QUERY_ENTRY_PROPERTIES from '../graphql/queries/EntryProperties';
-import QUERY_ENTRY_VALUES from '../graphql/queries/EntryValues';
-import QUERY_COLLECTION_PROPERTIES from '../graphql/queries/CollectionProperties';
-import QUERY_COLLECTION_VALUES from '../graphql/queries/CollectionValues';
-import QUERY_DATASET from '../graphql/queries/DataSet';
 
 export interface RouteInfo {
     path?: string;
-    queryMetadata?: Function;
-    queryData?: Function;
     component: ComponentType<RouteComponentProps<any> | {}>;
 }
 
@@ -43,19 +36,14 @@ export const routes: RouteObject[] = [
         routes: [
             {
                 path: `/:${ROUTE_KEYS.dataSet}/:${ROUTE_KEYS.collection}/:${ROUTE_KEYS.entry}`,
-                queryMetadata: QUERY_ENTRY_PROPERTIES,
-                queryData: QUERY_ENTRY_VALUES,
                 component: Entry
             },
             {
                 path: `/:${ROUTE_KEYS.dataSet}/:${ROUTE_KEYS.collection}`,
-                queryMetadata: QUERY_COLLECTION_PROPERTIES,
-                queryData: QUERY_COLLECTION_VALUES,
                 component: Search
             },
             {
                 path: `/:${ROUTE_KEYS.dataSet}`,
-                queryMetadata: QUERY_DATASET,
                 component: DataSet
             }
         ]

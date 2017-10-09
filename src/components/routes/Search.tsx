@@ -12,6 +12,9 @@ import Filters from '../Filters';
 import SearchResults from '../search/SearchResults';
 import { getValuesFromObject } from '../../services/getValue';
 import { getCollectionValues } from '../../services/GetDataSetValues';
+import MetadataResolver from '../MetadataResolver';
+import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
+import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
 
 interface Props {
     metadata: {
@@ -100,4 +103,4 @@ class Search extends PureComponent<FullProps> {
     }
 }
 
-export default Search;
+export default MetadataResolver(QUERY_COLLECTION_PROPERTIES, QUERY_COLLECTION_VALUES)(Search);

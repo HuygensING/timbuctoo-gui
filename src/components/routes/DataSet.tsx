@@ -17,6 +17,8 @@ import CollectionTags from '../CollectionTags';
 import About from '../About';
 import { Title } from '../layout/StyledCopy';
 import EditCollectionBar from '../dataSet/EditCollectionBar';
+import MetadataResolver from '../MetadataResolver';
+import QUERY_DATASET from '../../graphql/queries/DataSet';
 
 interface Props {
     metadata: {
@@ -132,4 +134,6 @@ const mapStateToProps = (state) => ({
     loggedIn: state.user.loggedIn
 });
 
-export default connect(mapStateToProps)(DataSet);
+export default MetadataResolver(QUERY_DATASET)(
+    connect(mapStateToProps)(DataSet)
+);

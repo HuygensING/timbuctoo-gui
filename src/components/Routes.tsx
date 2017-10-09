@@ -5,7 +5,6 @@ import Home from './routes/Home';
 import NotFound from './routes/NotFound';
 import { ROUTE_PATHS } from '../constants/routeNaming';
 import { RouteInfo, RouteObject, routes } from '../constants/routeStructure';
-import ApolloRoute from './ApolloRoute';
 import PrivateRoute from './PrivateRoute';
 
 const renderRoutes = (): JSX.Element[] => {
@@ -30,20 +29,11 @@ const setRoutes = (routeItem: RouteObject): JSX.Element[] => {
             const routePath: string = routeItem.key + subRoute;
             const key: string = `route_${routePath}_${idx}`;
 
-            if (route.queryMetadata) {
-                const ApolloRouteComponent = ApolloRoute(route.component);
-                routeList.push(
-                    <Route key={key} path={routePath}>
-                        <ApolloRouteComponent route={route} routePath={routePath} isPrivate={routeItem.isPrivate} />
-                    </Route>
-                );
-            } else {
-                const newRoute = routeItem.isPrivate
-                    ? <PrivateRoute key={key} path={routePath} component={route.component} />
-                    : <Route key={key} path={routePath} component={route.component}/>;
+            const newRoute = routeItem.isPrivate
+                ? <PrivateRoute key={key} path={routePath} component={route.component} />
+                : <Route key={key} path={routePath} component={route.component}/>;
 
-                routeList.push(newRoute);
-            }
+            routeList.push(newRoute);
         }
     );
 

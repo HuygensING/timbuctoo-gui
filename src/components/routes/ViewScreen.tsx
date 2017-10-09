@@ -13,6 +13,8 @@ import { COMPONENTS } from '../../constants/global';
 import { DataSetMetadata } from '../../typings/timbuctoo/schema';
 import Loading from '../Loading';
 import { createQueryStringFromFormFields } from '../../services/CreateQueryFromValues';
+import MetadataResolver from '../MetadataResolver';
+import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 
 interface Props {
     metadata: {
@@ -114,7 +116,8 @@ class ViewScreen extends PureComponent<FullProps, State> {
     private onSubmit (formValues: any[]) {
         const query = createQueryStringFromFormFields(formValues);
         console.log('query', query);
+        console.log(formValues);
     }
 }
 
-export default ViewScreen;
+export default MetadataResolver(QUERY_COLLECTION_PROPERTIES)(ViewScreen);
