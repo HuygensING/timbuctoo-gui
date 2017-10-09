@@ -3,27 +3,27 @@
 export interface Query {
   promotedDataSets: Array<DataSetMetadata>;
   allDataSets: Array<DataSetMetadata>;
-  dataSetMetadata: DataSetMetadata | null;
-  aboutMe: AboutMe | null;
+  dataSetMetadata: DataSetMetadata;
+  aboutMe: AboutMe;
   availableExportMimetypes: Array<MimeType>;
 }
 
 export interface DataSetMetadataQueryArgs {
-  dataSetId: string | null;
+  dataSetId?: string;
 }
 
 export interface DataSetMetadata {
   uri: string;
   dataSetId: string;
-  title: Value | null;
-  description: Value | null;
-  imageUrl: Value | null;
-  owner: ContactInfo | null;
-  contact: ContactInfo | null;
-  provenanceInfo: ProvenanceInfo | null;
-  license: License | null;
-  collection: CollectionMetadata | null;
-  collectionList: CollectionMetadataList | null;
+  title?: Value;
+  description?: Value;
+  imageUrl?: Value;
+  owner?: ContactInfo;
+  contact?: ContactInfo;
+  provenanceInfo?: ProvenanceInfo;
+  license?: License;
+  collection?: CollectionMetadata;
+  collectionList?: CollectionMetadataList;
   archetypes: Archetypes;
   contributors: Array<RoleWithMembers>;
   roles: Array<DataSetPermission>;
@@ -34,8 +34,8 @@ export interface CollectionDataSetMetadataArgs {
 }
 
 export interface CollectionListDataSetMetadataArgs {
-  count: number | null;
-  cursor: string | null;
+  count?: number;
+  cursor?: string;
 }
 
 export interface Value {
@@ -44,13 +44,13 @@ export interface Value {
 }
 
 export interface ContactInfo {
-  name: Value | null;
-  email: Value | null;
+  name?: Value;
+  email?: Value;
 }
 
 export interface ProvenanceInfo {
-  title: Value | null;
-  body: Value | null;
+  title?: Value;
+  body?: Value;
 }
 
 export interface License {
@@ -63,45 +63,45 @@ export interface CollectionMetadata {
   collectionListId: string;
   properties: PropertyList;
   total: number;
-  title: Value | null;
-  archeType: Entity | null;
-  indexerConfig: IndexerConfig | null;
+  title?: Value;
+  archeType?: Entity;
+  indexerConfig?: IndexerConfig;
   summaryProperties: SummaryProperties;
   components: ComponentList;
 }
 
 export interface PropertiesCollectionMetadataArgs {
-  count: number | null;
-  cursor: string | null;
+  count?: number;
+  cursor?: string;
 }
 
 export interface ComponentsCollectionMetadataArgs {
-  count: number | null;
-  cursor: string | null;
+  count?: number;
+  cursor?: string;
 }
 
 export interface PropertyList {
-  prevCursor: string | null;
-  nextCursor: string | null;
+  prevCursor?: string;
+  nextCursor?: string;
   items: Array<Property>;
 }
 
 export interface Property {
-  name: string | null;
-  density: number | null;
-  isList: boolean | null;
-  referencedCollections: CollectionIdList | null;
-  isValueType: boolean | null;
+  name?: string;
+  density?: number;
+  isList?: boolean;
+  referencedCollections?: CollectionIdList;
+  isValueType?: boolean;
 }
 
 export interface ReferencedCollectionsPropertyArgs {
-  count: number | null;
-  cursor: string | null;
+  count?: number;
+  cursor?: string;
 }
 
 export interface CollectionIdList {
-  prevCursor: string | null;
-  nextCursor: string | null;
+  prevCursor?: string;
+  nextCursor?: string;
   items: Array<string>;
 }
 
@@ -110,71 +110,71 @@ export interface Entity {
 }
 
 export interface IndexerConfig {
-  path: Value | null;
-  type: Value | null;
-  fullTextSearch: Value | null;
-  next: IndexerConfig | null;
+  path?: Value;
+  typ?: Value;
+  fullTextSearch?: Value;
+  next?: IndexerConfig;
 }
 
 export interface SummaryProperties {
-  title: Value | null;
-  description: Value | null;
-  image: Value | null;
+  title?: Value;
+  description?: Value;
+  image?: Value;
 }
 
 export interface ComponentList {
-  prevCursor: string | null;
-  nextCursor: string | null;
-  query: string | null;
+  prevCursor?: string;
+  nextCursor?: string;
+  query?: string;
   items: Array<Component>;
 }
 
 export interface Component {
   type: ComponentType;
-  value?: ComponentValue | null;
-  key?: ComponentValue | null;
-  title?: ComponentValue | null;
-  url?: ComponentValue | null;
-  alt?: ComponentValue | null;
-  tree?: string | null;
-  values?: Array<Component> | null;
+  value?: ComponentValue;
+  key?: ComponentValue;
+  title?: ComponentValue;
+  url?: ComponentValue;
+  alt?: ComponentValue;
+  tree?: string;
+  values?: Array<Component>;
 }
 
 export type ComponentType = "TITLE" | "VALUE" | "IMAGE" | "LINK" | "DIVIDER" | "KEYVALUE" | "TREE";
 
 export interface ComponentValue {
-  field?: string | null;
-  fields?: Array<ComponentValueField> | null;
+  field?: string;
+  fields?: Array<ComponentValueField>;
 }
 
 export interface ComponentValueField {
     value: string;
     reference?: string;
-    isList?: boolean | null;
+    isList?: boolean;
 }
 
 export interface CollectionMetadataList {
-  prevCursor: string | null;
-  nextCursor: string | null;
+  prevCursor?: string;
+  nextCursor?: string;
   items: Array<CollectionMetadata>;
 }
 
 export interface Archetypes {
-  persons: PersonArchetypeList | null;
+  persons?: PersonArchetypeList;
 }
 
 export interface PersonArchetypeList {
-  prevCursor: string | null;
-  nextCursor: string | null;
+  prevCursor?: string;
+  nextCursor?: string;
   items: Array<PersonArchetype>;
 }
 
 export interface PersonArchetype {
-  names: Value | null;
+  names?: Value;
 }
 
 export interface RoleWithMembers {
-  name: string | null;
+  name?: string;
 }
 
 export type DataSetPermission = "SEARCH_AND_VIEW" | "DOWNLOAD_DUMP" | "FORK" | "PUBLISH" | "EDIT_ENTRIES" | "EDIT_DATASET" | "EDIT_ROLES";
@@ -193,22 +193,22 @@ export interface MimeType {
 
 export interface ComponentInput {
   type: ComponentType;
-  value: ComponentValueInput | null;
-  key: ComponentValueInput | null;
-  title: ComponentValueInput | null;
-  url: ComponentValueInput | null;
-  alt: ComponentValueInput | null;
-  values: Array<ComponentInput> | null;
+  value?: ComponentValueInput;
+  key?: ComponentValueInput;
+  title?: ComponentValueInput;
+  url?: ComponentValueInput;
+  alt?: ComponentValueInput;
+  values?: Array<ComponentInput>;
 }
 
 export interface ComponentValueInput {
-  field: string | null;
-  fields: Array<ComponentValueFieldInput> | null;
+  field?: string;
+  fields?: Array<ComponentValueFieldInput>;
 }
 
 export interface ComponentValueFieldInput {
-  value: string | null;
-  referenceType: string | null;
+  value?: string;
+  referenceType?: string;
 }
 
 export interface Facet {
@@ -232,24 +232,24 @@ export interface OptionInput {
 }
 
 export interface FacetsInput {
-  facets: Array<FacetInput> | null;
+  facets?: Array<FacetInput>;
 }
 
 export interface RootMutation {
-  setViewComponents: boolean | null;
-  setFacets: boolean | null;
+  setViewComponents?: boolean;
+  setFacets?: boolean;
 }
 
 export interface SetViewComponentsRootMutationArgs {
-  input: ViewComponentsInput | null;
+  input?: ViewComponentsInput;
 }
 
 export interface SetFacetsRootMutationArgs {
-  input: FacetsInput | null;
+  input?: FacetsInput;
 }
 
 export interface ViewComponentsInput {
-  components: Array<ComponentInput> | null;
+  components?: Array<ComponentInput>;
   dataSetId: string;
   collectionId: string;
   query: string;

@@ -1,7 +1,7 @@
 // filter out tim_names and set tim_names.items[0].value instead
 
 import TimbuctooNamesParser from './TimbuctooNamesParser';
-import { PropertyList } from '../typings/timbuctoo/schema';
+import { PropertyList } from '../typings/schema';
 
 interface KeyValue {
     [name: string]: string | null;

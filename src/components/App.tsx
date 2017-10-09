@@ -12,7 +12,7 @@ import Header from './header/Header';
 import Footer from './footer/Footer';
 import PoweredBy from './PoweredBy';
 import { Grid } from './layout/Grid';
-import { AboutMe } from '../typings/timbuctoo/schema';
+import { AboutMe } from '../typings/schema';
 import { UserReducer } from '../typings/store';
 import { LogInUser, LogOutUser } from '../reducers/user';
 import Loading from './Loading';

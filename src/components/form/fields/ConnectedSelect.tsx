@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { DataSetMetadata } from '../../../typings/timbuctoo/schema';
+import { DataSetMetadata } from '../../../typings/schema';
 
 import QUERY_COLLECTION_EDIT_VIEW from '../../../graphql/queries/CollectionEditView';
 
@@ -28,9 +28,9 @@ interface State {
 
 interface OptionSettingProps {
     [name: string]: {
-        reference: string | null;
-        isList: boolean | null;
-        isValue: boolean | null;
+        reference?: string;
+        isList?: boolean;
+        isValue?: boolean;
     };
 }
 

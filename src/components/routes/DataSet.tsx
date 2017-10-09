@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import { CollectionMetadata, DataSetMetadata } from '../../typings/timbuctoo/schema';
+import { CollectionMetadata, DataSetMetadata } from '../../typings/schema';
 import Loading from '../Loading';
 import FullHelmet from '../FullHelmet';
 import Hero from '../hero/Hero';
@@ -35,6 +35,15 @@ interface StateProps {
 type FullProps = Props & StateProps & RouteComponentProps<any>;
 
 class DataSet extends PureComponent<FullProps> {
+
+    static renderCollectionBar (collection: CollectionMetadata, idx: number, dataSetId: string) {
+        return (
+            <li key={idx}>
+                <EditCollectionBar key={idx} collection={collection} dataSetId={dataSetId}/>
+            </li>
+        );
+    }
+
     render () {
         if (this.props.loading) {
             return <Loading />;
@@ -112,20 +121,12 @@ class DataSet extends PureComponent<FullProps> {
                         {collectionItems
                             .filter(isKnown)
                             .map((collection, idx) =>
-                                this.renderCollectionBar(collection , idx, dataSetId)
+                                DataSet.renderCollectionBar(collection , idx, dataSetId)
                             )
                         }
                     </ul>
                 </section>
             </Col>
-        );
-    }
-
-    private renderCollectionBar (collection: CollectionMetadata, idx: number, dataSetId: string) {
-        return (
-            <li key={idx}>
-                <EditCollectionBar key={idx} collection={collection} dataSetId={dataSetId}/>
-            </li>
         );
     }
 }

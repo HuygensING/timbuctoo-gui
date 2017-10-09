@@ -5,7 +5,7 @@ import MultiSelectForm from './form/MultiselectForm';
 import styled from '../styled-components';
 import { Title } from './layout/StyledCopy';
 import { Dummy } from './Dummy';
-import { Facet } from '../typings/timbuctoo/schema';
+import { Facet } from '../typings/schema';
 
 interface Props {
     facets: Facet[] | null;

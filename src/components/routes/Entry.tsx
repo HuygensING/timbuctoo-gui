@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { RouteComponentProps } from 'react-router';
 
-import { Component, ComponentType, DataSetMetadata } from '../../typings/timbuctoo/schema';
+import { Component, ComponentType, DataSetMetadata } from '../../typings/schema';
 
 import { COMPONENTS } from '../../constants/global';
 

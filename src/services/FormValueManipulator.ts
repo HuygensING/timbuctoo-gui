@@ -1,6 +1,6 @@
 import { ComponentFormType } from '../typings/index';
 import EMPTY_VIEW_COMPONENTS from '../constants/emptyViewComponents';
-import { Component } from '../typings/timbuctoo/schema';
+import { Component } from '../typings/schema';
 
 const addExtraInfo = (items: any[]): ComponentFormType[] => {
     const newItems: any = [];

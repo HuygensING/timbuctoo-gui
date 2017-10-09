@@ -8,7 +8,7 @@ import { ComponentFormType } from '../typings/index';
 interface Props {
     item: ComponentFormType;
     idx: number;
-    openedIndex: number | null;
+    openedIndex?: number;
     resolveChange: Function;
     onDeleteFn?: Function;
     openCloseFn: Function;

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { CollectionMetadata } from '../typings/timbuctoo/schema';
+import { CollectionMetadata } from '../typings/schema';
 
 import CollectionTag from './CollectionTag';
 
@@ -37,7 +37,7 @@ class CollectionTags extends PureComponent<Props, State> {
                 index={idx}
                 toggleOpen={this.toggleOpen}
                 isOpen={this.state.isOpen === idx}
-                currentCollectionListId={currentCollectionListId ? currentCollectionListId : null}
+                currentCollectionListId={currentCollectionListId}
                 dataSetId={dataSetId}
                 collection={collection}
             />

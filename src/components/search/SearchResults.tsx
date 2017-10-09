@@ -3,7 +3,7 @@ import Translations from '../../services/Translations';
 
 import GridSection from '../layout/GridSection';
 import SearchResultEntry from './SearchResultEntry';
-import { SummaryProperties } from '../../typings/timbuctoo/schema';
+import { SummaryProperties } from '../../typings/schema';
 import { getValue } from '../../services/getValue';
 
 interface Props {

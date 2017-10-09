@@ -40,10 +40,10 @@ const ButtonContainer = styled.div`
 
 interface HeroProps {
     title: string | null;
-    content?: string | null;
-    searchPath?: string | null;
+    content: string | null;
+    searchPath: string | null;
     buttonText?: string;
-    imgUrl?: string | null;
+    imgUrl: string | null;
 }
 
 const defaultImgUrl = '/assets/_tmp/header--library.jpg';

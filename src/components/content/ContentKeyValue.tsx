@@ -5,7 +5,7 @@ import { COMPONENTS } from '../../constants/global';
 import ComponentLoader from '../../services/ComponentLoader';
 import { BREAKPOINT } from '../layout/Grid';
 import { Content } from '../layout/StyledCopy';
-import { Component } from '../../typings/timbuctoo/schema';
+import { Component } from '../../typings/schema';
 
 interface Props {
     label: string;

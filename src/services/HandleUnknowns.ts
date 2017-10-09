@@ -1,4 +1,4 @@
-import { CollectionMetadata } from '../typings/timbuctoo/schema';
+import { CollectionMetadata } from '../typings/schema';
 import { UNKNOWN_VOCABULARY } from '../constants/global';
 
 const isKnown = (col) => col.collectionId.indexOf(UNKNOWN_VOCABULARY) === -1;

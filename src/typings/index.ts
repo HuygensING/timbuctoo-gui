@@ -1,5 +1,5 @@
 import { Permissions } from './permissions';
-import { Component } from './timbuctoo/schema';
+import { Component } from './schema';
 
 export interface KeyValueObject {
     [name: string]: string;

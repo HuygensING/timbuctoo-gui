@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 
 import { RouteComponentProps } from 'react-router';
-import { CollectionMetadata, DataSetMetadata } from '../../typings/timbuctoo/schema';
+import { CollectionMetadata, DataSetMetadata } from '../../typings/schema';
 import Loading from '../Loading';
 import FullHelmet from '../FullHelmet';
 import { Col, FullSection } from '../layout/Grid';

@@ -10,7 +10,7 @@ import styled from '../../styled-components';
 import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
 import { COMPONENTS } from '../../constants/global';
-import { DataSetMetadata } from '../../typings/timbuctoo/schema';
+import { DataSetMetadata } from '../../typings/schema';
 import Loading from '../Loading';
 import { createQueryStringFromFormFields } from '../../services/CreateQueryFromValues';
 import MetadataResolver from '../MetadataResolver';

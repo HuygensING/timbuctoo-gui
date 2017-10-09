@@ -14,7 +14,7 @@ import GridSection from '../layout/GridSection';
 import FeaturedContentBlock from '../featured/FeaturedContentBlock';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import About from '../About';
-import { AboutMe, DataSetMetadata } from '../../typings/timbuctoo/schema';
+import { AboutMe, DataSetMetadata } from '../../typings/schema';
 
 import Translations from '../../services/Translations';
 import { getValue } from '../../services/getValue';
@@ -73,7 +73,7 @@ class Home extends Component<FullProps, State> {
     render () {
         const {promotedDataSets, aboutMe} = this.props.data;
 
-        const heroDataSetPath = this.selectFirstSet();
+        const heroDataSetPath: string| null = this.selectFirstSet();
         return (
             <Grid>
                 <FullHelmet pageName="home"/>
@@ -82,6 +82,7 @@ class Home extends Component<FullProps, State> {
                     content={Translations.translate('home.hero.content')}
                     searchPath={heroDataSetPath}
                     buttonText={Translations.translate('home.hero.button')}
+                    imgUrl={null}
                 />
 
                 {promotedDataSets && this.renderFeatured(promotedDataSets)}
