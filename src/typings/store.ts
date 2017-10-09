@@ -3,14 +3,13 @@ export interface State {
 }
 
 export interface UserReducer {
-    hsid: string;
-    language: string;
-    loggedIn: boolean;
-    loading: boolean;
+    hsid: Readonly<string>;
+    language: Readonly<string>;
+    loggedIn: Readonly<boolean>;
 }
 
 export interface SearchReducer {
-    dataset: string;
-    collection: string;
-    filter: string;
+    dataset: Readonly<string>;
+    collection: Readonly<string>;
+    filter: Readonly<string>;
 }
