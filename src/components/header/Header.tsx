@@ -7,8 +7,6 @@ import { LogOutUser } from '../../reducers/user';
 import { UserReducer } from '../../typings/store';
 import CreateElementWithTag from '../../services/CreateElementWithTag';
 import AccountMenu from './AccountMenu';
-// import LoginLink from './LoginLink';
-// import AccountToggle from './AccountToggle';
 
 const logo = require('../../assets/logo-timbuctoo.svg');
 

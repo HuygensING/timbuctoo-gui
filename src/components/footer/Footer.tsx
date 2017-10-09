@@ -73,7 +73,7 @@ const Footer: SFC<Props> = ({ isLoggedIn, onLogOut, switchLanguage }) => {
                     ))
                 }
             </MenuList>
-        )
+        );
     };
 
     return (

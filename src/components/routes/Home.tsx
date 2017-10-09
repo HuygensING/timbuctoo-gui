@@ -46,16 +46,16 @@ class Home extends Component<FullProps, State> {
         }
     };
 
-    shouldComponentUpdate( newProps: FullProps ) {
-        const _currProps = JSON.stringify(this.props.data);
-        const _newProps = JSON.stringify(newProps.data);
+    // shouldComponentUpdate( newProps: FullProps ) {
+    //     const _currProps = JSON.stringify(this.props.data);
+    //     const _newProps = JSON.stringify(newProps.data);
             
-        if (_currProps !== _newProps) {
-            return true;
-        }
+    //     if (_currProps !== _newProps) {
+    //         return true;
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
     renderFeatured (promoted: DataSetMetadata[]) {
         return (
