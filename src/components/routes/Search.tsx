@@ -103,4 +103,4 @@ class Search extends PureComponent<FullProps> {
     }
 }
 
-export default MetadataResolver(QUERY_COLLECTION_PROPERTIES, QUERY_COLLECTION_VALUES)(Search);
+export default MetadataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES, QUERY_COLLECTION_VALUES)(Search);

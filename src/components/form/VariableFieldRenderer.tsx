@@ -162,7 +162,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         return (
             <ConnectedSelect
                 key={childIdx}
-                name={'Select'}
+                name={'select'}
                 selected={{key: value, value: value}}
                 collectionId={reference}
                 onChange={({option, settings}) => this.onSelectChangeHandler(option, settings, valueItem.name, childIdx)}

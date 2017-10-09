@@ -14,23 +14,17 @@ import MetadataResolver from '../MetadataResolver';
 import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
 import QUERY_ENTRY_VALUES from '../../graphql/queries/EntryValues';
 
-interface Props {
+interface ApolloProps {
     metadata: {
         dataSetMetadata: DataSetMetadata;
     };
     data: {
-      dataSets: any
+        dataSets: any;
     };
     loading: boolean;
 }
 
-interface ApolloProps {
-    data: {
-        dataSetMetadata: DataSetMetadata;
-    };
-}
-
-type FullProps = Props & ApolloProps & RouteComponentProps<any>;
+type FullProps = ApolloProps & RouteComponentProps<any>;
 
 interface State {}
 
