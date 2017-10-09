@@ -7,19 +7,6 @@ import { ROUTE_PATHS } from '../constants/routeNaming';
 import { RouteInfo, RouteObject, routes } from '../constants/routeStructure';
 import PrivateRoute from './PrivateRoute';
 
-const renderRoutes = () => {
-    let routeList: JSX.Element[] = [];
-
-    routes.forEach(
-        (routeItem: RouteObject) => {
-            const newRoutes = setRoutes(routeItem.key, routeItem.routes, routeItem.isPrivate);
-            routeList = routeList.concat(newRoutes);
-        }
-    );
-
-    return routeList;
-};
-
 const setRoutes = (path: string, routeInfo: RouteInfo[], isPrivate?: boolean) => {
     let routeList: JSX.Element[] = [];
 
@@ -45,7 +32,20 @@ const setRoutes = (path: string, routeInfo: RouteInfo[], isPrivate?: boolean) =>
             routeList.push(newRoute);
         }
     );
-    
+
+    return routeList;
+};
+
+const renderRoutes = () => {
+    let routeList: JSX.Element[] = [];
+
+    routes.forEach(
+        (routeItem: RouteObject) => {
+            const newRoutes = setRoutes(routeItem.key, routeItem.routes, routeItem.isPrivate);
+            routeList = routeList.concat(newRoutes);
+        }
+    );
+
     return routeList;
 };
 

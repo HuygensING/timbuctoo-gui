@@ -141,4 +141,4 @@ export interface ImageProps {
     onError?: Function;
     pageLoadingItemLoading?: Function;
     pageLoadingItemLoaded?: Function;
-};
+}
