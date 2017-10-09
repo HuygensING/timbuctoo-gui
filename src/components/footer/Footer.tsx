@@ -25,12 +25,6 @@ const FooterContainer = styled(Grid)`
     background-color: ${(props) => props.theme.colors.black};
 `;
 
-const MenuList = styled.ul`
-`;
-
-const MenuListItem = styled.li`
-`;
-
 const MenuLink = styled(Link)`
     color: ${props => props.theme.colors.white};
 `;
@@ -64,15 +58,15 @@ const Footer: SFC<Props> = ({ isLoggedIn, onLogOut, switchLanguage }) => {
 
     const renderMenu = () => {
         return (
-            <MenuList>
+            <ul>
                 {
                     MENU_ITEMS.map((item: MenuItemProp, idx: number) => (
-                        <MenuListItem key={idx}>
+                        <li key={idx}>
                             <MenuLink to={item.path}>{item.name}</MenuLink>
-                        </MenuListItem>
+                        </li>
                     ))
                 }
-            </MenuList>
+            </ul>
         );
     };
 

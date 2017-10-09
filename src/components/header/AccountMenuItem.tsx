@@ -1,27 +1,14 @@
-import React, { SFC } from 'react';
+import React, { ComponentClass, SFC } from 'react';
 import styled from '../../styled-components';
 
 import { Link } from '../layout/StyledCopy';
-
-import User from '../icons/User';
-import Book from '../icons/Book';
-import GitBranch from '../icons/GitBranch';
-import Heart from '../icons/Heart';
-import Logout from '../icons/Logout';
+import { IconProps } from '../../typings';
 
 interface Props {
     to?: string;
-    icon: string;
+    icon: SFC<IconProps> | ComponentClass<IconProps>;
     onClick?: () => void;
 }
-
-const ICONS = {
-    user: 'user',
-    book: 'book',
-    git: 'git-branch',
-    heart: 'heart',
-    logout: 'logout'
-};
 
 const MenuItem = styled.li`
     width: 200px;
@@ -52,22 +39,12 @@ const IconWrapper = styled.figure`
 
 const IconColor = '#114235';
 
-const AccountMenuItem: SFC<Props> = ({ onClick, to = '/', icon, children }) => {
-    const loadIcon = (iconName: string) => {
-        switch (iconName) {
-            case ICONS.user:    return <User color={IconColor} />;
-            case ICONS.book:    return <Book color={IconColor} />;
-            case ICONS.git:     return <GitBranch color={IconColor} />;
-            case ICONS.heart:   return <Heart color={IconColor} />;
-            case ICONS.logout:  return <Logout color={IconColor} />;
-            default: return null;
-        }
-    };
+const AccountMenuItem: SFC<Props> = ({onClick, to = '/', icon: Icon, children}) => {
 
     const renderButton = () => (
         <Button onClick={onClick}>
             <IconWrapper>
-                {loadIcon(icon)}
+                <Icon color={IconColor}/>
             </IconWrapper>
             {children}
         </Button>
@@ -76,12 +53,12 @@ const AccountMenuItem: SFC<Props> = ({ onClick, to = '/', icon, children }) => {
     const renderLinkedButton = () => (
         <LinkedButton to={to}>
             <IconWrapper>
-                {loadIcon(icon)}
+                <Icon color={IconColor}/>
             </IconWrapper>
             {children}
         </LinkedButton>
     );
-    
+
     return (
         <MenuItem>
             {

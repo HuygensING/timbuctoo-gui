@@ -1,7 +1,11 @@
-import { SUB_ROUTES } from '../constants/routeNaming';
+import { SUB_ROUTES } from './routeNaming';
 import { ButtonType } from '../typings/layout';
 import { MenuItemProp } from '../typings';
 import { ComponentFieldType, ComponentTypes } from '../typings/viewComponents';
+import User from '../components/icons/User';
+import Heart from '../components/icons/Heart';
+import Book from '../components/icons/Book';
+import GitBranch from '../components/icons/GitBranch';
 
 export const HSID: string = 'hsid';
 
@@ -42,21 +46,21 @@ export const MENU_ITEMS: MenuItemProp[] = [
     {
         path: '',
         name: 'Account',
-        icon: 'user'
+        icon: User
     },
     {
         path: SUB_ROUTES.favorites,
         name: 'Favorites',
-        icon: 'heart'
+        icon: Heart
     },
     {
         path: SUB_ROUTES.dataSets,
         name: 'My datasets',
-        icon: 'book'
+        icon: Book
     },
     {
         path: SUB_ROUTES.pullRequests,
         name: 'Pull requests',
-        icon: 'git-branch'
+        icon: GitBranch
     }
 ];

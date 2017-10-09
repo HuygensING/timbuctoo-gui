@@ -1,5 +1,6 @@
 import { Permissions } from './permissions';
 import { Component } from './timbuctoo/schema';
+import { SFC, ComponentClass } from "react";
 
 export interface KeyValueObject {
     [name: string]: string;
@@ -44,8 +45,12 @@ export interface DataSetProps {
     collections?: any[];
 }
 
+export interface IconProps {
+    color?: string;
+}
+
 export interface MenuItemProp {
     path: string;
     name: string;
-    icon: string;
+    icon: SFC<IconProps> | ComponentClass<IconProps>;
 }

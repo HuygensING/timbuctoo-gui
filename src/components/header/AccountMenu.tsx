@@ -13,6 +13,7 @@ import Tooltip, { ALIGN } from '../Tooltip';
 import { MENU_ITEMS } from '../../constants/global';
 import AccountMenuItem from './AccountMenuItem';
 import Avatar, { SIZE } from './Avatar';
+import Logout from '../icons/Logout';
 
 interface Props {
     user: UserReducer;
@@ -58,55 +59,45 @@ const AvatarContainer = styled.figure`
     right: 0;
 `;
 
-const MenuList = styled.ul`
-`;
-
 class AccountMenu extends PureComponent<Props, State> {
-
-    constructor() {
-        super();
-
-        this.state = {
-            isOpen: false
-        };
-
-        this.onAvatarClickHandler = this.onAvatarClickHandler.bind(this);
-    }
+    state = {
+        isOpen: false
+    };
     
-    renderLoginButton () {
+    renderLoginButton() {
         return <LoginButton href={LOGIN_URL}>Login</LoginButton>;
     }
 
-    renderAvatarButton () {
-        const { user } = this.props;
+    renderAvatarButton() {
+        const {user} = this.props;
         return <AvatarButton user={user} onClick={this.onAvatarClickHandler}/>;
     }
 
-    renderMenu () {
-        const { user, onLogOut } = this.props;
+    renderMenu() {
+        const {user, onLogOut} = this.props;
         return (
             <Tooltip align={ALIGN.right} alignOffset={'-0.5rem'} interactable={true}>
                 <MenuHeader>
                     <Subtitle>{user.name}</Subtitle>
                     <AvatarContainer>
-                        <Avatar size={SIZE.large} src={user.avatar} />
+                        <Avatar size={SIZE.large} src={user.avatar}/>
                     </AvatarContainer>
                 </MenuHeader>
-                <MenuList>
+                <ul>
                     {
                         MENU_ITEMS.map((item: MenuItemProp, idx: number) => (
                             <AccountMenuItem key={idx} to={item.path} icon={item.icon}>{item.name}</AccountMenuItem>
                         ))
                     }
-                    <AccountMenuItem icon={'logout'} onClick={onLogOut}>Log out</AccountMenuItem>
-                </MenuList>
+                    <AccountMenuItem icon={Logout} onClick={onLogOut}>Log out</AccountMenuItem>
+                </ul>
             </Tooltip>
         );
     }
 
     render() {
-        const { loggedIn } = this.props.user;
-        const { isOpen } = this.state;
+        const {loggedIn} = this.props.user;
+        const {isOpen} = this.state;
         return (
             <AccountContainer>
                 {loggedIn ? this.renderAvatarButton() : this.renderLoginButton()}
@@ -114,12 +105,11 @@ class AccountMenu extends PureComponent<Props, State> {
             </AccountContainer>
         );
     }
-    
-    private onAvatarClickHandler (e: any) {
+
+    private onAvatarClickHandler = (e: any) => {
         const isOpen = !this.state.isOpen;
         this.setState({isOpen});
     }
-
 }
 
 export default AccountMenu;
