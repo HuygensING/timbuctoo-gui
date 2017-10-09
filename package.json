@@ -8,7 +8,7 @@
     "gql-ts": "graphql-to-typescript schema.graphql src/typings/timbuctoo/schema.ts",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "prepush": "check-dependencies && tslint --project . && tsc"
+    "prepush": "check-dependencies && tslint . && tsc"
   },
   "dependencies": {
     "js-cookie": "^2.1.4",
