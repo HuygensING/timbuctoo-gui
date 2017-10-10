@@ -25,7 +25,8 @@
     "details": {
         "collection": {
             "property": "Property",
-            "density": "Density"
+            "density": "Density",
+            "unknown": "Unknown"
         }
     },
     "search": {
