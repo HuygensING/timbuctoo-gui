@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import styled from '../../styled-components';
-import Translations from '../../services/Translations';
+import translate from '../../services/translate';
 
 import { MenuItemProp } from '../../typings';
 import { MENU_ITEMS } from '../../constants/global';
@@ -81,21 +81,21 @@ const Footer: SFC<Props> = ({ isLoggedIn, onLogOut, switchLanguage }) => {
                 </WhiteCol>
             }
             <WhiteCol sm={8} smOffset={isLoggedIn ? 26 : 34}>
-                <Content color={'#fff'}>{Translations.translate('footer.powered_by')}:</Content>
+                <Content color={'#fff'}>{translate('footer.powered_by')}:</Content>
                 <Dl>
-                    <Dt>{Translations.translate('footer.company_name')}</Dt>
+                    <Dt>{translate('footer.company_name')}</Dt>
                     <Dd>{addressData.company}</Dd>
 
-                    <Dt>{Translations.translate('footer.street')}</Dt>
+                    <Dt>{translate('footer.street')}</Dt>
                     <Dd>{addressData.street}</Dd>
 
-                    <Dt>{Translations.translate('footer.address')}</Dt>
+                    <Dt>{translate('footer.address')}</Dt>
                     <Dd>{addressData.zip} {addressData.city}</Dd>
 
-                    <Dt>{Translations.translate('footer.phone')}</Dt>
+                    <Dt>{translate('footer.phone')}</Dt>
                     <Dd>{addressData.phone}</Dd>
 
-                    <Dt>{Translations.translate('footer.opening_hours')}</Dt>
+                    <Dt>{translate('footer.opening_hours')}</Dt>
                     <Dd>{addressData.openingHours}</Dd>
                 </Dl>
             </WhiteCol>

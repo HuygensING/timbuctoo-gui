@@ -14,7 +14,7 @@ interface Props {
     gridSpacing?: number;
 }
 
-const GridSection: SFC<Props> = ({ tag = 'section', children, title, gridSize = 42, gridOffset = 3, colSizeOffset = gridOffset, cols = 2, rowSpacing = colSizeOffset, gridSpacing = 0}) => {
+const GridSection: SFC<Props> = ({ tag = 'section', children, title, gridSize = 42, gridOffset = 3, colSizeOffset = gridOffset, cols = 2, rowSpacing = colSizeOffset, gridSpacing = 0 }) => {
     if (!children) { return null; }
 
     const calcColSize = () => {
@@ -28,7 +28,7 @@ const GridSection: SFC<Props> = ({ tag = 'section', children, title, gridSize = 
     const colSize = calcColSize();
 
     const offset = (idx) => {
-        if ( cols <= 1 || idx === 0 || idx % cols === 0 ) { return 0; }
+        if (cols <= 1 || idx === 0 || idx % cols === 0) { return 0; }
         return colSizeOffset;
     };
 

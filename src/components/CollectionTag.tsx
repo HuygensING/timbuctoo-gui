@@ -1,7 +1,7 @@
 import React, { SFC } from 'react';
 import styled from 'styled-components';
 
-import Translations from '../services/Translations';
+import translate from '../services/translate';
 import { CollectionMetadata, Property } from '../typings/schema';
 import { ROUTE_PATHS } from '../constants/routeNaming';
 import { encode } from '../services/UrlStringCreator';
@@ -75,7 +75,7 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
             <Tooltip>
                 <PropertiesHeader>
                     <Subtitle>{collectionId} ({total})</Subtitle>
-                    <PropertyLabel>{Translations.translate('details.collection.property')}</PropertyLabel><DensityLabel>{Translations.translate('details.collection.density')}</DensityLabel>
+                    <PropertyLabel>{translate('details.collection.property')}</PropertyLabel><DensityLabel>{translate('details.collection.density')}</DensityLabel>
                 </PropertiesHeader>
                 {properties.items.map(renderPropertyDensity)}
             </Tooltip>
@@ -90,7 +90,7 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
         const buttonTitle = getValue(title) || (
             collectionKnown
                 ? collectionId
-                : Translations.translate('details.collection.unknown'));
+                : translate('details.collection.unknown'));
 
         return (
             <Button type={buttonType} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>

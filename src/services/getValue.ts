@@ -1,7 +1,7 @@
 // filter out tim_names and set tim_names.items[0].value instead
 
-import TimbuctooNamesParser from './TimbuctooNamesParser';
 import { PropertyList } from '../typings/schema';
+import { getFullNameString } from './TimbuctooNamesParser';
 
 interface KeyValue {
     [name: string]: string | null;
@@ -16,7 +16,7 @@ const getValue = (obj: any): string | null => {
 
         // in case of names
         if (obj.hasOwnProperty('items') && obj.items.length > 0 && obj.items[0].hasOwnProperty('value')) {
-            return TimbuctooNamesParser.getFullNameString(obj);
+            return getFullNameString(obj);
         }
     }
 

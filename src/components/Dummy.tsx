@@ -46,7 +46,7 @@ interface Props {
     marginY?: number | string;
 }
 
-const Dummy = ({mvp = false, text, height = '5rem', width = '100%', marginY = '0', absolute = false}: Props) => (
+const Dummy = ({ mvp = false, text, height = '5rem', width = '100%', marginY = '0', absolute = false }: Props) => (
     <DummyContainer mvp={mvp} height={height} width={width} marginY={marginY} absolute={absolute}>
         <DummyContent color={mvp ? lighten(.2, theme.colors.primary.medium) : theme.colors.shade.light}>
             {text && text}

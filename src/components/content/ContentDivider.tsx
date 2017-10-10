@@ -25,7 +25,7 @@ interface Props {
     title: valueField;
 }
 
-const ContentDivider = ({title}: Props) => {
+const ContentDivider = ({ title }: Props) => {
     return (
         <DividerLine>
             {title && <DividerTitle>{title}</DividerTitle>}

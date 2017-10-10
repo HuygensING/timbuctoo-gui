@@ -3,7 +3,7 @@ import styled from '../../styled-components';
 
 import { CollectionMetadataList } from '../../typings/schema';
 
-import Translations from '../../services/Translations';
+import translate from '../../services/translate';
 import { Subtitle, Content, Label } from '../layout/StyledCopy';
 import Image from '../layout/Image';
 import Button from '../layout/Button';
@@ -53,7 +53,7 @@ const SearchResulDataset = (props: ResultDataSetMetadata) => {
                 {renderCollections()}
             </CollectionList>
             <Content>{description}</Content>
-            <Button to="/" small={true}>{Translations.translate('search.view_dataset')}</Button>
+            <Button to="/" small={true}>{translate('search.view_dataset')}</Button>
         </SearchItem>
     );
 };

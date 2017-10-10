@@ -2,12 +2,12 @@ import { ComponentFormType } from '../typings/index';
 import EMPTY_VIEW_COMPONENTS from '../constants/emptyViewComponents';
 import { Component } from '../typings/schema';
 
-const renderName = (typename: string, idx: number, field?: string, ): string => (
+const renderName = (typename: string, idx: number, field?: string): string => (
     `${idx}_${typename}${field ? '_' + field : ''}`
 );
 
 const setComponentInfo = (item: any, idx: number) => {
-    const newItem = {...item};
+    const newItem = { ...item };
 
     newItem.componentInfo = {
         name: renderName(item.type, idx),
