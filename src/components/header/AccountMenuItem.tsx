@@ -40,30 +40,28 @@ const IconColor = '#114235';
 
 const AccountMenuItem: SFC<Props> = ({onClick, to = '/', icon: Icon, children}) => {
 
-    const renderButton = () => (
-        <Button onClick={onClick}>
-            <IconWrapper>
-                <Icon color={IconColor}/>
-            </IconWrapper>
-            {children}
-        </Button>
-    );
-
-    const renderLinkedButton = () => (
-        <LinkedButton to={to}>
-            <IconWrapper>
-                <Icon color={IconColor}/>
-            </IconWrapper>
-            {children}
-        </LinkedButton>
+    const renderIcon = () => (
+        <IconWrapper>
+            <Icon color={IconColor}/>
+        </IconWrapper>
     );
 
     return (
         <MenuItem>
             {
                 onClick
-                    ? renderButton()
-                    : renderLinkedButton()
+                    ? (
+                        <Button onClick={onClick}>
+                            {renderIcon()}
+                            {children}
+                        </Button>
+                    )
+                    : (
+                        <LinkedButton to={to}>
+                            {renderIcon()}
+                            {children}
+                        </LinkedButton>
+                    )
             }
         </MenuItem>
     );
