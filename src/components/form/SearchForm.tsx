@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import Translations from '../../services/Translations';
+import translate from '../../services/translate';
 import { Col, Grid } from '../layout/Grid';
-import { submitSearch } from '../../reducers/search';
-import { SearchReducer } from '../../typings/store';
+import { SearchReducer, submitSearch } from '../../reducers/search';
 import InputField from './fields/Input';
 import { ResetButton, SubmitButton } from './fields/Buttons';
 
@@ -61,12 +60,12 @@ class SearchForm extends PureComponent<Props & StoreProps, State> {
                             type={'text'}
                             value={this.state.value}
                             onChange={this.handleChange}
-                            placeholder={Translations.translate('search.placeholder')}
+                            placeholder={translate('search.placeholder')}
                         />
                         {!this.state.pristine && this.renderReset()}
                     </Col>
                     <Col sm={3} smOffset={.5}>
-                        <SubmitButton type={'submit'} disabled={this.state.pristine}>{Translations.translate('search.search')}</SubmitButton>
+                        <SubmitButton type={'submit'} disabled={this.state.pristine}>{translate('search.search')}</SubmitButton>
                     </Col>
 
                 </Grid>
@@ -77,7 +76,7 @@ class SearchForm extends PureComponent<Props & StoreProps, State> {
     private renderReset () {
         return (
             <ResetButton type={'button'} onClick={this.onReset}>
-                {Translations.translate('search.reset')}
+                {translate('search.reset')}
             </ResetButton>
         );
     }
@@ -86,7 +85,7 @@ class SearchForm extends PureComponent<Props & StoreProps, State> {
         e.preventDefault();
         const value = e.target.value;
         const pristine = value === '';
-        this.setState({value, pristine});
+        this.setState({ value, pristine });
     }
 
     private onReset (e: any) {

@@ -11,7 +11,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     const renderRoute = props => (
         rest.loggedIn
             ? <Component {...props}/>
-            : <Redirect to={{ pathname: ROUTE_PATHS.root, state: {from: props.location}}}/>
+            : <Redirect to={{ pathname: ROUTE_PATHS.root, state: { from: props.location } }}/>
     );
 
     return <Route render={renderRoute} {...rest} />;

@@ -95,10 +95,9 @@ class ViewScreen extends PureComponent<FullProps, State> {
 
     render () {
         // TODO: add when Components are available
+        
         if (this.props.loading) { return <Loading />; }
-
         // const { collection } = this.props.metadata.dataSetMetadata;
-
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
                 <Section>

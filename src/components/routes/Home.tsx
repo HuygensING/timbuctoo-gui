@@ -6,7 +6,6 @@ import FullHelmet from '../FullHelmet';
 import { graphql, gql } from 'react-apollo';
 
 import { Col, Grid } from '../layout/Grid';
-import { UserReducer } from '../../typings/store';
 
 import Hero from '../hero/Hero';
 import ListContent from '../lists/ListContent';
@@ -16,8 +15,9 @@ import { ROUTE_PATHS } from '../../constants/routeNaming';
 import About from '../About';
 import { AboutMe, DataSetMetadata } from '../../typings/schema';
 
-import Translations from '../../services/Translations';
+import translate from '../../services/translate';
 import { getValue } from '../../services/getValue';
+import { UserReducer } from '../../reducers/user';
 
 interface ApolloProps {
     data: {
@@ -45,10 +45,10 @@ class Home extends Component<FullProps, State> {
             }
         }
     };
-    
+
     renderFeatured (promoted: DataSetMetadata[]) {
         return (
-            <GridSection title={Translations.translate('home.featured.title')} cols={5} colSizeOffset={2}>
+            <GridSection title={translate('home.featured.title')} cols={5} colSizeOffset={2}>
                 {this.renderFeaturedItems(promoted)}
             </GridSection>
         );
@@ -56,28 +56,28 @@ class Home extends Component<FullProps, State> {
 
     renderFeaturedItems (promoted: DataSetMetadata[]) {
         if (!promoted.length) { return <div>Loading</div>; }
-        return promoted.map( (props, idx: number) => <FeaturedContentBlock key={idx} {...props} {...this.props.user} /> );
+        return promoted.map((props, idx: number) => <FeaturedContentBlock key={idx} {...props} {...this.props.user} />);
     }
 
     render () {
-        const {promotedDataSets, aboutMe} = this.props.data;
+        const { promotedDataSets, aboutMe } = this.props.data;
 
-        const heroDataSetPath: string| null = this.selectFirstSet();
+        const heroDataSetPath: string | null = this.selectFirstSet();
         return (
             <Grid>
                 <FullHelmet pageName="home"/>
                 <Hero
-                    title={Translations.translate('home.hero.title')}
-                    content={Translations.translate('home.hero.content')}
+                    title={translate('home.hero.title')}
+                    content={translate('home.hero.content')}
                     searchPath={heroDataSetPath}
-                    buttonText={Translations.translate('home.hero.button')}
+                    buttonText={translate('home.hero.button')}
                     imgUrl={null}
                 />
 
                 {promotedDataSets && this.renderFeatured(promotedDataSets)}
 
-                <ListContent smOffset={3} sm={20} smPaddingY={1} title={Translations.translate('home.recently_modified.title')} data={promotedDataSets}/>
-                <ListContent smOffset={2} sm={20} smPaddingY={1} title={Translations.translate('home.most_popular.title')} data={promotedDataSets}/>
+                <ListContent smOffset={3} sm={20} smPaddingY={1} title={translate('home.recently_modified.title')} data={promotedDataSets}/>
+                <ListContent smOffset={2} sm={20} smPaddingY={1} title={translate('home.most_popular.title')} data={promotedDataSets}/>
 
                 <Col sm={48}>
                     {aboutMe && <About title={aboutMe ? getValue(aboutMe.name) : null} body={aboutMe ? getValue(aboutMe.personalInfo) : null} />}

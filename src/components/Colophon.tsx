@@ -18,7 +18,7 @@ const HiddenDt = styled.dt`
   ${srOnly}
 `;
 
-const Colophon: SFC<Props> = ({owner, contact}) => {
+const Colophon: SFC<Props> = ({ owner, contact }) => {
 
     const renderItem = (title: string, item?: ContactInfo) => {
         if (!item) {

@@ -18,4 +18,4 @@ const Application = (
     </ApolloProvider>
 );
 
-ReactDOM.render( Application, document.getElementById('root') as HTMLElement );
+ReactDOM.render(Application, document.getElementById('root') as HTMLElement);

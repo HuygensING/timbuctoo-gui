@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from '../../styled-components';
 
-import Translations from '../../services/Translations';
+import translate from '../../services/translate';
 import { Content, Subtitle } from '../layout/StyledCopy';
 import Image from '../layout/Image';
 import Button from '../layout/Button';
@@ -54,7 +54,7 @@ const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataSet
                 {title}
             </SearchTitle>
             <SearchDescription>{description}</SearchDescription>
-            <Button to={url} small={true}>{Translations.translate('search.view_entry')}</Button>
+            <Button to={url} small={true}>{translate('search.view_entry')}</Button>
             {imageUrl && imageUrl.indexOf('http') > -1 &&
                 <ImageWrapper>
                     <Image src={imageUrl} ratio={1} fill={true}/>
