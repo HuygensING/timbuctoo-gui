@@ -9,7 +9,7 @@
     "home.hero.button": "Search datasets",
     "home.featured.title": "Featured datasets",
     "home.recently_modified.title": "Recently modified",
-    "home.most_popular_title": "Most Popular",
+    "home.most_popular.title": "Most Popular",
     "details.collection.property": "Property",
     "details.collection.density": "Density",
     "search.placeholder": "Type to search...",
