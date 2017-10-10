@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import Translations from '../services/Translations';
+import translate from '../services/translate';
 import MultiSelectForm from './form/MultiselectForm';
 import styled from '../styled-components';
 import { Title } from './layout/StyledCopy';
@@ -40,7 +40,7 @@ class Filters extends PureComponent<Props, State> {
         return (
             <form onChange={() => this.onSubmit}>
                 <SpecialDiv>
-                    <Title>{Translations.translate('globals.filters')}</Title>
+                    <Title>{translate('globals.filters')}</Title>
                     <Dummy text={'search-filter'} height={1} marginY={.5}/>
                     {this.props.facets && this.renderFilters()}
                     <MultiSelectForm title={'fakey'} options={[{ name: 'one', count: 4 }, { name: 'two', count: 5 }]}/>

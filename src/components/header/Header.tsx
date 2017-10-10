@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from '../../styled-components';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
-import { LogOutUser } from '../../reducers/user';
-import { UserReducer } from '../../typings/store';
+import { LogOutUser, UserReducer } from '../../reducers/user';
 import CreateElementWithTag from '../../services/CreateElementWithTag';
 import AccountMenu from './AccountMenu';
 
@@ -38,7 +37,7 @@ interface Props {
     onLogOut: () => void;
 }
 
-const Header: SFC<Props> = ({user, onLogOut, height}) => {
+const Header: SFC<Props> = ({ user, onLogOut, height }) => {
     return (
         <StyledHeader height={height}>
             <StyledLink to={ROUTE_PATHS.root}><StyledImg src={logo} alt="timbuctoo"/></StyledLink>

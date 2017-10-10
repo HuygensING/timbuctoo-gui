@@ -45,11 +45,12 @@ class DataSet extends PureComponent<FullProps> {
     }
 
     render () {
-        if ( this.props.loading) {
-         return <Loading />; }
+        if (this.props.loading) {
+            return <Loading />; 
+        }
 
         const { dataSetMetadata } = this.props.metadata;
-        const {dataSetId, title, description, imageUrl, collectionList, owner, contact} = dataSetMetadata;
+        const { dataSetId, title, description, imageUrl, collectionList, owner, contact } = dataSetMetadata;
 
         const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
             ? collectionList.items

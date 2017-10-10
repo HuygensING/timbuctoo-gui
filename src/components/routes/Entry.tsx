@@ -63,7 +63,7 @@ class Entry extends PureComponent<FullProps, State> {
     }
 
     render () {
-        if ( this.props.loading ) { return <Loading />; }
+        if (this.props.loading) { return <Loading />; }
         
         const { collection } = this.props.metadata.dataSetMetadata;
         if (!collection) { return null; }

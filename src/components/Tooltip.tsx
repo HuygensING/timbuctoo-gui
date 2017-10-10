@@ -45,7 +45,7 @@ const TooltipPanel = withProps<Props>(styled.div)`
     }
 `;
 
-const Tooltip: SFC<Props> = ({interactable = false, align = ALIGN.left, alignOffset, width, children}) => {
+const Tooltip: SFC<Props> = ({ interactable = false, align = ALIGN.left, alignOffset, width, children }) => {
 
     return (
         <TooltipPanel interactable={interactable} align={align} alignOffset={alignOffset} width={width}>

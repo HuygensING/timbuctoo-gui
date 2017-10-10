@@ -1,17 +1,19 @@
 import { combineReducers } from 'redux';
 
-import user from './user';
-import search from './search';
+import user, { UserReducer, Action as UserAction } from './user';
+import search, { SearchReducer } from './search';
 
-import { State } from '../typings/store';
 import Client from '../services/ApolloClient';
 
-const appReducers = combineReducers({
+export interface RootState {
+    user: UserReducer;
+    search: SearchReducer;
+}
+
+export type RootAction = UserAction;
+
+export default combineReducers<RootState>({
     user,
     search,
     apollo: Client.reducer()
 });
-
-export default function rootReducer (state: State, action: {type: any}) {
-    return appReducers(state, action);
-}

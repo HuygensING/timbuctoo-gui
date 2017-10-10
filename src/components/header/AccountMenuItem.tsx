@@ -38,7 +38,7 @@ const IconWrapper = styled.figure`
 
 const IconColor = '#114235';
 
-const AccountMenuItem: SFC<Props> = ({onClick, to = '/', icon: Icon, children}) => {
+const AccountMenuItem: SFC<Props> = ({ onClick, to = '/', icon: Icon, children }) => {
 
     const renderIcon = () => (
         <IconWrapper>

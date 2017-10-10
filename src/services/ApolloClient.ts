@@ -1,8 +1,8 @@
 import { ApolloClient, createNetworkInterface } from 'apollo-client';
 import { GRAPH_URI } from '../constants/api';
 import { store } from '../index';
-import { State } from '../typings/store';
 import { NextFunction } from 'express';
+import { RootState } from '../reducers/rootReducer';
 
 const networkInterface = createNetworkInterface({
     uri: GRAPH_URI,
@@ -20,7 +20,7 @@ networkInterface.use([{
         }
 
         // get the authentication token from state if available
-        const state: State | any = store.getState();
+        const state: RootState = store.getState();
         req.options.headers.authorization = state && state.user && state.user.hsid ? state.user.hsid : null;
         next();
     }

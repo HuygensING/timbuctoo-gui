@@ -72,12 +72,12 @@ export const getFullNames = (items: TypeValue[]): Name[] => {
         );
     });
 
-        return names;
-    };
+    return names;
+};
     
-   export const getFullName=( {items}: {items: TypeValue[]} ): Name =>{
-        return parseName(items[0].value);
-    };
+export const getFullName = ({ items }: {items: TypeValue[]}): Name => {
+    return parseName(items[0].value);
+};
 
 export const getFullNameString = (obj: {items: TypeValue[]}): string => {
     const { firstName, middleName, lastName } = getFullName(obj);

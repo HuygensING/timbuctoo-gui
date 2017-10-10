@@ -41,7 +41,7 @@ class Search extends PureComponent<FullProps> {
 
     render () {
         // TODO: Refactor loading, so it breaks up into the components instead of re-running entire page | can use state for thisas well :)
-        if ( this.props.loading ) { return <Loading />; }
+        if (this.props.loading) { return <Loading />; }
 
         const { collectionList, dataSetId } = this.props.metadata.dataSetMetadata;
 

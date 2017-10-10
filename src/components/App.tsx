@@ -13,8 +13,7 @@ import Footer from './footer/Footer';
 import PoweredBy from './PoweredBy';
 import { Grid } from './layout/Grid';
 import { AboutMe } from '../typings/schema';
-import { UserReducer } from '../typings/store';
-import { LogInUser, LogOutUser } from '../reducers/user';
+import { LogInUser, LogOutUser, UserReducer } from '../reducers/user';
 import Loading from './Loading';
 
 if (process.env.NODE_ENV !== 'production') {

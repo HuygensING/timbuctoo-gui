@@ -1,46 +1,26 @@
 {
-    "globals": {
-        "filters": "Filters",
-        "results": "Results",
-        "yesterday": "yesterday",
-        "today": "today",
-        "tomorrow": "tomorrow"
-    },
-    "home": {
-        "hero": {
-            "title": "We care for your data",
-            "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consequatur cumque dolorem doloribus esse exercitationem fugit molestias possimus recusandae vitae?",
-            "button": "Search datasets"
-        },
-        "featured": {
-            "title": "Featured datasets"
-        },
-        "recently_modified": {
-            "title": "Recently modified"
-        },
-        "most_popular": {
-            "title": "Most Popular"
-        }
-    },
-    "details": {
-        "collection": {
-            "property": "Property",
-            "density": "Density"
-        }
-    },
-    "search": {
-        "placeholder": "Type to search...",
-        "reset": "Reset",
-        "search": "Search",
-        "view_dataset": "View dataset",
-        "view_entry": "View entry"
-    },
-    "footer": {
-        "powered_by": "Timbuctoo is powered by",
-        "company_name": "Company name",
-        "street": "Street",
-        "address": "Address",
-        "phone": "Phone Number",
-        "opening_hours": "Opening hours"
-    }
+    "globals.filters": "Filters",
+    "globals.results": "Results",
+    "globals.yesterday": "yesterday",
+    "globals.today": "today",
+    "globals.tomorrow": "tomorrow",
+    "home.hero.title": "We care for your data",
+    "home.hero.content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consequatur cumque dolorem doloribus esse exercitationem fugit molestias possimus recusandae vitae?",
+    "home.hero.button": "Search datasets",
+    "home.featured.title": "Featured datasets",
+    "home.recently_modified.title": "Recently modified",
+    "home.most_popular_title": "Most Popular",
+    "details.collection.property": "Property",
+    "details.collection.density": "Density",
+    "search.placeholder": "Type to search...",
+    "search.reset": "Reset",
+    "search.search": "Search",
+    "search.view_dataset": "View dataset",
+    "search.view_entry": "View entry",
+    "footer.powered_by": "Timbuctoo is powered by",
+    "footer.company_name": "Company name",
+    "footer.street": "Street",
+    "footer.address": "Address",
+    "footer.phone": "Phone Number",
+    "footer.opening_hours": "Opening hours"
 }

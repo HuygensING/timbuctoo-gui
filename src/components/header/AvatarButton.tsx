@@ -1,10 +1,8 @@
 import React, { SFC } from 'react';
 import styled from '../../styled-components';
-import { UserReducer } from '../../typings/store';
-
 import { Label } from '../layout/StyledCopy';
-
 import Avatar, { SIZE } from './Avatar';
+import { UserReducer } from '../../reducers/user';
 
 interface Props {
     user: UserReducer;
