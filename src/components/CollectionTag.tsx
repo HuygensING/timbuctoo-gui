@@ -2,7 +2,7 @@ import React, { SFC } from 'react';
 import styled from 'styled-components';
 
 import Translations from '../services/Translations';
-import { CollectionMetadata, Property } from '../typings/timbuctoo/schema';
+import { CollectionMetadata, Property } from '../typings/schema';
 import { ROUTE_PATHS } from '../constants/routeNaming';
 import { encode } from '../services/UrlStringCreator';
 import { Subtitle, Label } from './layout/StyledCopy';
@@ -18,7 +18,7 @@ interface Props {
     isOpen: boolean;
     index: number;
     dataSetId: string;
-    currentCollectionListId: string | undefined;
+    currentCollectionListId?: string | null;
     collection: CollectionMetadata;
     toggleOpen: Function;
 }

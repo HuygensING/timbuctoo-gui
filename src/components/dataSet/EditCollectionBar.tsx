@@ -1,5 +1,5 @@
 import React, { SFC } from 'react';
-import { CollectionMetadata } from '../../typings/timbuctoo/schema';
+import { CollectionMetadata } from '../../typings/schema';
 import styled, { css } from '../../styled-components';
 import { Link , Title } from '../layout/StyledCopy';
 import { lighten } from 'polished';

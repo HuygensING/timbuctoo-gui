@@ -3,18 +3,22 @@ import Translations from '../../services/Translations';
 
 import GridSection from '../layout/GridSection';
 import SearchResultEntry from './SearchResultEntry';
-import { SummaryProperties } from '../../typings/timbuctoo/schema';
+import { SummaryProperties } from '../../typings/schema';
 import { getValue } from '../../services/getValue';
 
 interface Props {
     dataSetId: string;
-    collectionId: string;
-    properties: SummaryProperties;
+    collectionId: string | null;
+    properties: SummaryProperties | null;
     fields: {[name: string]: string | null};
     results: any[]; // Object with uri and the three variable fields for title, image and description
 }
 
 const SearchResults: SFC<Props> = ({ results, properties, collectionId, dataSetId, fields }) => {
+
+    if (!properties || !collectionId) {
+        return null;
+    }
 
     const setValue = (val: string | null, result: any): string | null => {
         if (val && result && result[val]) {

@@ -3,17 +3,16 @@ export interface State {
 }
 
 export interface UserReducer {
-    hsid: string;
-    language: string;
-    loggedIn: boolean;
-
-    avatar: string;
-    name: string;
-    profession: string;
+    hsid: Readonly<string>;
+    language: Readonly<string>;
+    loggedIn: Readonly<boolean>;
+    avatar: Readonly<string>;
+    name: Readonly<string>;
+    profession: Readonly<string>;
 }
 
 export interface SearchReducer {
-    dataset: string;
-    collection: string;
-    filter: string;
+    dataset: Readonly<string>;
+    collection: Readonly<string>;
+    filter: Readonly<string>;
 }

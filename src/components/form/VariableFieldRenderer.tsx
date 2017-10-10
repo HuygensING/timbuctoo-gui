@@ -7,7 +7,7 @@ import { removeExtraInfo, renderEmptyViewComponent } from '../../services/FormVa
 import ConnectedSelect from './fields/ConnectedSelect';
 import Select, { OptionProps } from './fields/Select';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
-import { ComponentValue, ComponentValueField } from '../../typings/timbuctoo/schema';
+import { ComponentValue, ComponentValueField } from '../../typings/schema';
 import InputField from './fields/Input';
 
 const Label = styled.label`
@@ -162,7 +162,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         return (
             <ConnectedSelect
                 key={childIdx}
-                name={'Select'}
+                name={'select'}
                 selected={{key: value, value: value}}
                 collectionId={reference}
                 onChange={({option, settings}) => this.onSelectChangeHandler(option, settings, valueItem.name, childIdx)}

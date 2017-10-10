@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { ComponentValueField } from '../typings/timbuctoo/schema';
+import { ComponentValueField } from '../typings/schema';
 import { COMPONENT_FIELDS } from '../constants/global';
 
 const createValuesObject = (fields: ComponentValueField[]) => {

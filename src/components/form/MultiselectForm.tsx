@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { Subtitle } from '../layout/StyledCopy';
 import styled from '../../styled-components';
 import { Dummy } from '../Dummy';
-import { Option } from '../../typings/timbuctoo/schema';
+import { Option } from '../../typings/schema';
 import HiddenField from './fields/HiddenField';
 
 interface Props {

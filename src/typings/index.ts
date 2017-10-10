@@ -1,6 +1,6 @@
 import { Permissions } from './permissions';
-import { Component } from './timbuctoo/schema';
-import { SFC, ComponentClass } from "react";
+import { Component } from './schema';
+import { SFC, ComponentClass } from 'react';
 
 export interface KeyValueObject {
     [name: string]: string;

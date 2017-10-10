@@ -1,13 +1,13 @@
 import React, { SFC } from 'react';
-import { ContactInfo } from '../typings/timbuctoo/schema';
+import { ContactInfo } from '../typings/schema';
 import { getValue } from '../services/getValue';
 import styled from 'styled-components';
 import { calcColWidth } from './layout/Grid';
 import { srOnly, Subtitle, Title } from './layout/StyledCopy';
 
 interface Props {
-    owner: ContactInfo;
-    contact: ContactInfo;
+    owner?: ContactInfo;
+    contact?: ContactInfo;
 }
 
 const StyledSection = styled.section`
@@ -20,7 +20,11 @@ const HiddenDt = styled.dt`
 
 const Colophon: SFC<Props> = ({owner, contact}) => {
 
-    const renderItem = (title: string, item: ContactInfo) => {
+    const renderItem = (title: string, item?: ContactInfo) => {
+        if (!item) {
+            return null;
+        }
+
         const name = getValue(item.name);
         const email = getValue(item.email);
 
