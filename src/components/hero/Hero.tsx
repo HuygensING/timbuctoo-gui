@@ -39,11 +39,11 @@ const ButtonContainer = styled.div`
 `;
 
 interface HeroProps {
-    title: string;
-    content?: string | null;
-    searchPath?: string | null;
+    title: string | null;
+    content: string | null;
+    searchPath: string | null;
     buttonText?: string;
-    imgUrl?: string;
+    imgUrl: string | null;
 }
 
 const defaultImgUrl = '/assets/_tmp/header--library.jpg';

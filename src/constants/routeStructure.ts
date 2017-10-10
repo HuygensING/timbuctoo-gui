@@ -16,7 +16,6 @@ export interface RouteObject {
     key: string;
     routes: RouteInfo[];
     isPrivate?: boolean;
-
 }
 
 export const routes: RouteObject[] = [

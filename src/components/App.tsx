@@ -12,7 +12,7 @@ import Header from './header/Header';
 import Footer from './footer/Footer';
 import PoweredBy from './PoweredBy';
 import { Grid } from './layout/Grid';
-import { AboutMe } from '../typings/timbuctoo/schema';
+import { AboutMe } from '../typings/schema';
 import { UserReducer } from '../typings/store';
 import { LogInUser, LogOutUser } from '../reducers/user';
 import Loading from './Loading';
@@ -50,7 +50,7 @@ interface Props {
         aboutMe: AboutMe
     };
     user: UserReducer;
-    logInUser: () => void;
+    logInUser: (hsid: string) => void;
     logOutUser: () => void;
 }
 
@@ -66,17 +66,13 @@ class App extends PureComponent<ChildProps<Props, Response>, State> {
     }
 
     componentWillReceiveProps ({ data, user }: Props) {
-        if (!user.loggedIn && data.aboutMe && data.aboutMe.id && this.props.data.aboutMe !== data.aboutMe) {
-            this.props.logInUser();
+        if (!user.loggedIn && data.aboutMe && data.aboutMe.id && this.props.data.aboutMe !== data.aboutMe && user.hsid.length > 0) {
+            this.props.logInUser(user.hsid);
         }
 
         if (this.renderLoad && (data.error || data.aboutMe === null)) {
             this.renderLoad = false;
-
-            // TODO: Switch back when actually using!!
-            this.props.logInUser();
-            // this.props.logOutUser();
-            //
+            this.props.logOutUser();
         }
     }
 
@@ -118,7 +114,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    logInUser: () => dispatch(LogInUser()),
+    logInUser: (val) => dispatch(LogInUser(val)),
     logOutUser: () => dispatch(LogOutUser())
 });
 

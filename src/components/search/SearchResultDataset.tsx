@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '../../styled-components';
 
-import { CollectionMetadataList } from '../../typings/timbuctoo/schema';
+import { CollectionMetadataList } from '../../typings/schema';
 
 import Translations from '../../services/Translations';
 import { Subtitle, Content, Label } from '../layout/StyledCopy';

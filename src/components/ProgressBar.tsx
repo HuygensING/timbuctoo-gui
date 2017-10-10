@@ -42,9 +42,9 @@ const Progress = withProps<Props>(styled.figure)`
 `;
 
 interface Props {
-    label?: string | null;
+    label?: string;
     width?: number | string;
-    progress: number | null;
+    progress?: number;
     filter?: string[];
 }
 

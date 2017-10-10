@@ -11,7 +11,7 @@ export interface OptionProps {
 export interface SelectProps {
     name: string;
     selected: OptionProps;
-    options: OptionProps[];
+    options?: OptionProps[];
     onChange: (e: any) => void;
 }
 

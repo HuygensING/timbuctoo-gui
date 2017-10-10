@@ -1,4 +1,4 @@
-import { ApolloClient, createNetworkInterface } from 'react-apollo';
+import { ApolloClient, createNetworkInterface } from 'apollo-client';
 import { GRAPH_URI } from '../constants/api';
 import { store } from '../index';
 import { State } from '../typings/store';

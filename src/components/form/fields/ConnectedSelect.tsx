@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
-import connectQuery from '../../../services/ConnectQuery';
-import { DataSetMetadata } from '../../../typings/timbuctoo/schema';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { DataSetMetadata } from '../../../typings/schema';
 
 import QUERY_COLLECTION_EDIT_VIEW from '../../../graphql/queries/CollectionEditView';
 
 import Select, { OptionProps, SelectProps } from './Select';
+import MetadataResolver from '../../MetadataResolver';
 
 interface ApolloProps {
     data: ApolloDataProps;
@@ -15,7 +15,11 @@ interface ApolloDataProps {
     dataSetMetadata: DataSetMetadata;
 }
 
-type FullProps = SelectProps & ApolloProps;
+interface Props {
+    collectionId?: string;
+}
+
+type FullProps = Props & SelectProps & ApolloProps & RouteComponentProps<any>;
 
 interface State {
     isOpen: boolean;
@@ -24,9 +28,9 @@ interface State {
 
 interface OptionSettingProps {
     [name: string]: {
-        reference: string | null;
-        isList: boolean | null;
-        isValue: boolean | null;
+        reference?: string;
+        isList?: boolean;
+        isValue?: boolean;
     };
 }
 
@@ -110,4 +114,6 @@ class SelectField extends Component<FullProps, State> {
     }
 }
 
-export default withRouter(connectQuery(QUERY_COLLECTION_EDIT_VIEW)(SelectField));
+export default withRouter<Props & SelectProps>(
+    MetadataResolver<FullProps>(QUERY_COLLECTION_EDIT_VIEW)(SelectField)
+);

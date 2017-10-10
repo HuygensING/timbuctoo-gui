@@ -6,7 +6,7 @@ import { ComponentFormType } from '../../typings/index';
 import { addExtraInfo, renderEmptyViewComponent } from '../../services/FormValueManipulator';
 import styled from '../../styled-components';
 import { COMPONENTS, DRAGGABLE_COMPONENTS } from '../../constants/global';
-import { Component } from '../../typings/timbuctoo/schema';
+import { Component } from '../../typings/schema';
 import { SubmitButton } from './fields/Buttons';
 
 interface Props {

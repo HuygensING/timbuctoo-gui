@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
-import { CollectionMetadata } from '../typings/timbuctoo/schema';
+import { CollectionMetadata } from '../typings/schema';
 
 import CollectionTag from './CollectionTag';
 
 interface Props {
     colKeys: CollectionMetadata[];
     dataSetId: string;
-    currentCollectionListId?: string;
+    currentCollectionListId?: string | null;
 }
 
 interface State {
@@ -30,6 +30,7 @@ class CollectionTags extends PureComponent<Props, State> {
 
     renderButton (collection: CollectionMetadata, idx: number) {
         const { currentCollectionListId, dataSetId } = this.props;
+
         return (
             <CollectionTag
                 key={idx}

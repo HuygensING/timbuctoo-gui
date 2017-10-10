@@ -5,6 +5,7 @@ const QUERY_COLLECTION_PROPERTIES = ({ match }) => {
     const query = `
         query CollectionProperties {
             dataSetMetadata(dataSetId: "${match.params.dataSet}") {
+                dataSetId
                 collection(collectionId: "${match.params.collection}") {
                     ...CollectionBase
                     ...CollectionPropertiesDensity

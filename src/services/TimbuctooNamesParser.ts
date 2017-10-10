@@ -1,6 +1,3 @@
-import { TypeValue } from '../typings/timbuctoo';
-import { NameTypes, TimNames } from '../typings/timbuctoo/timPersons';
-
 const TYPES = {
     surname: 'SURNAME',
     forename: 'FORENAME',
@@ -10,8 +7,15 @@ const TYPES = {
     gen_name: 'GEN_NAME',
 };
 
+type NameTypes = 'SURNAME' | 'FORENAME' | 'ROLE_NAME' | 'ADD_NAME' | 'NAME_LINK' | 'GEN_NAME';
+
 interface NameObjectProps {
     type: NameTypes;
+    value: string;
+}
+
+interface TypeValue {
+    type: string;
     value: string;
 }
 
@@ -68,14 +72,14 @@ export const getFullNames = (items: TypeValue[]): Name[] => {
         );
     });
 
-    return names;
-};
+        return names;
+    };
+    
+   export const getFullName=( {items}: {items: TypeValue[]} ): Name =>{
+        return parseName(items[0].value);
+    };
 
-export const getFullName = ({ items }: TimNames): Name => {
-    return parseName(items[ 0 ].value);
-};
-
-export const getFullNameString = (obj: TimNames): string => {
+export const getFullNameString = (obj: {items: TypeValue[]}): string => {
     const { firstName, middleName, lastName } = getFullName(obj);
     return `${firstName ? firstName : ''} ${middleName ? middleName : ''} ${lastName ? lastName : ''}`;
 };

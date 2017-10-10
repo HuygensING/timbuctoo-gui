@@ -1,18 +1,14 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
 
 import Translations from '../services/Translations';
 import MultiSelectForm from './form/MultiselectForm';
 import styled from '../styled-components';
 import { Title } from './layout/StyledCopy';
 import { Dummy } from './Dummy';
-import { Facet } from '../typings/timbuctoo/schema';
+import { Facet } from '../typings/schema';
 
 interface Props {
-    facets: Facet[];
-    filter: {
-        values?: string;
-    };
+    facets: Facet[] | null;
 }
 interface State {}
 
@@ -35,12 +31,9 @@ class Filters extends PureComponent<Props, State> {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    onSubmit () {
-        const { values } = this.props.filter;
-
-        if (!values) { return; }
-
-        Filters.createQueryString(values);
+    onSubmit (e: any) {
+        console.log(e);
+        // Filters.createQueryString(values);
     }
 
     render() {
@@ -59,12 +52,8 @@ class Filters extends PureComponent<Props, State> {
     }
 
     private renderFilters () {
-        return this.props.facets.map(Filters.renderFilter);
+        return this.props.facets ? this.props.facets.map(Filters.renderFilter) : null;
     }
 }
 
-const mapStateToProps = state => ({
-    filter: state.form.filter
-});
-
-export default connect(mapStateToProps, {})(Filters);
+export default Filters;

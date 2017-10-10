@@ -17,7 +17,11 @@ const hsid = retrieveId();
 const initialState: UserReducer = {
     hsid,
     language: 'en',
-    loggedIn: false
+    loggedIn: false,
+
+    avatar: 'http://lorempixel.com/200/200/people/',
+    name: 'Username',
+    profession: 'Profession'
 };
 
 // actions
@@ -29,14 +33,10 @@ const SWITCH_LANGUAGE = 'SWITCH_LANGUAGE';
 export default (state: UserReducer = initialState, action: Action) => {
     switch (action.type) {
         case LOG_IN:
-            if (state.hsid.length > 0) {
-                Cookies.set(HSID, state.hsid);
-                return {
-                    ...state,
-                    loggedIn: true
-                };
-            }
-            return state;
+            return {
+                ...state,
+                loggedIn: true
+            };
         case LOG_OUT:
             return loggedOutState;
 
@@ -53,7 +53,8 @@ export default (state: UserReducer = initialState, action: Action) => {
 };
 
 // action creators
-export const LogInUser = () => {
+export const LogInUser = (auth: string) => {
+    Cookies.set(HSID, auth);
     return {
         type: LOG_IN
     };

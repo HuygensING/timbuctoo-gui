@@ -8,7 +8,7 @@ import ContentKeyValue from '../components/content/ContentKeyValue';
 import ContentDivider from '../components/content/ContentDivider';
 
 import { COMPONENTS } from '../constants/global';
-import { ComponentValue } from '../typings/timbuctoo/schema';
+import { ComponentValue } from '../typings/schema';
 
 interface ComponentLoaderProps {
     component: any;
