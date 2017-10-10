@@ -2,6 +2,21 @@ import { ComponentFormType } from '../typings/index';
 import EMPTY_VIEW_COMPONENTS from '../constants/emptyViewComponents';
 import { Component } from '../typings/timbuctoo/schema';
 
+const renderName = (typename: string, idx: number, field?: string, ): string => (
+    `${idx}_${typename}${field ? '_' + field : ''}`
+);
+
+const setComponentInfo = (item: any, idx: number) => {
+    const newItem = {...item};
+
+    newItem.componentInfo = {
+        name: renderName(item.type, idx),
+        index: idx
+    };
+
+    return newItem;
+};
+
 const addExtraInfo = (items: any[]): ComponentFormType[] => {
     const newItems: any = [];
 
@@ -19,17 +34,6 @@ const removeExtraInfo = (items: ComponentFormType[]): Component[] => {
     return newItems;
 };
 
-const setComponentInfo = (item: any, idx: number) => {
-    const newItem = {...item};
-
-    newItem.componentInfo = {
-        name: renderName(item.type, idx),
-        index: idx
-    };
-
-    return newItem;
-};
-
 const renderEmptyViewComponent = (componentKey, idx) => {
     if (!EMPTY_VIEW_COMPONENTS.hasOwnProperty(componentKey)) {
         return null;
@@ -37,9 +41,5 @@ const renderEmptyViewComponent = (componentKey, idx) => {
 
     return setComponentInfo(EMPTY_VIEW_COMPONENTS[componentKey], idx);
 };
-
-const renderName = (typename: string, idx: number, field?: string, ): string => (
-    `${idx}_${typename}${field ? '_' + field : ''}`
-);
 
 export { addExtraInfo, removeExtraInfo, renderEmptyViewComponent, setComponentInfo, renderName };
