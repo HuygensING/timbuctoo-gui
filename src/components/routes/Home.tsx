@@ -45,18 +45,7 @@ class Home extends Component<FullProps, State> {
             }
         }
     };
-
-    shouldComponentUpdate( newProps: FullProps ) {
-        const _currProps = JSON.stringify(this.props.data);
-        const _newProps = JSON.stringify(newProps.data);
-            
-        if (_currProps !== _newProps) {
-            return true;
-        }
-
-        return false;
-    }
-
+    
     renderFeatured (promoted: DataSetMetadata[]) {
         return (
             <GridSection title={Translations.translate('home.featured.title')} cols={5} colSizeOffset={2}>

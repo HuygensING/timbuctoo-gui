@@ -43,12 +43,6 @@ const createObjectFromFormFields = (items) => {
     return queryObject;
 };
 
-const createQueryStringFromFormFields = (items) => {
-    const queryObject = createObjectFromFormFields(items);
-
-    return createQueryStringFromObject(queryObject);
-};
-
 const createQueryStringFromObject = (object: {}) => {
     const filterCharacters: RegExp = /[^":]+/g;
     const filterEmptyObject: RegExp = /({})/g;
@@ -64,6 +58,12 @@ const createQueryStringFromObject = (object: {}) => {
     const queryString = _.replace(query, filterEmptyObject, '{ value }');
 
     return queryString.substring(1, queryString.length - 1);
+};
+
+const createQueryStringFromFormFields = (items) => {
+    const queryObject = createObjectFromFormFields(items);
+
+    return createQueryStringFromObject(queryObject);
 };
 
 export { createQueryStringFromFormFields, createQueryStringFromObject };

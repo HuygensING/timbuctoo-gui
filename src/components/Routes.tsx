@@ -7,19 +7,6 @@ import { ROUTE_PATHS } from '../constants/routeNaming';
 import { RouteInfo, RouteObject, routes } from '../constants/routeStructure';
 import PrivateRoute from './PrivateRoute';
 
-const renderRoutes = (): JSX.Element[] => {
-    let routeList: JSX.Element[] = [];
-
-    routes.forEach(
-        (routeItem: RouteObject) => {
-            const newRoutes = setRoutes(routeItem);
-            routeList = routeList.concat(newRoutes);
-        }
-    );
-
-    return routeList;
-};
-
 const setRoutes = (routeItem: RouteObject): JSX.Element[] => {
     let routeList: JSX.Element[] = [];
 
@@ -40,6 +27,19 @@ const setRoutes = (routeItem: RouteObject): JSX.Element[] => {
     return routeList;
 };
 
+const renderRoutes = (): JSX.Element[] => {
+    let routeList: JSX.Element[] = [];
+
+    routes.forEach(
+        (routeItem: RouteObject) => {
+            const newRoutes = setRoutes(routeItem);
+            routeList = routeList.concat(newRoutes);
+        }
+    );
+
+    return routeList;
+};
+
 const renderedRoutes = renderRoutes();
 
 const Router = () => {
@@ -48,7 +48,7 @@ const Router = () => {
         <Switch>
             <Route path={ROUTE_PATHS.root} exact={true} component={Home}/>
             {renderedRoutes}
-            <Route component={NotFound}/>
+            <Route component={NotFound} />
         </Switch>
     );
 };

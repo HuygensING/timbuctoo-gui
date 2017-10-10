@@ -10,7 +10,6 @@ import { BUTTON_TYPES } from '../../constants/global';
 const BaseButtonStyling = css`
     display: inline-block;
     font: ${props => props.theme.fonts.body};
-    margin-top: 0.5rem;
     border: 1px solid ${props => props.theme.colors.shade.medium};
     text-align: center;
     padding: 0.5rem 1rem;

@@ -4,11 +4,13 @@ import { connect } from 'react-redux';
 import styled from '../../styled-components';
 import Translations from '../../services/Translations';
 
+import { MenuItemProp } from '../../typings';
+import { MENU_ITEMS } from '../../constants/global';
 import { calcColWidth, Col, Grid } from '../layout/Grid';
+import { Link } from '../layout/StyledCopy';
 import { srOnly, Content } from '../layout/StyledCopy';
 import { addressData } from '../../constants/address';
 import { SFC } from 'react';
-import AccountMenu from '../header/AccountMenu';
 import { LogOutUser, SwitchLanguage } from '../../reducers/user';
 
 interface Props {
@@ -21,6 +23,10 @@ const FooterContainer = styled(Grid)`
     flex-shrink: 0;
     padding: ${calcColWidth(1)} ${calcColWidth(3)};
     background-color: ${(props) => props.theme.colors.black};
+`;
+
+const MenuLink = styled(Link)`
+    color: ${props => props.theme.colors.white};
 `;
 
 const WhiteCol = styled(Col)`
@@ -50,13 +56,27 @@ const Dl = styled.dl`
 
 const Footer: SFC<Props> = ({ isLoggedIn, onLogOut, switchLanguage }) => {
 
+    const renderMenu = () => {
+        return (
+            <ul>
+                {
+                    MENU_ITEMS.map((item: MenuItemProp, idx: number) => (
+                        <li key={idx}>
+                            <MenuLink to={item.path}>{item.name}</MenuLink>
+                        </li>
+                    ))
+                }
+            </ul>
+        );
+    };
+
     return (
         <FooterContainer tag={'footer'}>
             <H1>Footer</H1>
             {
                 isLoggedIn &&
                 <WhiteCol sm={8}>
-                    <AccountMenu isFooter={true} onLogOut={() => onLogOut()}/>
+                    {renderMenu()}
                     <button onClick={() => switchLanguage('nl')}>NL</button> | <button onClick={() => switchLanguage('en')}>EN</button>
                 </WhiteCol>
             }

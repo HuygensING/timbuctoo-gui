@@ -7,7 +7,8 @@
     "build": "react-scripts-ts build",
     "gql-ts": "graphql-to-typescript schema.graphql src/typings/timbuctoo/schema.ts",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "prepush": "check-dependencies && tslint --project . && tsc --noEmit"
   },
   "dependencies": {
     "js-cookie": "^2.1.4",
@@ -37,7 +38,9 @@
     "@types/react-dom": "^15.5.4",
     "@types/react-router-dom": "^4.0.7",
     "@types/redux-form": "^7.0.4",
+    "check-dependencies": "^1.1.0",
     "graphql-to-typescript": "^0.1.2",
+    "husky": "^0.14.3",
     "why-did-you-update": "0.0.8"
   }
 }
