@@ -31,7 +31,7 @@ const DateLabel = styled(Label)`
     margin: auto;
 `;
 
-const ListContentItem = ({title, description, dataSetId}: DataSetProps) => {
+const ListContentItem = ({ title, description, dataSetId }: DataSetProps) => {
     const titleField = getValue(title);
     const descrField = getValue(description);
 

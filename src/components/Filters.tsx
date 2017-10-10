@@ -50,7 +50,7 @@ class Filters extends PureComponent<Props, State> {
                     <Title>{Translations.translate('globals.filters')}</Title>
                     <Dummy text={'search-filter'} height={1} marginY={.5}/>
                     {this.props.facets && this.renderFilters()}
-                    <MultiSelectForm title={'fakey'} options={[{name: 'one', count: 4}, {name: 'two', count: 5}]}/>
+                    <MultiSelectForm title={'fakey'} options={[{ name: 'one', count: 4 }, { name: 'two', count: 5 }]}/>
                     <Dummy text={'filter hierarchy'} height={2} marginY={.5}/>
                     <Dummy text={'filter range'} height={5} marginY={.5}/>
                 </SpecialDiv>

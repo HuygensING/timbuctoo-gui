@@ -53,8 +53,8 @@ const ContentKeyValue = (props: Props) => {
     const { label, values, data } = props;
 
     const renderValues = () => {
-        return values && values.map( (component: Component, index: number) => {
-            if (ALLOWED_COMPONENT.indexOf( component.type ) < 0) { return null; }
+        return values && values.map((component: Component, index: number) => {
+            if (ALLOWED_COMPONENT.indexOf(component.type) < 0) { return null; }
             return <ComponentLoader key={index} component={component} data={data} />;
         });
     };

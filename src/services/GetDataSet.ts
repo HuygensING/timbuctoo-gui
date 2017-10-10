@@ -18,7 +18,7 @@ const getDataSet = (props: Props) => {
     return dataSets[dataSet];
 };
 
-const getCollection = (props: Props, collectionId: string) =>  {
+const getCollection = (props: Props, collectionId: string) => {
     const dataSet = getDataSet(props);
 
     if (!dataSet || !collectionId) { return noContent; }
@@ -31,7 +31,7 @@ const getCollection = (props: Props, collectionId: string) =>  {
 const getCurrentCollection = (collectionItems: CollectionMetadata[], collection: string) => {
     const fallBack = collectionItems[0];
 
-    if ( !collection ) { return fallBack; }
+    if (!collection) { return fallBack; }
     const currentCollection = collectionItems.find(item => item.collectionListId === collection);
 
     return currentCollection ? currentCollection : fallBack;

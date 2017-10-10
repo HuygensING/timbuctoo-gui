@@ -108,7 +108,7 @@ class ViewScreen extends PureComponent<FullProps, State> {
 
     render () {
         // TODO: add when Components are available
-        console.log( this.collection );
+        console.log(this.collection);
         if (!this.collection) { return <Loading />; }
         
         return (

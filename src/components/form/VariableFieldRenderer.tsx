@@ -90,7 +90,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         const { resolveChange, item } = this.props;
         const newValues = removeExtraInfo(values);
 
-        const newFieldset = {...item};
+        const newFieldset = { ...item };
         newFieldset.values = newValues;
 
         resolveChange(newFieldset);
@@ -108,7 +108,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     }
 
     render () {
-        const {values, componentInfo} = this.props.item;
+        const { values, componentInfo } = this.props.item;
         const valueList = VariableFormFieldRenderer.renderFieldList(this.props.item);
 
         return (
@@ -163,9 +163,9 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
             <ConnectedSelect
                 key={childIdx}
                 name={'Select'}
-                selected={{key: value, value: value}}
+                selected={{ key: value, value: value }}
                 collectionId={reference}
-                onChange={({option, settings}) => this.onSelectChangeHandler(option, settings, valueItem.name, childIdx)}
+                onChange={({ option, settings }) => this.onSelectChangeHandler(option, settings, valueItem.name, childIdx)}
             />
         );
     }
@@ -213,13 +213,13 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     }
 
     private onChangeHandler (e: any, fieldName: string) {
-        const {resolveChange, item} = this.props;
+        const { resolveChange, item } = this.props;
 
         const newValue = e.target.value;
         const oldValue = item[fieldName].field;
 
         if (newValue !== oldValue) {
-            const newFieldset = {...item};
+            const newFieldset = { ...item };
             newFieldset[fieldName].field = newValue;
             resolveChange(newFieldset);
         }
@@ -239,7 +239,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
 
         // Only update when newValue and oldValue are not matching
         if (newValue !== oldValue) {
-            const newFieldset = {...item};
+            const newFieldset = { ...item };
             const fields = newFieldset[fieldName].fields;
             fields[childIndex] = {
                 ...oldValue,
@@ -268,7 +268,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
             }
 
             // Send a fieldSet change
-            resolveChange( newFieldset );
+            resolveChange(newFieldset);
         }
     }
 
@@ -288,7 +288,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     private onAddHandler (fieldName: string) {
         const { resolveChange, item } = this.props;
 
-        const newFieldset = {...item};
+        const newFieldset = { ...item };
         newFieldset[fieldName].fields.push('');
 
         resolveChange(newFieldset);

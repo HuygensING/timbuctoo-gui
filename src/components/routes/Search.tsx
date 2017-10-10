@@ -33,7 +33,7 @@ class Search extends PureComponent<FullProps, State> {
 
     render () {
         const { dataSetMetadata } = this.props.data;
-        if ( !dataSetMetadata ) { return <Loading />; }
+        if (!dataSetMetadata) { return <Loading />; }
 
         const { title, description, imageUrl, collectionList, collection } = dataSetMetadata;
 

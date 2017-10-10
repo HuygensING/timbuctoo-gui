@@ -34,4 +34,4 @@ const ROUTE_KEYS: KeyValueObject = {
     sheet: 'sheet'
 };
 
-export {ROUTE_PATHS, SUB_ROUTES, ROUTE_KEYS};
+export { ROUTE_PATHS, SUB_ROUTES, ROUTE_KEYS };

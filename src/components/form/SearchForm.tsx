@@ -86,7 +86,7 @@ class SearchForm extends PureComponent<Props & StoreProps, State> {
         e.preventDefault();
         const value = e.target.value;
         const pristine = value === '';
-        this.setState({value, pristine});
+        this.setState({ value, pristine });
     }
 
     private onReset (e: any) {

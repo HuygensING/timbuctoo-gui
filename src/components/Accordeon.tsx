@@ -70,7 +70,7 @@ class Accordeon extends PureComponent<Props, State> {
     }
 
     render () {
-        const {openCloseFn, item, openedIndex, resolveChange, onDeleteFn, idx, children} = this.props;
+        const { openCloseFn, item, openedIndex, resolveChange, onDeleteFn, idx, children } = this.props;
 
         const isOpen = openedIndex === idx;
         const openClose = () => openCloseFn(isOpen ? null : idx);
@@ -97,11 +97,11 @@ class Accordeon extends PureComponent<Props, State> {
     }
 
     private setActive () {
-        this.setState({isActive: true});
+        this.setState({ isActive: true });
     }
 
     private setInactive () {
-        this.setState({isActive: false});
+        this.setState({ isActive: false });
     }
 }
 

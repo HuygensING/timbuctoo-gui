@@ -8,7 +8,7 @@ const StyledLink = styled(Link)`
     text-decoration: underline;
 `;
 
-const ContentLink = ({to, children}) => {
+const ContentLink = ({ to, children }) => {
     if (!to || !children) { return null; }
 
     return (

@@ -43,7 +43,7 @@ class EntryBody extends PureComponent<FullProps, State> {
                 <FullHelmet pageName={`Entry - ${this.props.match.params.entry}`} />
                 <Grid xs={36} sm={24} xsOffset={6} smOffset={12}>
                     <Col xs={36} sm={24}>
-                        {components && components.map( (component: Component, index: number) => <ComponentLoader key={index} component={component} data={currentCollection} />)}
+                        {components && components.map((component: Component, index: number) => <ComponentLoader key={index} component={component} data={currentCollection} />)}
                     </Col>
                 </Grid>
             </section>

@@ -65,7 +65,7 @@ class App extends PureComponent<ChildProps<Props, Response>, State> {
         this.checkRenderLoad(this.props.user);
     }
 
-    componentWillReceiveProps ({data, user}: Props) {
+    componentWillReceiveProps ({ data, user }: Props) {
         if (!user.loggedIn && data.aboutMe && data.aboutMe.id && this.props.data.aboutMe !== data.aboutMe) {
             this.props.logInUser();
         }

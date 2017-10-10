@@ -48,7 +48,7 @@ interface Props {
     filter?: string[];
 }
 
-const ProgressBar: SFC<Props> = ({label, width, progress, filter = FILTERED_LABELS}) => {
+const ProgressBar: SFC<Props> = ({ label, width, progress, filter = FILTERED_LABELS }) => {
 
     // Check if label exists, if not don't render component
     if (!label) {

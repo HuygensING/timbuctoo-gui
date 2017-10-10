@@ -10,7 +10,7 @@ const reorderUnknownsInList = (collections: CollectionMetadata[]) => {
     for (let i = 0, limit = collectionsCopy.length; i < limit; i++) {
         col = collectionsCopy[i];
         if (col && !isKnown(col)) {
-            invalidCollections.push( collectionsCopy.splice(i, 1)[0] );
+            invalidCollections.push(collectionsCopy.splice(i, 1)[0]);
         }
     }
     return collectionsCopy.concat(invalidCollections);

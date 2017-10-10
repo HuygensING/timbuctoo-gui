@@ -38,7 +38,7 @@ const AccountMenu: SFC<Props> = ({ onLogOut, isFooter }) => {
 
     ${
         !isFooter
-        ?  `position: absolute;
+        ? `position: absolute;
             border-radius: .25rem;
             overflow: hidden;
             width: 100%;
@@ -48,8 +48,6 @@ const AccountMenu: SFC<Props> = ({ onLogOut, isFooter }) => {
         : ''
     }
 `;
-    const MenuListItem = styled.li``;
-
     const MenuLinkStyle = css`
     display: inline-block;
     position: relative;
@@ -87,18 +85,18 @@ const AccountMenu: SFC<Props> = ({ onLogOut, isFooter }) => {
     const MenuListItemLink = styled(Link)`${MenuLinkStyle}`;
     const MenuListItemSpan = styled.span`${MenuLinkStyle}`;
 
-    const renderListItem = ({path, name}) => (
-        <MenuListItem key={name}>
+    const renderListItem = ({ path, name }) => (
+        <li key={name}>
             <MenuListItemLink to={ROUTE_PATHS.account + path}>{name}</MenuListItemLink>
-        </MenuListItem>
+        </li>
     );
 
     return (
         <MenuList>
             {menuList.map(renderListItem)}
-            <MenuListItem>
+            <li>
                 <MenuListItemSpan onClick={onLogOut}>Log out</MenuListItemSpan>
-            </MenuListItem>
+            </li>
         </MenuList>
     );
 };

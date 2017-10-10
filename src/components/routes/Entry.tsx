@@ -27,7 +27,7 @@ class Entry extends PureComponent<FullProps, State> {
 
     static addUnique(value: string, values: Array<string>) {
         if (value && values.indexOf(value) < 0) {
-            values.push( value );
+            values.push(value);
         }
     }
 
@@ -60,7 +60,7 @@ class Entry extends PureComponent<FullProps, State> {
     render () {
         const { dataSetMetadata } = this.props.data;
 
-        if ( !dataSetMetadata ) { return <Loading />; }
+        if (!dataSetMetadata) { return <Loading />; }
         
         const { collection } = dataSetMetadata;
         if (!collection) { return null; }
@@ -102,17 +102,17 @@ class Entry extends PureComponent<FullProps, State> {
             }
         }, {
             type: COMPONENTS.divider,
-            title: { field: 'Personal info'}
+            title: { field: 'Personal info' }
         }, {
             type: COMPONENTS.keyValue,
-            key: { field: 'Name'},
+            key: { field: 'Name' },
             values: [{
                 type: COMPONENTS.value,
                 value: { fields: [keys.name] }
             }]
         }, {
             type: COMPONENTS.keyValue,
-            key: { field: 'Born'},
+            key: { field: 'Born' },
             values: [{
                 type: COMPONENTS.value,
                 value: { fields: [keys.name] }
@@ -129,11 +129,11 @@ class Entry extends PureComponent<FullProps, State> {
             }, {
                 type: COMPONENTS.link,
                 url: { fields: [keys.url] },
-                value: { fields: [keys.name]}
+                value: { fields: [keys.name] }
             }, {
                 type: COMPONENTS.link,
                 url: { fields: [keys.url] },
-                value: { fields: [keys.name]}
+                value: { fields: [keys.name] }
             }]
         }, {
             type: COMPONENTS.divider,
@@ -165,7 +165,7 @@ class Entry extends PureComponent<FullProps, State> {
             }]
         }, {
             type: COMPONENTS.divider,
-            title: { field: 'Relatives'}
+            title: { field: 'Relatives' }
         }, {
             type: COMPONENTS.value,
             value:  { fields: [keys.description] }

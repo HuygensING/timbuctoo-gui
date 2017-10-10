@@ -1,5 +1,5 @@
 {
-    "extends": ["tslint-react"],
+    "extends": ["tslint-react", "tslint-eslint-rules"],
     "rules": {
         "align": [
             true,
@@ -8,6 +8,17 @@
             "statements"
         ],
         "ban": false,
+        "brace-style": [
+            true,
+            "1tbs",
+            {
+                "allowSingleLine": true
+            }
+        ],
+        "block-spacing": [
+            true,
+            "always"
+        ],
         "class-name": true,
         "comment-format": [
             true,
@@ -16,6 +27,8 @@
         "curly": true,
         "eofline": false,
         "forin": true,
+        "handle-callback-err": [true, "^(err|error)$"],
+        "import-spacing": true,
         "indent": [ true, "spaces" ],
         "interface-name": [true, "never-prefix"],
         "jsdoc-format": true,
@@ -29,6 +42,7 @@
             "static-before-instance",
             "variables-before-functions"
         ],
+        "new-parens": true,
         "no-any": false,
         "no-arg": true,
         "no-bitwise": true,
@@ -42,18 +56,27 @@
             "timeEnd",
             "trace"
         ],
-        "no-consecutive-blank-lines": true,
+        "no-consecutive-blank-lines": [true],
+        "no-constant-condition": true,
         "no-construct": true,
         "no-debugger": true,
         "no-duplicate-variable": true,
         "no-empty": true,
         "no-eval": true,
+        "no-multi-spaces": [true],
         "no-shadowed-variable": true,
         "no-string-literal": true,
+        "no-string-throw": true,
         "no-switch-case-fall-through": true,
         "no-trailing-whitespace": false,
         "no-unused-expression": true,
         "no-use-before-declare": true,
+        "no-var-keyword": true,
+        "object-curly-spacing": [
+            true,
+            "always"
+        ],
+        "one-variable-per-declaration": [true, "ignore-for-loop"],
         "one-line": [
             true,
             "check-catch",
@@ -65,8 +88,16 @@
         "radix": true,
         "semicolon": [true, "always"],
         "switch-default": true,
-
-        "trailing-comma": false,
+        "ter-arrow-spacing": [true],
+        "ter-func-call-spacing": [true],
+        "ter-indent": [
+            true,
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "trailing-comma": [true, {"singleline": "never"}],
 
         "triple-equals": [ true, "allow-null-check" ],
         "typedef": [
@@ -84,16 +115,20 @@
                 "variable-declaration": "nospace"
             }
         ],
+        "space-in-parens": [true, "never"],
         "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"],
         "whitespace": [
             true,
             "check-branch",
             "check-decl",
-            "check-module",
             "check-operator",
+            "check-module",
             "check-separator",
+            "check-rest-spread",
             "check-type",
-            "check-typecast"
+            "check-typecast",
+            "check-type-operator",
+            "check-preblock"
         ]
     }
 }

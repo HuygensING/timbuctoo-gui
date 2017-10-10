@@ -46,7 +46,7 @@ class Home extends Component<FullProps, State> {
         }
     };
 
-    shouldComponentUpdate( newProps: FullProps ) {
+    shouldComponentUpdate(newProps: FullProps) {
         const _currProps = JSON.stringify(this.props.data);
         const _newProps = JSON.stringify(newProps.data);
             
@@ -67,11 +67,11 @@ class Home extends Component<FullProps, State> {
 
     renderFeaturedItems (promoted: DataSetMetadata[]) {
         if (!promoted.length) { return <div>Loading</div>; }
-        return promoted.map( (props, idx: number) => <FeaturedContentBlock key={idx} {...props} {...this.props.user} /> );
+        return promoted.map((props, idx: number) => <FeaturedContentBlock key={idx} {...props} {...this.props.user} />);
     }
 
     render () {
-        const {promotedDataSets, aboutMe} = this.props.data;
+        const { promotedDataSets, aboutMe } = this.props.data;
 
         const heroDataSetPath = this.selectFirstSet();
         return (

@@ -44,7 +44,7 @@ class DataSetBody extends PureComponent<FullProps, State> {
     }
 
     render () {
-        const {title, description, imageUrl, dataSetId, collectionKeys, owner, contact} = this.props;
+        const { title, description, imageUrl, dataSetId, collectionKeys, owner, contact } = this.props;
 
         return (
             <section>

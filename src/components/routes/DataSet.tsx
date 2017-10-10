@@ -21,7 +21,7 @@ class DataSet extends PureComponent<FullProps, State> {
 
     render () {
         const { dataSetMetadata } = this.props.data;
-        if ( !dataSetMetadata ) { return <Loading />; }
+        if (!dataSetMetadata) { return <Loading />; }
 
         const { dataSetId, title, description, imageUrl, collectionList, provenanceInfo, owner, contact } = dataSetMetadata;
 

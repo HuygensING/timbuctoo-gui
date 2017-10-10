@@ -23,7 +23,7 @@ const mutateQueryObject = (item, queryObject) => {
 
             if (field && field.fields) {
                 const obj = createValuesObject(item.value.fields);
-                console.log( queryObject, obj );
+                console.log(queryObject, obj);
                 _.merge(queryObject, obj);
             }
         }

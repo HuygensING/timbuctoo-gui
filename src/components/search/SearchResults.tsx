@@ -30,7 +30,7 @@ const SearchResults: SFC<Props> = ({ results, properties, collectionId, dataSetI
         const description = setValue(fields.description, result);
         const title = setValue(fields.title, result);
 
-        return  (
+        return (
             <SearchResultEntry
                 key={idx}
                 imageUrl={imageUrl}

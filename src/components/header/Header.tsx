@@ -38,7 +38,7 @@ interface Props {
     onLogOut: () => void;
 }
 
-const Header: SFC<Props> = ({isLoggedIn, onLogOut, height}) => {
+const Header: SFC<Props> = ({ isLoggedIn, onLogOut, height }) => {
     return (
         <StyledHeader height={height}>
             <StyledLink to={ROUTE_PATHS.root}><StyledImg src={logo} alt="timbuctoo"/></StyledLink>

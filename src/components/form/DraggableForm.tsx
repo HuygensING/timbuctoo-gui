@@ -62,20 +62,20 @@ class DraggableForm extends PureComponent<Props, State> {
     componentWillReceiveProps (newProps: Props) {
         if (this.props.items !== newProps.items) {
             const listItems = addExtraInfo(newProps.items);
-            this.setState({listItems});
+            this.setState({ listItems });
         }
     }
 
-    onSortEnd ({oldIndex, newIndex}: { oldIndex: number, newIndex: number }) {
+    onSortEnd ({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }) {
         const listItems = arrayMove(this.state.listItems, oldIndex, newIndex);
         const openedIndex = oldIndex === this.state.openedIndex ? newIndex : this.state.openedIndex;
 
-        this.setState({listItems, openedIndex});
+        this.setState({ listItems, openedIndex });
     }
 
     openCloseFn (idx: number) {
 
-        this.setState({openedIndex: idx});
+        this.setState({ openedIndex: idx });
     }
 
     deleteFn (idx: number) {
@@ -84,14 +84,14 @@ class DraggableForm extends PureComponent<Props, State> {
         const listItems = this.state.listItems.slice();
         listItems.splice(idx, 1);
 
-        this.setState({listItems, openedIndex});
+        this.setState({ listItems, openedIndex });
     }
 
     resolveChange (listItem: ComponentFormType, idx: number) {
         const listItems = this.state.listItems.slice();
         listItems[idx] = listItem;
 
-        this.setState({listItems});
+        this.setState({ listItems });
     }
 
     render () {
@@ -105,7 +105,7 @@ class DraggableForm extends PureComponent<Props, State> {
     }
 
     private renderContent () {
-        const {listItems, openedIndex} = this.state;
+        const { listItems, openedIndex } = this.state;
         const componentProps = {
             openedIndex,
             openCloseFn: this.openCloseFn,
@@ -139,7 +139,7 @@ class DraggableForm extends PureComponent<Props, State> {
         const newListItem = renderEmptyViewComponent(COMPONENTS.value, this.state.listItems.length);
         listItems.push(newListItem);
 
-        this.setState({listItems});
+        this.setState({ listItems });
     }
 
     private onSubmit (e: any) {

@@ -125,7 +125,7 @@ class SelectField extends Component<SelectProps, State> {
         }
     };
 
-    static renderOptionField({key, value}: OptionProps, idx: number): JSX.Element {
+    static renderOptionField({ key, value }: OptionProps, idx: number): JSX.Element {
         return (
             <option key={`${key}-${idx}`} value={value}>{key}</option>
         );
