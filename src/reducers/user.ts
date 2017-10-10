@@ -17,7 +17,11 @@ const hsid = retrieveId();
 const initialState: UserReducer = {
     hsid,
     language: 'en',
-    loggedIn: false
+    loggedIn: false,
+
+    avatar: 'http://lorempixel.com/200/200/people/',
+    name: 'Username',
+    profession: 'Profession'
 };
 
 // actions
