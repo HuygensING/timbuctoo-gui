@@ -23,32 +23,23 @@ const TooltipPanel = withProps<Props>(styled.div)`
     position: absolute;
     pointer-events: ${props => props.interactable ? 'inherit' : 'none'};
     top: 3.5rem;
-    
     ${props => props.align === ALIGN.right ? `right: ${props.alignOffset || '1rem'}` : `left: ${props.alignOffset || '1rem'}` };
-
     width: ${props => props.width ? props.width : 'auto'};
-
     padding: 1rem;
-
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     background: ${props => props.theme.colors.white};
-
     z-index: 10;
-
     animation: ${TooltipPanelAnimation} 0.3s ease-in-out;
-
+    
     &:before {
         position: absolute;
         top: 0;
         ${props => props.align === ALIGN.right ? 'right: 1rem' : 'left: 1rem' };
-
         width: 1rem;
         height: 1rem;
-        
         border-top: 1px solid ${props => lighten(0.04, props.theme.colors.shade.light)};
         border-right: 1px solid ${props => props.theme.colors.shade.light};
         background: ${props => props.theme.colors.white};
-
         transform: translateY(-50%) rotate(-45deg);
         content: '';
     }

@@ -30,7 +30,6 @@ const LinkedButton = styled(Link)`
 const IconWrapper = styled.figure`
     position: relative;
     display: inline-block;
-
     width: 1rem;
     margin-right: 1rem;
     vertical-align: middle;
