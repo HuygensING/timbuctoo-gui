@@ -56,8 +56,6 @@ const renderButtonType = (CollectionIsKnown: boolean, CollectionIsSelected: bool
         : BUTTON_TYPES.inverted;
 };
 
-const UNKNOWN: string = Translations.translate('details.collection.unknown');
-
 const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, currentCollectionListId, dataSetId }) => {
     const { title, collectionId, collectionListId, properties, total } = collection;
 
@@ -89,7 +87,10 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
         const collectionSelected =  !!currentCollectionListId && currentCollectionListId === collectionListId;
 
         const buttonType = renderButtonType(collectionKnown, collectionSelected);
-        const buttonTitle = getValue(title) || (collectionKnown ? collectionId : UNKNOWN);
+        const buttonTitle = getValue(title) || (
+            collectionKnown
+                ? collectionId
+                : Translations.translate('details.collection.unknown'));
 
         return (
             <Button type={buttonType} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>
