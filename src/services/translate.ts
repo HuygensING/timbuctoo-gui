@@ -8,5 +8,5 @@ export default (translationKey: string) => {
     const language = Languages[languageKey];
     const defaultLanguage = Languages[DEFAULT_LANGUAGE_KEY];
 
-    return language[languageKey] || defaultLanguage[languageKey] || languageKey;
+    return language[translationKey] || defaultLanguage[translationKey] || languageKey;
 };
