@@ -1,35 +1,31 @@
 import React, { SFC } from 'react';
-import styled from '../../styled-components';
+import styled, { withProps } from '../../styled-components';
 
 import Image from '../layout/Image';
 
-export enum SIZE { small, large }
+export enum SIZE {
+    small = '2rem',
+    large = '4rem'
+}
+
 interface Props {
-    size: SIZE.small | SIZE.large;
+    size: SIZE;
     src: string;
 }
 
-const setSize = (size) => {
-    switch (size) {
-        case SIZE.small:    return '2rem';
-        case SIZE.large:    return '4rem';
-        default:            return '3rem';
-    }
-};
-
-const AvatarMask = styled.figure`
+const AvatarMask = withProps<{ propSize: SIZE }>(styled.figure)`
     position: relative;
     display: inline-block;
     overflow: hidden;
-    width: ${props => setSize(props.size)};
-    height: ${props => setSize(props.size)};
+    width: ${props => props.propSize};
+    height: ${props => props.propSize};
     border-radius: 50%;
     vertical-align: middle;
 `;
 
 const Avatar: SFC<Props> = ({ size, src }) => {
     return (
-        <AvatarMask size={size}>
+        <AvatarMask propSize={size}>
             <Image src={src} ratio={1}/>
         </AvatarMask>
     );
