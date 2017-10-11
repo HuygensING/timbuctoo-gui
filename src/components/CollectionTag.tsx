@@ -13,6 +13,7 @@ import ProgressBar from './ProgressBar';
 import { getValue } from '../services/getValue';
 
 import Tooltip from './Tooltip';
+import { isKnown } from '../services/HandleUnknowns';
 
 interface Props {
     isOpen: boolean;
@@ -45,18 +46,18 @@ const PropertyLabel = styled(Label)`
 const DensityLabel = styled(Label)`
 `;
 
-const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, currentCollectionListId, dataSetId }) => {
-    const { title, collectionId, collectionListId, properties } = collection;
+const renderButtonType = (CollectionIsKnown: boolean, CollectionIsSelected: boolean) => {
+    if (!CollectionIsKnown) {
+        return BUTTON_TYPES.disabled;
+    }
 
-    let buttonType = currentCollectionListId && currentCollectionListId === collectionListId
+    return CollectionIsSelected
         ? BUTTON_TYPES.dark
         : BUTTON_TYPES.inverted;
-    
-    let tagTitle = collectionId;
-    if (collectionId.indexOf('vocabulary_unknown') !== -1) {
-        tagTitle = 'Uknown';
-        buttonType = BUTTON_TYPES.disabled;
-    }
+};
+
+const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, currentCollectionListId, dataSetId }) => {
+    const { title, collectionId, collectionListId, properties, total } = collection;
 
     const renderPropertyDensity = (property: Property, idx: number) => {
         return (
@@ -73,11 +74,28 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
         return (
             <Tooltip>
                 <PropertiesHeader>
-                    <Subtitle>{collectionId}</Subtitle>
+                    <Subtitle>{collectionId} ({total})</Subtitle>
                     <PropertyLabel>{translate('details.collection.property')}</PropertyLabel><DensityLabel>{translate('details.collection.density')}</DensityLabel>
                 </PropertiesHeader>
                 {properties.items.map(renderPropertyDensity)}
             </Tooltip>
+        );
+    };
+
+    const renderButton = () => {
+        const collectionKnown = isKnown(collection);
+        const collectionSelected = !!currentCollectionListId && currentCollectionListId === collectionListId;
+
+        const buttonType = renderButtonType(collectionKnown, collectionSelected);
+        const buttonTitle = getValue(title) || (
+            collectionKnown
+                ? collectionId
+                : translate('details.collection.unknown'));
+
+        return (
+            <Button type={buttonType} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>
+                {buttonTitle} ({total})
+            </Button>
         );
     };
 
@@ -86,7 +104,7 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
             onMouseEnter={() => toggleOpen(index)}
             onMouseLeave={() => toggleOpen(null)}
         >
-            <Button type={buttonType} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>{getValue(title) || tagTitle}</Button>
+            {renderButton()}
             {isOpen && renderPropertiesPanel()}
         </ListItem>
     );
