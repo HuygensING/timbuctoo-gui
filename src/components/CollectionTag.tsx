@@ -84,7 +84,7 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
 
     const renderButton = () => {
         const collectionKnown = isKnown(collection);
-        const collectionSelected =  !!currentCollectionListId && currentCollectionListId === collectionListId;
+        const collectionSelected = !!currentCollectionListId && currentCollectionListId === collectionListId;
 
         const buttonType = renderButtonType(collectionKnown, collectionSelected);
         const buttonTitle = getValue(title) || (
