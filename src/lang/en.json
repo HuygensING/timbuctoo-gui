@@ -12,6 +12,7 @@
     "home.most_popular.title": "Most Popular",
     "details.collection.property": "Property",
     "details.collection.density": "Density",
+    "details.collection.unknown": "Unknown",
     "search.placeholder": "Type to search...",
     "search.reset": "Reset",
     "search.search": "Search",
