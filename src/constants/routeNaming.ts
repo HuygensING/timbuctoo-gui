@@ -30,7 +30,8 @@ const ROUTE_KEYS: KeyValueObject = {
     dataSet: 'dataSet',
     entry: 'entry',
     collection: 'collection',
-    sheet: 'sheet'
+    sheet: 'sheet',
+    cursor: 'cursor'
 };
 
 export { ROUTE_PATHS, SUB_ROUTES, ROUTE_KEYS };
