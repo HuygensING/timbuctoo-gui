@@ -156,7 +156,18 @@ export interface ComponentValueField {
 export interface CollectionMetadataList {
   prevCursor?: string;
   nextCursor?: string;
+  facets: Facet[];
   items: Array<CollectionMetadata>;
+}
+
+export interface Facet {
+  caption: string;
+  options: FacetOption[];
+}
+
+export interface FacetOption {
+  name: string;
+  count: number;
 }
 
 export interface Archetypes {
@@ -209,16 +220,6 @@ export interface ComponentValueInput {
 export interface ComponentValueFieldInput {
   value?: string;
   referenceType?: string;
-}
-
-export interface Facet {
-  caption: string;
-  options: Array<Option>;
-}
-
-export interface Option {
-  name: string;
-  count: number;
 }
 
 export interface FacetInput {

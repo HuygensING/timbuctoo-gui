@@ -11,6 +11,13 @@ const QUERY_COLLECTION_VALUES = ({ match, queryString = '/all', metadata }) => {
             dataSets {
                 ${match.params.dataSet} {
                     ${collectionListId} {
+                        facets {
+                            caption
+                            options {
+                                name
+                                count
+                            }
+                        }
                         items {
                             uri
                             ${createQueryFromValue(title, properties)}

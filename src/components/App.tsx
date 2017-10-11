@@ -86,7 +86,7 @@ class App extends PureComponent<ChildProps<Props, Response>, State> {
                 {
                     this.renderLoad
                         ? <Loading/>
-                        : <BrowserRouter>
+                        : <BrowserRouter basename={process.env.REACT_APP_REL_PATH || '/'}>
                             <GridWithMargin>
                                 <Header height={headerHeight}/>
                                 <Main>
