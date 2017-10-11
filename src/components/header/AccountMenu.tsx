@@ -1,19 +1,15 @@
 import React, { PureComponent } from 'react';
 import styled from '../../styled-components';
-
-import { UserReducer } from '../../typings/store';
 import { MenuItemProp } from '../../typings';
-
 import { LOGIN_URL } from '../../constants/api';
-
 import { Subtitle } from '../layout/StyledCopy';
 import AvatarButton from './AvatarButton';
 import Tooltip, { ALIGN } from '../Tooltip';
-
 import { MENU_ITEMS } from '../../constants/global';
 import AccountMenuItem from './AccountMenuItem';
 import Avatar, { SIZE } from './Avatar';
 import Logout from '../icons/Logout';
+import { UserReducer } from '../../reducers/user';
 
 interface Props {
     user: UserReducer;
@@ -69,12 +65,12 @@ class AccountMenu extends PureComponent<Props, State> {
     }
 
     renderAvatarButton() {
-        const {user} = this.props;
+        const { user } = this.props;
         return <AvatarButton user={user} onClick={this.onAvatarClickHandler}/>;
     }
 
     renderMenu() {
-        const {user, onLogOut} = this.props;
+        const { user, onLogOut } = this.props;
         return (
             <Tooltip align={ALIGN.right} alignOffset={'-0.5rem'} interactable={true}>
                 <MenuHeader>
@@ -96,8 +92,8 @@ class AccountMenu extends PureComponent<Props, State> {
     }
 
     render() {
-        const {loggedIn} = this.props.user;
-        const {isOpen} = this.state;
+        const { loggedIn } = this.props.user;
+        const { isOpen } = this.state;
         return (
             <AccountContainer>
                 {loggedIn ? this.renderAvatarButton() : this.renderLoginButton()}
@@ -108,7 +104,7 @@ class AccountMenu extends PureComponent<Props, State> {
 
     private onAvatarClickHandler = (e: any) => {
         const isOpen = !this.state.isOpen;
-        this.setState({isOpen});
+        this.setState({ isOpen });
     }
 }
 

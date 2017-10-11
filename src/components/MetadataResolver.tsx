@@ -21,10 +21,10 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
 
             static selectQuery (props: Readonly<P & RouteProps>, state: State, isMetadataQuery: boolean) {
                 if (isMetadataQuery && typeof metadataQuery === 'function') {
-                    return metadataQuery({...state, match: props.match});
+                    return metadataQuery({ ...state, match: props.match });
 
                 } else if (typeof dataQuery === 'function') {
-                    return dataQuery({...state, match: props.match});
+                    return dataQuery({ ...state, match: props.match });
                 }
 
                 return null;
@@ -82,11 +82,11 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                     return;
                 }
 
-                Client.query({query})
+                Client.query({ query })
                     .then((res) => this.setQuery(res, isMetadataQuery, state));
             }
 
-            private setQuery ({data}: any, isMetadataQuery: boolean, state: State) {
+            private setQuery ({ data }: any, isMetadataQuery: boolean, state: State) {
                 return isMetadataQuery
                     ? this.setMetadata(data, state)
                     : this.setData(data);

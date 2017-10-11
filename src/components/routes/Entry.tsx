@@ -32,7 +32,7 @@ class Entry extends PureComponent<FullProps, State> {
 
     static addUnique(value: string, values: Array<string>) {
         if (value && values.indexOf(value) < 0) {
-            values.push( value );
+            values.push(value);
         }
     }
 
@@ -63,7 +63,7 @@ class Entry extends PureComponent<FullProps, State> {
     }
 
     render () {
-        if ( this.props.loading ) { return <Loading />; }
+        if (this.props.loading) { return <Loading />; }
         
         const { collection } = this.props.metadata.dataSetMetadata;
         if (!collection) { return null; }
@@ -111,17 +111,17 @@ class Entry extends PureComponent<FullProps, State> {
             }
         }, {
             type: COMPONENTS.divider as ComponentType,
-            title: { field: 'Personal info'}
+            title: { field: 'Personal info' }
         }, {
             type: COMPONENTS.keyValue as ComponentType,
-            key: { field: 'Name'},
+            key: { field: 'Name' },
             values: [{
                 type: COMPONENTS.value as ComponentType,
                 value: { fields: [keys.name] }
             }]
         }, {
             type: COMPONENTS.keyValue as ComponentType,
-            key: { field: 'Born'},
+            key: { field: 'Born' },
             values: [{
                 type: COMPONENTS.value as ComponentType,
                 value: { fields: [keys.name] }
@@ -138,11 +138,11 @@ class Entry extends PureComponent<FullProps, State> {
             }, {
                 type: COMPONENTS.link as ComponentType,
                 url: { fields: [keys.url] },
-                value: { fields: [keys.name]}
+                value: { fields: [keys.name] }
             }, {
                 type: COMPONENTS.link as ComponentType,
                 url: { fields: [keys.url] },
-                value: { fields: [keys.name]}
+                value: { fields: [keys.name] }
             }]
         }, {
             type: COMPONENTS.divider as ComponentType,
@@ -174,7 +174,7 @@ class Entry extends PureComponent<FullProps, State> {
             }]
         }, {
             type: COMPONENTS.divider as ComponentType,
-            title: { field: 'Relatives'}
+            title: { field: 'Relatives' }
         }, {
             type: COMPONENTS.value as ComponentType,
             value:  { fields: [keys.description] }

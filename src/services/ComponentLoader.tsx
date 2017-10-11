@@ -18,7 +18,7 @@ interface ComponentLoaderProps {
 const ComponentLoader = ({ component, data }: ComponentLoaderProps) => {
 
     const getTreeValue = (fields) => {
-        let tree = {...data};
+        let tree = { ...data };
 
         for (let i = 0, len = fields.length; i < len; i++) {
             const key = fields[i];

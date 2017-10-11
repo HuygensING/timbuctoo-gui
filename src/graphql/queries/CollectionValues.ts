@@ -2,7 +2,7 @@ import { gql } from 'react-apollo';
 import { createQueryFromValue } from '../../services/getValue';
 
 const QUERY_COLLECTION_VALUES = ({ match, queryString = '/all', metadata }) => {
-    const {properties, summaryProperties, collectionListId} = metadata.dataSetMetadata.collection;
+    const { properties, summaryProperties, collectionListId } = metadata.dataSetMetadata.collection;
     const { title, description, image } = summaryProperties;
 
     const query = `

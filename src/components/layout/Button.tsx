@@ -47,7 +47,7 @@ const setBackgroundColor = (props: ElementProps, type: ButtonType) => {
     }
 };
 
-const Button: SFC<ButtonProps> = ({type = BUTTON_TYPES.normal, small, to, children}) => {
+const Button: SFC<ButtonProps> = ({ type = BUTTON_TYPES.normal, small, to, children }) => {
 
     const ButtonLink = styled(Link)`
         ${BaseButtonStyling};

@@ -6,7 +6,7 @@ import { DataSetProps } from '../../typings';
 import { calcColWidth } from '../layout/Grid';
 import { Subtitle, Content, Link, Label } from '../layout/StyledCopy';
 
-import Translations from '../../services/Translations';
+import translate from '../../services/translate';
 import { getValue } from '../../services/getValue';
 
 const Datasets = ['World Leaders', 'German Royalty', '18th century literature'];
@@ -31,7 +31,7 @@ const DateLabel = styled(Label)`
     margin: auto;
 `;
 
-const ListContentItem = ({title, description, dataSetId}: DataSetProps) => {
+const ListContentItem = ({ title, description, dataSetId }: DataSetProps) => {
     const titleField = getValue(title);
     const descrField = getValue(description);
 
@@ -49,7 +49,7 @@ const ListContentItem = ({title, description, dataSetId}: DataSetProps) => {
                     </StyledLink>
                 </Content>
             }
-            <DateLabel>{Translations.translate('globals.today')}</DateLabel>
+            <DateLabel>{translate('globals.today')}</DateLabel>
         </ListItem>
     );
 };

@@ -19,12 +19,12 @@ const calcColWidth = (cols: number) => `${cols / TOTAL_COLUMNS * 100}vw`;
 
 // const calcToCol = (px: number) => calc px to percentages using innerWidth and divide by total columns;
 
-const getProp = (props: number, queries: string[] = BREAKPOINT_KEYS.DESKTOP, prop: string ) => {
+const getProp = (props: number, queries: string[] = BREAKPOINT_KEYS.DESKTOP, prop: string) => {
     if (!prop) {
         return 0;
     }
     let _prop = 0;
-    for (let key of queries ) {
+    for (let key of queries) {
         if (props[`${key}${prop}`]) {
             _prop = props[`${key}${prop}`];
         }
@@ -58,7 +58,7 @@ const Grid = styled((props: GridProps) => CreateElementWithTag(props, 'section')
     flex-direction: row;
     position: relative;
     flex-wrap: wrap;
-    width: ${(props: GridProps) => calcColWidth( props.md || props.sm || props.xs || (TOTAL_COLUMNS - getOffset(props)) )};
+    width: ${(props: GridProps) => calcColWidth(props.md || props.sm || props.xs || (TOTAL_COLUMNS - getOffset(props)))};
     margin-top: 0;
     margin-left: ${(props: GridProps) => calcColWidth(getOffset(props))};
 
@@ -66,7 +66,7 @@ const Grid = styled((props: GridProps) => CreateElementWithTag(props, 'section')
      * Tablet specific rules
      */
     @media (max-width: ${BREAKPOINT.TABLET}) {
-        width: ${(props: GridProps) => calcColWidth(props.sm || props.xs || (TOTAL_COLUMNS - getOffset(props, BREAKPOINT_KEYS.TABLET)) )};
+        width: ${(props: GridProps) => calcColWidth(props.sm || props.xs || (TOTAL_COLUMNS - getOffset(props, BREAKPOINT_KEYS.TABLET)))};
         margin-left: ${(props: GridProps) => `${calcColWidth(getOffset(props, BREAKPOINT_KEYS.TABLET))}`};
     }
 
@@ -74,7 +74,7 @@ const Grid = styled((props: GridProps) => CreateElementWithTag(props, 'section')
      * Mobile specific rules
      */
     @media (max-width: ${BREAKPOINT.MOBILE}) {
-        width: ${(props: GridProps) => calcColWidth(props.xs || (TOTAL_COLUMNS - getOffset(props, BREAKPOINT_KEYS.MOBILE)) )};
+        width: ${(props: GridProps) => calcColWidth(props.xs || (TOTAL_COLUMNS - getOffset(props, BREAKPOINT_KEYS.MOBILE)))};
         margin-left: ${(props: GridProps) => `${calcColWidth(props.xsOffset || 0)}`};
     }
 `;
@@ -120,10 +120,10 @@ const Col = styled((props: ColProps) => CreateElementWithTag(props, 'div'))`
         
         margin-left: ${(props: ColProps) => `${calcColWidth(getOffset(props, BREAKPOINT_KEYS.TABLET))}`};
         
-        padding-top: ${(props: ColProps) => calcColWidth(getPaddingTop(props, BREAKPOINT_KEYS.TABLET) || getPaddingY(props, BREAKPOINT_KEYS.TABLET) || getPadding(props, BREAKPOINT_KEYS.TABLET) )};
-        padding-right: ${(props: ColProps) => calcColWidth(getPaddingRight(props, BREAKPOINT_KEYS.TABLET) || getPaddingX(props, BREAKPOINT_KEYS.TABLET) || getPadding(props, BREAKPOINT_KEYS.TABLET) )};
-        padding-bottom: ${(props: ColProps) => calcColWidth(getPaddingBottom(props, BREAKPOINT_KEYS.TABLET) || getPaddingY(props, BREAKPOINT_KEYS.TABLET) || getPadding(props, BREAKPOINT_KEYS.TABLET) )};
-        padding-left: ${(props: ColProps) => calcColWidth(getPaddingLeft(props, BREAKPOINT_KEYS.TABLET) || getPaddingX(props, BREAKPOINT_KEYS.TABLET) || getPadding(props, BREAKPOINT_KEYS.TABLET) )};
+        padding-top: ${(props: ColProps) => calcColWidth(getPaddingTop(props, BREAKPOINT_KEYS.TABLET) || getPaddingY(props, BREAKPOINT_KEYS.TABLET) || getPadding(props, BREAKPOINT_KEYS.TABLET))};
+        padding-right: ${(props: ColProps) => calcColWidth(getPaddingRight(props, BREAKPOINT_KEYS.TABLET) || getPaddingX(props, BREAKPOINT_KEYS.TABLET) || getPadding(props, BREAKPOINT_KEYS.TABLET))};
+        padding-bottom: ${(props: ColProps) => calcColWidth(getPaddingBottom(props, BREAKPOINT_KEYS.TABLET) || getPaddingY(props, BREAKPOINT_KEYS.TABLET) || getPadding(props, BREAKPOINT_KEYS.TABLET))};
+        padding-left: ${(props: ColProps) => calcColWidth(getPaddingLeft(props, BREAKPOINT_KEYS.TABLET) || getPaddingX(props, BREAKPOINT_KEYS.TABLET) || getPadding(props, BREAKPOINT_KEYS.TABLET))};
     }
     
     /*
@@ -142,10 +142,10 @@ const Col = styled((props: ColProps) => CreateElementWithTag(props, 'div'))`
         width: ${(props: ColProps) => calcColWidth(props.xs || (TOTAL_COLUMNS - getOffset(props, BREAKPOINT_KEYS.MOBILE)))};
         margin-left: ${(props: ColProps) => `${calcColWidth(getOffset(props, BREAKPOINT_KEYS.MOBILE))}`};
 
-        padding-top: ${(props: ColProps) => calcColWidth(getPaddingTop(props, BREAKPOINT_KEYS.MOBILE) || getPaddingY(props, BREAKPOINT_KEYS.MOBILE) || getPadding(props, BREAKPOINT_KEYS.MOBILE) )};
-        padding-right: ${(props: ColProps) => calcColWidth(getPaddingRight(props, BREAKPOINT_KEYS.MOBILE) || getPaddingX(props, BREAKPOINT_KEYS.MOBILE) || getPadding(props, BREAKPOINT_KEYS.MOBILE) )};
-        padding-bottom: ${(props: ColProps) => calcColWidth(getPaddingBottom(props, BREAKPOINT_KEYS.MOBILE) || getPaddingY(props, BREAKPOINT_KEYS.MOBILE) || getPadding(props, BREAKPOINT_KEYS.MOBILE) )};
-        padding-left: ${(props: ColProps) => calcColWidth(getPaddingLeft(props, BREAKPOINT_KEYS.MOBILE) || getPaddingX(props, BREAKPOINT_KEYS.MOBILE) || getPadding(props, BREAKPOINT_KEYS.MOBILE) )};
+        padding-top: ${(props: ColProps) => calcColWidth(getPaddingTop(props, BREAKPOINT_KEYS.MOBILE) || getPaddingY(props, BREAKPOINT_KEYS.MOBILE) || getPadding(props, BREAKPOINT_KEYS.MOBILE))};
+        padding-right: ${(props: ColProps) => calcColWidth(getPaddingRight(props, BREAKPOINT_KEYS.MOBILE) || getPaddingX(props, BREAKPOINT_KEYS.MOBILE) || getPadding(props, BREAKPOINT_KEYS.MOBILE))};
+        padding-bottom: ${(props: ColProps) => calcColWidth(getPaddingBottom(props, BREAKPOINT_KEYS.MOBILE) || getPaddingY(props, BREAKPOINT_KEYS.MOBILE) || getPadding(props, BREAKPOINT_KEYS.MOBILE))};
+        padding-left: ${(props: ColProps) => calcColWidth(getPaddingLeft(props, BREAKPOINT_KEYS.MOBILE) || getPaddingX(props, BREAKPOINT_KEYS.MOBILE) || getPadding(props, BREAKPOINT_KEYS.MOBILE))};
     }
 `;
 

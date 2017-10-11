@@ -1,5 +1,5 @@
 import React, { SFC } from 'react';
-import Translations from '../../services/Translations';
+import translate from '../../services/translate';
 
 import GridSection from '../layout/GridSection';
 import SearchResultEntry from './SearchResultEntry';
@@ -34,7 +34,7 @@ const SearchResults: SFC<Props> = ({ results, properties, collectionId, dataSetI
         const description = setValue(fields.description, result);
         const title = setValue(fields.title, result);
 
-        return  (
+        return (
             <SearchResultEntry
                 key={idx}
                 imageUrl={imageUrl}
@@ -48,7 +48,7 @@ const SearchResults: SFC<Props> = ({ results, properties, collectionId, dataSetI
     };
 
     return (
-        <GridSection title={Translations.translate('globals.results')} cols={1} gridSize={27} gridOffset={0} colSizeOffset={1}>
+        <GridSection title={translate('globals.results')} cols={1} gridSize={27} gridOffset={0} colSizeOffset={1}>
             {results.map(renderEntries)}
         </GridSection>
     );

@@ -35,12 +35,12 @@ class About extends PureComponent<Props, State> {
 
     toggleState () {
         this.setState(
-            {isOpen: !this.state.isOpen}
+            { isOpen: !this.state.isOpen }
         );
     }
 
     render () {
-        const {body, title} = this.props;
+        const { body, title } = this.props;
 
         if (!body || !title) {
             return null;

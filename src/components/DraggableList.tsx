@@ -32,7 +32,7 @@ class DraggableList extends PureComponent<Props> {
         this.renderListItem = this.renderListItem.bind(this);
     }
 
-    renderListItem ( listItem: any, idx: number) {
+    renderListItem (listItem: any, idx: number) {
         const { componentType, componentProps } = this.props;
 
         if (componentType === DRAGGABLE_COMPONENTS.accordeon) {

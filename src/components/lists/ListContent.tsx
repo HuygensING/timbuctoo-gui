@@ -14,7 +14,7 @@ const List = styled.ul`
 const ListContent = (props) => {
 
     function renderContent(data: any) {
-        return data && data.map( (content, index) => <ListContentItem key={index} {...content} /> ) || <div>Loading</div>;
+        return data && data.map((content, index) => <ListContentItem key={index} {...content} />) || <div>Loading</div>;
     }
 
     return (

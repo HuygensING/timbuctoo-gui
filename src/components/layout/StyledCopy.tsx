@@ -142,7 +142,7 @@ export const Link = styled((props: ElementProps & LinkProps) => CreateElementWit
     
     &:hover {
         color: ${(props) => 
-        (props.hoverColor && props.theme.colors[props.hoverColor] && props.theme.colors[props.hoverColor].medium ) 
+        (props.hoverColor && props.theme.colors[props.hoverColor] && props.theme.colors[props.hoverColor].medium) 
         || props.hoverColor 
         || props.theme.colors.shade.dark};
     }
