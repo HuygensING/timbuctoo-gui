@@ -41,7 +41,7 @@ class Search extends PureComponent<FullProps> {
     }
 
     render() {
-        // TODO: Refactor loading, so it breaks up into the components instead of re-running entire page | can use state for thisas well :)
+        // TODO: Refactor loading, so it breaks up into the components instead of re-running entire page | can use state for this well :)
         if (this.props.loading) {
             return <Loading/>;
         }
@@ -83,7 +83,7 @@ class Search extends PureComponent<FullProps> {
 
                     {/* Filter functionality */}
                     <Col sm={12} smPaddingY={1}>
-                        <Filters facets={null}/>
+                        <Filters facets={collectionValues.facets}/>
                     </Col>
 
                     <Col sm={27} smOffset={3} smPaddingY={1}>

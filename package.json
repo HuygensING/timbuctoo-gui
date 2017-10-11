@@ -2,6 +2,7 @@
   "name": "timbuctoo-gui",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "scripts": {
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",

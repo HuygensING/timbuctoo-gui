@@ -15,6 +15,13 @@ const QUERY_COLLECTION_VALUES = ({ match, metadata, location }) => {
                     ${collectionListId}${cursor ? `(cursor: "${cursor}")` : ''} {
                         nextCursor
                         prevCursor
+                        facets {
+                            caption
+                            options {
+                                name
+                                count
+                            }
+                        }
                         items {
                             uri
                             ${createQueryFromValue(title, properties)}
