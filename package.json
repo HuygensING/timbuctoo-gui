@@ -9,7 +9,7 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "faker": "graphql-faker --extend http://localhost:8080/v5/graphql \\  -H 'Accept:application/json' -H 'Content-Type:application/json'",
-    "prepush": "check-dependencies && tslint --project . && tsc --noEmit"
+    "prepush": "check-dependencies && tslint --project . --type-check"
   },
   "dependencies": {
     "js-cookie": "^2.1.4",
