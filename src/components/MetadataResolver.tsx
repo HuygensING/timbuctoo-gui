@@ -1,6 +1,6 @@
 import React, { Component, ComponentClass } from 'react';
 import Client from '../services/ApolloClient';
-import { match } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 
 interface State {
     metadata: any;
@@ -8,23 +8,19 @@ interface State {
     loading: boolean;
 }
 
-interface RouteProps {
-    match: match<any>;
-}
-
 export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?: Function) {
     return (WrappedComponent: ComponentClass<P>) => {
-        return class MetaDataQueryResolver extends Component<P & RouteProps, State> {
+        return class MetaDataQueryResolver extends Component<P & RouteComponentProps<any>, State> {
             defaultState: State;
             onlyMetadata: boolean;
             noQuery: boolean;
 
-            static selectQuery (props: Readonly<P & RouteProps>, state: State, isMetadataQuery: boolean) {
+            static selectQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
                 if (isMetadataQuery && typeof metadataQuery === 'function') {
-                    return metadataQuery({ ...state, match: props.match });
+                    return metadataQuery({ ...state, match: props.match, location: props.location, history: props.history });
 
                 } else if (typeof dataQuery === 'function') {
-                    return dataQuery({ ...state, match: props.match });
+                    return dataQuery({ ...state, match: props.match, location: props.location, history: props.history });
                 }
 
                 return null;
@@ -48,12 +44,12 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 }
             }
 
-            componentWillUpdate (nextProps: Readonly<P & RouteProps>, nextState: State) {
+            componentWillUpdate (nextProps: Readonly<P & RouteComponentProps<any>>, nextState: State) {
                 if (this.noQuery) {
                     return;
                 }
 
-                const isRouteChange = this.props.match.params !== nextProps.match.params;
+                const isRouteChange = this.props.match.params !== nextProps.match.params || this.props.location.search !== nextProps.location.search;
                 const metadataChanged = !this.onlyMetadata && this.state.metadata !== nextState.metadata;
 
                 if (isRouteChange || metadataChanged) {
@@ -66,7 +62,7 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
             }
 
             // privates
-            private queryGraph (props: Readonly<P & RouteProps>, state: State, isMetadataQuery: boolean) {
+            private queryGraph (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
 
                 if (!isMetadataQuery && this.onlyMetadata) {
                     return null;
@@ -75,7 +71,7 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 return this.doQuery(props, state, isMetadataQuery);
             }
 
-            private doQuery (props: Readonly<P & RouteProps>, state: State, isMetadataQuery: boolean) {
+            private doQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
                 const query = MetaDataQueryResolver.selectQuery(props, state, isMetadataQuery);
 
                 if (!query) {
