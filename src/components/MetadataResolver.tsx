@@ -17,10 +17,10 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
 
             static selectQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
                 if (isMetadataQuery && typeof metadataQuery === 'function') {
-                    return metadataQuery({ ...state, match: props.match, location: props.location });
+                    return metadataQuery({ ...state, match: props.match, location: props.location, history: props.history });
 
                 } else if (typeof dataQuery === 'function') {
-                    return dataQuery({ ...state, match: props.match, location: props.location });
+                    return dataQuery({ ...state, match: props.match, location: props.location, history: props.history });
                 }
 
                 return null;

@@ -13,10 +13,6 @@ interface Props {
 const Container = styled.div`
     display: flex;
     justify-content: flex-end;
-    
-    @media (max-width: ${BREAKPOINT.MOBILE}) {
-        justify-content: flex-end;        
-    }
 `;
 
 interface ButtonProps {
