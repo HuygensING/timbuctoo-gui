@@ -2,8 +2,6 @@ import { gql } from 'react-apollo';
 import { createQueryFromValue } from '../../services/getValue';
 import setCollectionArguments from '../../services/CollectionArgumentsCreator';
 
-// TODO: BIKE IN THE CURSOR AS TOTAL OF ARGS
-
 const QUERY_COLLECTION_VALUES = ({ match, location, metadata }) => {
     const { properties, summaryProperties, collectionListId, indexConfig } = metadata.dataSetMetadata.collection;
 
