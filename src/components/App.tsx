@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { graphql, gql, ChildProps } from 'react-apollo';
 
-import Router from './Routes';
+import Routes from './Routes';
 import { default as styled, ThemeProvider } from 'styled-components';
 import theme from '../theme';
 
@@ -15,6 +15,7 @@ import { Grid } from './layout/Grid';
 import { AboutMe } from '../typings/schema';
 import { LogInUser, LogOutUser, UserReducer } from '../reducers/user';
 import Loading from './Loading';
+import createBrowserHistory from 'history/createBrowserHistory';
 
 if (process.env.NODE_ENV !== 'production') {
     // /* eslint-disable-next-line no-unused-vars,react/no-deprecated */
@@ -59,9 +60,19 @@ interface State {
 
 class App extends PureComponent<ChildProps<Props, Response>, State> {
     renderLoad: boolean = true;
+    history = createBrowserHistory({
+        basename: process.env.REACT_APP_REL_PATH || '/'
+    });
 
     componentWillMount () {
         this.checkRenderLoad(this.props.user);
+        
+        this.history.listen((location) => {
+            const { state } = location;
+            if ((state && !state.dontJumpToTop) || !state) {
+                window.scrollTo(0, 0);
+            }
+        });
     }
 
     componentWillReceiveProps ({ data, user }: Props) {
@@ -86,16 +97,16 @@ class App extends PureComponent<ChildProps<Props, Response>, State> {
                 {
                     this.renderLoad
                         ? <Loading/>
-                        : <BrowserRouter basename={process.env.REACT_APP_REL_PATH || '/'}>
+                        : <Router history={this.history}>
                             <GridWithMargin>
                                 <Header height={headerHeight}/>
                                 <Main>
-                                    <Router/>
+                                    <Routes />
                                 </Main>
                                 <Footer/>
                                 <PoweredBy/>
                             </GridWithMargin>
-                        </BrowserRouter>
+                        </Router>
                 }
             </ThemeProvider>
         );

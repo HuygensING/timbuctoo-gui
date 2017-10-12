@@ -1,11 +1,34 @@
-import * as React from 'react';
 import { lighten } from 'polished/lib';
-import styled, { css } from '../../styled-components';
-
-import { ButtonProps, ButtonType, ElementProps } from '../../typings/layout';
-import { Link } from './StyledCopy';
-import { SFC } from 'react';
+import styled, { css, withProps } from '../../styled-components';
+import { ButtonProps, ButtonVariant, ElementProps } from '../../typings/layout';
 import { BUTTON_TYPES } from '../../constants/global';
+import { LinkProps, Link } from 'react-router-dom';
+
+export const setColor = (props: ElementProps, type?: ButtonVariant) => {
+    switch (type) {
+        case BUTTON_TYPES.normal:
+            return props.theme.colors.white;
+        case BUTTON_TYPES.dark:
+            return props.theme.colors.white;
+        case BUTTON_TYPES.inverted:
+        default:
+            return props.theme.colors.black;
+    }
+};
+
+export const setBackgroundColor = (props: ElementProps, type?: ButtonVariant) => {
+    switch (type) {
+        case BUTTON_TYPES.normal:
+            return props.theme.colors.shade.medium;
+        case BUTTON_TYPES.dark:
+            return props.theme.colors.black;
+        case BUTTON_TYPES.disabled:
+            return lighten(0.1, props.theme.colors.shade.light);
+        case BUTTON_TYPES.inverted:
+        default:
+            return props.theme.colors.white;
+    }
+};
 
 const BaseButtonStyling = css`
     display: inline-block;
@@ -22,49 +45,24 @@ const BaseButtonStyling = css`
         background-color: ${props => props.theme.colors.shade.dark};
     }
 `;
-    
+
 const SmallButtonStyling = css`
     padding: 0 0.5rem;
     border-radius: .15rem;
 `;
 
-const setColor = (props: ElementProps, type: ButtonType) => {
-    switch (type) {
-        case BUTTON_TYPES.normal: return props.theme.colors.white;
-        case BUTTON_TYPES.dark: return props.theme.colors.white;
-        case BUTTON_TYPES.inverted:
-        default: return props.theme.colors.black;
-    }
-};
+export const ButtonLink = withProps<LinkProps & ButtonProps>(styled(Link))`
+    ${BaseButtonStyling};
+    color: ${props => setColor(props, props.variant)};
+    background-color: ${props => setBackgroundColor(props, props.variant)};
+    ${props => props.small ? SmallButtonStyling : ''};
+    opacity: ${props => (props.variant === BUTTON_TYPES.disabled) ? 0.4 : 1 };
+`;
 
-const setBackgroundColor = (props: ElementProps, type: ButtonType) => {
-    switch (type) {
-        case BUTTON_TYPES.normal: return props.theme.colors.shade.medium;
-        case BUTTON_TYPES.dark: return props.theme.colors.black;
-        case BUTTON_TYPES.disabled: return lighten(0.1, props.theme.colors.shade.light);
-        case BUTTON_TYPES.inverted:
-        default: return props.theme.colors.white;
-    }
-};
-
-// TODO: This should just be either a link or a button with onClick, which happens to be styled the same way -- not an entire SFC. Also means the rest does not need to be exported anymore
-const Button: SFC<ButtonProps> = ({ type = BUTTON_TYPES.normal, small, to, children }) => {
-
-    const ButtonLink = styled(Link)`
-        ${BaseButtonStyling};
-        color: ${props => setColor(props, type)};
-        background-color: ${props => setBackgroundColor(props, type)};
-        ${small ? SmallButtonStyling : ''};
-
-        opacity: ${props => (type === BUTTON_TYPES.disabled) ? 0.4 : 1 };
-    `;
-
-    return (
-        <ButtonLink to={to}>
-            {children}
-        </ButtonLink>
-    );
-};
-
-export { BaseButtonStyling, SmallButtonStyling, setColor, setBackgroundColor };
-export default Button;
+export const Button = withProps<ButtonProps, HTMLButtonElement>(styled.button)`
+    ${BaseButtonStyling};
+    color: ${props => setColor(props, props.variant)};
+    background-color: ${props => setBackgroundColor(props, props.variant)};
+    ${props => props.small ? SmallButtonStyling : ''};
+    opacity: ${props => (props.type === BUTTON_TYPES.disabled) ? 0.4 : 1 };
+`;

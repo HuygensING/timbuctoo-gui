@@ -1,9 +1,9 @@
 import React, { SFC } from 'react';
-import { Link, LinkProps } from 'react-router-dom';
 import { RouteComponentProps, withRouter } from 'react-router';
-import styled, { withProps } from '../../styled-components';
+import styled from '../../styled-components';
 import Caret from '../icons/Caret';
 import { BREAKPOINT } from '../layout/Grid';
+import { ButtonLink as ButtonLinkBase } from '../layout/Button';
 
 interface Props {
     nextCursor?: string;
@@ -15,37 +15,21 @@ const Container = styled.div`
     justify-content: flex-end;
 `;
 
-interface ButtonProps {
-    disabled?: boolean;
-}
-
-const Button = withProps<ButtonProps & LinkProps>(styled(Link))`
-    padding: 0.25rem 0.5rem;
-    border: 1px solid ${props => props.theme.colors.black};
-    border-radius: .15rem;
-    font: ${props => props.theme.fonts.body};
-    color: ${props => props.theme.colors.black};
-    pointer-events: ${props => props.disabled ? 'none' : 'auto'};
-    opacity: ${props => props.disabled ? 0.4 : 1};
+const Button = ButtonLinkBase.extend`
     margin: .25rem;
-    text-align: center;
-    
-    &:hover {
-        color: ${props => props.theme.colors.black};
-        background-color: ${props => props.theme.colors.shade.light};
-    }
     
     @media (max-width: ${BREAKPOINT.MOBILE}) {
         flex: 2;
     }
 `;
 
+// TODO use global button component instead...
 const Pagination: SFC<Props & RouteComponentProps<any>> = ({ nextCursor, prevCursor, location: { pathname } }) => (
     <Container>
-        <Button to={{ pathname, search: `cursor=${prevCursor}` }} disabled={!prevCursor}>
+        <Button to={{ pathname, search: `cursor=${prevCursor}` }} disabled={!prevCursor} replace={true}>
             <Caret rotate={true} />
         </Button>
-        <Button to={{ pathname, search: `cursor=${nextCursor}` }} disabled={!nextCursor}>
+        <Button to={{ pathname, search: `cursor=${nextCursor}` }} disabled={!nextCursor} replace={true}>
             <Caret />
         </Button>
     </Container>

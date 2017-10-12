@@ -6,7 +6,7 @@ import { CollectionMetadata, Property } from '../typings/schema';
 import { ROUTE_PATHS } from '../constants/routeNaming';
 import { encode } from '../services/UrlStringCreator';
 import { Subtitle, Label } from './layout/StyledCopy';
-import Button from './layout/Button';
+import { ButtonLink } from './layout/Button';
 import { BUTTON_TYPES } from '../constants/global';
 
 import ProgressBar from './ProgressBar';
@@ -14,6 +14,7 @@ import { getValue } from '../services/getValue';
 
 import Tooltip from './Tooltip';
 import { isKnown } from '../services/HandleUnknowns';
+import { ButtonVariant } from '../typings/layout';
 
 interface Props {
     isOpen: boolean;
@@ -46,7 +47,7 @@ const PropertyLabel = styled(Label)`
 const DensityLabel = styled(Label)`
 `;
 
-const renderButtonType = (CollectionIsKnown: boolean, CollectionIsSelected: boolean) => {
+const getButtonVariant = (CollectionIsKnown: boolean, CollectionIsSelected: boolean): ButtonVariant => {
     if (!CollectionIsKnown) {
         return BUTTON_TYPES.disabled;
     }
@@ -59,17 +60,6 @@ const renderButtonType = (CollectionIsKnown: boolean, CollectionIsSelected: bool
 const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, currentCollectionListId, dataSetId }) => {
     const { title, collectionId, collectionListId, properties, total } = collection;
 
-    const renderPropertyDensity = (property: Property, idx: number) => {
-        return (
-            <ProgressBar
-                key={idx}
-                label={property.name}
-                width={'100px'}
-                progress={property.density}
-            />
-        );
-    };
-
     const renderPropertiesPanel = () => {
         return (
             <Tooltip>
@@ -77,7 +67,14 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
                     <Subtitle>{collectionId} ({total})</Subtitle>
                     <PropertyLabel>{translate('details.collection.property')}</PropertyLabel><DensityLabel>{translate('details.collection.density')}</DensityLabel>
                 </PropertiesHeader>
-                {properties.items.map(renderPropertyDensity)}
+                {properties.items.map((property: Property, idx: number) => (
+                    <ProgressBar
+                        key={idx}
+                        label={property.name}
+                        width={'100px'}
+                        progress={property.density}
+                    />
+                ))}
             </Tooltip>
         );
     };
@@ -86,16 +83,17 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
         const collectionKnown = isKnown(collection);
         const collectionSelected = !!currentCollectionListId && currentCollectionListId === collectionListId;
 
-        const buttonType = renderButtonType(collectionKnown, collectionSelected);
+        const buttonVariant = getButtonVariant(collectionKnown, collectionSelected);
         const buttonTitle = getValue(title) || (
             collectionKnown
                 ? collectionId
-                : translate('details.collection.unknown'));
+                : translate('details.collection.unknown')
+        );
 
         return (
-            <Button type={buttonType} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`}>
+            <ButtonLink variant={buttonVariant} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`} replace={true}>
                 {buttonTitle} ({total})
-            </Button>
+            </ButtonLink>
         );
     };
 

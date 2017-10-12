@@ -6,7 +6,6 @@ import App from './components/App';
 import Client from './services/ApolloClient';
 import { configureStore } from './store';
 import globalStyling from './theme/globalStyling';
-import ScrollToTop from './components/ScrollToTop';
 
 export const store = configureStore();
 
@@ -15,7 +14,6 @@ globalStyling();
 
 const Application = (
     <ApolloProvider client={Client} store={store}>
-        <ScrollToTop />
         <App />
     </ApolloProvider>
 );

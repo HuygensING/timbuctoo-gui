@@ -1,5 +1,5 @@
 import { BUTTON_TYPES } from '../../../constants/global';
-import { BaseButtonStyling, setBackgroundColor, setColor } from '../../layout/Button';
+import { Button, setBackgroundColor, setColor } from '../../layout/Button';
 import styled from '../../../styled-components';
 
 const ResetButton = styled.button`
@@ -10,8 +10,7 @@ const ResetButton = styled.button`
     z-index: 2;
 `;
 
-const SubmitButton = styled.button`
-    ${BaseButtonStyling};
+const SubmitButton = Button.extend`
     background-color: ${props => setBackgroundColor(props, BUTTON_TYPES.normal)};
     color: ${props => setColor(props, BUTTON_TYPES.normal)};
     margin: 0;

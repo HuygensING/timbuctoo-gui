@@ -1,11 +1,12 @@
 import React, { SFC } from 'react';
 import { CollectionMetadata } from '../../typings/schema';
-import styled, { css } from '../../styled-components';
+import styled, { css, withProps } from '../../styled-components';
 import { Link , Title } from '../layout/StyledCopy';
 import { lighten } from 'polished';
 import Edit from '../icons/Edit';
 import { ROUTE_PATHS, SUB_ROUTES } from '../../constants/routeNaming';
 import { getValue } from '../../services/getValue';
+import { LinkProps } from 'react-router-dom';
 
 interface Props {
     collection: CollectionMetadata;
@@ -37,7 +38,7 @@ const EditIcon = styled(Edit)`
   transform: translateY(-50%);
 `;
 
-const LinkBox = styled(Link)`
+const LinkBox = withProps<LinkProps>(styled(Link))`
     background: ${props => lighten(.05, props.theme.colors.shade.light)};
     ${Box}
     &:last-child {

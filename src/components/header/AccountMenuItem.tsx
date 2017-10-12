@@ -1,8 +1,9 @@
 import React, { ComponentClass, SFC } from 'react';
-import styled from '../../styled-components';
+import styled, { withProps } from '../../styled-components';
 
 import { Link } from '../layout/StyledCopy';
 import { IconProps } from '../../typings';
+import { LinkProps } from 'react-router-dom';
 
 interface Props {
     to?: string;
@@ -21,7 +22,7 @@ const Button = styled.button`
     outline: none;
 `;
 
-const LinkedButton = styled(Link)`
+const LinkedButton = withProps<LinkProps>(styled(Link))`
     display: block;
     cursor: pointer;
     padding: 0.5rem 1rem;

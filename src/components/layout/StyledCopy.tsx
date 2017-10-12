@@ -1,8 +1,9 @@
 import styled, { css } from '../../styled-components';
 import CreateElementWithTag from '../../services/CreateElementWithTag';
-import { ElementProps, LinkProps } from '../../typings/layout';
+import { Color, ElementProps } from '../../typings/layout';
 import { keyframes } from '../../styled-components';
 import { lighten } from 'polished';
+import { LinkProps } from 'react-router-dom';
 
 const setColor = props => (props.theme.colors[props.color] && props.theme.colors[props.color].medium)
     || props.color
@@ -10,6 +11,17 @@ const setColor = props => (props.theme.colors[props.color] && props.theme.colors
 const setCaps = props => props.isCaps ? 'uppercase' : 'initial';
 const setLetterSpacing = props => props.isCaps ? '0.13em' : '0';
 const setAlignment = props => props.align ? props.align : 'left';
+
+export interface StyledCopyLinkProps {
+    children?: any;
+    tag?: string;
+    size?: string;
+    color?: Color;
+    align?: 'left' | 'right' | 'center';
+    hoverColor?: 'primary' | 'shade' | string;
+    weight?: string;
+    isCaps?: boolean;
+}
 
 const anim = keyframes`
     from {
@@ -130,7 +142,7 @@ export const Label = styled((props: ElementProps) => CreateElementWithTag(props,
  * <Link to="/route" >
  */
 
-export const Link = styled((props: ElementProps & LinkProps) => CreateElementWithTag(props, 'Link'))`
+export const Link = styled((props: ElementProps & StyledCopyLinkProps & LinkProps) => CreateElementWithTag(props, 'Link'))`
     margin: 0;
     font: ${(props) => props.theme.fonts.body};
     text-transform: ${setCaps};

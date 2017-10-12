@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import styled from '../styled-components';
 import { Col, Grid } from './layout/Grid';
 import { Content, Title } from './layout/StyledCopy';
-import { BaseButtonStyling } from './layout/Button';
+import { Button } from './layout/Button';
 
 interface Props {
     title: string | null;
@@ -17,8 +17,7 @@ const StyledCol = styled(Col)`
     background: ${props => props.theme.colors.shade.light};
 `;
 
-const Toggle = styled.button`
-  ${BaseButtonStyling};
+const Toggle = Button.extend`
   margin-top: 2rem;
 `;
 
