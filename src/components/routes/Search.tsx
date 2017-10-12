@@ -83,7 +83,7 @@ class Search extends PureComponent<FullProps> {
 
                     {/* Filter functionality */}
                     <Col sm={12} smPaddingY={1}>
-                        <Filters facets={collectionValues.facets}/>
+                        <Filters collection={collectionValues} />
                     </Col>
 
                     <Col sm={27} smOffset={3} smPaddingY={1}>
@@ -98,10 +98,10 @@ class Search extends PureComponent<FullProps> {
                                 fields={fields}
                             />
                         )}
-                        
+
                         <Pagination nextCursor={collectionValues && collectionValues.nextCursor} prevCursor={collectionValues && collectionValues.prevCursor} />
                     </Col>
-                    
+
                 </FullSection>
             </section>
         );
