@@ -47,6 +47,7 @@ const setBackgroundColor = (props: ElementProps, type: ButtonType) => {
     }
 };
 
+// TODO: This should just be either a link or a button with onClick, which happens to be styled the same way -- not an entire SFC. Also means the rest does not need to be exported anymore
 const Button: SFC<ButtonProps> = ({ type = BUTTON_TYPES.normal, small, to, children }) => {
 
     const ButtonLink = styled(Link)`
@@ -65,5 +66,5 @@ const Button: SFC<ButtonProps> = ({ type = BUTTON_TYPES.normal, small, to, child
     );
 };
 
-export { BaseButtonStyling, setColor, setBackgroundColor };
+export { BaseButtonStyling, SmallButtonStyling, setColor, setBackgroundColor };
 export default Button;

@@ -1,18 +1,19 @@
 import { gql } from 'react-apollo';
 import { createQueryFromValue } from '../../services/getValue';
-import queryString from 'querystring';
+import setCollectionArguments from '../../services/CollectionArgumentsCreator';
 
-const QUERY_COLLECTION_VALUES = ({ match, metadata, location }) => {
-    const { properties, summaryProperties, collectionListId } = metadata.dataSetMetadata.collection;
+const QUERY_COLLECTION_VALUES = ({ match, location, metadata }) => {
+    const { properties, summaryProperties, collectionListId, indexConfig } = metadata.dataSetMetadata.collection;
+
+    const collectionArguments = setCollectionArguments(indexConfig, location);
     const { title, description, image } = summaryProperties;
-    const { cursor } = queryString.parse(location.search.substring(1));
-    
+
     const query = `
         query CollectionValues {
         
             dataSets {
                 ${match.params.dataSet} {
-                    ${collectionListId}${cursor ? `(cursor: "${cursor}")` : ''} {
+                    ${collectionListId}${collectionArguments} {
                         nextCursor
                         prevCursor
                         facets {

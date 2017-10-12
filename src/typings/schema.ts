@@ -157,7 +157,29 @@ export interface CollectionMetadataList {
   prevCursor?: string;
   nextCursor?: string;
   facets: Facet[];
+  indexConfig: IndexConfig;
   items: Array<CollectionMetadata>;
+}
+
+export interface IndexConfig {
+  facet: FacetConfig[];
+  fullText: FullTextConfig[];
+}
+
+export interface FacetConfig {
+  paths: string[];
+  type: string;
+  caption: string;
+}
+
+export interface FullTextConfig {
+  caption: string;
+  fields: TextConfigField[];
+}
+
+export interface TextConfigField {
+  path: string;
+  boost: number;
 }
 
 export interface Facet {

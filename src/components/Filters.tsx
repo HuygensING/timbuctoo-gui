@@ -8,7 +8,9 @@ import { Dummy } from './Dummy';
 import { Facet } from '../typings/schema';
 
 interface Props {
-    facets: Facet[] | null;
+    collection: {
+        facets: Facet[]
+    } | null;
 }
 interface State {}
 
@@ -42,8 +44,7 @@ class Filters extends PureComponent<Props, State> {
                 <SpecialDiv>
                     <Title>{translate('globals.filters')}</Title>
                     <Dummy text={'search-filter'} height={1} marginY={.5}/>
-                    {this.props.facets && this.renderFilters()}
-                    <MultiSelectForm title={'fakey'} options={[{ name: 'one', count: 4 }, { name: 'two', count: 5 }]}/>
+                    {this.renderFilters()}
                     <Dummy text={'filter hierarchy'} height={2} marginY={.5}/>
                     <Dummy text={'filter range'} height={5} marginY={.5}/>
                 </SpecialDiv>
@@ -52,7 +53,11 @@ class Filters extends PureComponent<Props, State> {
     }
 
     private renderFilters () {
-        return this.props.facets ? this.props.facets.map(Filters.renderFilter) : null;
+        if (!this.props.collection || this.props.collection.facets.length === 0) {
+            return null;
+        }
+
+        return this.props.collection.facets.map(Filters.renderFilter);
     }
 }
 
