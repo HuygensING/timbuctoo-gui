@@ -18,6 +18,8 @@
     "search.search": "Search",
     "search.view_dataset": "View dataset",
     "search.view_entry": "View entry",
+    "search.more": "Show more",
+    "search.less": "Show less",
     "footer.powered_by": "Timbuctoo is powered by",
     "footer.company_name": "Company name",
     "footer.street": "Street",

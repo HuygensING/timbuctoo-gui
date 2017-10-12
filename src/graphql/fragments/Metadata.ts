@@ -50,6 +50,25 @@ const collectionPropertiesReference = gql`
     }
 `;
 
+const collectionIndexConfig = gql`
+    fragment CollectionIndexConfig on CollectionMetadata {
+        indexConfig {
+            facet {
+                paths
+                type
+                caption
+            }
+            fullText {
+                caption
+                fields {
+                    path
+                    boost
+                }
+            }
+        }
+    }
+`;
+
 const collectionSummaryProperties = gql`
     fragment CollectionSummaryProperties on CollectionMetadata {
         summaryProperties {
@@ -90,4 +109,4 @@ const dataSetMetadataFragment = gql`
     ${collectionPropertiesDensity}
 `;
 
-export { dataSetMetadataFragment, collectionBase, collectionPropertiesDensity, collectionPropertiesReference, collectionSummaryProperties };
+export { dataSetMetadataFragment, collectionBase, collectionPropertiesDensity, collectionPropertiesReference, collectionSummaryProperties, collectionIndexConfig };
