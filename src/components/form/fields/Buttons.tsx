@@ -1,4 +1,4 @@
-import { BUTTON_TYPES } from '../../../constants/global';
+import { BUTTON_VARIANT } from '../../../constants/global';
 import { Button, setBackgroundColor, setColor } from '../../layout/Button';
 import styled from '../../../styled-components';
 
@@ -11,8 +11,8 @@ const ResetButton = styled.button`
 `;
 
 const SubmitButton = Button.extend`
-    background-color: ${props => setBackgroundColor(props, BUTTON_TYPES.normal)};
-    color: ${props => setColor(props, BUTTON_TYPES.normal)};
+    background-color: ${props => setBackgroundColor(props, BUTTON_VARIANT.normal)};
+    color: ${props => setColor(props, BUTTON_VARIANT.normal)};
     margin: 0;
     width: 100%;
     height: 100%;

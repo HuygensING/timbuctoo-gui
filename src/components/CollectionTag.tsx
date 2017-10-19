@@ -5,9 +5,9 @@ import translate from '../services/translate';
 import { CollectionMetadata, Property } from '../typings/schema';
 import { ROUTE_PATHS } from '../constants/routeNaming';
 import { encode } from '../services/UrlStringCreator';
-import { Subtitle, Label } from './layout/StyledCopy';
+import { Label, Subtitle } from './layout/StyledCopy';
 import { ButtonLink } from './layout/Button';
-import { BUTTON_TYPES } from '../constants/global';
+import { BUTTON_VARIANT } from '../constants/global';
 
 import ProgressBar from './ProgressBar';
 import { getValue } from '../services/getValue';
@@ -49,12 +49,12 @@ const DensityLabel = styled(Label)`
 
 const getButtonVariant = (CollectionIsKnown: boolean, CollectionIsSelected: boolean): ButtonVariant => {
     if (!CollectionIsKnown) {
-        return BUTTON_TYPES.disabled;
+        return BUTTON_VARIANT.disabled;
     }
 
     return CollectionIsSelected
-        ? BUTTON_TYPES.dark
-        : BUTTON_TYPES.inverted;
+        ? BUTTON_VARIANT.dark
+        : BUTTON_VARIANT.inverted;
 };
 
 const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, currentCollectionListId, dataSetId }) => {
@@ -91,7 +91,14 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
         );
 
         return (
-            <ButtonLink data-variant={buttonVariant} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`} replace={true}>
+            <ButtonLink
+                data-variant={buttonVariant}
+                to={{
+                    pathname: `${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`,
+                    state: { dontJumpToTop: true }
+                }}
+                replace={true}
+            >
                 {buttonTitle} ({total})
             </ButtonLink>
         );

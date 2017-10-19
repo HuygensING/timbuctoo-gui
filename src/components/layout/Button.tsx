@@ -1,16 +1,16 @@
 import { lighten } from 'polished/lib';
 import styled, { css, withProps } from '../../styled-components';
 import { ButtonProps, ButtonVariant, ElementProps } from '../../typings/layout';
-import { BUTTON_TYPES } from '../../constants/global';
+import { BUTTON_VARIANT } from '../../constants/global';
 import { LinkProps, Link } from 'react-router-dom';
 
 export const setColor = (props: ElementProps, type?: ButtonVariant) => {
     switch (type) {
-        case BUTTON_TYPES.normal:
+        case BUTTON_VARIANT.normal:
             return props.theme.colors.white;
-        case BUTTON_TYPES.dark:
+        case BUTTON_VARIANT.dark:
             return props.theme.colors.white;
-        case BUTTON_TYPES.inverted:
+        case BUTTON_VARIANT.inverted:
         default:
             return props.theme.colors.black;
     }
@@ -18,13 +18,13 @@ export const setColor = (props: ElementProps, type?: ButtonVariant) => {
 
 export const setBackgroundColor = (props: ElementProps, type?: ButtonVariant) => {
     switch (type) {
-        case BUTTON_TYPES.normal:
+        case BUTTON_VARIANT.normal:
             return props.theme.colors.shade.medium;
-        case BUTTON_TYPES.dark:
+        case BUTTON_VARIANT.dark:
             return props.theme.colors.black;
-        case BUTTON_TYPES.disabled:
+        case BUTTON_VARIANT.disabled:
             return lighten(0.1, props.theme.colors.shade.light);
-        case BUTTON_TYPES.inverted:
+        case BUTTON_VARIANT.inverted:
         default:
             return props.theme.colors.white;
     }
@@ -56,7 +56,7 @@ export const ButtonLink = withProps<LinkProps & ButtonProps>(styled(Link))`
     color: ${props => setColor(props, props['data-variant'])};
     background-color: ${props => setBackgroundColor(props, props['data-variant'])};
     ${props => props['data-small'] ? SmallButtonStyling : ''};
-    opacity: ${props => (props['data-variant'] === BUTTON_TYPES.disabled) ? 0.4 : 1 };
+    opacity: ${props => (props['data-variant'] === BUTTON_VARIANT.disabled) ? 0.4 : 1 };
 `;
 
 export const Button = withProps<ButtonProps, HTMLButtonElement>(styled.button)`
@@ -64,5 +64,5 @@ export const Button = withProps<ButtonProps, HTMLButtonElement>(styled.button)`
     color: ${props => setColor(props, props['data-variant'])};
     background-color: ${props => setBackgroundColor(props, props['data-variant'])};
     ${props => props['data-small'] ? SmallButtonStyling : ''};
-    opacity: ${props => (props['data-variant'] === BUTTON_TYPES.disabled) ? 0.4 : 1 };
+    opacity: ${props => (props['data-variant'] === BUTTON_VARIANT.disabled) ? 0.4 : 1 };
 `;

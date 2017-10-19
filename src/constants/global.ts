@@ -35,7 +35,7 @@ export const COMPONENT_FIELDS: ComponentFieldType = {
     title: 'title'
 };
 
-export const BUTTON_TYPES: {[name: string]: ButtonVariant} = {
+export const BUTTON_VARIANT: {[name: string]: ButtonVariant} = {
     normal: 'normal',
     inverted: 'inverted',
     dark: 'dark',
