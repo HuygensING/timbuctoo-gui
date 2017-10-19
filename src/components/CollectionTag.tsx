@@ -91,7 +91,7 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
         );
 
         return (
-            <ButtonLink variant={buttonVariant} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`} replace={true}>
+            <ButtonLink data-variant={buttonVariant} to={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`} replace={true}>
                 {buttonTitle} ({total})
             </ButtonLink>
         );

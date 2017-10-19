@@ -23,13 +23,12 @@ const Button = ButtonLinkBase.extend`
     }
 `;
 
-// TODO use global button component instead...
 const Pagination: SFC<Props & RouteComponentProps<any>> = ({ nextCursor, prevCursor, location: { pathname } }) => (
     <Container>
-        <Button to={{ pathname, search: `cursor=${prevCursor}` }} disabled={!prevCursor} replace={true}>
+        <Button data-small={true} to={{ pathname, search: `cursor=${prevCursor}` }} disabled={!prevCursor} replace={true}>
             <Caret rotate={true} />
         </Button>
-        <Button to={{ pathname, search: `cursor=${nextCursor}` }} disabled={!nextCursor} replace={true}>
+        <Button data-small={true} to={{ pathname, search: `cursor=${nextCursor}` }} disabled={!nextCursor} replace={true}>
             <Caret />
         </Button>
     </Container>

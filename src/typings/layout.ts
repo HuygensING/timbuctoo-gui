@@ -37,9 +37,9 @@ export interface ElementProps {
     align?: 'left' | 'right' | 'center';
 }
 
-export interface ButtonProps { 
-    small?: boolean;
-    variant?: ButtonVariant;
+export interface ButtonProps {
+    'data-small'?: boolean;
+    'data-variant'?: ButtonVariant;
 }
 
 export type ButtonVariant = 'normal' | 'inverted' | 'dark' | 'disabled';

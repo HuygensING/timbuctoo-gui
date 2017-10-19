@@ -53,16 +53,16 @@ const SmallButtonStyling = css`
 
 export const ButtonLink = withProps<LinkProps & ButtonProps>(styled(Link))`
     ${BaseButtonStyling};
-    color: ${props => setColor(props, props.variant)};
-    background-color: ${props => setBackgroundColor(props, props.variant)};
-    ${props => props.small ? SmallButtonStyling : ''};
-    opacity: ${props => (props.variant === BUTTON_TYPES.disabled) ? 0.4 : 1 };
+    color: ${props => setColor(props, props['data-variant'])};
+    background-color: ${props => setBackgroundColor(props, props['data-variant'])};
+    ${props => props['data-small'] ? SmallButtonStyling : ''};
+    opacity: ${props => (props['data-variant'] === BUTTON_TYPES.disabled) ? 0.4 : 1 };
 `;
 
 export const Button = withProps<ButtonProps, HTMLButtonElement>(styled.button)`
     ${BaseButtonStyling};
-    color: ${props => setColor(props, props.variant)};
-    background-color: ${props => setBackgroundColor(props, props.variant)};
-    ${props => props.small ? SmallButtonStyling : ''};
-    opacity: ${props => (props.type === BUTTON_TYPES.disabled) ? 0.4 : 1 };
+    color: ${props => setColor(props, props['data-variant'])};
+    background-color: ${props => setBackgroundColor(props, props['data-variant'])};
+    ${props => props['data-small'] ? SmallButtonStyling : ''};
+    opacity: ${props => (props['data-variant'] === BUTTON_TYPES.disabled) ? 0.4 : 1 };
 `;

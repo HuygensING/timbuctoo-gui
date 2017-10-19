@@ -61,11 +61,11 @@ class MultiSelectForm extends PureComponent<Props, State> {
                 </ul>
                 {
                     isFiltering && couldDoLess &&
-                    <Button small={true} onClick={this.showLess}>{translate('search.less')}</Button>
+                    <Button data-small={true} onClick={this.showLess}>{translate('search.less')}</Button>
                 }
                 {
                     isFiltering && couldDoMore &&
-                    <Button small={true} onClick={this.showMore}>{translate('search.more')}</Button>
+                    <Button data-small={true} onClick={this.showMore}>{translate('search.more')}</Button>
                 }
             </Section>
         );

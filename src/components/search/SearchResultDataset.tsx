@@ -53,7 +53,7 @@ const SearchResulDataset = (props: ResultDataSetMetadata) => {
                 {renderCollections()}
             </CollectionList>
             <Content>{description}</Content>
-            <ButtonLink to="/" small={true}>{translate('search.view_dataset')}</ButtonLink>
+            <ButtonLink to="/" data-small={true}>{translate('search.view_dataset')}</ButtonLink>
         </SearchItem>
     );
 };
