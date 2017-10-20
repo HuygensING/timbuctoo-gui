@@ -23,6 +23,7 @@ interface Props {
     currentCollectionListId?: string | null;
     collection: CollectionMetadata;
     toggleOpen: Function;
+    replace?: boolean;
 }
 
 const ListItem = styled.li`
@@ -57,7 +58,7 @@ const getButtonVariant = (CollectionIsKnown: boolean, CollectionIsSelected: bool
         : BUTTON_VARIANT.inverted;
 };
 
-const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, currentCollectionListId, dataSetId }) => {
+const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, currentCollectionListId, dataSetId, replace }) => {
     const { title, collectionId, collectionListId, properties, total } = collection;
 
     const renderPropertiesPanel = () => {
@@ -95,9 +96,9 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
                 data-variant={buttonVariant}
                 to={{
                     pathname: `${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`,
-                    state: { dontJumpToTop: true }
+                    state: replace && { keepPosition: true }
                 }}
-                replace={true}
+                replace={!!replace}
             >
                 {buttonTitle} ({total})
             </ButtonLink>

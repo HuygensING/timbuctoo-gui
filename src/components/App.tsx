@@ -16,6 +16,7 @@ import { AboutMe } from '../typings/schema';
 import { LogInUser, LogOutUser, UserReducer } from '../reducers/user';
 import Loading from './Loading';
 import createBrowserHistory from 'history/createBrowserHistory';
+import { Location } from 'history';
 
 if (process.env.NODE_ENV !== 'production') {
     // /* eslint-disable-next-line no-unused-vars,react/no-deprecated */
@@ -66,10 +67,10 @@ class App extends PureComponent<ChildProps<Props, Response>, State> {
 
     componentWillMount () {
         this.checkRenderLoad(this.props.user);
-        
-        this.history.listen((location) => {
+
+        this.history.listen((location: Location) => {
             const { state } = location;
-            if ((state && !state.dontJumpToTop) || !state) {
+            if ((state && !state.keepPosition) || !state) {
                 window.scrollTo(0, 0);
             }
         });

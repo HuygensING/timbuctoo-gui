@@ -7,6 +7,7 @@ interface Props {
     colKeys: CollectionMetadata[];
     dataSetId: string;
     currentCollectionListId?: string | null;
+    replace?: boolean;
 }
 
 interface State {
@@ -29,7 +30,7 @@ class CollectionTags extends PureComponent<Props, State> {
     }
 
     renderButton (collection: CollectionMetadata, idx: number) {
-        const { currentCollectionListId, dataSetId } = this.props;
+        const { currentCollectionListId, dataSetId, replace } = this.props;
 
         return (
             <CollectionTag
@@ -40,6 +41,7 @@ class CollectionTags extends PureComponent<Props, State> {
                 currentCollectionListId={currentCollectionListId}
                 dataSetId={dataSetId}
                 collection={collection}
+                replace={replace}
             />
         );
     }
