@@ -70,6 +70,25 @@ const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] => (
     })
 );
 
+const setNewSelected = (newFilters: EsFilter[], key: string, valueName: string) => {
+    newFilters.forEach((newFilter, filterIdx) => {
+        newFilter.paths.forEach(path => {
+            if (path === key) {
+                newFilter.values.forEach(
+                    (newValue, valueIdx) => {
+                        if (newValue.name === valueName) {
+                            const value = { ...newValue, selected: true };
+                            let values = newFilter.values.slice();
+                            values[valueIdx] = value;
+                            newFilters[filterIdx] = { ...newFilter, values };
+                        }
+                    }
+                );
+            }
+        });
+    });
+};
+
 export const mergeOldSelected = (newFilters: EsFilter[], location: Location) => {
     const { search } = queryString.parse(location.search.substring(1));
 
@@ -90,25 +109,6 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location) => 
             );
         }
     }
-};
-
-const setNewSelected = (newFilters: EsFilter[], key: string, valueName: string) => {
-    newFilters.forEach((newFilter, filterIdx) => {
-        newFilter.paths.forEach(path => {
-            if (path === key) {
-                newFilter.values.forEach(
-                    (newValue, valueIdx) => {
-                        if (newValue.name === valueName) {
-                            const value = { ...newValue, selected: true };
-                            let values = newFilter.values.slice();
-                            values[valueIdx] = value;
-                            newFilters[filterIdx] = { ...newFilter, values };
-                        }
-                    }
-                );
-            }
-        });
-    });
 };
 
 const toggleFilterItem = (index: number, value: string, filters: EsFilter[]): EsFilter => {

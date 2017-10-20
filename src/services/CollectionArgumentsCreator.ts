@@ -2,6 +2,8 @@ import queryString from 'querystring';
 import { FacetConfig, IndexConfig } from '../typings/schema';
 import { decode } from './UrlStringCreator';
 
+const doubleStringify = (obj: {}): string => JSON.stringify(JSON.stringify(obj));
+
 const createAggsString = (facets: FacetConfig[]): {} => {
     const aggs = { aggs: {} };
 
@@ -27,8 +29,6 @@ const createPostFilterString = (search: string): string => {
     }
     return '';
 };
-
-const doubleStringify = (obj: {}): string => JSON.stringify(JSON.stringify(obj));
 
 const elasticQueryStringCreator = (indexConfig: IndexConfig, search: string): string => {
     const aggs = createAggsString(indexConfig.facet);
