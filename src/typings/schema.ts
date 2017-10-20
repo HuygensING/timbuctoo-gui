@@ -65,7 +65,7 @@ export interface CollectionMetadata {
   total: number;
   title?: Value;
   archeType?: Entity;
-  indexerConfig?: IndexerConfig;
+  indexConfig: IndexConfig;
   summaryProperties: SummaryProperties;
   components: ComponentList;
 }
@@ -109,11 +109,11 @@ export interface Entity {
   uri: string;
 }
 
-export interface IndexerConfig {
+export interface IndexConfig {
   path?: Value;
   typ?: Value;
   fullTextSearch?: Value;
-  next?: IndexerConfig;
+  next?: IndexConfig;
 }
 
 export interface SummaryProperties {

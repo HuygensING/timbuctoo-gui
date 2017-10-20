@@ -1,17 +1,29 @@
 import React, { PureComponent } from 'react';
 
+import _ from 'lodash';
+
+import { connect } from 'react-redux';
+
 import { Subtitle } from '../layout/StyledCopy';
 import styled from '../../styled-components';
 import { Dummy } from '../Dummy';
-import { FacetOption } from '../../typings/schema';
 import { BaseButtonStyling, SmallButtonStyling } from '../layout/Button';
 import translate from '../../services/translate';
 import MultiselectFormOption from './MultiselectFormOption';
+import { EsFilter, EsValue, toggleFilter } from '../../reducers/search';
+import { RootState } from '../../reducers/rootReducer';
 
 interface Props {
-    title: string;
-    options: FacetOption[];
+    filter: EsFilter;
+    index: number;
 }
+
+interface StateProps {
+    filters: EsFilter[];
+    updateField: (index: number, value: string, filters: EsFilter[]) => void;
+}
+
+type FullProps = Props & StateProps;
 
 interface State {
     amountShown: number;
@@ -35,29 +47,47 @@ const Button = styled.button`
   margin: 1rem .5rem 0 0;
 `;
 
-class MultiSelectForm extends PureComponent<Props, State> {
+class MultiSelectForm extends PureComponent<FullProps, State> {
     static showStep = 5;
-
     state = { amountShown: MultiSelectForm.showStep };
 
+    static sortGroup = (group: EsValue[]): EsValue[] => {
+        let array: EsValue[] = [];
+
+        const splitGroups = _.partition(group, val => val.selected);
+
+        splitGroups.forEach(splitGroup => {
+            const sortedSplitGroup = _.sortBy(splitGroup, val => val.count).reverse();
+            array = array.concat(sortedSplitGroup);
+        });
+
+        return array;
+    }
+
+    public toggleField = (val: string) => {
+        this.props.updateField(this.props.index, val, this.props.filters);
+    }
+
     render () {
-        const { title, options } = this.props;
+        const { caption, values } = this.props.filter;
         const { amountShown } = this.state;
 
-        const isFiltering = options.length > MultiSelectForm.showStep;
-        const shownOptions = isFiltering ? options.slice(0, amountShown) : options;
+        const selection = MultiSelectForm.sortGroup(values);
+
+        const isFiltering = values.length > MultiSelectForm.showStep;
+        const shownOptions = isFiltering ? selection.slice(0, amountShown) : selection;
 
         const couldDoLess = shownOptions.length - MultiSelectForm.showStep > 0;
-        const couldDoMore = shownOptions.length < options.length;
+        const couldDoMore = shownOptions.length < values.length;
 
         return (
             <Section>
-                <Sub>{title}</Sub>
+                <Sub>{caption}</Sub>
                 <Dummy absolute={true} height={'1.5rem'} width={'3.5rem'} text={'toggle'}/>
                 <ul>
                     {
                         shownOptions.map((option, idx) => (
-                            <MultiselectFormOption key={idx} option={option}/>
+                            <MultiselectFormOption key={idx} option={option} onToggle={this.toggleField} />
                         ))
                     }
                 </ul>
@@ -86,4 +116,12 @@ class MultiSelectForm extends PureComponent<Props, State> {
     }
 }
 
-export default MultiSelectForm;
+const mapStateToProps = (state: RootState) => ({
+    filters: state.search.filters
+});
+
+const mapDispatchToProps = dispatch => ({
+    updateField: (index: number, value: string, filters: EsFilter[]) => dispatch(toggleFilter(index, value, filters))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MultiSelectForm);

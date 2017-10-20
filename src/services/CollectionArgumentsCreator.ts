@@ -3,26 +3,27 @@ import { FacetConfig, IndexConfig } from '../typings/schema';
 import { decode } from './UrlStringCreator';
 
 const createAggsString = (facets: FacetConfig[]): {} => {
-    const aggs = {};
+    const aggs = { aggs: {} };
 
     facets.forEach(({ paths, caption, type }: FacetConfig, idx: number) => {
         if (type === 'MultiSelect' && (caption || type) && paths) {
-            aggs[caption || type + idx] = {
+            aggs.aggs[caption || `${type}_${idx}`] = {
                 terms: {
                     field: `${paths[0]}.raw`
                 }
             };
         }
     });
-
-    return aggs;
+    const aggString = doubleStringify(aggs);
+    return aggString.slice(2, -2);
 };
 
 const createPostFilterString = (search: string): string => {
     const searchString = search ? decode(search) : null;
 
     if (searchString && searchString.length > 0) {
-        return searchString;
+        const searchStr = JSON.stringify(searchString);
+        return `\\"query\\": {${searchStr.slice(2, -2)}}`;
     }
     return '';
 };
@@ -30,17 +31,9 @@ const createPostFilterString = (search: string): string => {
 const doubleStringify = (obj: {}): string => JSON.stringify(JSON.stringify(obj));
 
 const elasticQueryStringCreator = (indexConfig: IndexConfig, search: string): string => {
-    const obj: { aggs: {}, post_filter?: {} } = {
-        aggs: createAggsString(indexConfig.facet)
-    };
-
+    const aggs = createAggsString(indexConfig.facet);
     const postFilter = createPostFilterString(search);
-
-    if (postFilter.length > 0) {
-        obj.post_filter = postFilter;
-    }
-
-    return `elasticsearch: ${doubleStringify(obj)}`;
+    return `elasticsearch: "{${aggs} ${postFilter.length > 0 ? ',' + postFilter : ''}}"`;
 };
 
 const cursorStringCreator = (cursor: string): string => {

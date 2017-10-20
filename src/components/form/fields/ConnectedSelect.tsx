@@ -1,25 +1,16 @@
 import React, { Component } from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { DataSetMetadata } from '../../../typings/schema';
+import { withRouter } from 'react-router';
 
 import QUERY_COLLECTION_EDIT_VIEW from '../../../graphql/queries/CollectionEditView';
 
 import Select, { OptionProps, SelectProps } from './Select';
-import MetadataResolver from '../../MetadataResolver';
-
-interface ApolloProps {
-    data: ApolloDataProps;
-}
-
-interface ApolloDataProps {
-    dataSetMetadata: DataSetMetadata;
-}
+import MetadataResolver, { ResolvedApolloProps } from '../../MetadataResolver';
 
 interface Props {
     collectionId?: string;
 }
 
-type FullProps = Props & SelectProps & ApolloProps & RouteComponentProps<any>;
+type FullProps = Props & SelectProps & ResolvedApolloProps;
 
 interface State {
     isOpen: boolean;
@@ -89,7 +80,7 @@ class SelectField extends Component<FullProps, State> {
         }
     }
 
-    private getOptionsFromQuery({ dataSetMetadata }: ApolloDataProps, options: OptionProps[] = []) {
+    private getOptionsFromQuery({ dataSetMetadata }: any, options: OptionProps[] = []) {
         if (dataSetMetadata && dataSetMetadata.collection) {
             const collection = dataSetMetadata.collection;
             collection.properties.items.forEach((field) => {

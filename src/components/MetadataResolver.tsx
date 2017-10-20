@@ -1,18 +1,33 @@
 import React, { Component, ComponentClass } from 'react';
 import Client from '../services/ApolloClient';
 import { RouteComponentProps } from 'react-router';
+import { DataSetMetadata } from '../typings/schema';
 
 interface State {
     metadata: any;
     data: any;
+    onRefetch: () => void;
+}
+
+interface DataProps {
+    metadata: {
+        dataSetMetadata: DataSetMetadata;
+    };
+    data: {
+        dataSets: any;
+    };
+    onRefetch: () => void;
     loading: boolean;
 }
 
-export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?: Function) {
+export type ResolvedApolloProps = DataProps & RouteComponentProps<any>;
+
+export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?: Function, resolverOptions?: { forceFetch: boolean; }) {
     return (WrappedComponent: ComponentClass<P>) => {
         return class MetaDataQueryResolver extends Component<P & RouteComponentProps<any>, State> {
             defaultState: State;
-            onlyMetadata: boolean;
+            onlyMetadata: boolean = !dataQuery;
+            loading: boolean = true;
             noQuery: boolean;
 
             static selectQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
@@ -32,10 +47,8 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 this.state = this.defaultState = {
                     metadata: null,
                     data: null,
-                    loading: true
+                    onRefetch: this.onRefetch
                 };
-
-                this.onlyMetadata = !dataQuery;
             }
 
             componentDidMount () {
@@ -53,48 +66,50 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 const metadataChanged = !this.onlyMetadata && this.state.metadata !== nextState.metadata;
 
                 if (isRouteChange || metadataChanged) {
-                    this.queryGraph(nextProps, nextState, isRouteChange);
+                    this.loading = true;
+                    this.queryGraph(nextProps, nextState, isRouteChange, resolverOptions && resolverOptions.forceFetch);
                 }
             }
 
-            render () {
-                return <WrappedComponent {...this.props} {...this.state}/>;
+            onRefetch = () => {
+                const forceFetch = true;
+                this.queryGraph(this.props, this.state, true, forceFetch);
             }
 
-            // privates
-            private queryGraph (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
+            render () {
+                const loadingProps = { loading: this.loading };
+                return <WrappedComponent {...this.props} {...this.state} {...loadingProps} />;
+            }
+
+            private queryGraph (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean, forceFetch: boolean = false) {
 
                 if (!isMetadataQuery && this.onlyMetadata) {
                     return null;
                 }
 
-                return this.doQuery(props, state, isMetadataQuery);
+                return this.doQuery(props, state, isMetadataQuery, forceFetch);
             }
 
-            private doQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
+            private doQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean, forceFetch: boolean) {
                 const query = MetaDataQueryResolver.selectQuery(props, state, isMetadataQuery);
 
                 if (!query) {
                     return;
                 }
 
-                Client.query({ query })
+                Client.query({ fetchPolicy: forceFetch ? 'network-only' : 'cache-first' , query })
                     .then((res) => this.setQuery(res, isMetadataQuery, state));
             }
 
-            private setQuery ({ data }: any, isMetadataQuery: boolean, state: State) {
+            private setQuery (res: any, isMetadataQuery: boolean, state: State) {
                 return isMetadataQuery
-                    ? this.setMetadata(data, state)
-                    : this.setData(data);
+                    ? this.setMetadata(res.data)
+                    : this.setData(res.data);
             }
 
-            private setMetadata (metadata: any, state: State) {
-
-                if (this.onlyMetadata && state.loading !== false) {
-                    this.setState({
-                        loading: false,
-                        metadata
-                    });
+            private setMetadata (metadata: any) {
+                if (this.onlyMetadata) {
+                    this.loading = false;
                 }
                 this.setState({
                     metadata
@@ -102,8 +117,8 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
             }
 
             private setData (data: any) {
+                this.loading = false;
                 this.setState({
-                    loading: false,
                     data
                 });
             }
