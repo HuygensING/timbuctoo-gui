@@ -91,15 +91,17 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                                 onSelectChangeHandler={this.onSelectChangeHandler}
                                 collection={this.props.match && this.props.match.params.collection}
                             />
-                            <StyledInputWrapper>
-                                <StyledInput
-                                    type={'text'}
-                                    title={`${valueItem.name}_${0}`}
-                                    name={componentInfo.name}
-                                    defaultValue={valueItem.value.field}
-                                    onBlur={(e) => this.onChangeHandler(e, valueItem.name)}
-                                />
-                            </StyledInputWrapper>
+                            {typeof valueItem.value.field === 'string' && (
+                                <StyledInputWrapper>
+                                    <StyledInput
+                                        type={'text'}
+                                        title={`${valueItem.name}_${0}`}
+                                        name={componentInfo.name}
+                                        defaultValue={valueItem.value.field}
+                                        onBlur={(e) => this.onChangeHandler(e, valueItem.name)}
+                                    />
+                                </StyledInputWrapper>
+                            )}
                         </StyledDivider>
                     ))}
                 {values && values.length > 0 && (
