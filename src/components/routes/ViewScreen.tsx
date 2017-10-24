@@ -8,8 +8,7 @@ import { Title } from '../layout/StyledCopy';
 import styled from '../../styled-components';
 
 import { FormWrapperProps } from '../../typings/Forms';
-import DraggableForm from '../form/DraggableForm';
-import { COMPONENTS } from '../../constants/global';
+// import DraggableForm from '../form/DraggableForm';
 import { DataSetMetadata } from '../../typings/schema';
 import Loading from '../Loading';
 import { createQueryStringFromFormFields } from '../../services/CreateQueryFromValues';
@@ -33,58 +32,6 @@ const Section = styled.div`
     padding-bottom: 3rem;
 `;
 
-const fakeItems: any[] = [
-    {
-        type: COMPONENTS.title,
-        value: {
-            fields: []
-        }
-    },
-    {
-        type: COMPONENTS.keyValue,
-        key: {
-            field: 'from'
-        },
-        values: [
-            {
-                type: COMPONENTS.value,
-                value: {
-                    fields: [{
-                        value: 'tim_hasResident',
-                        reference: 'clusius_Persons'
-                    }, {
-                        value: 'tim_gender',
-                        reference: null
-                    }]
-                }
-            }
-        ]
-    },
-    {
-        type: COMPONENTS.keyValue,
-        key: {
-            field: 'to'
-        },
-        values: [
-            {
-                type: COMPONENTS.value,
-                value: {
-                    fields: [{
-                        value: 'tim_hasResident',
-                        reference: 'clusius_Persons'
-                    }, {
-                        value: 'tim_hasBirthPlace',
-                        reference: 'clusius_Places'
-                    }, {
-                        value: 'tim_country',
-                        reference: null
-                    }]
-                }
-            }
-        ]
-    }
-];
-
 class ViewScreen extends PureComponent<FullProps, State> {
 
     constructor (props: FullProps) {
@@ -95,7 +42,7 @@ class ViewScreen extends PureComponent<FullProps, State> {
 
     render () {
         // TODO: add when Components are available
-        
+
         if (this.props.loading) { return <Loading />; }
         // const { collection } = this.props.metadata.dataSetMetadata;
         return (
@@ -103,10 +50,10 @@ class ViewScreen extends PureComponent<FullProps, State> {
                 <Section>
                     <FullHelmet pageName="View screen"/>
                     <Title>View screen</Title>
-                    <DraggableForm
-                        items={fakeItems}
-                        onSend={this.onSubmit}
-                    />
+                    {/*<DraggableForm*/}
+                        {/*items={fakeItems}*/}
+                        {/*onSend={this.onSubmit}*/}
+                    {/*/>*/}
                 </Section>
             </Grid>
         );

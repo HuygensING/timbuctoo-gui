@@ -1,12 +1,8 @@
-export interface ComponentTypes {
-    title: string;
-    value: string;
-    image: string;
-    link: string;
-    keyValue: string;
-    divider: string;
-    tree: string;
-}
+import { ComponentType } from './schema';
+
+export type ComponentTypes = {
+    [key: string]: ComponentType
+};
 
 export interface ComponentFieldType {
     valueKey: string;
