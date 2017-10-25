@@ -20,7 +20,6 @@ type FullProps = ResolvedApolloProps;
 class Search extends PureComponent<FullProps> {
 
     render() {
-        // TODO: Refactor loading, so it breaks up into the components instead of re-running entire page | can use state for this well :)
         if (!this.props.metadata || !this.props.data) {
             return <Loading />;
         }
@@ -90,4 +89,4 @@ class Search extends PureComponent<FullProps> {
     }
 }
 
-export default MetadataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES, QUERY_COLLECTION_VALUES, { forceFetch: true })(Search);
+export default MetadataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES, QUERY_COLLECTION_VALUES)(Search);
