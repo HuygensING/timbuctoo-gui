@@ -18,8 +18,8 @@ interface Props {
     items: NormalizedComponent[];
     onSend: (e: {}) => void;
     addItem: (component: Component) => void;
-    addChild: (nodeId: number, childId: number) => void;
-    sortChild: (nodeId: number, oldIndex: number, newIndex: number) => void;
+    addChild: (childId: number) => void;
+    sortChild: (oldIndex: number, newIndex: number) => void;
     id: number;
     noForm?: boolean;
     lastId: number;
@@ -105,12 +105,12 @@ class DraggableForm extends PureComponent<Props, State> {
         this.setState(state => ({
             openedIndex: oldIndex === state.openedIndex ? newIndex : state.openedIndex
         }));
-        this.props.sortChild(this.props.id, oldIndex, newIndex);
+        this.props.sortChild(oldIndex, newIndex);
     }
 
     private addListItem = () => {
         this.props.addItem(EMPTY_VIEW_COMPONENTS[COMPONENTS.value]);
-        this.props.addChild(this.props.id, this.props.lastId + 1);
+        this.props.addChild(this.props.lastId + 1);
     }
 
     private onSubmit (e: any) {
@@ -119,11 +119,10 @@ class DraggableForm extends PureComponent<Props, State> {
     }
 }
 
-// todo ownProps
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, { id }: Props) => ({
     addItem: (component: Component) => dispatch(addViewConfigNode(component)),
-    addChild: (nodeId, childId) => dispatch(addViewConfigChild(nodeId, childId)),
-    sortChild: (nodeId, oldIndex, newIndex) => dispatch(sortViewConfigChild(nodeId, oldIndex, newIndex))
+    addChild: (childId) => dispatch(addViewConfigChild(id, childId)),
+    sortChild: (oldIndex, newIndex) => dispatch(sortViewConfigChild(id, oldIndex, newIndex))
 });
 
 const mapStateToProps = (state: RootState) => ({
