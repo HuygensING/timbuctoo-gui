@@ -6,7 +6,7 @@ import { CollectionMetadataList } from '../../typings/schema';
 import translate from '../../services/translate';
 import { Subtitle, Content, Label } from '../layout/StyledCopy';
 import Image from '../layout/Image';
-import Button from '../layout/Button';
+import { ButtonLink } from '../layout/Button';
 
 export interface ResultDataSetMetadata {
     imageUrl: string | null;
@@ -53,7 +53,7 @@ const SearchResulDataset = (props: ResultDataSetMetadata) => {
                 {renderCollections()}
             </CollectionList>
             <Content>{description}</Content>
-            <Button to="/" small={true}>{translate('search.view_dataset')}</Button>
+            <ButtonLink to="/" data-small={true}>{translate('search.view_dataset')}</ButtonLink>
         </SearchItem>
     );
 };
