@@ -123,7 +123,7 @@ const setCollectionArguments = (indexConfig, location): string => {
     const elasticsearch = `elasticsearch: ${setElasticSearchParams(indexConfig, search)}`;
     const cursorString = cursor ? `, cursor: ${doubleStringify(cursor)}` : '';
 
-    return `(${elasticsearch}${cursorString}`;
+    return `(${elasticsearch}${cursorString})`;
 };
 
 export default setCollectionArguments;
