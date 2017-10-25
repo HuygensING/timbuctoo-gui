@@ -16,6 +16,7 @@ import MetadataResolver from '../MetadataResolver';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
 import Pagination from '../search/Pagination';
+import NotFound from './NotFound';
 
 interface Props {
     metadata: {
@@ -46,10 +47,16 @@ class Search extends PureComponent<FullProps> {
             return <Loading/>;
         }
 
+        // Probably an unknown dataSet
+        if (!this.props.loading && this.props.metadata.dataSetMetadata === null) {
+            return <NotFound />;
+        }
+
         const { collectionList, dataSetId, collection } = this.props.metadata.dataSetMetadata;
 
-        if (!collection || !collectionList) {
-            return null;
+        // Probably an unknown collectionId
+        if (!collection || !collectionList || !dataSetId) {
+            return <NotFound />;
         }
 
         const collectionValues = getCollectionValues(this.props.data.dataSets, dataSetId, collection.collectionListId);

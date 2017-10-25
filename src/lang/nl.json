@@ -24,5 +24,6 @@
     "footer.street": "Straat",
     "footer.address": "Adres",
     "footer.phone": "Telefoon nummer",
-    "footer.opening_hours": "Openingstijden"
+    "footer.opening_hours": "Openingstijden",
+    "404.not_found": "Ik kan de pagina niet vinden, sorry!"
 }
