@@ -4,6 +4,8 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import styled, { withProps } from '../../styled-components';
 import Caret from '../icons/Caret';
 import { BREAKPOINT } from '../layout/Grid';
+import * as queryString from 'querystring';
+import { encode } from '../../services/UrlStringCreator';
 
 interface Props {
     nextCursor?: string;
@@ -40,15 +42,20 @@ const Button = withProps<ButtonProps & LinkProps>(styled(Link))`
     }
 `;
 
-const Pagination: SFC<Props & RouteComponentProps<any>> = ({ nextCursor, prevCursor, location: { pathname } }) => (
-    <Container>
-        <Button to={{ pathname, search: `cursor=${prevCursor}` }} disabled={!prevCursor}>
-            <Caret rotate={true} />
-        </Button>
-        <Button to={{ pathname, search: `cursor=${nextCursor}` }} disabled={!nextCursor}>
-            <Caret />
-        </Button>
-    </Container>
-);
+const Pagination: SFC<Props & RouteComponentProps<any>> = ({ nextCursor, prevCursor, location: { pathname } }) => {
+    const { search } = queryString.parse(location.search.substring(1));
+    const searchParam = search ? `search=${encode(search)}&` : '';
+
+    return (
+        <Container>
+            <Button to={{ pathname, search: `${searchParam}cursor=${prevCursor}` }} disabled={!prevCursor}>
+                <Caret rotate={true}/>
+            </Button>
+            <Button to={{ pathname, search: `${searchParam}cursor=${nextCursor}` }} disabled={!nextCursor}>
+                <Caret/>
+            </Button>
+        </Container>
+    );
+};
 
 export default withRouter(Pagination);
