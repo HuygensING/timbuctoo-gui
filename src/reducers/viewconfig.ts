@@ -1,5 +1,6 @@
 import { COMPONENTS } from '../constants/global';
 import { Component } from '../typings/schema';
+import { arrayMove } from 'react-sortable-hoc';
 
 export type NormalizedComponent = Component & {
     id: number
@@ -141,6 +142,15 @@ type ViewConfigChildAction = {
     }
 };
 
+type SortViewConfigChildAction = {
+    type: 'SORT_VIEW_CONFIG_CHILD',
+    payload: {
+        nodeId: number,
+        oldIndex: number,
+        newIndex: number
+    }
+};
+
 type DeleteViewConfigItemAction = {
     type: 'DELETE_VIEW_CONFIG_NODE',
     payload: {
@@ -148,10 +158,19 @@ type DeleteViewConfigItemAction = {
     }
 };
 
-type Action = AddViewConfigNodeAction | DeleteViewConfigItemAction | ViewConfigChildAction | ModifyViewConfigNodeAction;
+type Action =
+    AddViewConfigNodeAction
+    | DeleteViewConfigItemAction
+    | ViewConfigChildAction
+    | ModifyViewConfigNodeAction
+    | SortViewConfigChildAction;
 
 export const getNodeById = (id: number, state: ViewConfigReducer): NormalizedComponent | undefined =>
     state.find(item => item.id === id);
+
+export const lastId = (state: ViewConfigReducer) => state
+    .map(item => item.id)
+    .reduce(((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue)), -Infinity);
 
 const getAllDescendantIds = (state, nodeId) => (
     state[nodeId].childIds.reduce((acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)], [])
@@ -166,9 +185,11 @@ const deleteMany = (state, ids) => {
 const childIds = (state, action) => {
     switch (action.type) {
         case 'ADD_VIEW_CONFIG_CHILD':
-            return [...state, action.childId];
+            return [...state, action.payload.childId];
         case 'DELETE_VIEW_CONFIG_CHILD':
             return state.filter(id => id !== action.childId);
+        case 'SORT_VIEW_CONFIG_CHILD':
+            return arrayMove(state, action.payload.oldIndex, action.payload.newIndex);
         default:
             return state;
     }
@@ -177,13 +198,9 @@ const childIds = (state, action) => {
 const node = (state: NormalizedComponent | null, action: Action, items: NormalizedComponent[]): NormalizedComponent => {
     switch (action.type) {
         case 'ADD_VIEW_CONFIG_NODE': {
-            const lastId = items
-                .map(item => item.id)
-                .reduce(((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue)), -Infinity);
-
             return {
                 ...action.payload.component,
-                id: lastId + 1,
+                id: lastId(items) + 1,
                 childIds: []
             };
         }
@@ -195,6 +212,7 @@ const node = (state: NormalizedComponent | null, action: Action, items: Normaliz
             };
         case 'ADD_VIEW_CONFIG_CHILD':
         case 'DELETE_VIEW_CONFIG_CHILD':
+        case 'SORT_VIEW_CONFIG_CHILD':
             return {
                 ...state!,
                 childIds: state && childIds(state.childIds, action)
@@ -207,12 +225,15 @@ const node = (state: NormalizedComponent | null, action: Action, items: Normaliz
 export default (state = initialState, action: Action): ViewConfigReducer => {
     switch (action.type) {
         case 'MODIFY_VIEW_CONFIG_NODE':
+        case 'SORT_VIEW_CONFIG_CHILD':
         case 'DELETE_VIEW_CONFIG_CHILD':
         case 'ADD_VIEW_CONFIG_CHILD': {
-            let nodeId = action.payload.nodeId;
-            const modifiedNode = node(getNodeById(nodeId, state)!, action, state);
-            const nextState = { ...state };
-            nextState[nodeId] = modifiedNode;
+            const nodeId = action.payload.nodeId;
+            const nodeIndex = state.findIndex(item => item.id === nodeId);
+
+            const nextNode = node(state[nodeIndex], action, state);
+            const nextState = [...state];
+            nextState[nodeIndex] = nextNode;
             return nextState;
         }
         case 'ADD_VIEW_CONFIG_NODE': {
@@ -220,7 +241,7 @@ export default (state = initialState, action: Action): ViewConfigReducer => {
             return [...state, modifiedNode];
         }
         case 'DELETE_VIEW_CONFIG_NODE': {
-            let nodeId = action.payload.nodeId;
+            const nodeId = action.payload.nodeId;
             const descendantIds = getAllDescendantIds(state, nodeId);
             return deleteMany(state, [nodeId, ...descendantIds]);
         }
@@ -251,10 +272,19 @@ export const addViewConfigChild = (nodeId, childId): ViewConfigChildAction => ({
     }
 });
 
-export const removeChild = (nodeId, childId): ViewConfigChildAction => ({
+export const removeViewConfigChild = (nodeId, childId): ViewConfigChildAction => ({
     type: 'DELETE_VIEW_CONFIG_CHILD',
     payload: {
         nodeId,
         childId
+    }
+});
+
+export const sortViewConfigChild = (nodeId, oldIndex, newIndex): SortViewConfigChildAction => ({
+    type: 'SORT_VIEW_CONFIG_CHILD',
+    payload: {
+        nodeId,
+        oldIndex,
+        newIndex
     }
 });

@@ -1,50 +1,57 @@
 import { COMPONENTS } from './global';
+import { Component } from '../typings/schema';
+import { ComponentTypes } from '../typings/viewComponents';
 
-const EMPTY_VIEW_COMPONENTS = {
+type EmptyViewComponentsMap = {
+    [T in keyof ComponentTypes]: Component
+};
+
+const EMPTY_VIEW_COMPONENTS: EmptyViewComponentsMap = {
     [COMPONENTS.title]: {
         type: COMPONENTS.title,
         value: {
-            fields: [{ value: '', referenceType: null }]
+            fields: [{ value: '' }]
         }
     },
     [COMPONENTS.value]: {
         type: COMPONENTS.value,
         value: {
-            fields: [{ value: '', referenceType: null }]
+            fields: [{ value: '' }]
         }
     },
     [COMPONENTS.image]: {
         type: COMPONENTS.image,
         url: {
-            fields: [{ value: '', referenceType: null }]
+            fields: [{ value: '' }]
         },
         alt: {
-            fields: [{ value: '', referenceType: null }]
+            fields: [{ value: '' }]
         }
     },
     [COMPONENTS.link]: {
         type: COMPONENTS.link,
         value: {
-            fields: [{ value: '', referenceType: null }]
+            fields: [{ value: '' }]
         },
         url: {
-            fields: [{ value: '', referenceType: null }]
+            fields: [{ value: '' }]
         }
     },
     [COMPONENTS.keyValue]: {
         type: COMPONENTS.keyValue,
         key: {
-            fields: ''
+            fields: [{ value: '' }]
         },
         values: [
             {
                 type: COMPONENTS.value,
                 value: {
-                    fields: [{ value: '', referenceType: null }]
+                    fields: [{ value: '' }]
                 }
             }
         ]
     },
+
     [COMPONENTS.divider]: {
         type: COMPONENTS.divider,
         title: {
