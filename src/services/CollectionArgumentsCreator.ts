@@ -7,7 +7,7 @@ interface Aggs {
 }
 
 interface Agg {
-    filter?: EsQuery;
+    filter: EsQuery | {};
     aggs: {
         name: {
             terms: {
@@ -72,8 +72,10 @@ const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Agg
     facets.forEach(({ paths, caption, type }: FacetConfig, idx: number) => {
         if (type === 'MultiSelect' && (caption || type) && paths) {
             const field = setFirstPathAsString(paths);
+            const filter = searchObj ? setFilteredSearchObj(searchObj, field) : {};
 
-            const aggregation: Agg = {
+            aggregations[caption || `${type}_${idx}`] = {
+                filter,
                 aggs: {
                     name: {
                         terms: {
@@ -82,12 +84,6 @@ const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Agg
                     }
                 }
             };
-
-            if (searchObj) {
-                aggregation.filter = setFilteredSearchObj(searchObj, field);
-            }
-
-            aggregations[caption || `${type}_${idx}`] = aggregation;
         }
     });
 
