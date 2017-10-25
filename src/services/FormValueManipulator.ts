@@ -1,5 +1,4 @@
 import { ComponentFormType } from '../typings/index';
-// import EMPTY_VIEW_COMPONENTS from '../constants/emptyViewComponents';
 import { Component } from '../typings/schema';
 import { NormalizedComponent } from '../reducers/viewconfig';
 
@@ -12,7 +11,15 @@ export const addExtraInfo = (item: NormalizedComponent): ComponentFormType => ({
     name: renderName(item.type, item.id)
 });
 
-export const removeExtraInfo = (items: ComponentFormType[]): Component[] => {
+// warning! if it wasn't obvious enough: this function mutates!
+export const removeExtraInfo = (item: ComponentFormType): Component => {
+    delete item.name;
+    delete item.id;
+    delete item.childIds;
+    return item;
+};
+
+export const removeExtraInfos = (items: ComponentFormType[]): Component[] => {
     const newItems = items.slice();
     newItems.forEach(item => {
         delete item.name;
@@ -22,11 +29,3 @@ export const removeExtraInfo = (items: ComponentFormType[]): Component[] => {
 
     return newItems;
 };
-
-// const renderEmptyViewComponent = (componentKey, idx) => {
-//     if (!EMPTY_VIEW_COMPONENTS.hasOwnProperty(componentKey)) {
-//         return null;
-//     }
-//
-//     return addExtraInfo(EMPTY_VIEW_COMPONENTS[componentKey]);
-// };

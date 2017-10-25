@@ -119,6 +119,8 @@ const exampleData: Component[] = [
 
 const initialState: ViewConfigReducer = normalizeTree(exampleData);
 
+// action definitions
+
 type AddViewConfigNodeAction = {
     type: 'ADD_VIEW_CONFIG_NODE',
     payload: {
@@ -165,29 +167,36 @@ type Action =
     | ModifyViewConfigNodeAction
     | SortViewConfigChildAction;
 
+// selectors
+
 export const getNodeById = (id: number, state: ViewConfigReducer): NormalizedComponent | undefined =>
     state.find(item => item.id === id);
 
-export const lastId = (state: ViewConfigReducer) => state
+export const lastId = (state: ViewConfigReducer): number => state
     .map(item => item.id)
     .reduce(((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue)), -Infinity);
 
-const getAllDescendantIds = (state, nodeId) => (
-    state[nodeId].childIds.reduce((acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)], [])
+const getAllDescendantIds = (state: ViewConfigReducer, nodeId: number) => (
+    getNodeById(nodeId, state)!.childIds.reduce((acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)], [])
 );
 
-const deleteMany = (state, ids) => {
-    state = { ...state };
-    ids.forEach(id => delete state[id]);
+const deleteMany = (state: ViewConfigReducer, ids: number[]): ViewConfigReducer => {
+    state = [...state];
+    for (const id of ids) {
+        const index = state.findIndex(item => item.id === id);
+        state.splice(index, 1);
+    }
     return state;
 };
+
+// reducers
 
 const childIds = (state, action) => {
     switch (action.type) {
         case 'ADD_VIEW_CONFIG_CHILD':
             return [...state, action.payload.childId];
         case 'DELETE_VIEW_CONFIG_CHILD':
-            return state.filter(id => id !== action.childId);
+            return state.filter(id => id !== action.payload.childId);
         case 'SORT_VIEW_CONFIG_CHILD':
             return arrayMove(state, action.payload.oldIndex, action.payload.newIndex);
         default:
@@ -206,8 +215,8 @@ const node = (state: NormalizedComponent | null, action: Action, items: Normaliz
         }
         case 'MODIFY_VIEW_CONFIG_NODE':
             return {
-                // state can only be null when adding.
-                ...state!,
+                id: state!.id,
+                childIds: state!.childIds,
                 ...action.payload.component
             };
         case 'ADD_VIEW_CONFIG_CHILD':
@@ -215,7 +224,7 @@ const node = (state: NormalizedComponent | null, action: Action, items: Normaliz
         case 'SORT_VIEW_CONFIG_CHILD':
             return {
                 ...state!,
-                childIds: state && childIds(state.childIds, action)
+                childIds: childIds(state!.childIds, action)
             };
         default:
             return state!; // todo don't unwrap optional???
@@ -257,6 +266,14 @@ export const addViewConfigNode = (component: Component): AddViewConfigNodeAction
     }
 });
 
+export const modifyViewConfigNode = (nodeId, component: Component): ModifyViewConfigNodeAction => ({
+    type: 'MODIFY_VIEW_CONFIG_NODE',
+    payload: {
+        nodeId,
+        component
+    }
+});
+
 export const deleteViewConfigNode = (nodeId): DeleteViewConfigItemAction => ({
     type: 'DELETE_VIEW_CONFIG_NODE',
     payload: {
@@ -272,7 +289,7 @@ export const addViewConfigChild = (nodeId, childId): ViewConfigChildAction => ({
     }
 });
 
-export const removeViewConfigChild = (nodeId, childId): ViewConfigChildAction => ({
+export const deleteViewConfigChild = (nodeId, childId): ViewConfigChildAction => ({
     type: 'DELETE_VIEW_CONFIG_CHILD',
     payload: {
         nodeId,

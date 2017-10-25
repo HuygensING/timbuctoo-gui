@@ -41,15 +41,7 @@ const EMPTY_VIEW_COMPONENTS: EmptyViewComponentsMap = {
         type: COMPONENTS.keyValue,
         key: {
             fields: [{ value: '' }]
-        },
-        values: [
-            {
-                type: COMPONENTS.value,
-                value: {
-                    fields: [{ value: '' }]
-                }
-            }
-        ]
+        }
     },
 
     [COMPONENTS.divider]: {

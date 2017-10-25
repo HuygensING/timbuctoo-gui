@@ -56,7 +56,7 @@ class DraggableForm extends PureComponent<Props, State> {
     state = {
         openedIndex: null
     };
-    
+
     render () {
         return this.props.noForm
             ? this.renderContent()
@@ -120,6 +120,7 @@ class DraggableForm extends PureComponent<Props, State> {
     }
 }
 
+// todo ownProps
 const mapDispatchToProps = dispatch => ({
     addItem: (component: Component) => dispatch(addViewConfigNode(component)),
     addChild: (nodeId, childId) => dispatch(addViewConfigChild(nodeId, childId)),
