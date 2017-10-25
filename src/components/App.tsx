@@ -61,9 +61,7 @@ interface State {
 
 class App extends PureComponent<ChildProps<Props, Response>, State> {
     renderLoad: boolean = true;
-    history = createBrowserHistory({
-        basename: process.env.REACT_APP_REL_PATH || '/'
-    });
+    history = createBrowserHistory();
 
     componentWillMount () {
         this.checkRenderLoad(this.props.user);
