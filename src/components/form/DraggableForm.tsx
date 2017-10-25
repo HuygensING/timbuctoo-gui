@@ -1,15 +1,14 @@
 import React, { PureComponent } from 'react';
 
 import DraggableList from '../DraggableList';
-import { ComponentFormType } from '../../typings/index';
+import { ComponentFormType, NormalizedComponent } from '../../typings/index';
 import { addExtraInfo } from '../../services/FormValueManipulator';
 import styled from '../../styled-components';
 import { COMPONENTS, DRAGGABLE_COMPONENTS } from '../../constants/global';
 import { Component } from '../../typings/schema';
 import { SubmitButton } from './fields/Buttons';
 import {
-    addViewConfigChild, addViewConfigNode, getNodeById, lastId, NormalizedComponent,
-    sortViewConfigChild
+    addViewConfigChild, addViewConfigNode, getNodeById, lastId, sortViewConfigChild
 } from '../../reducers/viewconfig';
 import { connect } from 'react-redux';
 import EMPTY_VIEW_COMPONENTS from '../../constants/emptyViewComponents';

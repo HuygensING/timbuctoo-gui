@@ -1,11 +1,7 @@
 import { COMPONENTS } from '../constants/global';
 import { Component } from '../typings/schema';
 import { arrayMove } from 'react-sortable-hoc';
-
-export type NormalizedComponent = Component & {
-    id: number
-    childIds: number[]
-};
+import { NormalizedComponent } from '../typings/index';
 
 export type ViewConfigReducer = NormalizedComponent[];
 
@@ -246,8 +242,7 @@ export default (state = initialState, action: Action): ViewConfigReducer => {
             return nextState;
         }
         case 'ADD_VIEW_CONFIG_NODE': {
-            const modifiedNode = node(null, action, state);
-            return [...state, modifiedNode];
+            return [...state, node(null, action, state)];
         }
         case 'DELETE_VIEW_CONFIG_NODE': {
             const nodeId = action.payload.nodeId;
