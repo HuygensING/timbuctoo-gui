@@ -1,45 +1,32 @@
 import { ComponentFormType } from '../typings/index';
-import EMPTY_VIEW_COMPONENTS from '../constants/emptyViewComponents';
+// import EMPTY_VIEW_COMPONENTS from '../constants/emptyViewComponents';
 import { Component } from '../typings/schema';
+import { NormalizedComponent } from '../reducers/viewconfig';
 
-const renderName = (typename: string, idx: number, field?: string): string => (
+export const renderName = (typename: string, idx: number, field?: string): string => (
     `${idx}_${typename}${field ? '_' + field : ''}`
 );
 
-const setComponentInfo = (item: any, idx: number) => {
-    const newItem = { ...item };
+export const addExtraInfo = (item: NormalizedComponent): ComponentFormType => ({
+    ...item,
+    name: renderName(item.type, item.id)
+});
 
-    newItem.componentInfo = {
-        name: renderName(item.type, idx),
-        index: idx
-    };
-
-    return newItem;
-};
-
-const addExtraInfo = (items: any[]): ComponentFormType[] => {
-    const newItems: any = [];
-
-    items.forEach((item, idx) => {
-        newItems.push(setComponentInfo(item, idx));
+export const removeExtraInfo = (items: ComponentFormType[]): Component[] => {
+    const newItems = items.slice();
+    newItems.forEach(item => {
+        delete item.name;
+        delete item.id;
+        delete item.childIds;
     });
 
     return newItems;
 };
 
-const removeExtraInfo = (items: ComponentFormType[]): Component[] => {
-    const newItems = items.slice();
-    newItems.forEach(item => delete item.componentInfo);
-
-    return newItems;
-};
-
-const renderEmptyViewComponent = (componentKey, idx) => {
-    if (!EMPTY_VIEW_COMPONENTS.hasOwnProperty(componentKey)) {
-        return null;
-    }
-
-    return setComponentInfo(EMPTY_VIEW_COMPONENTS[componentKey], idx);
-};
-
-export { addExtraInfo, removeExtraInfo, renderEmptyViewComponent, setComponentInfo, renderName };
+// const renderEmptyViewComponent = (componentKey, idx) => {
+//     if (!EMPTY_VIEW_COMPONENTS.hasOwnProperty(componentKey)) {
+//         return null;
+//     }
+//
+//     return addExtraInfo(EMPTY_VIEW_COMPONENTS[componentKey]);
+// };

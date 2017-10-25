@@ -3,9 +3,8 @@ import { match, withRouter } from 'react-router';
 import styled from '../../styled-components';
 import { COMPONENT_FIELDS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
-import { removeExtraInfo, renderEmptyViewComponent } from '../../services/FormValueManipulator';
-import Select, { OptionProps } from './fields/Select';
-import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
+import { removeExtraInfo } from '../../services/FormValueManipulator';
+import { OptionProps } from './fields/Select';
 import InputField from './fields/Input';
 import { ComponentFormType, ValueItem } from '../../typings/index';
 import KeyValue from './fields/KeyValue';
@@ -50,7 +49,7 @@ interface Props {
 class VariableFormFieldRenderer extends PureComponent<Props> {
     render () {
         const { item } = this.props;
-        const { values, componentInfo } = item;
+        const { values } = item;
 
         const valueList: ValueItem[] = [];
 
@@ -70,24 +69,23 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
 
         return (
             <StyledFieldset>
-                {componentInfo && (
-                    <StyledDivider>
-                        <Label htmlFor={name}>Component</Label>
-                        <Select
-                            name={'Component'}
-                            options={SELECT_COMPONENT_TYPES}
-                            selected={name}
-                            onChange={e => this.onChangeHeadHandler(e)}
-                        />
-                    </StyledDivider>
-                )}
+                {/*{componentInfo && (*/}
+                {/*<StyledDivider>*/}
+                {/*<Label htmlFor={name}>Component</Label>*/}
+                {/*<Select*/}
+                {/*name={'Component'}*/}
+                {/*options={SELECT_COMPONENT_TYPES}*/}
+                {/*selected={name}*/}
+                {/*onChange={e => this.onChangeHeadHandler(e)}*/}
+                {/*/>*/}
+                {/*</StyledDivider>*/}
+                {/*)}*/}
                 {valueList.map((valueItem: ValueItem, idx: number) =>
                     valueItem && valueItem.value && (
                         <StyledDivider key={idx}>
-                            <Label htmlFor={`${componentInfo.name}_${valueItem.name}_0`}>{valueItem.name}</Label>
+                            <Label htmlFor={`${item.name}_${valueItem.name}_0`}>{valueItem.name}</Label>
                             <KeyValue
                                 valueItem={valueItem}
-                                componentInfo={componentInfo}
                                 onSelectChangeHandler={this.onSelectChangeHandler}
                                 collection={this.props.match && this.props.match.params.collection}
                             />
@@ -96,7 +94,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                                     <StyledInput
                                         type={'text'}
                                         title={`${valueItem.name}_${0}`}
-                                        name={componentInfo.name}
+                                        name={item.name}
                                         defaultValue={valueItem.value.field}
                                         onBlur={(e) => this.onChangeHandler(e, valueItem.name)}
                                     />
@@ -185,20 +183,20 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         }
     }
 
-    private onChangeHeadHandler = (option: OptionProps) => {
-        const { resolveChange, item } = this.props;
-        const componentKey = option.value;
-
-        if (componentKey === item.type) {
-            return null;
-        }
-
-        const newFieldset = renderEmptyViewComponent(componentKey, item.componentInfo.index);
-
-        return newFieldset
-            ? resolveChange(newFieldset)
-            : console.log('"' + componentKey + '" : this is not an existing component!');
-    }
+    // private onChangeHeadHandler = (option: OptionProps) => {
+    // const { resolveChange, item } = this.props;
+    // const componentKey = option.value;
+    //
+    // if (componentKey === item.type) {
+    //     return null;
+    // }
+    //
+    // const newFieldset = renderEmptyViewComponent(componentKey, item.componentInfo.index);
+    //
+    // return newFieldset
+    //     ? resolveChange(newFieldset)
+    //     : console.log('"' + componentKey + '" : this is not an existing component!');
+    // }
 }
 
 export default withRouter(VariableFormFieldRenderer);

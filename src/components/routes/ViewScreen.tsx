@@ -8,10 +8,9 @@ import { Title } from '../layout/StyledCopy';
 import styled from '../../styled-components';
 
 import { FormWrapperProps } from '../../typings/Forms';
-// import DraggableForm from '../form/DraggableForm';
+import DraggableForm from '../form/DraggableForm';
 import { DataSetMetadata } from '../../typings/schema';
 import Loading from '../Loading';
-import { createQueryStringFromFormFields } from '../../services/CreateQueryFromValues';
 import MetadataResolver from '../MetadataResolver';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 
@@ -33,36 +32,32 @@ const Section = styled.div`
 `;
 
 class ViewScreen extends PureComponent<FullProps, State> {
-
-    constructor (props: FullProps) {
-        super(props);
-
-        this.onSubmit = this.onSubmit.bind(this);
-    }
-
     render () {
         // TODO: add when Components are available
 
-        if (this.props.loading) { return <Loading />; }
+        if (this.props.loading) {
+            return <Loading/>;
+        }
         // const { collection } = this.props.metadata.dataSetMetadata;
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
                 <Section>
                     <FullHelmet pageName="View screen"/>
                     <Title>View screen</Title>
-                    {/*<DraggableForm*/}
-                        {/*items={fakeItems}*/}
-                        {/*onSend={this.onSubmit}*/}
-                    {/*/>*/}
+                    <DraggableForm
+                        id={0}
+                        onSend={this.onSubmit}
+                    />
                 </Section>
             </Grid>
         );
     }
 
-    private onSubmit (formValues: any[]) {
-        const query = createQueryStringFromFormFields(formValues);
-        console.log('query', query);
-        console.log(formValues);
+    private onSubmit = (formValues: any[]) => {
+        // const query = createQueryStringFromFormFields(formValues);
+        // console.log('query', query);
+        // console.log(formValues);
+        alert('NOTIMPL');
     }
 }
 

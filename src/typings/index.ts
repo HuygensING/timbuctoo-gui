@@ -1,6 +1,7 @@
 import { Permissions } from './permissions';
-import { Component, ComponentValue } from './schema';
-import { SFC, ComponentClass } from 'react';
+import { ComponentValue } from './schema';
+import { ComponentClass, SFC } from 'react';
+import { NormalizedComponent } from '../reducers/viewconfig';
 
 export interface KeyValueObject {
     [name: string]: string;
@@ -11,13 +12,8 @@ export interface ValueItem {
     name: string;
 }
 
-export type ComponentInfo = {
+export type ComponentFormType = NormalizedComponent & {
     name: string;
-    index: number
-};
-
-export type ComponentFormType = Component & {
-    componentInfo: ComponentInfo
 };
 
 export type valueField = {
