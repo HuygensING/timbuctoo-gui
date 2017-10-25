@@ -1,14 +1,14 @@
-import React, { PureComponent } from 'react';
-import { withRouter, match } from 'react-router';
+import React, { FormEvent, PureComponent } from 'react';
+import { match, withRouter } from 'react-router';
 import styled from '../../styled-components';
 import { COMPONENT_FIELDS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
 import { removeExtraInfo, renderEmptyViewComponent } from '../../services/FormValueManipulator';
-import ConnectedSelect from './fields/ConnectedSelect';
 import Select, { OptionProps } from './fields/Select';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
-import { ComponentValue, ComponentValueField } from '../../typings/schema';
 import InputField from './fields/Input';
+import { ComponentFormType, ValueItem } from '../../typings/index';
+import KeyValue from './fields/KeyValue';
 
 const Label = styled.label`
     display: inline-block;
@@ -42,20 +42,17 @@ const StyledDivider = styled.div`
 `;
 
 interface Props {
-    item: any;
+    item: ComponentFormType;
     resolveChange: Function;
     match?: match<any>;
 }
 
-interface ValueItem {
-    value: ComponentValue;
-    name: string;
-}
-
 class VariableFormFieldRenderer extends PureComponent<Props> {
+    render () {
+        const { item } = this.props;
+        const { values, componentInfo } = item;
 
-    static renderFieldList (item: any) {
-        const arr: any[] = [];
+        const valueList: ValueItem[] = [];
 
         for (let key in COMPONENT_FIELDS) {
             if (COMPONENT_FIELDS.hasOwnProperty(key)) {
@@ -66,27 +63,59 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                 };
 
                 if (item[name]) {
-                    arr.push(obj);
+                    valueList.push(obj);
                 }
-
             }
         }
 
-        return arr;
+        return (
+            <StyledFieldset>
+                {componentInfo && (
+                    <StyledDivider>
+                        <Label htmlFor={name}>Component</Label>
+                        <Select
+                            name={'Component'}
+                            options={SELECT_COMPONENT_TYPES}
+                            selected={name}
+                            onChange={e => this.onChangeHeadHandler(e)}
+                        />
+                    </StyledDivider>
+                )}
+                {valueList.map((valueItem: ValueItem, idx: number) =>
+                    valueItem && valueItem.value && (
+                        <StyledDivider key={idx}>
+                            <Label htmlFor={`${componentInfo.name}_${valueItem.name}_0`}>{valueItem.name}</Label>
+                            <KeyValue
+                                valueItem={valueItem}
+                                componentInfo={componentInfo}
+                                onSelectChangeHandler={this.onSelectChangeHandler}
+                                collection={this.props.match && this.props.match.params.collection}
+                            />
+                            {typeof valueItem.value.field === 'string' && (
+                                <StyledInputWrapper>
+                                    <StyledInput
+                                        type={'text'}
+                                        title={`${valueItem.name}_${0}`}
+                                        name={componentInfo.name}
+                                        defaultValue={valueItem.value.field}
+                                        onBlur={(e) => this.onChangeHandler(e, valueItem.name)}
+                                    />
+                                </StyledInputWrapper>
+                            )}
+                        </StyledDivider>
+                    ))}
+                {values && values.length > 0 && (
+                    <DraggableForm
+                        items={values}
+                        noForm={true}
+                        onSend={this.onChangeSubForm}
+                    />
+                )}
+            </StyledFieldset>
+        );
     }
 
-    constructor () {
-        super();
-
-        this.onAddHandler = this.onAddHandler.bind(this);
-        this.renderSubFields = this.renderSubFields.bind(this);
-        this.renderComponentSelector = this.renderComponentSelector.bind(this);
-        this.onChangeSubForm = this.onChangeSubForm.bind(this);
-        this.onChangeHeadHandler = this.onChangeHeadHandler.bind(this);
-        this.onChangeHandler = this.onChangeHandler.bind(this);
-    }
-
-    onChangeSubForm (values: any) {
+    private onChangeSubForm = (values: any) => {
         const { resolveChange, item } = this.props;
         const newValues = removeExtraInfo(values);
 
@@ -96,126 +125,10 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         resolveChange(newFieldset);
     }
 
-    renderSubForm () {
-        const { values } = this.props.item;
-        return (
-            <DraggableForm
-                items={values}
-                noForm={true}
-                onSend={this.onChangeSubForm}
-            />
-        );
-    }
-
-    render () {
-        const { values, componentInfo } = this.props.item;
-        const valueList = VariableFormFieldRenderer.renderFieldList(this.props.item);
-
-        return (
-            <StyledFieldset>
-                {componentInfo && this.renderComponentSelector()}
-                {valueList.map(this.renderSubFields)}
-                {values && values.length > 0 && this.renderSubForm()}
-            </StyledFieldset>
-        );
-    }
-
-    private renderComponentSelector () {
-        const { name } = this.props.item.componentInfo;
-
-        return (
-            <StyledDivider>
-                <Label htmlFor={name}>Component</Label>
-                <Select
-                    name={'Component'}
-                    options={SELECT_COMPONENT_TYPES}
-                    selected={name}
-                    onChange={e => this.onChangeHeadHandler(e)}
-                />
-            </StyledDivider>
-        );
-    }
-
-    private renderTextField (valueItem: ValueItem) {
-        const { componentInfo } = this.props.item;
-
-        if (typeof valueItem.value.field !== 'string') {
-            return null;
-        }
-
-        return (
-            <StyledInputWrapper>
-                <StyledInput
-                    type={'text'}
-                    title={`${valueItem.name}_${0}`}
-                    name={componentInfo.name}
-                    defaultValue={valueItem.value.field}
-                    onBlur={(e) => this.onChangeHandler(e, valueItem.name)}
-                />
-            </StyledInputWrapper>
-        );
-    }
-
-    private renderConnectedSelect (valueItem: ValueItem, field: ComponentValueField, childIdx: number = 0) {
-
-        const { value, reference } = field;
-        return (
-            <ConnectedSelect
-                key={childIdx}
-                name={'select'}
-                selected={{ key: value, value: value }}
-                collectionId={reference}
-                onChange={({ option, settings }) => this.onSelectChangeHandler(option, settings, valueItem.name, childIdx)}
-            />
-        );
-    }
-
-    private renderKeyFields (valueItem: ValueItem) {
-
-        // If fields does not exist return null
-        if (!valueItem.value.fields) {
-            return null;
-        }
-
-        // If fields does exist but is empty, add a default field with current collection as reference
-        if (valueItem.value.fields && valueItem.value.fields.length === 0) {
-            valueItem.value.fields.push({
-                value: '',
-                reference: this.props.match && this.props.match.params.collection
-            });
-        }
-
-        return (
-            <StyledInputWrapper>
-                {
-                    valueItem.value.fields.map((field: ComponentValueField, childIdx: number) => (
-                        this.renderConnectedSelect(valueItem, field, childIdx))
-                    )
-                }
-            </StyledInputWrapper>
-        );
-    }
-
-    private renderSubFields (valueItem: ValueItem, idx: number) {
-        if (!valueItem || !valueItem.value) {
-            return null;
-        }
-
-        const { componentInfo } = this.props.item;
-
-        return (
-            <StyledDivider key={idx}>
-                <Label htmlFor={`${componentInfo.name}_${valueItem.name}_0`}>{valueItem.name}</Label>
-                {this.renderKeyFields(valueItem)}
-                {this.renderTextField(valueItem)}
-            </StyledDivider>
-        );
-    }
-
-    private onChangeHandler (e: any, fieldName: string) {
+    private onChangeHandler = (e: FormEvent<HTMLInputElement>, fieldName: string) => {
         const { resolveChange, item } = this.props;
 
-        const newValue = e.target.value;
+        const newValue = e.currentTarget.value;
         const oldValue = item[fieldName].field;
 
         if (newValue !== oldValue) {
@@ -225,9 +138,9 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         }
     }
 
-    private onSelectChangeHandler (option: OptionProps, settings: any, fieldName: string, childIndex: number) {
+    private onSelectChangeHandler = (option: OptionProps, settings: any, fieldName: string, childIndex: number) => {
         const { resolveChange, item } = this.props;
-        
+
         // Set the newValue object
         const newValue = {
             value: option.value,
@@ -245,7 +158,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                 ...oldValue,
                 value: newValue.value
             };
-            
+
             // Remove all items behind last changed index
             fields.splice(childIndex + 1, fields.length - childIndex);
 
@@ -272,26 +185,19 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         }
     }
 
-    private onChangeHeadHandler (option: OptionProps) {
+    private onChangeHeadHandler = (option: OptionProps) => {
         const { resolveChange, item } = this.props;
         const componentKey = option.value;
 
-        if (componentKey === item.type) { return null; }
+        if (componentKey === item.type) {
+            return null;
+        }
 
         const newFieldset = renderEmptyViewComponent(componentKey, item.componentInfo.index);
 
         return newFieldset
             ? resolveChange(newFieldset)
             : console.log('"' + componentKey + '" : this is not an existing component!');
-    }
-
-    private onAddHandler (fieldName: string) {
-        const { resolveChange, item } = this.props;
-
-        const newFieldset = { ...item };
-        newFieldset[fieldName].fields.push('');
-
-        resolveChange(newFieldset);
     }
 }
 

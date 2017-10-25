@@ -72,7 +72,7 @@ class SelectField extends Component<FullProps, State> {
                 options={options}
                 selected={selected}
                 onChange={this.onChangeHandler}
-            />   
+            />
         );
     }
 
@@ -89,9 +89,9 @@ class SelectField extends Component<FullProps, State> {
         }
     }
 
-    private getOptionsFromQuery({ dataSetMetadata }: ApolloDataProps, options: OptionProps[] = []) {
-        if (dataSetMetadata && dataSetMetadata.collection) {
-            const collection = dataSetMetadata.collection;
+    private getOptionsFromQuery(data: ApolloDataProps, options: OptionProps[] = []) {
+        if (data && data.dataSetMetadata && data.dataSetMetadata.collection) {
+            const collection = data.dataSetMetadata.collection;
             collection.properties.items.forEach((field) => {
                 // Now references only the first item.
                 const reference = field.referencedCollections && field.referencedCollections.items[0];
