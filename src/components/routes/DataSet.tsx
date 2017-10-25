@@ -18,6 +18,7 @@ import { Title } from '../layout/StyledCopy';
 import EditCollectionBar from '../dataSet/EditCollectionBar';
 import MetadataResolver, { ResolvedApolloProps } from '../MetadataResolver';
 import QUERY_DATASET from '../../graphql/queries/DataSet';
+import NotFound from './NotFound';
 
 interface StateProps {
     loggedIn: boolean;
@@ -38,6 +39,11 @@ class DataSet extends PureComponent<FullProps> {
     render () {
         if (this.props.loading) {
             return <Loading />; 
+        }
+
+        // Probably not a known dataSet, do not redirect to 404 but render inside
+        if (this.props.metadata.dataSetMetadata === null) {
+            return <NotFound />;
         }
 
         const { dataSetMetadata } = this.props.metadata;

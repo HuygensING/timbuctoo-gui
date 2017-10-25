@@ -14,6 +14,7 @@ import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionPropert
 import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
 import Pagination from '../search/Pagination';
 import Loading from '../Loading';
+import NotFound from './NotFound';
 
 type FullProps = ResolvedApolloProps;
 
@@ -24,10 +25,16 @@ class Search extends PureComponent<FullProps> {
             return <Loading />;
         }
 
+        // Probably an unknown dataSet
+        if (!this.props.loading && this.props.metadata.dataSetMetadata === null) {
+            return <NotFound />;
+        }
+
         const { collectionList, dataSetId, collection } = this.props.metadata.dataSetMetadata;
 
-        if (!collection || !collectionList) {
-            return null;
+        // Probably an unknown collectionId
+        if (!collection || !collectionList || !dataSetId) {
+            return <NotFound />;
         }
 
         const collectionValues = getCollectionValues(this.props.data.dataSets, dataSetId, collection.collectionListId);
