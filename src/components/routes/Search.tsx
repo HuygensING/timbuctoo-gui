@@ -43,10 +43,7 @@ class Search extends PureComponent<FullProps> {
 
                 <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={1}>
                     {/* TODO: Connect the fulltext search as well */}
-                    <SearchForm
-                        submit={() => { console.log('searching'); }}
-                        type={'collection'}
-                    />
+                    <SearchForm type={'collection'}/>
                 </Col>
 
                 <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={.5}>

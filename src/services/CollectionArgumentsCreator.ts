@@ -1,6 +1,6 @@
 import queryString from 'querystring';
 import { FacetConfig, IndexConfig } from '../typings/schema';
-import { EsMatches, EsQuery } from './EsQueryConstructor';
+import { EsMatches, EsQuery, setFirstPathAsString } from './EsQueryStringCreator';
 
 interface Aggs {
     [name: string]: Agg;
@@ -71,7 +71,7 @@ const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Agg
 
     facets.forEach(({ paths, caption, type }: FacetConfig, idx: number) => {
         if (type === 'MultiSelect' && (caption || type) && paths) {
-            const field = `${paths[0]}.raw`;
+            const field = setFirstPathAsString(paths);
 
             const aggregation: Agg = {
                 aggs: {

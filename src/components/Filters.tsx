@@ -6,7 +6,7 @@ import { EsFilter, FullTextSearch, mergeFilters } from '../reducers/search';
 import { RootState } from '../reducers/rootReducer';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { encode } from '../services/UrlStringCreator';
-import { createEsQueryString } from '../services/EsQueryConstructor';
+import { createEsQueryString } from '../services/EsQueryStringCreator';
 import FilterForm from './FilterForm';
 
 interface Props {
