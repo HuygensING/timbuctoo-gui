@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import styled from '../../styled-components';
 import { MenuItemProp } from '../../typings';
-import { LOGIN_URL } from '../../constants/api';
+import LoginLink from './LoginLink';
 import { Subtitle } from '../layout/StyledCopy';
 import AvatarButton from './AvatarButton';
 import Tooltip, { ALIGN } from '../Tooltip';
@@ -19,21 +19,6 @@ interface Props {
 interface State {
     isOpen: boolean;
 }
-
-const LoginButton = styled.a`
-    margin-top: 0;
-    padding: 0.25rem 0.5rem;
-    border: 1px solid ${props => props.theme.colors.white};
-    border-radius: .15rem;
-    font: ${props => props.theme.fonts.body};
-    color: ${props => props.theme.colors.white};
-    background-color: ${props => props.theme.colors.black};
-    
-    &:hover {
-        color: ${props => props.theme.colors.black};
-        background-color: ${props => props.theme.colors.shade.light};
-    }
-`;
 
 const AccountContainer = styled.div`
     position: absolute;
@@ -61,7 +46,7 @@ class AccountMenu extends PureComponent<Props, State> {
     };
     
     renderLoginButton() {
-        return <LoginButton href={LOGIN_URL}>Login</LoginButton>;
+        return <LoginLink />;
     }
 
     renderAvatarButton() {
