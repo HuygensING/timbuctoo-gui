@@ -46,7 +46,7 @@ const AddListButton = styled.button`
   }
 `;
 
-const StyledSubmitButton = styled(SubmitButton)`
+const StyledSubmitButton = SubmitButton.extend`
   max-width: 15rem;
   float: right;
 `;
@@ -95,7 +95,7 @@ class DraggableForm extends PureComponent<Props, State> {
                 />
                 <AddListButton type={'button'} onClick={this.addListItem}>+</AddListButton>
                 {this.props.noForm
-                    ? <StyledSubmitButton type={'button'} onClick={this.onSubmit}>save</StyledSubmitButton>
+                    ? <StyledSubmitButton onClick={this.onSubmit}>save</StyledSubmitButton>
                     : <StyledSubmitButton type="submit">save</StyledSubmitButton>
                 }
             </div>

@@ -76,6 +76,7 @@ class Search extends PureComponent<FullProps> {
                         colKeys={reorderUnknownsInList(collectionItems)}
                         dataSetId={dataSetId}
                         currentCollectionListId={collection.collectionListId}
+                        replace={true}
                     />
                 </Col>
 

@@ -37,33 +37,12 @@ export interface ElementProps {
     align?: 'left' | 'right' | 'center';
 }
 
-export interface LinkProps {
-    /*
-     * React Router specific
-     */
-    to: string | Object;
-    exact?: boolean;
-    replace?: boolean;
-
-    /*
-     * StyledCopy specific
-     */
-    children?: any;
-    tag?: string;
-    size?: string;
-    color?: Color;
-    align?: 'left' | 'right' | 'center';
-    hoverColor?: 'primary' | 'shade' | string;
-    weight?: string;
-    isCaps?: boolean;
+export interface ButtonProps {
+    'data-small'?: boolean;
+    'data-variant'?: ButtonVariant;
 }
 
-export interface ButtonProps extends LinkProps { 
-    small?: boolean;
-    type?: ButtonType;
-}
-
-export type ButtonType = 'normal' | 'inverted' | 'dark' | 'disabled';
+export type ButtonVariant = 'normal' | 'inverted' | 'dark' | 'disabled';
 
 export interface GridProps {
     innerRef?: Function;

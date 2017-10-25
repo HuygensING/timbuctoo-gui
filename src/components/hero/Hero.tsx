@@ -5,8 +5,8 @@ import theme from '../../theme';
 
 import { Col } from '../layout/Grid';
 import Image from '../layout/Image';
-import { Title, Content } from '../layout/StyledCopy';
-import Button from '../layout/Button';
+import { Content, Title } from '../layout/StyledCopy';
+import { ButtonLink } from '../layout/Button';
 
 const HeroImageWrapper = styled.div`
     position: relative;
@@ -56,16 +56,16 @@ const Hero = ({ title, content, searchPath, buttonText, imgUrl = defaultImgUrl }
                     fill={true}
                     defaultSrc={defaultImgUrl}
                 />
-                <DarkenImage />
+                <DarkenImage/>
             </HeroImageWrapper>
             <CenteredContent>
                 <Title align="center" color={theme.colors.white}>{title}</Title>
                 {content && <Content align="center" color={theme.colors.white}>{content}</Content>}
-                { searchPath && buttonText &&
+                {searchPath && buttonText && (
                     <ButtonContainer>
-                        <Button to={searchPath} align="center">{buttonText}</Button>
+                        <ButtonLink to={searchPath}>{buttonText}</ButtonLink>
                     </ButtonContainer>
-                }
+                )}
             </CenteredContent>
         </Col>
     );
