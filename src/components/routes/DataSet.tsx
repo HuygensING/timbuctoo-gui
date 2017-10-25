@@ -19,7 +19,6 @@ import { Title } from '../layout/StyledCopy';
 import EditCollectionBar from '../dataSet/EditCollectionBar';
 import MetadataResolver from '../MetadataResolver';
 import QUERY_DATASET from '../../graphql/queries/DataSet';
-import NotFound from './NotFound';
 
 interface Props {
     metadata: {
@@ -27,6 +26,7 @@ interface Props {
     };
     data: null;
     loading: boolean;
+    error: boolean;
 }
 
 interface StateProps {
@@ -46,17 +46,11 @@ class DataSet extends PureComponent<FullProps> {
     }
 
     render () {
-        if (this.props.loading) {
+        if (this.props.loading || !this.props.metadata.dataSetMetadata) {
             return <Loading />; 
         }
 
-        // Probably not a known dataSet, do not redirect to 404 but render inside
-        if (this.props.metadata.dataSetMetadata === null) {
-            return <NotFound />;
-        }
-
-        const { dataSetMetadata } = this.props.metadata;
-        const { dataSetId, title, description, imageUrl, collectionList, owner, contact } = dataSetMetadata;
+        const { dataSetId, title, description, imageUrl, collectionList, owner, contact } = this.props.metadata.dataSetMetadata;
 
         const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
             ? collectionList.items
