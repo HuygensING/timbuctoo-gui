@@ -15,6 +15,7 @@ import { getCollectionValues } from '../../services/GetDataSetValues';
 import MetadataResolver from '../MetadataResolver';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
+import Pagination from '../search/Pagination';
 
 interface Props {
     metadata: {
@@ -29,27 +30,29 @@ interface Props {
 type FullProps = Props & RouteComponentProps<any>;
 
 class Search extends PureComponent<FullProps> {
-    static onSearch (values: {search: string}) {
+    static onSearch(values: { search: string }) {
         // TODO: Do a refetch for results using this key || refetch on route
         console.log(values.search);
     }
 
-    static onFilter (values: any) {
+    static onFilter(values: any) {
         // TODO: create filter logic
         console.log(values);
     }
 
-    render () {
-        // TODO: Refactor loading, so it breaks up into the components instead of re-running entire page | can use state for thisas well :)
-        if (this.props.loading) { return <Loading />; }
+    render() {
+        // TODO: Refactor loading, so it breaks up into the components instead of re-running entire page | can use state for this well :)
+        if (this.props.loading) {
+            return <Loading/>;
+        }
 
-        const { collectionList, dataSetId } = this.props.metadata.dataSetMetadata;
+        const { collectionList, dataSetId, collection } = this.props.metadata.dataSetMetadata;
 
-        const collection = this.props.metadata.dataSetMetadata.collection
-            ? this.props.metadata.dataSetMetadata.collection
-            : { collectionListId: null, collectionId: null, summaryProperties: null };
+        if (!collection || !collectionList) {
+            return null;
+        }
 
-        const collectionValues = getCollectionValues(this.props.data.dataSets, dataSetId , collection.collectionListId);
+        const collectionValues = getCollectionValues(this.props.data.dataSets, dataSetId, collection.collectionListId);
         const fields = getValuesFromObject(collection.summaryProperties);
 
         const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
@@ -80,21 +83,23 @@ class Search extends PureComponent<FullProps> {
 
                     {/* Filter functionality */}
                     <Col sm={12} smPaddingY={1}>
-                        <Filters facets={null} />
+                        <Filters collection={collectionValues} />
                     </Col>
 
                     <Col sm={27} smOffset={3} smPaddingY={1}>
                         {/* Filter functionality */}
 
-                        {collectionValues &&
-                        <SearchResults
-                            dataSetId={dataSetId}
-                            collectionId={collection.collectionId}
-                            properties={collection.summaryProperties}
-                            results={collectionValues.items}
-                            fields={fields}
-                        />
-                        }
+                        {collectionValues && (
+                            <SearchResults
+                                dataSetId={dataSetId}
+                                collectionId={collection.collectionId}
+                                properties={collection.summaryProperties}
+                                results={collectionValues.items}
+                                fields={fields}
+                            />
+                        )}
+
+                        <Pagination nextCursor={collectionValues && collectionValues.nextCursor} prevCursor={collectionValues && collectionValues.prevCursor} />
                     </Col>
 
                 </FullSection>

@@ -3,12 +3,18 @@ import React, { PureComponent } from 'react';
 import { Subtitle } from '../layout/StyledCopy';
 import styled from '../../styled-components';
 import { Dummy } from '../Dummy';
-import { Option } from '../../typings/schema';
-import HiddenField from './fields/HiddenField';
+import { FacetOption } from '../../typings/schema';
+import { BaseButtonStyling, SmallButtonStyling } from '../layout/Button';
+import translate from '../../services/translate';
+import MultiselectFormOption from './MultiselectFormOption';
 
 interface Props {
     title: string;
-    options: Option[];
+    options: FacetOption[];
+}
+
+interface State {
+    amountShown: number;
 }
 
 const Section = styled.section`
@@ -23,40 +29,59 @@ const Sub = styled(Subtitle)`
     margin-top: 0;
 `;
 
-const Amount = styled.span`
-   float: right;
+const Button = styled.button`
+  ${BaseButtonStyling};
+  ${SmallButtonStyling};
+  margin: 1rem .5rem 0 0;
 `;
 
-class MultiSelectForm extends PureComponent<Props> {
+class MultiSelectForm extends PureComponent<Props, State> {
+    static showStep = 5;
+
+    state = { amountShown: MultiSelectForm.showStep };
+
     render () {
         const { title, options } = this.props;
+        const { amountShown } = this.state;
+
+        const isFiltering = options.length > MultiSelectForm.showStep;
+        const shownOptions = isFiltering ? options.slice(0, amountShown) : options;
+
+        const couldDoLess = shownOptions.length - MultiSelectForm.showStep > 0;
+        const couldDoMore = shownOptions.length < options.length;
+
         return (
             <Section>
                 <Sub>{title}</Sub>
                 <Dummy absolute={true} height={'1.5rem'} width={'3.5rem'} text={'toggle'}/>
                 <ul>
-                    {options.map(this.renderCheckBox)}
+                    {
+                        shownOptions.map((option, idx) => (
+                            <MultiselectFormOption key={idx} option={option}/>
+                        ))
+                    }
                 </ul>
+                {
+                    isFiltering && couldDoLess &&
+                    <Button type={'button'} onClick={this.showLess}>{translate('search.less')}</Button>
+                }
+                {
+                    isFiltering && couldDoMore &&
+                    <Button type={'button'} onClick={this.showMore}>{translate('search.more')}</Button>
+                }
             </Section>
         );
     }
 
-    private renderCheckBox (option: Option) {
-        return (
-            <li key={option.name}>
-                <fieldset>
-                    <HiddenField
-                        name={option.name}
-                        id={option.name}
-                        value={option.name}
-                        type={'checkbox'}
-                    />
-                    <label htmlFor={option.name}>
-                        {option.name}
-                        <Amount>{option.count}</Amount>
-                    </label>
-                </fieldset>
-            </li>
+    private showMore = () => {
+        this.setState(
+            (prevState: State) => ({ amountShown: prevState.amountShown + MultiSelectForm.showStep })
+        );
+    }
+
+    private showLess = () => {
+        this.setState(
+            (prevState: State) => ({ amountShown: prevState.amountShown - MultiSelectForm.showStep })
         );
     }
 }

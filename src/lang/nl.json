@@ -16,6 +16,8 @@
     "search.placeholder": "Type om te zoeken...",
     "search.reset": "Reset",
     "search.search": "Zoek",
+    "search.more": "Laat meer zien",
+    "search.less": "Laat minder zien",
     "search.view_dataset": "Bekijk dataset",
     "footer.powered_by": "Timbuctoo wordt gesponsord door",
     "footer.company_name": "Bedrijfs naam",

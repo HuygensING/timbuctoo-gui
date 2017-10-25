@@ -152,9 +152,41 @@ export interface ComponentValueField {
 }
 
 export interface CollectionMetadataList {
-    prevCursor?: string;
-    nextCursor?: string;
-    items: Array<CollectionMetadata>;
+  prevCursor?: string;
+  nextCursor?: string;
+  facets: Facet[];
+  indexConfig: IndexConfig;items: Array<CollectionMetadata>;
+}
+
+export interface IndexConfig {
+  facet: FacetConfig[];
+  fullText: FullTextConfig[];
+}
+
+export interface FacetConfig {
+  paths: string[];
+  type: string;
+  caption: string;
+}
+
+export interface FullTextConfig {
+  caption: string;
+  fields: TextConfigField[];
+}
+
+export interface TextConfigField {
+  path: string;
+  boost: number;
+}
+
+export interface Facet {
+  caption: string;
+  options: FacetOption[];
+}
+
+export interface FacetOption {
+  name: string;
+  count: number;
 }
 
 export interface Archetypes {
@@ -214,16 +246,6 @@ export interface ComponentValueInput {
 export interface ComponentValueFieldInput {
     value?: string;
     referenceType?: string;
-}
-
-export interface Facet {
-    caption: string;
-    options: Array<Option>;
-}
-
-export interface Option {
-    name: string;
-    count: number;
 }
 
 export interface FacetInput {

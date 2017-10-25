@@ -12,10 +12,19 @@ export const store = configureStore();
 // set global body styling in the head
 globalStyling();
 
-const Application = (
-    <ApolloProvider client={Client} store={store}>
-        <App />
-    </ApolloProvider>
+const renderApp = () => (
+    ReactDOM.render(
+        <ApolloProvider client={Client} store={store}>
+            <App/>
+        </ApolloProvider>,
+        document.getElementById('root') as HTMLElement
+    )
 );
 
-ReactDOM.render(Application, document.getElementById('root') as HTMLElement);
+if (module.hot) {
+    module.hot.accept('./components/App', () => {
+        renderApp();
+    });
+}
+
+renderApp();
