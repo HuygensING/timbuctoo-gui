@@ -4,7 +4,7 @@ import setCollectionArguments from '../../services/CollectionArgumentsCreator';
 
 const QUERY_COLLECTION_VALUES = ({ match, location, metadata }) => {
     if (!metadata.dataSetMetadata || !metadata.dataSetMetadata.collection) {
-        return gql`query Empty { __typename}`;
+        return null;
     }
 
     const { properties, summaryProperties, collectionListId, indexConfig } = metadata.dataSetMetadata.collection;

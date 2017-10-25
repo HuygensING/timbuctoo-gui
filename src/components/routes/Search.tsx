@@ -14,31 +14,20 @@ import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionPropert
 import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
 import Pagination from '../search/Pagination';
 import Loading from '../Loading';
-import NotFound from './NotFound';
 
 type FullProps = ResolvedApolloProps;
 
 class Search extends PureComponent<FullProps> {
 
     render() {
-        if (!this.props.metadata || !this.props.data) {
+        if (!this.props.metadata || !this.props.metadata.dataSetMetadata || !this.props.data) {
             return <Loading />;
-        }
-
-        // Probably an unknown dataSet
-        if (!this.props.loading && this.props.metadata.dataSetMetadata === null) {
-            return <NotFound />;
         }
 
         const { collectionList, dataSetId, collection } = this.props.metadata.dataSetMetadata;
 
-        // Probably an unknown collectionId
-        if (!collection || !collectionList || !dataSetId) {
-            return <NotFound />;
-        }
-
-        const collectionValues = getCollectionValues(this.props.data.dataSets, dataSetId, collection.collectionListId);
-        const fields = getValuesFromObject(collection.summaryProperties);
+        const collectionValues = getCollectionValues(this.props.data.dataSets, dataSetId, collection!.collectionListId);
+        const fields = getValuesFromObject(collection!.summaryProperties);
 
         const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
             ? collectionList.items
@@ -57,7 +46,7 @@ class Search extends PureComponent<FullProps> {
                     <CollectionTags
                         colKeys={reorderUnknownsInList(collectionItems)}
                         dataSetId={dataSetId}
-                        currentCollectionListId={collection.collectionListId}
+                        currentCollectionListId={collection!.collectionListId}
                     />
                 </Col>
 
@@ -66,9 +55,9 @@ class Search extends PureComponent<FullProps> {
                     <Col sm={12} smPaddingY={1}>
                         <Filters
                             loading={this.props.loading}
-                            currentCollectionListId={collection.collectionListId}
+                            currentCollectionListId={collection!.collectionListId}
                             collection={collectionValues}
-                            facetConfigs={collection.indexConfig.facet}
+                            facetConfigs={collection!.indexConfig.facet}
                         />
                     </Col>
 
@@ -77,8 +66,8 @@ class Search extends PureComponent<FullProps> {
                         {collectionValues && (
                             <SearchResults
                                 dataSetId={dataSetId}
-                                collectionId={collection.collectionId}
-                                properties={collection.summaryProperties}
+                                collectionId={collection!.collectionId}
+                                properties={collection!.summaryProperties}
                                 results={collectionValues.items}
                                 fields={fields}
                             />
