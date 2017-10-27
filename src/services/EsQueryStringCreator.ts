@@ -40,7 +40,7 @@ export const setFirstPathAsString = (paths: string[]): string => (`${paths[0]}.r
  * @param {EsFilter[]} filters
  * @param {EsQuery} query
  */
-const addMatchQueries = (filters: EsFilter[], query: EsQuery): void => {
+const addMatchQueries = (filters: Readonly<EsFilter[]>, query: EsQuery): void => {
     filters.forEach(filter => {
         const matches: EsMatches = { bool: { should: [] } };
         let hasValues = false;
@@ -65,7 +65,7 @@ const addMatchQueries = (filters: EsFilter[], query: EsQuery): void => {
  * @param {FullTextSearch} fullText
  * @returns {string}
  */
-export const createEsQueryString = (filters: EsFilter[], fullText: FullTextSearch): string | null => {
+export const createEsQueryString = (filters: Readonly<EsFilter[]>, fullText: FullTextSearch): string | null => {
     const query: EsQuery = { bool: { must: [] } };
 
     if (fullText.collection.length > 0) {

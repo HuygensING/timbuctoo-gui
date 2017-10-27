@@ -14,7 +14,7 @@ interface DataState {
 }
 
 interface ErrorState {
-    error: string | null;
+    error: Error | null;
     found: boolean;
 }
 
@@ -39,18 +39,18 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 found: true
             };
             defaultState: State;
-            onlyMetadata: boolean = !dataQuery;
-            loading: boolean = true;
-            state = this.defaultState = {
-                ...this.noErrors,
-                metadata: null,
-                data: null,
-                onRefetch: this.onRefetch
-            };
 
             loading: boolean = true;
             onlyMetadata: boolean = !dataQuery;
             noQuery: boolean;
+            refetch: () => void = this.onRefetch.bind(this);
+
+            state = this.defaultState = {
+                ...this.noErrors,
+                metadata: null,
+                data: null,
+                onRefetch: this.refetch
+            };
 
             static selectQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
                 if (isMetadataQuery && typeof metadataQuery === 'function') {
@@ -83,7 +83,7 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 }
             }
 
-            onRefetch = () => {
+            onRefetch () {
                 const forceFetch = true;
                 this.queryGraph(this.props, this.state, true, forceFetch);
             }
@@ -94,7 +94,7 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 }
 
                 if (!this.loading && this.state.error) {
-                    return <Error errorMessage={this.state.error} />;
+                    return <Error error={this.state.error} />;
                 }
 
                 const loadingProps = { loading: this.loading };
@@ -166,7 +166,7 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
 
                 this.setState({
                     found: true,
-                    error: err.message
+                    error: err
                 });
             }
         };

@@ -7,7 +7,16 @@ import { RootState } from '../reducers/rootReducer';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { encode } from '../services/UrlStringCreator';
 import { createEsQueryString } from '../services/EsQueryStringCreator';
-import FilterForm from './FilterForm';
+import styled, { withProps } from '../styled-components';
+import { Title } from './layout/StyledCopy';
+import MultiSelectForm from './form/MultiselectForm';
+import translate from '../services/translate';
+import { Dummy } from './Dummy';
+
+// TODO: this is just a simple loading effect, should be way cooler
+const StyledForm = withProps<{ loading: boolean }>(styled.form)`
+    opacity: ${props => props.loading ? .5 : 1};
+`;
 
 interface Props {
     currentCollectionListId: string;
@@ -75,7 +84,21 @@ class Filters extends PureComponent<FullProps, {}> {
     }
 
     render () {
-        return <FilterForm filters={this.props.filters} loading={this.props.loading}/>;
+        const { loading, filters } = this.props;
+
+        return (
+            <StyledForm onSubmit={e => e.preventDefault()} loading={loading}>
+                <Title>{translate('globals.filters')}</Title>
+                <Dummy text={'search-filter'} height={1} marginY={.5}/>
+                {
+                    filters.length > 0 && filters.map(
+                        (filter, idx) => (
+                            <MultiSelectForm key={idx} filter={filter} index={idx} />
+                        )
+                    )
+                }
+            </StyledForm>
+        );
     }
 }
 

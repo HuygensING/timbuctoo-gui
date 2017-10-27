@@ -3,14 +3,14 @@ import FullHelmet from '../FullHelmet';
 import { Content, Title } from '../layout/StyledCopy';
 
 interface Props {
-    errorMessage: string | null;
+    error: Error | null;
 }
 
-const Error: SFC<Props> = ({ errorMessage }) => (
+const Error: SFC<Props> = ({ error }) => (
     <section>
         <FullHelmet pageName="Error" />
         <Title align={'center'}>Whoops!</Title>
-        <Content align={'center'}>{errorMessage}</Content>
+        {error && error.message && <Content align={'center'}>{error.message}</Content>}
     </section>
 );
 

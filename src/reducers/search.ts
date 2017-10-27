@@ -50,7 +50,11 @@ interface SubmitSearchAction {
     };
 }
 
-type Action = MergeFilterAction | ToggleFilterAction | SubmitSearchAction;
+interface RequestCallAction {
+    type: 'ES_REQUEST_CALL';
+}
+
+type Action = MergeFilterAction | ToggleFilterAction | SubmitSearchAction | RequestCallAction;
 
 // Helpers
 const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] => (
@@ -98,6 +102,10 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location) => 
         if (searchObj.bool.must.length > 0) {
             searchObj.bool.must.forEach(
                 matches => {
+                    if (!matches.bool || !matches.bool.should) {
+                        return;
+                    }
+
                     matches.bool.should.forEach(
                         obj => {
                             const key = Object.keys(obj.match)[0];
@@ -152,6 +160,11 @@ export default (state: SearchReducer = initialState, action: Action): SearchRedu
                     [action.payload.type]: action.payload.value
                 }
             };
+        case 'ES_REQUEST_CALL':
+            return {
+                ...state,
+                callRequested: true
+            };
         default:
             return state;
     }
@@ -188,3 +201,7 @@ export const toggleFilter = (index, value: string, oldFilters: EsFilter[]) => {
         payload: { filters }
     };
 };
+
+export const requestCall = (): RequestCallAction => ({
+    type: 'ES_REQUEST_CALL'
+});

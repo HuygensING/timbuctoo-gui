@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { SFC } from 'react';
 import { connect } from 'react-redux';
 import translate from '../../services/translate';
 import { Col, Grid } from '../layout/Grid';
-import { SearchReducer, submitSearch } from '../../reducers/search';
+import { requestCall, SearchReducer, submitSearch } from '../../reducers/search';
 import InputField from './fields/Input';
 import { ResetButton, SubmitButton } from './fields/Buttons';
 
@@ -10,7 +10,8 @@ const mapStateToProps = state => ({
     defaultValues: state.search
 });
 const mapDispatchToProps = dispatch => ({
-    submitSearch: (key, value) => dispatch(submitSearch(key, value))
+    handleChange: (key, value) => dispatch(submitSearch(key, value)),
+    requestSearch: () => dispatch(requestCall())
 });
 
 interface Props {
@@ -19,88 +20,56 @@ interface Props {
 
 interface StoreProps {
     defaultValues: SearchReducer;
-    submitSearch: Function;
+    handleChange: Function;
+    requestSearch: () => void;
 }
 
-interface State {
-    pristine: boolean;
-    value: string;
-}
+const SearchForm: SFC<Props & StoreProps> = ({ defaultValues, type, handleChange, requestSearch }) => {
 
-class SearchForm extends PureComponent<Props & StoreProps, State> {
-    defaultState: State;
-
-    constructor (props: Props & StoreProps) {
-        super(props);
-
-        const storeValue = props.defaultValues[props.type];
-
-        this.state = {
-            pristine: storeValue === '',
-            value: storeValue
-        };
-
-        this.defaultState = {
-            pristine: true,
-            value: ''
-        };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.onReset = this.onReset.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    render () {
-        return (
-            <form onSubmit={this.onSubmit}>
-                <Grid>
-                    <Col sm={38.5}>
-                        <InputField
-                            name={'search'}
-                            type={'text'}
-                            value={this.state.value}
-                            onChange={this.handleChange}
-                            placeholder={translate('search.placeholder')}
-                        />
-                        {!this.state.pristine && this.renderReset()}
-                    </Col>
-                    <Col sm={3} smOffset={.5}>
-                        <SubmitButton type={'submit'} disabled={this.state.pristine}>{translate('search.search')}</SubmitButton>
-                    </Col>
-
-                </Grid>
-            </form>
-        );
-    }
-
-    private renderReset () {
-        return (
-            <ResetButton type={'button'} onClick={this.onReset}>
-                {translate('search.reset')}
-            </ResetButton>
-        );
-    }
-
-    private handleChange (e: any) {
+    const onChange = (e: any) => {
         e.preventDefault();
-        const value = e.target.value;
-        const pristine = value === '';
-        this.setState({ value, pristine });
-    }
+        const val = e.target.value;
+        handleChange(type, val);
+    };
 
-    private onReset (e: any) {
+    const onReset = (e: any) => {
         e.preventDefault();
-        this.setState(this.defaultState);
-    }
+        handleChange(type, '');
+        requestSearch();
+    };
 
-    private onSubmit (e: any) {
+    const onSubmit = (e: any) => {
         e.preventDefault();
+        requestSearch();
+    };
 
-        const { type } = this.props;
-        const { value } = this.state;
+    const value = defaultValues.fullText[type];
+    const pristine = value.length === 0;
 
-        this.props.submitSearch(type, value);
-    }
-}
+    return (
+        <form onSubmit={onSubmit}>
+            <Grid>
+                <Col sm={38.5}>
+                    <InputField
+                        name={'search'}
+                        type={'text'}
+                        value={defaultValues.fullText[type]}
+                        onChange={onChange}
+                        placeholder={translate('search.placeholder')}
+                    />
+                    {!pristine && (
+                        <ResetButton type={'button'} onClick={onReset}>
+                            {translate('search.reset')}
+                        </ResetButton>
+                    )}
+                </Col>
+                <Col sm={3} smOffset={.5}>
+                    <SubmitButton type={'submit'}>{translate('search.search')}</SubmitButton>
+                </Col>
+
+            </Grid>
+        </form>
+    );
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchForm);
