@@ -69,7 +69,9 @@ const setFilteredSearchObj = (searchObj: EsQuery, field: string): EsQuery => {
 const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Aggs => {
     const aggregations: Aggs = {};
 
-    facets.forEach(({ paths, caption, type }: FacetConfig, idx: number) => {
+    const entries = facets.entries();
+    for (const [idx, { paths, caption, type }] of entries) {
+
         if (type === 'MultiSelect' && (caption || type) && paths) {
             const field = setFirstPathAsString(paths);
             const filter = searchObj ? setFilteredSearchObj(searchObj, field) : {};
@@ -85,7 +87,7 @@ const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Agg
                 }
             };
         }
-    });
+    }
 
     return aggregations;
 };
