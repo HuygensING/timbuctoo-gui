@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { merge, replace } from 'lodash';
 import { ComponentValueField } from '../typings/schema';
 import { COMPONENT_FIELDS } from '../constants/global';
 
@@ -23,8 +23,7 @@ const mutateQueryObject = (item, queryObject) => {
 
             if (field && field.fields) {
                 const obj = createValuesObject(item.value.fields);
-                console.log(queryObject, obj);
-                _.merge(queryObject, obj);
+                merge(queryObject, obj);
             }
         }
     }
@@ -55,7 +54,7 @@ const createQueryStringFromObject = (object: {}) => {
 
     const strMatch = str.match(filterCharacters);
     const query = strMatch ? strMatch.join(' ') : '';
-    const queryString = _.replace(query, filterEmptyObject, '{ value }');
+    const queryString = replace(query, filterEmptyObject, '{ value }');
 
     return queryString.substring(1, queryString.length - 1);
 };

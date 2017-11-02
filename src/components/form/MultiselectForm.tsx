@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import _ from 'lodash';
+import { sortBy, partition } from 'lodash';
 
 import { connect } from 'react-redux';
 
@@ -52,10 +52,10 @@ class MultiSelectForm extends PureComponent<FullProps, State> {
     static sortGroup = (group: EsValue[]): EsValue[] => {
         let array: EsValue[] = [];
 
-        const splitGroups = _.partition(group, val => val.selected);
+        const splitGroups = partition(group, val => val.selected);
 
         splitGroups.forEach(splitGroup => {
-            const sortedSplitGroup = _.sortBy(splitGroup, val => val.count).reverse();
+            const sortedSplitGroup = sortBy(splitGroup, val => val.count).reverse();
             array = array.concat(sortedSplitGroup);
         });
 

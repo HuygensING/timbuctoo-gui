@@ -50,8 +50,8 @@ class SelectField extends Component<FullProps, State> {
     }
 
     render() {
-        const { name, data, selected } = this.props;
-        const options: OptionProps[] = this.getOptionsFromQuery(data);
+        const { name, selected } = this.props;
+        const options: OptionProps[] = this.getOptionsFromQuery(this.props);
 
         if (!options || options.length === 0) {
             return null;
@@ -80,9 +80,9 @@ class SelectField extends Component<FullProps, State> {
         }
     }
 
-    private getOptionsFromQuery(data: ApolloDataProps, options: OptionProps[] = []) {
-        if (data && data.dataSetMetadata && data.dataSetMetadata.collection) {
-            const collection = data.dataSetMetadata.collection;
+    private getOptionsFromQuery({ metadata }: FullProps, options: OptionProps[] = []) {
+        if (metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection) {
+            const collection = metadata.dataSetMetadata.collection;
             collection.properties.items.forEach((field) => {
                 // Now references only the first item.
                 const reference = field.referencedCollections && field.referencedCollections.items[0];
