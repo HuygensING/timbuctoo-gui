@@ -25,5 +25,6 @@
     "footer.street": "Street",
     "footer.address": "Address",
     "footer.phone": "Phone Number",
-    "footer.opening_hours": "Opening hours"
+    "footer.opening_hours": "Opening hours",
+    "404.not_found": "Couldn't find your page, sorry!"
 }

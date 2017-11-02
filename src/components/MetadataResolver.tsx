@@ -1,19 +1,56 @@
 import React, { Component, ComponentClass } from 'react';
 import Client from '../services/ApolloClient';
 import { RouteComponentProps } from 'react-router';
+import { DataSetMetadata } from '../typings/schema';
+import Error from '../components/routes/Error';
+import NotFound from './routes/NotFound';
 
-interface State {
+type State = ErrorState & DataState;
+
+interface DataState {
     metadata: any;
     data: any;
+    onRefetch: () => void;
+}
+
+interface ErrorState {
+    error: Error | null;
+    found: boolean;
+}
+
+interface DataProps {
+    metadata: {
+        dataSetMetadata: DataSetMetadata;
+    };
+    data: {
+        dataSets: any;
+    };
+    onRefetch: () => void;
     loading: boolean;
 }
 
-export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?: Function) {
+export type ResolvedApolloProps = DataProps & RouteComponentProps<any>;
+
+export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?: Function, resolverOptions?: { forceFetch: boolean; }) {
     return (WrappedComponent: ComponentClass<P>) => {
         return class MetaDataQueryResolver extends Component<P & RouteComponentProps<any>, State> {
+            noErrors: ErrorState = {
+                error: null,
+                found: true
+            };
             defaultState: State;
-            onlyMetadata: boolean;
+
+            loading: boolean = true;
+            onlyMetadata: boolean = !dataQuery;
             noQuery: boolean;
+            refetch: () => void = this.onRefetch.bind(this);
+
+            state = this.defaultState = {
+                ...this.noErrors,
+                metadata: null,
+                data: null,
+                onRefetch: this.refetch
+            };
 
             static selectQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
                 if (isMetadataQuery && typeof metadataQuery === 'function') {
@@ -24,18 +61,6 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 }
 
                 return null;
-            }
-
-            constructor () {
-                super();
-
-                this.state = this.defaultState = {
-                    metadata: null,
-                    data: null,
-                    loading: true
-                };
-
-                this.onlyMetadata = !dataQuery;
             }
 
             componentDidMount () {
@@ -53,58 +78,95 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 const metadataChanged = !this.onlyMetadata && this.state.metadata !== nextState.metadata;
 
                 if (isRouteChange || metadataChanged) {
-                    this.queryGraph(nextProps, nextState, isRouteChange);
+                    this.loading = true;
+                    this.queryGraph(nextProps, nextState, isRouteChange, resolverOptions && resolverOptions.forceFetch);
                 }
             }
 
-            render () {
-                return <WrappedComponent {...this.props} {...this.state}/>;
+            onRefetch () {
+                const forceFetch = true;
+                this.queryGraph(this.props, this.state, true, forceFetch);
             }
 
-            // privates
-            private queryGraph (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
+            render () {
+                if (!this.loading && !this.state.found) {
+                    return <NotFound />;
+                }
+
+                if (!this.loading && this.state.error) {
+                    return <Error error={this.state.error} />;
+                }
+
+                const loadingProps = { loading: this.loading };
+                return <WrappedComponent {...this.props} {...this.state} {...loadingProps}/>;
+            }
+
+            private queryGraph (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean, forceFetch: boolean = false) {
 
                 if (!isMetadataQuery && this.onlyMetadata) {
                     return null;
                 }
 
-                return this.doQuery(props, state, isMetadataQuery);
+                return this.doQuery(props, state, isMetadataQuery, forceFetch);
             }
 
-            private doQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
+            private doQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean, forceFetch: boolean) {
                 const query = MetaDataQueryResolver.selectQuery(props, state, isMetadataQuery);
 
                 if (!query) {
-                    return;
+                    return this.setNotFound();
                 }
 
-                Client.query({ query })
-                    .then((res) => this.setQuery(res, isMetadataQuery, state));
+                Client.query({ fetchPolicy: forceFetch ? 'network-only' : 'cache-first' , query })
+                    .then((res) => this.setQuery(res, isMetadataQuery))
+                    .catch(err => this.setError(err));
             }
 
-            private setQuery ({ data }: any, isMetadataQuery: boolean, state: State) {
+            private setQuery ({ data }: any, isMetadataQuery: boolean) {
                 return isMetadataQuery
-                    ? this.setMetadata(data, state)
+                    ? this.setMetadata(data)
                     : this.setData(data);
             }
 
-            private setMetadata (metadata: any, state: State) {
+            private setMetadata (metadata: any) {
+                if (this.onlyMetadata && this.loading) {
+                    this.loading = false;
 
-                if (this.onlyMetadata && state.loading !== false) {
-                    this.setState({
-                        loading: false,
+                    return this.setState(prevState => ({
+                        ...this.noErrors,
                         metadata
-                    });
+                    }));
                 }
-                this.setState({
+
+                return this.setState({
                     metadata
                 });
             }
 
             private setData (data: any) {
-                this.setState({
-                    loading: false,
+                this.loading = false;
+
+                this.setState(prevState => ({
+                    ...this.noErrors,
                     data
+                }));
+            }
+
+            private setNotFound () {
+                this.loading = false;
+
+                this.setState({
+                    error: null,
+                    found: false
+                });
+            }
+
+            private setError (err: Error) {
+                this.loading = false;
+
+                this.setState({
+                    found: true,
+                    error: err
                 });
             }
         };

@@ -10,20 +10,12 @@ import styled from '../../styled-components';
 import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
 import { COMPONENTS } from '../../constants/global';
-import { DataSetMetadata } from '../../typings/schema';
 import Loading from '../Loading';
 import { createQueryStringFromFormFields } from '../../services/CreateQueryFromValues';
-import MetadataResolver from '../MetadataResolver';
+import MetadataResolver, { ResolvedApolloProps } from '../MetadataResolver';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 
-interface Props {
-    metadata: {
-        dataSetMetadata: DataSetMetadata;
-    };
-    loading: boolean;
-}
-
-type FullProps = Props & RouteComponentProps<any> & FormWrapperProps;
+type FullProps = ResolvedApolloProps & RouteComponentProps<any> & FormWrapperProps;
 
 interface State {
 }
