@@ -18,6 +18,9 @@ export default () => (
         a {
           text-decoration: none;
         }
+        button {
+          background: none;
+        }
         html {
             overflow-y: scroll;
         }
