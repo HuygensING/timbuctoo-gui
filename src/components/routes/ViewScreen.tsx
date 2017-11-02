@@ -9,12 +9,16 @@ import styled from '../../styled-components';
 
 import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
-import { DataSetMetadata } from '../../typings/schema';
+import { Component, DataSetMetadata } from '../../typings/schema';
 import Loading from '../Loading';
 import MetadataResolver from '../MetadataResolver';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
+import { COMPONENTS } from '../../constants/global';
+import { setTree } from '../../reducers/viewconfig';
+import { connect } from 'react-redux';
 
 interface Props {
+    setTree: (components: Component[]) => void;
     metadata: {
         dataSetMetadata: DataSetMetadata;
     };
@@ -31,7 +35,77 @@ const Section = styled.div`
     padding-bottom: 3rem;
 `;
 
+const exampleData: Component[] = [
+    {
+        type: COMPONENTS.title,
+        value: {
+            fields: []
+        }
+    },
+    {
+        type: COMPONENTS.keyValue,
+        key: {
+            field: 'from'
+        },
+        values: [
+            {
+                type: COMPONENTS.keyValue,
+                key: {
+                    field: 'from'
+                },
+                values: [
+                    {
+                        type: COMPONENTS.keyValue,
+                        key: {
+                            field: 'from'
+                        },
+                        values: [
+                            {
+                                type: COMPONENTS.value,
+                                value: {
+                                    fields: [{
+                                        value: 'tim_hasResident',
+                                        reference: 'clusius_Persons'
+                                    }, {
+                                        value: 'tim_gender',
+                                    }]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        type: COMPONENTS.keyValue,
+        key: {
+            field: 'to'
+        },
+        values: [
+            {
+                type: COMPONENTS.value,
+                value: {
+                    fields: [{
+                        value: 'tim_hasResident',
+                        reference: 'clusius_Persons'
+                    }, {
+                        value: 'tim_hasBirthPlace',
+                        reference: 'clusius_Places'
+                    }, {
+                        value: 'tim_country',
+                    }]
+                }
+            }
+        ]
+    }
+];
+
 class ViewScreen extends PureComponent<FullProps, State> {
+    componentWillMount () {
+        this.props.setTree(exampleData);
+    }
+
     render () {
         // TODO: add when Components are available
 
@@ -61,4 +135,8 @@ class ViewScreen extends PureComponent<FullProps, State> {
     }
 }
 
-export default MetadataResolver(QUERY_COLLECTION_PROPERTIES)(ViewScreen);
+const mapDispatchToProps = dispatch => ({
+    setTree: (components: Component[]) => dispatch(setTree(components))
+});
+
+export default MetadataResolver(QUERY_COLLECTION_PROPERTIES)(connect(null, mapDispatchToProps)(ViewScreen));

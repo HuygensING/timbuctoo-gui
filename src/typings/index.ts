@@ -13,11 +13,8 @@ export interface ValueItem {
 
 export type NormalizedComponent = Component & {
     id: number
-    childIds: number[]
-};
-
-export type ComponentFormType = NormalizedComponent & {
-    name: string;
+    childIds: number[],
+    name: string
 };
 
 export type valueField = {

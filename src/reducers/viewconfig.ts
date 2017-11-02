@@ -5,115 +5,7 @@ import { NormalizedComponent } from '../typings/index';
 
 export type ViewConfigReducer = NormalizedComponent[];
 
-/**
- * Flatten a tree of Components into an array of NormalizedComponents with a root branch (index 0)
- */
-const normalizeTree = (tree: Component[]): ViewConfigReducer => {
-    let idx = -1;
-    let flatTree: NormalizedComponent[] = [];
-
-    const normalizeBranch = (branch: Component) => {
-        idx++;
-
-        let children: number[] = [];
-        let id = idx;
-
-        if (branch.values) {
-            for (const subBranch of branch.values) {
-                children.push(idx + 1);
-                normalizeBranch(subBranch);
-            }
-        }
-
-        const normalizedComponent = {
-            ...branch,
-            id,
-            childIds: children
-        };
-        console.log(normalizedComponent.id, children);
-        delete normalizedComponent.values;
-
-        flatTree = [
-            ...flatTree,
-            normalizedComponent
-        ];
-    };
-
-    normalizeBranch({
-        type: COMPONENTS.keyValue,
-        values: tree
-    });
-
-    return flatTree;
-};
-
-const exampleData: Component[] = [
-    {
-        type: COMPONENTS.title,
-        value: {
-            fields: []
-        }
-    },
-    {
-        type: COMPONENTS.keyValue,
-        key: {
-            field: 'from'
-        },
-        values: [
-            {
-                type: COMPONENTS.keyValue,
-                key: {
-                    field: 'from'
-                },
-                values: [
-                    {
-                        type: COMPONENTS.keyValue,
-                        key: {
-                            field: 'from'
-                        },
-                        values: [
-                            {
-                                type: COMPONENTS.value,
-                                value: {
-                                    fields: [{
-                                        value: 'tim_hasResident',
-                                        reference: 'clusius_Persons'
-                                    }, {
-                                        value: 'tim_gender',
-                                    }]
-                                }
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        type: COMPONENTS.keyValue,
-        key: {
-            field: 'to'
-        },
-        values: [
-            {
-                type: COMPONENTS.value,
-                value: {
-                    fields: [{
-                        value: 'tim_hasResident',
-                        reference: 'clusius_Persons'
-                    }, {
-                        value: 'tim_hasBirthPlace',
-                        reference: 'clusius_Places'
-                    }, {
-                        value: 'tim_country',
-                    }]
-                }
-            }
-        ]
-    }
-];
-
-const initialState: ViewConfigReducer = normalizeTree(exampleData);
+const initialState: ViewConfigReducer = [];
 
 // action definitions
 
@@ -156,21 +48,75 @@ type DeleteViewConfigItemAction = {
     }
 };
 
+type SetTreeAction = {
+    type: 'SET_TREE',
+    payload: {
+        components: Component[]
+    }
+};
+
 type Action =
     AddViewConfigNodeAction
     | DeleteViewConfigItemAction
     | ViewConfigChildAction
     | ModifyViewConfigNodeAction
-    | SortViewConfigChildAction;
+    | SortViewConfigChildAction
+    | SetTreeAction;
 
 // selectors
+
+export const createName = (typename: string, idx: number, field?: string): string => (
+    `${idx}_${typename}${field ? '_' + field : ''}`
+);
+
+const normalizeTree = (tree: Component[]): ViewConfigReducer => {
+    // Flatten a tree of Components into an array of NormalizedComponents with a root branch (index 0)
+
+    let idx = -1;
+    let flatTree: NormalizedComponent[] = [];
+
+    const normalizeBranch = (branch: Component) => {
+        idx++;
+
+        let children: number[] = [];
+        let id = idx;
+
+        if (branch.values) {
+            for (const subBranch of branch.values) {
+                children.push(idx + 1);
+                normalizeBranch(subBranch);
+            }
+        }
+
+        const normalizedComponent = {
+            ...branch,
+            id,
+            childIds: children,
+            name: createName(branch.type, id)
+        };
+        console.log(normalizedComponent.id, children);
+        delete normalizedComponent.values;
+
+        flatTree = [
+            ...flatTree,
+            normalizedComponent
+        ];
+    };
+
+    normalizeBranch({
+        type: COMPONENTS.keyValue,
+        values: tree
+    });
+
+    return flatTree;
+};
 
 export const getNodeById = (id: number, state: ViewConfigReducer): NormalizedComponent | undefined =>
     state.find(item => item.id === id);
 
 export const lastId = (state: ViewConfigReducer): number => state
     .map(item => item.id)
-    .reduce(((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue)), -Infinity);
+    .reduce(((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue)), -1);
 
 const getAllDescendantIds = (state: ViewConfigReducer, nodeId: number) => (
     getNodeById(nodeId, state)!.childIds.reduce((acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)], [])
@@ -185,9 +131,17 @@ const deleteMany = (state: ViewConfigReducer, ids: number[]): ViewConfigReducer 
     return state;
 };
 
+export const denormalizeComponent = (item: NormalizedComponent): Component => {
+    item = { ...item };
+    delete item.id;
+    delete item.childIds;
+    delete item.name;
+    return item;
+};
+
 // reducers
 
-const childIds = (state, action) => {
+const childIds = (state: number[], action: Action) => {
     switch (action.type) {
         case 'ADD_VIEW_CONFIG_CHILD':
             return [...state, action.payload.childId];
@@ -203,16 +157,19 @@ const childIds = (state, action) => {
 const node = (state: NormalizedComponent | null, action: Action, items: NormalizedComponent[]): NormalizedComponent => {
     switch (action.type) {
         case 'ADD_VIEW_CONFIG_NODE': {
+            const id = lastId(items) + 1;
             return {
                 ...action.payload.component,
-                id: lastId(items) + 1,
-                childIds: []
+                id,
+                childIds: [],
+                name: createName(state!.type, id)
             };
         }
         case 'MODIFY_VIEW_CONFIG_NODE':
             return {
                 id: state!.id,
                 childIds: state!.childIds,
+                name: createName(action.payload.component.type, state!.id),
                 ...action.payload.component
             };
         case 'ADD_VIEW_CONFIG_CHILD':
@@ -248,6 +205,9 @@ export default (state = initialState, action: Action): ViewConfigReducer => {
             const nodeId = action.payload.nodeId;
             const descendantIds = getAllDescendantIds(state, nodeId);
             return deleteMany(state, [nodeId, ...descendantIds]);
+        }
+        case 'SET_TREE': {
+            return normalizeTree(action.payload.components);
         }
         default:
             return state;
@@ -298,5 +258,13 @@ export const sortViewConfigChild = (nodeId, oldIndex, newIndex): SortViewConfigC
         nodeId,
         oldIndex,
         newIndex
+    }
+});
+
+// clears & builds a new tree. This is one way operation (for now)
+export const setTree = (components: Component[]) => ({
+    type: 'SET_TREE',
+    payload: {
+        components
     }
 });

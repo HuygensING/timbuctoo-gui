@@ -5,7 +5,7 @@ import { COMPONENT_FIELDS, COMPONENTS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
 import { default as Select, OptionProps } from './fields/Select';
 import InputField from './fields/Input';
-import { ComponentFormType, ValueItem } from '../../typings/index';
+import { NormalizedComponent, ValueItem } from '../../typings/index';
 import KeyValue from './fields/KeyValue';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect } from 'react-redux';
@@ -13,14 +13,13 @@ import {
     addViewConfigChild,
     addViewConfigNode,
     deleteViewConfigChild,
-    deleteViewConfigNode,
+    deleteViewConfigNode, denormalizeComponent,
     getNodeById, lastId,
     modifyViewConfigNode,
     ViewConfigReducer
 } from '../../reducers/viewconfig';
 import { Component } from '../../typings/schema';
 import EMPTY_VIEW_COMPONENTS from '../../constants/emptyViewComponents';
-import { removeExtraInfo } from '../../services/FormValueManipulator';
 import { RootState } from '../../reducers/rootReducer';
 
 const Label = styled.label`
@@ -55,7 +54,7 @@ const StyledDivider = styled.div`
 `;
 
 interface Props {
-    item: ComponentFormType;
+    item: NormalizedComponent;
     items: ViewConfigReducer;
     match?: match<any>;
     modifyNode: (component: Component) => void;
@@ -140,7 +139,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         const oldValue = item[fieldName].field;
 
         if (newValue !== oldValue) {
-            const newFieldset: Component = removeExtraInfo({ ...item });
+            const newFieldset: Component = denormalizeComponent({ ...item });
             newFieldset[fieldName].field = newValue;
             this.props.modifyNode(newFieldset);
         }
@@ -148,6 +147,8 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
 
     private onSelectChangeHandler = (option: OptionProps, settings: any, fieldName: string, childIndex: number) => {
         const { item } = this.props;
+
+        // todo: Move all this logic to redux side effects as a saga (see 'redux-saga' package)
 
         // Set the newValue object
         const newValue = {
@@ -160,7 +161,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
 
         // Only update when newValue and oldValue are not matching
         if (newValue !== oldValue) {
-            const newFieldset: Component = removeExtraInfo({ ...item });
+            const newFieldset: Component = denormalizeComponent({ ...item });
             const fields = newFieldset[fieldName].fields;
             fields[childIndex] = {
                 ...oldValue,

@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 
 import DraggableList from '../DraggableList';
-import { ComponentFormType, NormalizedComponent } from '../../typings/index';
-import { addExtraInfo } from '../../services/FormValueManipulator';
+import { NormalizedComponent } from '../../typings/index';
 import styled from '../../styled-components';
 import { COMPONENTS, DRAGGABLE_COMPONENTS } from '../../constants/global';
 import { Component } from '../../typings/schema';
@@ -79,9 +78,8 @@ class DraggableForm extends PureComponent<Props, State> {
         };
 
         const myNode: NormalizedComponent = getNodeById(this.props.id, items)!;
-        const myChildren: ComponentFormType[] = myNode.childIds
-            .map(id => getNodeById(id, items)!)
-            .map(component => addExtraInfo(component));
+        const myChildren: NormalizedComponent[] =
+            myNode.childIds.map(id => getNodeById(id, items)!);
 
         return (
             <div>
