@@ -18,18 +18,14 @@ interface ErrorState {
     found: boolean;
 }
 
-interface DataProps {
-    metadata: {
-        dataSetMetadata: DataSetMetadata;
-    };
-    data: {
-        dataSets: any;
-    };
+export interface DataProps<TMetadata, TData> {
+    metadata: TMetadata;
+    data: TData;
     onRefetch: () => void;
     loading: boolean;
 }
 
-export type ResolvedApolloProps = DataProps & RouteComponentProps<any>;
+export type ResolvedApolloProps = DataProps<{dataSetMetadata: DataSetMetadata}, any> & RouteComponentProps<any>;
 
 export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?: Function, resolverOptions?: { forceFetch: boolean; }) {
     return (WrappedComponent: ComponentClass<P>) => {
