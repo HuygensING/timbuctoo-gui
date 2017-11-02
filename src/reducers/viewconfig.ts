@@ -49,7 +49,7 @@ type DeleteViewConfigItemAction = {
 };
 
 type SetTreeAction = {
-    type: 'SET_TREE',
+    type: 'SET_VIEW_CONFIG_TREE',
     payload: {
         components: Component[]
     }
@@ -206,7 +206,7 @@ export default (state = initialState, action: Action): ViewConfigReducer => {
             const descendantIds = getAllDescendantIds(state, nodeId);
             return deleteMany(state, [nodeId, ...descendantIds]);
         }
-        case 'SET_TREE': {
+        case 'SET_VIEW_CONFIG_TREE': {
             return normalizeTree(action.payload.components);
         }
         default:
@@ -263,7 +263,7 @@ export const sortViewConfigChild = (nodeId, oldIndex, newIndex): SortViewConfigC
 
 // clears & builds a new tree. This is one way operation (for now)
 export const setTree = (components: Component[]) => ({
-    type: 'SET_TREE',
+    type: 'SET_VIEW_CONFIG_TREE',
     payload: {
         components
     }
