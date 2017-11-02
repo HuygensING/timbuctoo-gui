@@ -74,7 +74,6 @@ export const createEsQueryString = (filters: Readonly<EsFilter[]>, fullText: Ful
         });
     }
 
-    // todo: Connect fullText Query
     addMatchQueries(filters, query);
 
     if (query.bool.must.length === 0) {
