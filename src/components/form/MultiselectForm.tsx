@@ -7,11 +7,11 @@ import { connect } from 'react-redux';
 import { Subtitle } from '../layout/StyledCopy';
 import styled from '../../styled-components';
 import { Dummy } from '../Dummy';
-import { BaseButtonStyling, SmallButtonStyling } from '../layout/Button';
 import translate from '../../services/translate';
 import MultiselectFormOption from './MultiselectFormOption';
 import { EsFilter, EsValue, toggleFilter } from '../../reducers/search';
 import { RootState } from '../../reducers/rootReducer';
+import { Button as ButtonBase } from '../layout/Button';
 
 interface Props {
     filter: EsFilter;
@@ -41,9 +41,7 @@ const Sub = styled(Subtitle)`
     margin-top: 0;
 `;
 
-const Button = styled.button`
-  ${BaseButtonStyling};
-  ${SmallButtonStyling};
+const Button = ButtonBase.extend`
   margin: 1rem .5rem 0 0;
 `;
 
@@ -93,11 +91,11 @@ class MultiSelectForm extends PureComponent<FullProps, State> {
                 </ul>
                 {
                     isFiltering && couldDoLess &&
-                    <Button type={'button'} onClick={this.showLess}>{translate('search.less')}</Button>
+                    <Button data-small={true} onClick={this.showLess}>{translate('search.less')}</Button>
                 }
                 {
                     isFiltering && couldDoMore &&
-                    <Button type={'button'} onClick={this.showMore}>{translate('search.more')}</Button>
+                    <Button data-small={true} onClick={this.showMore}>{translate('search.more')}</Button>
                 }
             </Section>
         );

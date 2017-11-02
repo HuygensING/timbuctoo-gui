@@ -4,7 +4,7 @@ import styled, { css } from '../../styled-components';
 import translate from '../../services/translate';
 import { Content, Subtitle } from '../layout/StyledCopy';
 import Image from '../layout/Image';
-import Button from '../layout/Button';
+import { ButtonLink } from '../layout/Button';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import { encode } from '../../services/UrlStringCreator';
 
@@ -54,11 +54,11 @@ const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataSet
                 {title}
             </SearchTitle>
             <SearchDescription>{description}</SearchDescription>
-            <Button to={url} small={true}>{translate('search.view_entry')}</Button>
+            <ButtonLink to={url} data-small={true}>{translate('search.view_entry')}</ButtonLink>
             {imageUrl && imageUrl.indexOf('http') > -1 &&
-                <ImageWrapper>
-                    <Image src={imageUrl} ratio={1} fill={true}/>
-                </ImageWrapper>
+            <ImageWrapper>
+                <Image src={imageUrl} ratio={1} fill={true}/>
+            </ImageWrapper>
             }
         </SearchItem>
     );

@@ -1,5 +1,5 @@
 import { SUB_ROUTES } from './routeNaming';
-import { ButtonType } from '../typings/layout';
+import { ButtonVariant } from '../typings/layout';
 import { MenuItemProp } from '../typings';
 import { ComponentFieldType, ComponentTypes } from '../typings/viewComponents';
 import User from '../components/icons/User';
@@ -35,7 +35,7 @@ export const COMPONENT_FIELDS: ComponentFieldType = {
     title: 'title'
 };
 
-export const BUTTON_TYPES: {[name: string]: ButtonType} = {
+export const BUTTON_VARIANT: {[name: string]: ButtonVariant} = {
     normal: 'normal',
     inverted: 'inverted',
     dark: 'dark',
