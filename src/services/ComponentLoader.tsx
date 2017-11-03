@@ -7,6 +7,7 @@ import ContentKeyValue from '../components/content/ContentKeyValue';
 import ContentDivider from '../components/content/ContentDivider';
 import { ComponentConfig, Entity, Value, LeafComponentConfig, FormatterConfig } from '../typings/schema';
 import { valueToString } from '../services/getValue';
+import { safeGet } from '../services/GetDataSetValues';
 
 interface TypedUri { 
     uri: string; 
@@ -78,7 +79,7 @@ function walkPathStep(path: string[], formatters: FormatterConfig, entity: Entit
     }
 }
 
-function getValueOrLiteral(component: LeafComponentConfig | undefined, data: Entity): pathResult {
+function getValueOrLiteral(component: LeafComponentConfig | null, data: Entity): pathResult {
     if (!component) {
         return null;
     } else {
@@ -144,14 +145,6 @@ function makeArraysOfSameLength(arrA: pathResult, arrB: pathResult): [uriOrStrin
 
 function valOrUri(item: string | {uri: string}): string {
     return typeof item === 'string' ? item : item.uri;
-}
-
-function safeGet<T, U extends keyof T>(arr: T | undefined, index: U): T[U] | undefined {
-    if (arr) {
-        return arr[index];
-    } else {
-        return undefined;
-    }
 }
 
 export class ComponentLoader extends React.Component<{ data: Entity, componentConfig: ComponentConfig, idPerUri: { [key: string]: string | undefined } }, {}> {

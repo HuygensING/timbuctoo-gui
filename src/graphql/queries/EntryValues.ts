@@ -1,7 +1,7 @@
 import { gql } from 'react-apollo';
 import { decode } from '../../services/UrlStringCreator';
 import { ComponentConfig } from '../../typings/schema';
-import { DataSets, checkTypes, Query } from '../../typings/schema';
+import { Entity, EntityList, DataSetMetadata, checkTypes, Query } from '../../typings/schema';
 
 // `type: never` makes the type checker report an error if the case switch does not handle all types
 function checkUnknownComponent(type: never) {
@@ -132,7 +132,7 @@ function mapToQuery(map: {}, prefix: string): string {
             result.push(key + ' {\n' + subQuery + prefix + '}');
         }
     }
-    return result.map(line => (prefix || '') + line).join('\n');
+    return result.map(line => (prefix) + line).join('\n');
 }
 
 export const QUERY_ENTRY_VALUES = ({ match, metadata }) => {
@@ -159,7 +159,21 @@ ${mapToQuery(componentPathsToMap(getPaths(values, [])), '                       
     return gql`${query}`;
 };
 
-checkTypes<QueryValues, Query>();
+checkTypes<QueryValuesToCheck, Query>();
+// This is the interface to check against the Query definition
+interface QueryValuesToCheck {
+    dataSets: {
+        [dataSetId: string]: {
+            [collectionId: string]: Entity | EntityList | DataSetMetadata | undefined
+        } | undefined
+    };
+}
+
+// But we know (because we're passing a uri: argument to graphql) that any valid executing query will have either an Entity or undefined
 export interface QueryValues {
-    dataSets: DataSets;
+    dataSets: {
+        [dataSetId: string]: {
+            [collectionId: string]: Entity | undefined
+        } | undefined
+    };
 }
