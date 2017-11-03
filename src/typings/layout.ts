@@ -112,7 +112,7 @@ export interface ImageProps {
     defaultSrc2x?: string | null;
     alt?: string;
     ratio?: number;
-    fill?: boolean;
+    shouldFill?: boolean;
     contain?: boolean;
     hover?: boolean;
     preload?: boolean;

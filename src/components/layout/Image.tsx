@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import styled from '../../styled-components';
+import styled, { withProps } from '../../styled-components';
 import { ImageProps } from '../../typings/layout';
 
 interface State {
@@ -7,27 +7,27 @@ interface State {
     src2x: string | null | undefined;
 }
 
-const ImageWrapper = styled.figure`
+const ImageWrapper = withProps<{ shouldFill?: boolean; ratio?: number; hover?: boolean; }>(styled.figure)`
     position: relative;
     overflow: hidden;
     top: 0;
     left: 0;
     margin: 0;
     width: 100%;
-    height: ${(props: ImageProps) => props.fill ? '100%' : 'initial'};
+    height: ${props => props.shouldFill ? '100%' : 'initial'};
     
     &:before {
         content: '';
         display: block;
-        padding-bottom: ${(props: ImageProps) => {
-            if (props.fill) {
+        padding-bottom: ${props => {
+            if (props.shouldFill) {
                 return 0;
             }
             return props.ratio ? `${ 100 / props.ratio }%` : '100%';
         }};
     }
 
-    ${(props: ImageProps) => {
+    ${props => {
         if (props.hover) {
             return `
                 &:hover {
@@ -95,10 +95,10 @@ class Image extends PureComponent<ImageProps, State> {
     }
 
     render() {
-        const { ratio, fill, alt, contain, hover } = this.props;
+        const { ratio, shouldFill, alt, contain, hover } = this.props;
         const { src, src2x } = this.state;
         return (
-            <ImageWrapper ratio={ratio} fill={fill} hover={hover}>
+            <ImageWrapper ratio={ratio} shouldFill={shouldFill} hover={hover}>
                 <Img
                     contain={contain}
                     onLoad={this.onLoad}

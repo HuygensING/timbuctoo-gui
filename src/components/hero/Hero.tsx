@@ -53,7 +53,7 @@ const Hero = ({ title, content, searchPath, buttonText, imgUrl = defaultImgUrl }
             <HeroImageWrapper>
                 <Image
                     src={imgUrl}
-                    fill={true}
+                    shouldFill={true}
                     defaultSrc={defaultImgUrl}
                 />
                 <DarkenImage/>
