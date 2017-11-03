@@ -28,12 +28,15 @@ const ImageWrapper = styled.figure`
     }};
 `;
 
-const ContentImage = (props) => {
-    const defaultOptions = {
+const ContentImage = (props: {src?: string, alt?: string, options: {ratio?: number}}) => {
+    const options = {
         type: IMAGE_TYPES.normal,
         ratio: IMAGE_RATIO.landscape
     };
-    const { src, alt, options = defaultOptions } = props;
+    const { src, alt } = props;
+    if (props.options.ratio !== undefined) {
+        options.ratio = props.options.ratio;
+    }
 
     return (
         <ImageWrapper {...options}>

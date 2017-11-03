@@ -50,6 +50,19 @@ const collectionPropertiesReference = gql`
     }
 `;
 
+interface CollectionPropertiesReference {
+    properties: {
+        items: Array<{
+            name: string
+            isList: boolean
+            isValueType: boolean
+            referencedCollections: {
+                items: string[]
+            }
+        }>
+    };
+}
+
 const collectionIndexConfig = gql`
     fragment CollectionIndexConfig on CollectionMetadata {
         indexConfig {
@@ -109,4 +122,4 @@ const dataSetMetadataFragment = gql`
     ${collectionPropertiesDensity}
 `;
 
-export { dataSetMetadataFragment, collectionBase, collectionPropertiesDensity, collectionPropertiesReference, collectionSummaryProperties, collectionIndexConfig };
+export { dataSetMetadataFragment, collectionBase, collectionPropertiesDensity, collectionPropertiesReference, CollectionPropertiesReference, collectionSummaryProperties, collectionIndexConfig };

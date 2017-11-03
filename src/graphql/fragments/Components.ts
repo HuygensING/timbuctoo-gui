@@ -1,41 +1,34 @@
 import { gql } from 'react-apollo';
 
-const fieldsFragment = gql`
-    fragment Fields on ComponentValue {
-        field
-        fields
+function generateComponentsNest(depth: number, maxDepth: number) {
+    let prefix = '';
+    for (let i = depth; i < maxDepth; i++) {
+        prefix += '  ';
     }
+    if (depth > 1) {
+        return `
+  ${prefix}type
+  ${prefix}value
+  ${prefix}formatter { type name }
+  ${prefix}subComponents {${generateComponentsNest(depth - 1, maxDepth)}  ${prefix}}
 `;
-
-const componentsFragment = gql`
-    fragment ComponentsFragment on Component {
-        type
-        value   { ...Fields }
-        key     { ...Fields }
-        title   { ...Fields }
-        url     { ...Fields }
-        alt     { ...Fields }
-        tree
-        values {
-            type
-            value   { ...Fields }
-            key     { ...Fields }
-            title   { ...Fields }
-            url     { ...Fields }
-            alt     { ...Fields }
-            tree
-            values {
-                type
-                value   { ...Fields }
-                key     { ...Fields }
-                title   { ...Fields }
-                url     { ...Fields }
-                alt     { ...Fields }
-                tree
-            }
-        }
+    } else {
+        return `
+  ${prefix}type
+  ${prefix}value
+  ${prefix}formatter { type name }
+`;
     }
-    ${fieldsFragment}
-`;
+}
 
-export { componentsFragment };
+export type ComponentsFragment = Array<{
+    type: string;
+    value?: string;
+    subComponents?: ComponentsFragment
+    formatter: Array<{
+        type: string
+        name: string
+    }>
+}>;
+
+export const componentsFragment = gql`fragment ComponentsFragment on Component {${generateComponentsNest(10, 10)}}`;
