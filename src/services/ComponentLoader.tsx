@@ -5,6 +5,7 @@ import ContentImage from '../components/content/ContentImage';
 import ContentLink from '../components/content/ContentLink';
 import ContentKeyValue from '../components/content/ContentKeyValue';
 import ContentDivider from '../components/content/ContentDivider';
+import ContentValue from '../components/content/ContentValue';
 import { ComponentConfig, Entity, Value, LeafComponentConfig, FormatterConfig } from '../typings/schema';
 import { valueToString } from '../services/getValue';
 import { safeGet } from '../services/GetDataSetValues';
@@ -118,14 +119,6 @@ function normalize(result: pathResult): {normalized: uriOrString[], wasSingle: b
     }
 }
 
-function join(result: uriOrString[]): string | null {
-    if (result.length === 0) {
-        return null;
-    } else {
-        return result.join(', ');
-    }
-}
-
 function makeArraysOfSameLength(arrA: pathResult, arrB: pathResult): [uriOrString[], uriOrString[]] {
     let { normalized: normalizedA, wasSingle: wasSingleA } = normalize(arrA);
     let { normalized: normalizedB, wasSingle: wasSingleB } = normalize(arrB);
@@ -155,13 +148,13 @@ export class ComponentLoader extends React.Component<{ data: Entity, componentCo
         const { data, componentConfig } = this.props;
         switch (componentConfig.type) {
             case 'DIVIDER':
-                return <ContentDivider>{join(normalize(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data)).normalized)}</ContentDivider>;
+                return <ContentDivider>{normalize(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data)).normalized[0]}</ContentDivider>;
             case 'TITLE':
                 return <ContentTitle>{normalize(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data)).normalized[0]}</ContentTitle>;
             case 'LITERAL':
-                return componentConfig.value || null;
+                return <ContentValue value={componentConfig.value} />;
             case 'PATH':
-                return normalize(walkPath(componentConfig.value, componentConfig.formatter, data)).normalized.map((x, i) => <li key={i}>{x}</li>);
+                return normalize(walkPath(componentConfig.value, componentConfig.formatter, data)).normalized.map((x, i) => <ContentValue key={i} value={x as string} />);
             case 'IMAGE':
                 const [srcs, alts] = makeArraysOfSameLength(
                     getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data),
