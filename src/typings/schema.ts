@@ -1,150 +1,148 @@
-/* tslint:disable */
-
 export interface Query {
-  promotedDataSets: Array<DataSetMetadata>;
-  allDataSets: Array<DataSetMetadata>;
-  dataSetMetadata: DataSetMetadata;
-  aboutMe: AboutMe;
-  availableExportMimetypes: Array<MimeType>;
+    promotedDataSets: Array<DataSetMetadata>;
+    allDataSets: Array<DataSetMetadata>;
+    dataSetMetadata: DataSetMetadata;
+    aboutMe: AboutMe;
+    availableExportMimetypes: Array<MimeType>;
 }
 
 export interface DataSetMetadataQueryArgs {
-  dataSetId?: string;
+    dataSetId?: string;
 }
 
 export interface DataSetMetadata {
-  uri: string;
-  dataSetId: string;
-  title?: Value;
-  description?: Value;
-  imageUrl?: Value;
-  owner?: ContactInfo;
-  contact?: ContactInfo;
-  provenanceInfo?: ProvenanceInfo;
-  license?: License;
-  collection?: CollectionMetadata;
-  collectionList?: CollectionMetadataList;
-  archetypes: Archetypes;
-  contributors: Array<RoleWithMembers>;
-  roles: Array<DataSetPermission>;
+    uri: string;
+    dataSetId: string;
+    title?: Value;
+    description?: Value;
+    imageUrl?: Value;
+    owner?: ContactInfo;
+    contact?: ContactInfo;
+    provenanceInfo?: ProvenanceInfo;
+    license?: License;
+    collection?: CollectionMetadata;
+    collectionList?: CollectionMetadataList;
+    archetypes: Archetypes;
+    contributors: Array<RoleWithMembers>;
+    roles: Array<DataSetPermission>;
 }
 
 export interface CollectionDataSetMetadataArgs {
-  collectionId: string;
+    collectionId: string;
 }
 
 export interface CollectionListDataSetMetadataArgs {
-  count?: number;
-  cursor?: string;
+    count?: number;
+    cursor?: string;
 }
 
 export interface Value {
-  value: string;
-  type: string;
+    value: string;
+    type: string;
 }
 
 export interface ContactInfo {
-  name?: Value;
-  email?: Value;
+    name?: Value;
+    email?: Value;
 }
 
 export interface ProvenanceInfo {
-  title?: Value;
-  body?: Value;
+    title?: Value;
+    body?: Value;
 }
 
 export interface License {
-  uri: string;
+    uri: string;
 }
 
 export interface CollectionMetadata {
-  uri: string;
-  collectionId: string;
-  collectionListId: string;
-  properties: PropertyList;
-  total: number;
-  title?: Value;
-  archeType?: Entity;
-  indexConfig: IndexConfig;
-  summaryProperties: SummaryProperties;
-  components: ComponentList;
+    uri: string;
+    collectionId: string;
+    collectionListId: string;
+    properties: PropertyList;
+    total: number;
+    title?: Value;
+    archeType?: Entity;
+    indexConfig: IndexConfig;
+    summaryProperties: SummaryProperties;
+    components: ComponentList;
 }
 
 export interface PropertiesCollectionMetadataArgs {
-  count?: number;
-  cursor?: string;
+    count?: number;
+    cursor?: string;
 }
 
 export interface ComponentsCollectionMetadataArgs {
-  count?: number;
-  cursor?: string;
+    count?: number;
+    cursor?: string;
 }
 
 export interface PropertyList {
-  prevCursor?: string;
-  nextCursor?: string;
-  items: Array<Property>;
+    prevCursor?: string;
+    nextCursor?: string;
+    items: Array<Property>;
 }
 
 export interface Property {
-  name?: string;
-  density?: number;
-  isList?: boolean;
-  referencedCollections?: CollectionIdList;
-  isValueType?: boolean;
+    name?: string;
+    density?: number;
+    isList?: boolean;
+    referencedCollections?: CollectionIdList;
+    isValueType?: boolean;
 }
 
 export interface ReferencedCollectionsPropertyArgs {
-  count?: number;
-  cursor?: string;
+    count?: number;
+    cursor?: string;
 }
 
 export interface CollectionIdList {
-  prevCursor?: string;
-  nextCursor?: string;
-  items: Array<string>;
+    prevCursor?: string;
+    nextCursor?: string;
+    items: Array<string>;
 }
 
 export interface Entity {
-  uri: string;
+    uri: string;
 }
 
 export interface IndexConfig {
-  path?: Value;
-  typ?: Value;
-  fullTextSearch?: Value;
-  next?: IndexConfig;
+    path?: Value;
+    typ?: Value;
+    fullTextSearch?: Value;
+    next?: IndexConfig;
 }
 
 export interface SummaryProperties {
-  title?: Value;
-  description?: Value;
-  image?: Value;
+    title?: Value;
+    description?: Value;
+    image?: Value;
 }
 
 export interface ComponentList {
-  prevCursor?: string;
-  nextCursor?: string;
-  query?: string;
-  items: Array<Component>;
+    prevCursor?: string;
+    nextCursor?: string;
+    query?: string;
+    items: Array<Component>;
 }
 
 export interface Component {
-  type: ComponentType;
-  value?: ComponentValue;
-  key?: ComponentValue;
-  title?: ComponentValue;
-  url?: ComponentValue;
-  alt?: ComponentValue;
-  tree?: string;
-  values?: Array<Component>;
+    type: ComponentType;
+    value?: ComponentValue;
+    key?: ComponentValue;
+    title?: ComponentValue;
+    url?: ComponentValue;
+    alt?: ComponentValue;
+    tree?: string;
+    values?: Array<Component>;
 }
 
-export type ComponentType = "TITLE" | "VALUE" | "IMAGE" | "LINK" | "DIVIDER" | "KEYVALUE" | "TREE";
+export type ComponentType = 'TITLE' | 'VALUE' | 'IMAGE' | 'LINK' | 'DIVIDER' | 'KEYVALUE' | 'TREE';
 
 export interface ComponentValue {
-  field?: string;
-  fields?: Array<ComponentValueField>;
+    field?: string;
+    fields?: Array<ComponentValueField>;
 }
 
 export interface ComponentValueField {
@@ -154,126 +152,133 @@ export interface ComponentValueField {
 }
 
 export interface CollectionMetadataList {
-  prevCursor?: string;
-  nextCursor?: string;
-  facets: Facet[];
-  indexConfig: IndexConfig;
-  items: Array<CollectionMetadata>;
+    prevCursor?: string;
+    nextCursor?: string;
+    facets: Facet[];
+    indexConfig: IndexConfig;
+    items: Array<CollectionMetadata>;
 }
 
 export interface IndexConfig {
-  facet: FacetConfig[];
-  fullText: FullTextConfig[];
+    facet: FacetConfig[];
+    fullText: FullTextConfig[];
 }
 
 export interface FacetConfig {
-  paths: string[];
-  type: string;
-  caption: string;
+    paths: string[];
+    type: string;
+    caption: string;
 }
 
 export interface FullTextConfig {
-  caption: string;
-  fields: TextConfigField[];
+    caption: string;
+    fields: TextConfigField[];
 }
 
 export interface TextConfigField {
-  path: string;
-  boost: number;
+    path: string;
+    boost: number;
 }
 
 export interface Facet {
-  caption: string;
-  options: FacetOption[];
+    caption: string;
+    options: FacetOption[];
 }
 
 export interface FacetOption {
-  name: string;
-  count: number;
+    name: string;
+    count: number;
 }
 
 export interface Archetypes {
-  persons?: PersonArchetypeList;
+    persons?: PersonArchetypeList;
 }
 
 export interface PersonArchetypeList {
-  prevCursor?: string;
-  nextCursor?: string;
-  items: Array<PersonArchetype>;
+    prevCursor?: string;
+    nextCursor?: string;
+    items: Array<PersonArchetype>;
 }
 
 export interface PersonArchetype {
-  names?: Value;
+    names?: Value;
 }
 
 export interface RoleWithMembers {
-  name?: string;
+    name?: string;
 }
 
-export type DataSetPermission = "SEARCH_AND_VIEW" | "DOWNLOAD_DUMP" | "FORK" | "PUBLISH" | "EDIT_ENTRIES" | "EDIT_DATASET" | "EDIT_ROLES";
+export type DataSetPermission =
+    'SEARCH_AND_VIEW'
+    | 'DOWNLOAD_DUMP'
+    | 'FORK'
+    | 'PUBLISH'
+    | 'EDIT_ENTRIES'
+    | 'EDIT_DATASET'
+    | 'EDIT_ROLES';
 
 export interface AboutMe {
-  dataSets: Array<DataSetMetadata>;
-  id: string;
-  name: string;
-  personalInfo: string;
-  canCreateDataSet: boolean;
+    dataSets: Array<DataSetMetadata>;
+    id: string;
+    name: string;
+    personalInfo: string;
+    canCreateDataSet: boolean;
 }
 
 export interface MimeType {
-  name: string;
+    name: string;
 }
 
 export interface ComponentInput {
-  type: ComponentType;
-  value?: ComponentValueInput;
-  key?: ComponentValueInput;
-  title?: ComponentValueInput;
-  url?: ComponentValueInput;
-  alt?: ComponentValueInput;
-  values?: Array<ComponentInput>;
+    type: ComponentType;
+    value?: ComponentValueInput;
+    key?: ComponentValueInput;
+    title?: ComponentValueInput;
+    url?: ComponentValueInput;
+    alt?: ComponentValueInput;
+    values?: Array<ComponentInput>;
 }
 
 export interface ComponentValueInput {
-  field?: string;
-  fields?: Array<ComponentValueFieldInput>;
+    field?: string;
+    fields?: Array<ComponentValueFieldInput>;
 }
 
 export interface ComponentValueFieldInput {
-  value?: string;
-  referenceType?: string;
+    value?: string;
+    referenceType?: string;
 }
 
 export interface FacetInput {
-  caption: string;
-  options: Array<OptionInput>;
+    caption: string;
+    options: Array<OptionInput>;
 }
 
 export interface OptionInput {
-  name: string;
-  value: string;
+    name: string;
+    value: string;
 }
 
 export interface FacetsInput {
-  facets?: Array<FacetInput>;
+    facets?: Array<FacetInput>;
 }
 
 export interface RootMutation {
-  setViewComponents?: boolean;
-  setFacets?: boolean;
+    setViewComponents?: boolean;
+    setFacets?: boolean;
 }
 
 export interface SetViewComponentsRootMutationArgs {
-  input?: ViewComponentsInput;
+    input?: ViewComponentsInput;
 }
 
 export interface SetFacetsRootMutationArgs {
-  input?: FacetsInput;
+    input?: FacetsInput;
 }
 
 export interface ViewComponentsInput {
-  components?: Array<ComponentInput>;
-  dataSetId: string;
-  collectionId: string;
-  query: string;
+    components?: Array<ComponentInput>;
+    dataSetId: string;
+    collectionId: string;
+    query: string;
 }

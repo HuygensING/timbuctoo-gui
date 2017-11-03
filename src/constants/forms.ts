@@ -1,4 +1,5 @@
 import { COMPONENT_FIELDS, COMPONENTS } from './global';
+import { ComponentType } from '../typings/schema';
 
 export const FIELD_TITLES = {
     [COMPONENT_FIELDS.valueKey]: 'value',
@@ -7,7 +8,7 @@ export const FIELD_TITLES = {
     [COMPONENT_FIELDS.urlKey]: 'url',
 };
 
-export const SELECT_COMPONENT_TYPES: {key: string, value: string}[] = [
+export const SELECT_COMPONENT_TYPES: { key: string, value: ComponentType }[] = [
     {
         key: 'Title',
         value: COMPONENTS.title

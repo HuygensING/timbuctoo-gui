@@ -1,4 +1,4 @@
-import { ComponentInfo, ValueItem } from '../../../typings/index';
+import { ValueItem } from '../../../typings/index';
 import React, { PureComponent } from 'react';
 import ConnectedSelect from './ConnectedSelect';
 import { ComponentValueField } from '../../../typings/schema';
@@ -6,7 +6,6 @@ import { OptionProps } from './Select';
 
 type Props = {
     valueItem: ValueItem,
-    componentInfo: ComponentInfo,
     collection?: string,
     onSelectChangeHandler: (option: OptionProps, settings: any, fieldName: string, childIndex: number) => void
 };

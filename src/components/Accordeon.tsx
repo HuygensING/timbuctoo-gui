@@ -3,10 +3,10 @@ import styled from '../styled-components';
 import Cross from './icons/Cross';
 import VariableFormFieldRenderer from './form/VariableFieldRenderer';
 import { CONTAINER_PADDING } from '../constants/global';
-import { ComponentFormType } from '../typings/index';
+import { NormalizedComponent } from '../typings/index';
 
 interface Props {
-    item: ComponentFormType;
+    item: NormalizedComponent;
     idx: number;
     openedIndex?: number;
     resolveChange: Function;
@@ -54,7 +54,7 @@ const CloseIcon = styled.button`
 
 class Accordeon extends PureComponent<Props, State> {
 
-    static renderForm (item: ComponentFormType, resolve: Function) {
+    static renderForm (item: NormalizedComponent, resolve: Function) {
         return (
             <FieldContainer>
                 <VariableFormFieldRenderer item={item} resolveChange={resolve}/>
@@ -74,7 +74,7 @@ class Accordeon extends PureComponent<Props, State> {
 
         const isOpen = openedIndex === idx;
         const openClose = () => openCloseFn(isOpen ? null : idx);
-        const resolve = (val: ComponentFormType) => {
+        const resolve = (val: NormalizedComponent) => {
             resolveChange(val, idx);
         };
 

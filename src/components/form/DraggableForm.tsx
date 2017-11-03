@@ -1,22 +1,30 @@
 import React, { PureComponent } from 'react';
-import { arrayMove } from 'react-sortable-hoc';
 
 import DraggableList from '../DraggableList';
-import { ComponentFormType } from '../../typings/index';
-import { addExtraInfo, renderEmptyViewComponent } from '../../services/FormValueManipulator';
+import { NormalizedComponent } from '../../typings/index';
 import styled from '../../styled-components';
 import { COMPONENTS, DRAGGABLE_COMPONENTS } from '../../constants/global';
 import { Component } from '../../typings/schema';
 import { SubmitButton } from './fields/Buttons';
+import {
+    addViewConfigChild, addViewConfigNode, getNodeById, lastId, sortViewConfigChild
+} from '../../reducers/viewconfig';
+import { connect } from 'react-redux';
+import EMPTY_VIEW_COMPONENTS from '../../constants/emptyViewComponents';
+import { RootState } from '../../reducers/rootReducer';
 
 interface Props {
-    items: Component[];
+    items: NormalizedComponent[];
     onSend: (e: {}) => void;
+    addItem: (component: Component) => void;
+    addChild: (childId: number) => void;
+    sortChild: (oldIndex: number, newIndex: number) => void;
+    id: number;
     noForm?: boolean;
+    lastId: number;
 }
 
 interface State {
-    listItems: ComponentFormType[];
     openedIndex: number | null;
 }
 
@@ -43,56 +51,9 @@ const StyledSubmitButton = SubmitButton.extend`
 
 class DraggableForm extends PureComponent<Props, State> {
 
-    constructor (props: Props) {
-        super(props);
-
-        this.state = {
-            listItems: addExtraInfo(props.items),
-            openedIndex: null
-        };
-
-        this.addListItem = this.addListItem.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-        this.resolveChange = this.resolveChange.bind(this);
-        this.openCloseFn = this.openCloseFn.bind(this);
-        this.deleteFn = this.deleteFn.bind(this);
-        this.onSortEnd = this.onSortEnd.bind(this);
-    }
-
-    componentWillReceiveProps (newProps: Props) {
-        if (this.props.items !== newProps.items) {
-            const listItems = addExtraInfo(newProps.items);
-            this.setState({ listItems });
-        }
-    }
-
-    onSortEnd ({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }) {
-        const listItems = arrayMove(this.state.listItems, oldIndex, newIndex);
-        const openedIndex = oldIndex === this.state.openedIndex ? newIndex : this.state.openedIndex;
-
-        this.setState({ listItems, openedIndex });
-    }
-
-    openCloseFn (idx: number) {
-
-        this.setState({ openedIndex: idx });
-    }
-
-    deleteFn (idx: number) {
-        const openedIndex = null;
-
-        const listItems = this.state.listItems.slice();
-        listItems.splice(idx, 1);
-
-        this.setState({ listItems, openedIndex });
-    }
-
-    resolveChange (listItem: ComponentFormType, idx: number) {
-        const listItems = this.state.listItems.slice();
-        listItems[idx] = listItem;
-
-        this.setState({ listItems });
-    }
+    state = {
+        openedIndex: null
+    };
 
     render () {
         return this.props.noForm
@@ -104,25 +65,30 @@ class DraggableForm extends PureComponent<Props, State> {
             );
     }
 
+    private openCloseFn = (idx: number) => {
+        this.setState({ openedIndex: idx });
+    }
+
     private renderContent () {
-        const { listItems, openedIndex } = this.state;
+        const { openedIndex } = this.state;
+        const { items } = this.props;
         const componentProps = {
             openedIndex,
-            openCloseFn: this.openCloseFn,
-            onDeleteFn: this.deleteFn,
-            resolveChange: this.resolveChange,
-            deleteFn: this.deleteFn
+            openCloseFn: this.openCloseFn
         };
+
+        const myNode: NormalizedComponent = getNodeById(this.props.id, items)!;
+        const myChildren: NormalizedComponent[] =
+            myNode.childIds.map(id => getNodeById(id, items)!);
 
         return (
             <div>
                 <DraggableList
                     componentType={DRAGGABLE_COMPONENTS.accordeon}
                     componentProps={componentProps}
-
-                    listItems={listItems}
-                    onSortEnd={this.onSortEnd}
+                    listItems={myChildren}
                     useDragHandle={true}
+                    onSortEnd={this.onSortEnd}
                 />
                 <AddListButton type={'button'} onClick={this.addListItem}>+</AddListButton>
                 {this.props.noForm
@@ -133,19 +99,33 @@ class DraggableForm extends PureComponent<Props, State> {
         );
     }
 
-    private addListItem () {
-        const listItems: any = this.state.listItems.slice();
+    private onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }) => {
+        this.setState(state => ({
+            openedIndex: oldIndex === state.openedIndex ? newIndex : state.openedIndex
+        }));
+        this.props.sortChild(oldIndex, newIndex);
+    }
 
-        const newListItem = renderEmptyViewComponent(COMPONENTS.value, this.state.listItems.length);
-        listItems.push(newListItem);
-
-        this.setState({ listItems });
+    private addListItem = () => {
+        this.props.addItem(EMPTY_VIEW_COMPONENTS[COMPONENTS.value]);
+        this.props.addChild(this.props.lastId + 1);
     }
 
     private onSubmit (e: any) {
         e.preventDefault();
-        this.props.onSend(this.state.listItems);
+        // this.props.onSend(this.state.listItems);
     }
 }
 
-export default DraggableForm;
+const mapDispatchToProps = (dispatch, { id }: Props) => ({
+    addItem: (component: Component) => dispatch(addViewConfigNode(component)),
+    addChild: (childId) => dispatch(addViewConfigChild(id, childId)),
+    sortChild: (oldIndex, newIndex) => dispatch(sortViewConfigChild(id, oldIndex, newIndex))
+});
+
+const mapStateToProps = (state: RootState) => ({
+    items: state.viewconfig,
+    lastId: lastId(state.viewconfig)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DraggableForm);

@@ -1,6 +1,6 @@
 import { Permissions } from './permissions';
 import { Component, ComponentValue } from './schema';
-import { SFC, ComponentClass } from 'react';
+import { ComponentClass, SFC } from 'react';
 
 export interface KeyValueObject {
     [name: string]: string;
@@ -11,13 +11,10 @@ export interface ValueItem {
     name: string;
 }
 
-export type ComponentInfo = {
-    name: string;
-    index: number
-};
-
-export type ComponentFormType = Component & {
-    componentInfo: ComponentInfo
+export type NormalizedComponent = Component & {
+    id: number
+    childIds: number[],
+    name: string
 };
 
 export type valueField = {
