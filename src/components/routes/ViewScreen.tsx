@@ -9,7 +9,7 @@ import styled from '../../styled-components';
 
 import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
-import { Component } from '../../typings/schema';
+import { Component, DataSetMetadata } from '../../typings/schema';
 import Loading from '../Loading';
 import MetadataResolver, { ResolvedApolloProps } from '../MetadataResolver';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
@@ -21,7 +21,7 @@ interface Props {
     setTree: (components: Component[]) => void;
 }
 
-type FullProps = Props & ResolvedApolloProps & RouteComponentProps<any> & FormWrapperProps;
+type FullProps = Props & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any> & RouteComponentProps<any> & FormWrapperProps;
 
 interface State {
 }

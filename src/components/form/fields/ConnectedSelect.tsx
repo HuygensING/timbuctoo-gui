@@ -5,12 +5,13 @@ import QUERY_COLLECTION_EDIT_VIEW from '../../../graphql/queries/CollectionEditV
 
 import Select, { OptionProps, SelectProps } from './Select';
 import MetadataResolver, { ResolvedApolloProps } from '../../MetadataResolver';
+import { DataSetMetadata } from '../../../typings/schema';
 
 interface Props {
     collectionId?: string;
 }
 
-type FullProps = Props & SelectProps & ResolvedApolloProps;
+type FullProps = Props & SelectProps & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any>;
 
 interface State {
     isOpen: boolean;

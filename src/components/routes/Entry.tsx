@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { RouteComponentProps } from 'react-router';
 
 import { Entity, ComponentConfig } from '../../typings/schema';
 
@@ -7,7 +6,7 @@ import Loading from '../Loading';
 import FullHelmet from '../FullHelmet';
 import { Col, Grid } from '../layout/Grid';
 
-import MetadataResolver, { DataProps } from '../MetadataResolver';
+import MetadataResolver, { ResolvedApolloProps } from '../MetadataResolver';
 import { ComponentLoader } from '../../services/ComponentLoader';
 
 import { QUERY_ENTRY_PROPERTIES, QueryMetadata } from '../../graphql/queries/EntryProperties';
@@ -15,7 +14,7 @@ import { QUERY_ENTRY_VALUES, QueryValues, makeDefaultViewConfig } from '../../gr
 
 interface State {}
 
-class Entry extends PureComponent<DataProps<QueryMetadata, QueryValues> & RouteComponentProps<any>, State> {
+class Entry extends PureComponent<ResolvedApolloProps<QueryMetadata, QueryValues, any>, State> {
 
     render () {
         if (this.props.loading) { return <Loading />; }
