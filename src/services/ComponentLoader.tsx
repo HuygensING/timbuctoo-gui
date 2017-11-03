@@ -35,23 +35,28 @@ function walkPath(pathStr: string | undefined, formatters: FormatterConfig, enti
     return null;
 }
 
-function walkPathStep(path: string[], formatters: FormatterConfig, entity: Entity): pathResult {
-    if (path.length === 0) {
-        return entity.uri;
-    }
-    let result = entity[path[0]];
+export const DEFAULT_FORMATTERS: FormatterConfig = [{
+    type: 'http://timbuctoo.huygens.knaw.nl/datatypes/person-name',
+    name: 'PERSON_NAMES'
+}];
 
-    if (!result) {
-        return null;
-    } else if (Array.isArray(result)) {
-        let retVal: uriOrString[] = [];
-        for (const item of result) {
-            if (isValue(item)) {
-                retVal.push(valueToString(item, formatters.concat([{
-                    type: 'http://timbuctoo.huygens.knaw.nl/datatypes/person-name',
-                    name: 'PERSON_NAMES'
-                }])));
-            } else {
+function walkPathStep(path: string[], formatters: FormatterConfig, entity: Value | Entity): pathResult {
+    if (isValue(entity)) {
+        return valueToString(entity, formatters.concat(DEFAULT_FORMATTERS));
+    } else {
+        if (path.length === 0) {
+            return {
+                uri: entity.uri,
+                type: entity.__typename
+            };
+        }
+        let result = entity[path[0]];
+
+        if (!result) {
+            return null;
+        } else if (Array.isArray(result)) {
+            let retVal: uriOrString[] = [];
+            for (const item of result) {
                 const subResult = walkPathStep(path.slice(1), formatters, item);
                 if (subResult) {
                     if (Array.isArray(subResult)) {
@@ -61,21 +66,19 @@ function walkPathStep(path: string[], formatters: FormatterConfig, entity: Entit
                     }
                 }
             }
+            return retVal;
+        } else if (typeof result === 'string') {
+            if (path[0] === 'uri') {
+                return {
+                    uri: result,
+                    type: entity.__typename
+                };
+            } else {
+                return result;
+            }
+        } else {
+            return walkPathStep(path.slice(1), formatters, result);
         }
-        return retVal;
-    } else if (typeof result === 'string') {
-        console.log(entity, entity.__typename);
-        return {
-            uri: result,
-            type: entity.__typename
-        };
-    } else if (isValue(result)) {
-        return valueToString(result, formatters.concat([{
-            type: 'http://timbuctoo.huygens.knaw.nl/datatypes/person-name',
-            name: 'PERSON_NAMES'
-        }]));
-    } else {
-        return walkPathStep(path.slice(1), formatters, result);
     }
 }
 
