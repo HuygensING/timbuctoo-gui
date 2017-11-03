@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import ContentTitle from '../components/content/ContentTitle';
 import ContentImage from '../components/content/ContentImage';
@@ -154,7 +154,7 @@ function safeGet<T, U extends keyof T>(arr: T | undefined, index: U): T[U] | und
     }
 }
 
-export class ComponentLoader extends React.Component<{ data: Entity, componentConfig: ComponentConfig, idPerUri: { [key: string]: string | undefined } }, {}> {
+export class ComponentLoader extends Component<{ data: Entity, componentConfig: ComponentConfig, idPerUri: { [key: string]: string | undefined } }, {}> {
     render(): JSX.Element | JSX.Element[] | null | string {
         const { data, componentConfig } = this.props;
         switch (componentConfig.type) {

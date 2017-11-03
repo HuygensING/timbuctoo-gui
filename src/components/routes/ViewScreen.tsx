@@ -9,16 +9,15 @@ import styled from '../../styled-components';
 
 import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
-import { Component } from '../../typings/schema';
+import { ComponentConfig } from '../../typings/schema';
 import Loading from '../Loading';
 import MetadataResolver, { ResolvedApolloProps } from '../MetadataResolver';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
-import { COMPONENTS } from '../../constants/global';
 import { setTree } from '../../reducers/viewconfig';
 import { connect } from 'react-redux';
 
 interface Props {
-    setTree: (components: Component[]) => void;
+    setTree: (components: ComponentConfig[]) => void;
 }
 
 type FullProps = Props & ResolvedApolloProps & RouteComponentProps<any> & FormWrapperProps;
@@ -31,41 +30,37 @@ const Section = styled.div`
     padding-bottom: 3rem;
 `;
 
-const exampleData: Component[] = [
+const exampleData: ComponentConfig[] = [
     {
-        type: COMPONENTS.title,
-        value: {
-            fields: []
-        }
+        type: 'TITLE',
+        formatter: [],
+        subComponents: [
+            {
+                type: 'LITERAL',
+                formatter: [],
+                value: 'Dit is mijn titel'
+            }
+        ]
     },
     {
-        type: COMPONENTS.keyValue,
-        key: {
-            field: 'from'
-        },
-        values: [
+        type: 'KEYVALUE',
+        formatter: [],
+        value: 'from',
+        subComponents: [
             {
-                type: COMPONENTS.keyValue,
-                key: {
-                    field: 'from'
-                },
-                values: [
+                type: 'KEYVALUE',
+                formatter: [],
+                value: 'from',
+                subComponents: [
                     {
-                        type: COMPONENTS.keyValue,
-                        key: {
-                            field: 'from'
-                        },
-                        values: [
+                        type: 'KEYVALUE',
+                        formatter: [],
+                        value: 'from',
+                        subComponents: [
                             {
-                                type: COMPONENTS.value,
-                                value: {
-                                    fields: [{
-                                        value: 'tim_hasResident',
-                                        reference: 'clusius_Persons'
-                                    }, {
-                                        value: 'tim_gender',
-                                    }]
-                                }
+                                type: 'PATH',
+                                formatter: [],
+                                value: 'tim_hasResident.tim_gender'
                             }
                         ]
                     }
@@ -74,24 +69,13 @@ const exampleData: Component[] = [
         ]
     },
     {
-        type: COMPONENTS.keyValue,
-        key: {
-            field: 'to'
-        },
-        values: [
+        type: 'KEYVALUE',
+        formatter: [],
+        subComponents: [
             {
-                type: COMPONENTS.value,
-                value: {
-                    fields: [{
-                        value: 'tim_hasResident',
-                        reference: 'clusius_Persons'
-                    }, {
-                        value: 'tim_hasBirthPlace',
-                        reference: 'clusius_Places'
-                    }, {
-                        value: 'tim_country',
-                    }]
-                }
+                type: 'PATH',
+                formatter: [],
+                value: 'tim_hasResident.clusius_Places.tim_country'
             }
         ]
     }
@@ -132,7 +116,9 @@ class ViewScreen extends PureComponent<FullProps, State> {
 }
 
 const mapDispatchToProps = dispatch => ({
-    setTree: (components: Component[]) => dispatch(setTree(components))
+    setTree: (components: ComponentConfig[]) => dispatch(setTree(components))
 });
 
-export default MetadataResolver(QUERY_COLLECTION_PROPERTIES)(connect(null, mapDispatchToProps)(ViewScreen));
+export default MetadataResolver(QUERY_COLLECTION_PROPERTIES)(
+    connect(null, mapDispatchToProps)(ViewScreen)
+);

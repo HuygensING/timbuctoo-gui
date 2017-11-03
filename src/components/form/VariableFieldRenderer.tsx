@@ -18,8 +18,8 @@ import {
     modifyViewConfigNode,
     ViewConfigReducer
 } from '../../reducers/viewconfig';
-import { Component } from '../../typings/schema';
-import EMPTY_VIEW_COMPONENTS from '../../constants/emptyViewComponents';
+import { ComponentConfig } from '../../typings/schema';
+import { EMPTY_NODE_COMPONENT , EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
 
 const Label = styled.label`
@@ -57,11 +57,11 @@ interface Props {
     item: NormalizedComponent;
     items: ViewConfigReducer;
     match?: match<any>;
-    modifyNode: (component: Component) => void;
+    modifyNode: (component: ComponentConfig) => void;
     removeNode: (nodeId: number) => void;
     removeChild: (childId: number) => void;
     addChild: (childId: number) => void;
-    addNode: (component: Component) => void;
+    addNode: (component: ComponentConfig) => void;
     lastId: number;
 }
 
@@ -139,7 +139,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         const oldValue = item[fieldName].field;
 
         if (newValue !== oldValue) {
-            const newFieldset: Component = denormalizeComponent({ ...item });
+            const newFieldset: ComponentConfig = denormalizeComponent({ ...item });
             newFieldset[fieldName].field = newValue;
             this.props.modifyNode(newFieldset);
         }
@@ -161,7 +161,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
 
         // Only update when newValue and oldValue are not matching
         if (newValue !== oldValue) {
-            const newFieldset: Component = denormalizeComponent({ ...item });
+            const newFieldset: ComponentConfig = denormalizeComponent({ ...item });
             const fields = newFieldset[fieldName].fields;
             fields[childIndex] = {
                 ...oldValue,
@@ -210,11 +210,14 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
             }
         } else {
             // this is a keyvalue component now: push a new node and add it as child.
-            this.props.addNode(EMPTY_VIEW_COMPONENTS[COMPONENTS.title]);
+            this.props.addNode(EMPTY_NODE_COMPONENT[COMPONENTS.title]);
             this.props.addChild(this.props.lastId + 1);
         }
 
-        const newFieldset = EMPTY_VIEW_COMPONENTS[componentKey];
+        const newFieldset = (componentKey === COMPONENTS.literal || COMPONENTS.path)
+            ? EMPTY_LEAF_COMPONENT[componentKey]
+            : EMPTY_NODE_COMPONENT[componentKey];
+
         this.props.modifyNode(newFieldset);
     }
 }
@@ -225,10 +228,10 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch, { item: { id } }: Props) => ({
-    modifyNode: (component: Component) => dispatch(modifyViewConfigNode(id, component)),
+    modifyNode: (component: ComponentConfig) => dispatch(modifyViewConfigNode(id, component)),
     removeChild: (childId: number) => dispatch(deleteViewConfigChild(id, childId)),
     removeNode: (nodeId: number) => dispatch(deleteViewConfigNode(nodeId)),
-    addNode: (component: Component) => dispatch(addViewConfigNode(component)),
+    addNode: (component: ComponentConfig) => dispatch(addViewConfigNode(component)),
     addChild: (childId: number) => dispatch(addViewConfigChild(id, childId))
 });
 

@@ -181,7 +181,7 @@ export interface Component {
     values?: Array<Component>;
 }
 
-export type ComponentType = 'TITLE' | 'VALUE' | 'IMAGE' | 'LINK' | 'DIVIDER' | 'KEYVALUE' | 'TREE';
+export type ComponentType = 'PATH' | 'LITERAL' | 'TITLE' | 'IMAGE' | 'LINK' | 'DIVIDER' | 'KEYVALUE';
 
 export interface ComponentValue {
     field?: string;
@@ -194,13 +194,14 @@ export interface ComponentValueField {
     isList?: boolean;
 }
 
-export type ComponentConfig =
-  ImageComponentConfig |
-  LinkComponentConfig |
-  KeyvalueComponentConfig |
-  TitleComponentConfig |
-  DividerComponentConfig |
-  LeafComponentConfig;
+export type ComponentConfig = NodeComponentConfig | LeafComponentConfig;
+
+export type NodeComponentConfig =
+    ImageComponentConfig |
+    LinkComponentConfig |
+    KeyvalueComponentConfig |
+    TitleComponentConfig |
+    DividerComponentConfig;
 
 export type LeafComponentConfig =
   LiteralComponentConfig |

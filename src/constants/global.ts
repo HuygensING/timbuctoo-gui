@@ -18,13 +18,13 @@ export const DRAGGABLE_COMPONENTS = {
 export const UNKNOWN_VOCABULARY = 'vocabulary_unknown';
 
 export const COMPONENTS: ComponentTypes = {
+    literal: 'LITERAL',
+    path: 'PATH',
     title: 'TITLE',
-    value: 'VALUE',
     image: 'IMAGE',
     link: 'LINK',
     keyValue: 'KEYVALUE',
-    divider: 'DIVIDER',
-    tree: 'TREE'
+    divider: 'DIVIDER'
 };
 
 export const COMPONENT_FIELDS: ComponentFieldType = {

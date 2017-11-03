@@ -1,55 +1,68 @@
 import { COMPONENTS } from './global';
-import { Component } from '../typings/schema';
+import { LeafComponentConfig, NodeComponentConfig } from '../typings/schema';
 import { ComponentTypes } from '../typings/viewComponents';
 
-type EmptyViewComponentsMap = {
-    [T in keyof ComponentTypes]: Component
+type EmptyLeafComponentsMap = {
+    [T in keyof ComponentTypes]: LeafComponentConfig
 };
 
-const EMPTY_VIEW_COMPONENTS: EmptyViewComponentsMap = {
-    [COMPONENTS.title]: {
-        type: COMPONENTS.title,
-        value: {
-            fields: [{ value: '' }]
-        }
+type EmptyViewComponentsMap = {
+    [T in keyof ComponentTypes]: NodeComponentConfig
+};
+
+export const EMPTY_LEAF_COMPONENT: EmptyLeafComponentsMap = {
+    [COMPONENTS.literal]: {
+        type: 'LITERAL',
+        value: '',
+        formatter: [],
+        subComponents: []
     },
-    [COMPONENTS.value]: {
-        type: COMPONENTS.value,
-        value: {
-            fields: [{ value: '' }]
-        }
+    [COMPONENTS.path]: {
+        type: 'PATH',
+        formatter: [],
+        subComponents: []
+    },
+};
+
+// TODO: Create the right initial values for this
+export const EMPTY_NODE_COMPONENT: EmptyViewComponentsMap = {
+    [COMPONENTS.title]: {
+        type: 'TITLE',
+        formatter: [],
+        subComponents: [
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.LITERAL] }
+        ]
     },
     [COMPONENTS.image]: {
-        type: COMPONENTS.image,
-        url: {
-            fields: [{ value: '' }]
-        },
-        alt: {
-            fields: [{ value: '' }]
-        }
+        type: 'IMAGE',
+        formatter: [],
+        subComponents: [
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] },
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }
+        ]
     },
     [COMPONENTS.link]: {
-        type: COMPONENTS.link,
-        value: {
-            fields: [{ value: '' }]
-        },
-        url: {
-            fields: [{ value: '' }]
-        }
+        type: 'LINK',
+        formatter: [],
+        subComponents: [
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] },
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }
+        ]
     },
     [COMPONENTS.keyValue]: {
-        type: COMPONENTS.keyValue,
-        key: {
-            fields: [{ value: '' }]
-        }
+        type: 'KEYVALUE',
+        formatter: [],
+        value: '',
+        subComponents: [
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }
+        ]
     },
 
     [COMPONENTS.divider]: {
-        type: COMPONENTS.divider,
-        title: {
-            field: ''
-        }
+        type: 'DIVIDER',
+        formatter: [],
+        subComponents: [
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.LITERAL] }
+        ]
     }
 };
-
-export default EMPTY_VIEW_COMPONENTS;

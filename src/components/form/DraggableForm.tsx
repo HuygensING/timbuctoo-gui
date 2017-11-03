@@ -4,19 +4,19 @@ import DraggableList from '../DraggableList';
 import { NormalizedComponent } from '../../typings/index';
 import styled from '../../styled-components';
 import { COMPONENTS, DRAGGABLE_COMPONENTS } from '../../constants/global';
-import { Component } from '../../typings/schema';
+import { ComponentConfig } from '../../typings/schema';
 import { SubmitButton } from './fields/Buttons';
 import {
     addViewConfigChild, addViewConfigNode, getNodeById, lastId, sortViewConfigChild
 } from '../../reducers/viewconfig';
 import { connect } from 'react-redux';
-import EMPTY_VIEW_COMPONENTS from '../../constants/emptyViewComponents';
+import { EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
 
 interface Props {
     items: NormalizedComponent[];
     onSend: (e: {}) => void;
-    addItem: (component: Component) => void;
+    addItem: (component: ComponentConfig) => void;
     addChild: (childId: number) => void;
     sortChild: (oldIndex: number, newIndex: number) => void;
     id: number;
@@ -107,7 +107,7 @@ class DraggableForm extends PureComponent<Props, State> {
     }
 
     private addListItem = () => {
-        this.props.addItem(EMPTY_VIEW_COMPONENTS[COMPONENTS.value]);
+        this.props.addItem(EMPTY_LEAF_COMPONENT[COMPONENTS.path]);
         this.props.addChild(this.props.lastId + 1);
     }
 
@@ -118,7 +118,7 @@ class DraggableForm extends PureComponent<Props, State> {
 }
 
 const mapDispatchToProps = (dispatch, { id }: Props) => ({
-    addItem: (component: Component) => dispatch(addViewConfigNode(component)),
+    addItem: (component: ComponentConfig) => dispatch(addViewConfigNode(component)),
     addChild: (childId) => dispatch(addViewConfigChild(id, childId)),
     sortChild: (oldIndex, newIndex) => dispatch(sortViewConfigChild(id, oldIndex, newIndex))
 });
