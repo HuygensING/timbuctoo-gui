@@ -1,6 +1,7 @@
 import React, { SFC } from 'react';
 import styled, { css, withProps } from '../../styled-components';
 import { EsValue } from '../../reducers/search';
+import { Content } from '../layout/StyledCopy';
 
 const checkMark = require('../../assets/icons/checkmark.svg');
 
@@ -53,10 +54,10 @@ const MultiselectFormOption: SFC<Props> = ({ option, onToggle }) => {
         <li key={option.name}>
             <Fieldset onClick={() => onToggle(option.name)}>
                 <CheckBox isSelected={option.selected} />
-                <span>
+                <Content>
                     {name}
                     <Amount>{option.count}</Amount>
-                </span>
+                </Content>
             </Fieldset>
         </li>
     );

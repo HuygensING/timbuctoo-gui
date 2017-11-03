@@ -1,5 +1,4 @@
 import { injectGlobal } from 'styled-components';
-import theme from './index';
 
 export default () => (
     injectGlobal`
@@ -7,20 +6,20 @@ export default () => (
 
         * {
             box-sizing: border-box;
-            background: none repeat scroll 0 0 transparent;
-            border: medium none;
-            border-spacing: 0;
-            color: ${theme.colors.shade.dark};
-            font-family: 'PT Sans Narrow',sans-serif;
-            font-size: 16px;
-            font-weight: normal;
-            line-height: 1.42rem;
-            list-style: none outside none;
             margin: 0;
             padding: 0;
-            text-align: left;
-            text-decoration: none;
-            text-indent: 0;
+            border: 0;
+            font: inherit;
+            vertical-align: baseline;
+        }
+        ul {
+          list-style: none;
+        }
+        a {
+          text-decoration: none;
+        }
+        button {
+          background: none;
         }
         html {
             overflow-y: scroll;
