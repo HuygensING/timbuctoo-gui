@@ -1,6 +1,9 @@
 import { gql } from 'react-apollo';
 
-function generateComponentsNest(depth: number, maxDepth: number) {
+function generateComponentsNest(depth: number, maxDepth?: number) {
+    if (maxDepth === undefined) {
+        maxDepth = depth;
+    }
     let prefix = '';
     for (let i = depth; i < maxDepth; i++) {
         prefix += '  ';
@@ -31,4 +34,5 @@ export type ComponentsFragment = Array<{
     }>
 }>;
 
-export const componentsFragment = gql`fragment ComponentsFragment on Component {${generateComponentsNest(10, 10)}}`;
+export const maximumComponentNesting = 10;
+export const componentsFragment = gql`fragment ComponentsFragment on Component {${generateComponentsNest(maximumComponentNesting)}}`;
