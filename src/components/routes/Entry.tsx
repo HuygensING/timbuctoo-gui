@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { RouteComponentProps } from 'react-router';
 
-import { Component, ComponentType, DataSetMetadata } from '../../typings/schema';
+import { Component, ComponentType } from '../../typings/schema';
 
 import { COMPONENTS } from '../../constants/global';
 
@@ -10,21 +10,11 @@ import FullHelmet from '../FullHelmet';
 import { Col, Grid } from '../layout/Grid';
 import ComponentLoader from '../../services/ComponentLoader';
 import { getCollectionValues } from '../../services/GetDataSetValues';
-import MetadataResolver from '../MetadataResolver';
+import MetadataResolver, { ResolvedApolloProps } from '../MetadataResolver';
 import QUERY_ENTRY_PROPERTIES from '../../graphql/queries/EntryProperties';
 import QUERY_ENTRY_VALUES from '../../graphql/queries/EntryValues';
 
-interface ApolloProps {
-    metadata: {
-        dataSetMetadata: DataSetMetadata;
-    };
-    data: {
-        dataSets: any;
-    };
-    loading: boolean;
-}
-
-type FullProps = ApolloProps & RouteComponentProps<any>;
+type FullProps = ResolvedApolloProps & RouteComponentProps<any>;
 
 interface State {}
 

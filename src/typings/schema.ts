@@ -56,16 +56,16 @@ export interface License {
 }
 
 export interface CollectionMetadata {
-    uri: string;
-    collectionId: string;
-    collectionListId: string;
-    properties: PropertyList;
-    total: number;
-    title?: Value;
-    archeType?: Entity;
-    indexerConfig?: IndexerConfig;
-    summaryProperties: SummaryProperties;
-    components: ComponentList;
+  uri: string;
+  collectionId: string;
+  collectionListId: string;
+  properties: PropertyList;
+  total: number;
+  title?: Value;
+  archeType?: Entity;
+  indexConfig: IndexConfig;
+  summaryProperties: SummaryProperties;
+  components: ComponentList;
 }
 
 export interface PropertiesCollectionMetadataArgs {
@@ -107,11 +107,11 @@ export interface Entity {
     uri: string;
 }
 
-export interface IndexerConfig {
+export interface IndexConfig {
     path?: Value;
     typ?: Value;
     fullTextSearch?: Value;
-    next?: IndexerConfig;
+    next?: IndexConfig;
 }
 
 export interface SummaryProperties {

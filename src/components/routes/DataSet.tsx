@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
-import { CollectionMetadata, DataSetMetadata } from '../../typings/schema';
+import { CollectionMetadata } from '../../typings/schema';
 import Loading from '../Loading';
 import FullHelmet from '../FullHelmet';
 import Hero from '../hero/Hero';
@@ -17,22 +16,14 @@ import CollectionTags from '../CollectionTags';
 import About from '../About';
 import { Title } from '../layout/StyledCopy';
 import EditCollectionBar from '../dataSet/EditCollectionBar';
-import MetadataResolver from '../MetadataResolver';
+import MetadataResolver, { ResolvedApolloProps } from '../MetadataResolver';
 import QUERY_DATASET from '../../graphql/queries/DataSet';
-
-interface Props {
-    metadata: {
-        dataSetMetadata: DataSetMetadata;
-    };
-    data: null;
-    loading: boolean;
-}
 
 interface StateProps {
     loggedIn: boolean;
 }
 
-type FullProps = Props & StateProps & RouteComponentProps<any>;
+type FullProps = ResolvedApolloProps & StateProps;
 
 class DataSet extends PureComponent<FullProps> {
 
@@ -45,12 +36,11 @@ class DataSet extends PureComponent<FullProps> {
     }
 
     render () {
-        if (this.props.loading) {
+        if (this.props.loading || !this.props.metadata.dataSetMetadata) {
             return <Loading />; 
         }
 
-        const { dataSetMetadata } = this.props.metadata;
-        const { dataSetId, title, description, imageUrl, collectionList, owner, contact } = dataSetMetadata;
+        const { dataSetId, title, description, imageUrl, collectionList, owner, contact } = this.props.metadata.dataSetMetadata;
 
         const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
             ? collectionList.items
