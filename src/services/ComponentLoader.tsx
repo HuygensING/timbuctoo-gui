@@ -14,7 +14,7 @@ interface TypedUri {
 }
 type uriOrString = string | TypedUri;
 
-type pathResult = uriOrString[] | uriOrString | undefined;
+type pathResult = uriOrString[] | uriOrString | null;
 
 // `type: never` makes the type checker report an error if the case switch does not handle all types
 function checkUnknownComponent(type: never) {
@@ -31,7 +31,7 @@ function walkPath(pathStr: string | undefined, formatters: FormatterConfig, enti
         
         return walkPathStep(path, formatters, entity);
     }
-    return undefined;
+    return null;
 }
 
 function walkPathStep(path: string[], formatters: FormatterConfig, entity: Entity): pathResult {
@@ -41,7 +41,7 @@ function walkPathStep(path: string[], formatters: FormatterConfig, entity: Entit
     let result = entity[path[0]];
 
     if (!result) {
-        return undefined;
+        return null;
     } else if (Array.isArray(result)) {
         let retVal: uriOrString[] = [];
         for (const item of result) {
@@ -80,16 +80,16 @@ function walkPathStep(path: string[], formatters: FormatterConfig, entity: Entit
 
 function getValueOrLiteral(component: LeafComponentConfig | undefined, data: Entity): pathResult {
     if (!component) {
-        return undefined;
+        return null;
     } else {
         switch (component.type) {
             case 'PATH':
                 return walkPath(component.value, component.formatter, data);
             case 'LITERAL':
-                return component.value;
+                return component.value || null;
             default:
                 checkUnknownComponent(component);
-                return undefined;
+                return null;
         }
     }
 }
