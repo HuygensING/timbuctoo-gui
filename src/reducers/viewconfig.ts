@@ -162,7 +162,7 @@ const node = (state: NormalizedComponent | null, action: Action, items: Normaliz
                 ...action.payload.component,
                 id,
                 childIds: [],
-                name: createName(state!.type, id)
+                name: createName(action.payload.component.type, id)
             };
         }
         case 'MODIFY_VIEW_CONFIG_NODE':

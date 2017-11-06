@@ -166,9 +166,11 @@ export interface IndexConfig {
 
 export interface FacetConfig {
     paths: string[];
-    type: string;
-    caption: string;
+    type: FacetConfigType;
+    caption: string | null;
 }
+
+export type FacetConfigType = 'MultiSelect' | 'DateRange' | 'Hierarchical';
 
 export interface FullTextConfig {
     caption: string;

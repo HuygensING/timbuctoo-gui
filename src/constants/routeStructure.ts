@@ -5,7 +5,8 @@ import { RouteComponentProps } from 'react-router';
 import DummyRoute from '../components/routes/DummyRoute';
 import Entry from '../components/routes/Entry';
 import DataSet from '../components/routes/DataSet';
-import ViewScreen from '../components/routes/ViewScreen';
+import ViewConfig from '../components/routes/ViewConfig';
+import FacetConfig from '../components/routes/FacetConfig';
 
 export interface RouteInfo {
     path?: string;
@@ -98,8 +99,12 @@ export const routes: RouteObject[] = [
                 component: DummyRoute
             },
             {
-                path: `${SUB_ROUTES.viewScreen}/:${ROUTE_KEYS.collection}`,
-                component: ViewScreen
+                path: `${SUB_ROUTES.viewConfig}/:${ROUTE_KEYS.collection}`,
+                component: ViewConfig
+            },
+            {
+                path: `${SUB_ROUTES.facetConfig}/:${ROUTE_KEYS.collection}`,
+                component: FacetConfig
             },
             {
                 path: SUB_ROUTES.editScreen,

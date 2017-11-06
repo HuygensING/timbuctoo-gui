@@ -1,5 +1,5 @@
 import { Permissions } from './permissions';
-import { Component, ComponentValue } from './schema';
+import { Component, ComponentType, ComponentValue, FacetConfig, FacetConfigType } from './schema';
 import { ComponentClass, SFC } from 'react';
 
 export interface KeyValueObject {
@@ -11,11 +11,20 @@ export interface ValueItem {
     name: string;
 }
 
-export type NormalizedComponent = Component & {
-    id: number
+// base type of NormalizedComponent & NormalizedFacetConfig
+export interface NormalizedItem {
+    type: FacetConfigType | ComponentType;
+    id: number;
+}
+
+export type NormalizedComponent = NormalizedItem & Component & {
     childIds: number[],
     name: string
 };
+
+export type NormalizedFacetConfig = NormalizedItem & FacetConfig; 
+
+export type ConfigurableItem = NormalizedComponent | NormalizedFacetConfig;
 
 export type valueField = {
     field: string;

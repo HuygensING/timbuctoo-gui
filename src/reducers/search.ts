@@ -67,7 +67,7 @@ const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] => (
 
         return {
             paths: config ? config.paths : [],
-            type: config ? config.type : '',
+            type: config ? config.type : 'MultiSelect',
             caption: facet.caption,
             values: facet.options || []
         };

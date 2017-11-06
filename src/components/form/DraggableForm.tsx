@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 
 import DraggableList from '../DraggableList';
-import { NormalizedComponent } from '../../typings/index';
+import { ConfigurableItem, NormalizedComponent } from '../../typings/index';
 import styled from '../../styled-components';
-import { COMPONENTS, DRAGGABLE_COMPONENTS } from '../../constants/global';
-import { Component } from '../../typings/schema';
+import { COMPONENTS, DRAGGABLE_COMPONENTS, EMPTY_FACET_CONFIG } from '../../constants/global';
+import { Component, FacetConfig } from '../../typings/schema';
 import { SubmitButton } from './fields/Buttons';
 import {
     addViewConfigChild, addViewConfigNode, getNodeById, lastId, sortViewConfigChild
@@ -12,17 +12,28 @@ import {
 import { connect } from 'react-redux';
 import EMPTY_VIEW_COMPONENTS from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
+import { addFacetConfigItem, sortFacetConfigItem } from '../../reducers/facetconfig';
 
-interface Props {
-    items: NormalizedComponent[];
-    onSend: (e: {}) => void;
-    addItem: (component: Component) => void;
-    addChild: (childId: number) => void;
-    sortChild: (oldIndex: number, newIndex: number) => void;
-    id: number;
-    noForm?: boolean;
+interface StateProps {
+    items: ConfigurableItem[];
     lastId: number;
 }
+
+interface DispatchProps {
+    addItem: (item: Component | FacetConfig) => void;
+    addChild: (childIndex: number) => void;
+    sortItem: (oldIndex: number, newIndex: number) => void;
+    removeItem: (id: number) => void;
+}
+
+interface OwnProps {
+    onSend: (e: {}) => void;
+    id: number;
+    noForm?: boolean;
+    configType: 'facet' | 'view';
+}
+
+type Props = StateProps & DispatchProps & OwnProps;
 
 interface State {
     openedIndex: number | null;
@@ -71,22 +82,19 @@ class DraggableForm extends PureComponent<Props, State> {
 
     private renderContent () {
         const { openedIndex } = this.state;
-        const { items } = this.props;
+        const { items, configType } = this.props;
         const componentProps = {
             openedIndex,
             openCloseFn: this.openCloseFn
         };
-
-        const myNode: NormalizedComponent = getNodeById(this.props.id, items)!;
-        const myChildren: NormalizedComponent[] =
-            myNode.childIds.map(id => getNodeById(id, items)!);
 
         return (
             <div>
                 <DraggableList
                     componentType={DRAGGABLE_COMPONENTS.accordeon}
                     componentProps={componentProps}
-                    listItems={myChildren}
+                    listItems={items}
+                    configType={configType}
                     useDragHandle={true}
                     onSortEnd={this.onSortEnd}
                 />
@@ -103,12 +111,11 @@ class DraggableForm extends PureComponent<Props, State> {
         this.setState(state => ({
             openedIndex: oldIndex === state.openedIndex ? newIndex : state.openedIndex
         }));
-        this.props.sortChild(oldIndex, newIndex);
+        this.props.sortItem(oldIndex, newIndex);
     }
 
     private addListItem = () => {
-        this.props.addItem(EMPTY_VIEW_COMPONENTS[COMPONENTS.value]);
-        this.props.addChild(this.props.lastId + 1);
+        this.props.addItem(this.props.configType === 'view' ? EMPTY_VIEW_COMPONENTS[COMPONENTS.value] : EMPTY_FACET_CONFIG);
     }
 
     private onSubmit (e: any) {
@@ -117,15 +124,46 @@ class DraggableForm extends PureComponent<Props, State> {
     }
 }
 
-const mapDispatchToProps = (dispatch, { id }: Props) => ({
-    addItem: (component: Component) => dispatch(addViewConfigNode(component)),
-    addChild: (childId) => dispatch(addViewConfigChild(id, childId)),
-    sortChild: (oldIndex, newIndex) => dispatch(sortViewConfigChild(id, oldIndex, newIndex))
+const mapDispatchToProps = (dispatch, { id, configType, ...rest }: Props) => {
+    if (configType === 'view') {
+        return {
+            sortItem: (oldIndex: number, newIndex: number) => dispatch(sortViewConfigChild(id, oldIndex, newIndex)),
+            addChild: (childId) => dispatch(addViewConfigChild(id, childId)),
+            addItem: (component: Component) => dispatch(addViewConfigNode(component))
+        };
+    } else {
+        return {
+            addItem: (facetConfig: FacetConfig) => dispatch(addFacetConfigItem(facetConfig)),
+            sortItem: (oldIndex: number, newIndex: number) => dispatch(sortFacetConfigItem(oldIndex, newIndex)),
+        };
+    }
+};
+
+const mergeProps = (stateProps: StateProps, dispatchProps: DispatchProps, ownProps: OwnProps): Props => ({
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    addItem: (item: ConfigurableItem) => {
+        dispatchProps.addItem(item);
+        if (ownProps.configType === 'view') {
+            dispatchProps.addChild(stateProps.lastId);
+        }
+    }
 });
 
-const mapStateToProps = (state: RootState) => ({
-    items: state.viewconfig,
-    lastId: lastId(state.viewconfig)
-});
+const mapStateToProps = (state: RootState, { id, configType }: Props) => {
+    let items: ConfigurableItem[];
+    if (configType === 'view') {
+        const myNode: NormalizedComponent = getNodeById(id, state.viewconfig)!;
+        items = myNode.childIds.map(childId => getNodeById(childId, state.viewconfig)!);
+    } else {
+        items = state.facetconfig;
+    }
+    
+    return {
+        items,
+        lastId: lastId(state.viewconfig)
+    };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(DraggableForm);
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(DraggableForm);
