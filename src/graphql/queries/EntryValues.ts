@@ -2,6 +2,7 @@ import { gql } from 'react-apollo';
 import { decode } from '../../services/UrlStringCreator';
 import { ComponentConfig } from '../../typings/schema';
 import { Entity, EntityList, DataSetMetadata, checkTypes, Query } from '../../typings/schema';
+import { QueryMetadata } from '../../graphql/queries/EntryProperties';
 
 // `type: never` makes the type checker report an error if the case switch does not handle all types
 function checkUnknownComponent(type: never) {
@@ -22,19 +23,20 @@ function getTitleProp(typeId: string, otherCollections: Array<{collectionId: str
     return '.uri';
 }
 
-export function makeDefaultViewConfig(properties: Array<{ isList: boolean, isValueType: boolean, name: string, referencedCollections: { items: string[] } }>, summaryProperties: { title?: { value: string } }, otherCollections: Array<{ collectionId: string, summaryProperties: { title?: { value: string } } }>): Array<ComponentConfig> {
+export function makeDefaultViewConfig(properties: Array<{ isList: boolean, shortenedUri: string, isInverse: boolean, isValueType: boolean, name: string, referencedCollections: { items: string[] } }>, summaryProperties: { title?: { value: string } }, otherCollections: Array<{ collectionId: string, summaryProperties: { title?: { value: string } } }>): Array<ComponentConfig> {
     const title: ComponentConfig[] = summaryProperties.title ?
         [{ type: 'TITLE', formatter: [], subComponents: [{ type: 'PATH', formatter: [], value: summaryProperties.title.value }] }] :
         [];
     return title.concat(
         properties
-            .filter(x => !x.isList) // fixme: support lists
+            .filter(x => !x.isList)// FIXME: support union types
             .map(x => {
+                const path = x.name + (x.isList ? '.items' : '');
                 let value: ComponentConfig;
                 if (x.isValueType) {
                     value = {
                         type: 'PATH',
-                        value: x.name,
+                        value: path,
                         formatter: []
                     };
                 } else {
@@ -44,17 +46,17 @@ export function makeDefaultViewConfig(properties: Array<{ isList: boolean, isVal
                         subComponents: [{
                             type: 'PATH',
                             formatter: [],
-                            value: x.name + '.uri'
+                            value: path + '.uri'
                         }, {
                             type: 'PATH',
                             formatter: [],
-                            value: x.name + (x.referencedCollections.items.length === 1 ? getTitleProp(x.referencedCollections.items[0], otherCollections) : '.uri')
+                            value: path + (x.referencedCollections.items.length === 1 ? getTitleProp(x.referencedCollections.items[0], otherCollections) : '.uri')
                         }]
                     };
                 }
                 return {
                     type: 'KEYVALUE',
-                    value: x.name,
+                    value: (x.isInverse ? '®' : '') + x.shortenedUri,
                     formatter: [],
                     subComponents: [value]
                 } as ComponentConfig;
@@ -135,7 +137,7 @@ function mapToQuery(map: {}, prefix: string): string {
     return result.map(line => (prefix) + line).join('\n');
 }
 
-export const QUERY_ENTRY_VALUES = ({ match, metadata }) => {
+export const QUERY_ENTRY_VALUES = ({ match, metadata }: { match: any, metadata: QueryMetadata}) => {
     const values = metadata && 
         metadata.dataSetMetadata && 
         metadata.dataSetMetadata.collection && 

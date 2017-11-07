@@ -21,6 +21,8 @@ const Key = styled(Content)`
     width: 20%;
     margin: 0;
     vertical-align: top;
+    text-overflow: ellipsis;
+    overflow: hidden;
 
     @media (max-width: ${BREAKPOINT.MOBILE}) {
         width: 100%;
@@ -44,7 +46,7 @@ const ContentKeyValue = (props: Props) => {
 
     return (
         <KeyValueWrapper>
-            <Key tag="h2">{label}:</Key>
+            <Key tag="h2"><span title={label}>{label}</span>:</Key>
             <Values>{children}</Values>
         </KeyValueWrapper>      
     );
