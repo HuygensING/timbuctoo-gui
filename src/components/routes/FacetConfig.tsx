@@ -9,16 +9,16 @@ import styled from '../../styled-components';
 
 import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
-import { Component, DataSetMetadata } from '../../typings/schema';
+import { DataSetMetadata, FacetConfig as IFacetConfig } from '../../typings/schema';
 import Loading from '../Loading';
 import MetadataResolver from '../MetadataResolver';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
-import { setTree } from '../../reducers/viewconfig';
 import { connect } from 'react-redux';
+import { setFacetConfigItems } from '../../reducers/facetconfig';
 
 interface Props {
-    setTree: (components: Component[]) => void;
-    metadata: {
+    setItems: (configs: IFacetConfig[]) => void;
+    metadata?: {
         dataSetMetadata: DataSetMetadata;
     };
     loading: boolean;
@@ -35,10 +35,16 @@ const Section = styled.div`
 `;
 
 class FacetConfig extends PureComponent<FullProps, State> {
+    componentWillReceiveProps (nextProps: FullProps) {
+        const metadata = nextProps.metadata && nextProps.metadata.dataSetMetadata;
+        if (metadata && metadata.collection && metadata.collection.indexConfig.facet.length) {
+            this.props.setItems(metadata.collection.indexConfig.facet);
+        }
+    }
+
     render () {
         // TODO: add when Components are available
 
-        console.log(this.props.metadata.dataSetMetadata.collection && this.props.metadata.dataSetMetadata.collection.indexConfig.facet);
         if (this.props.loading) {
             return <Loading/>;
         }
@@ -66,7 +72,7 @@ class FacetConfig extends PureComponent<FullProps, State> {
 }
 
 const mapDispatchToProps = dispatch => ({
-    setTree: (components: Component[]) => dispatch(setTree(components))
+    setItems: (configs: IFacetConfig[]) => dispatch(setFacetConfigItems(configs))
 });
 
 export default MetadataResolver(QUERY_COLLECTION_PROPERTIES)(connect(null, mapDispatchToProps)(FacetConfig));

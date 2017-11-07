@@ -14,6 +14,12 @@ type AddFacetConfigItemAction = {
         facetConfig: FacetConfig
     }
 };
+type SetFacetConfigItemsAction = {
+    type: 'SET_FACET_CONFIG_ITEMS',
+    payload: {
+        facetConfigs: FacetConfig[]
+    }
+};
 
 type DeleteFacetConfigItemAction = {
     type: 'DELETE_FACET_CONFIG_ITEM',
@@ -40,6 +46,7 @@ type SortFacetConfigItemAction = {
 
 type Action =
     AddFacetConfigItemAction
+    | SetFacetConfigItemsAction
     | DeleteFacetConfigItemAction
     | ModifyFacetConfigItemAction
     | SortFacetConfigItemAction;
@@ -55,7 +62,7 @@ export const getById = (id: number, state: FacetConfigReducer): NormalizedFacetC
 
 // reducer
 
-const item = (state: NormalizedFacetConfig | null, action: Action, items: NormalizedFacetConfig[]) => {
+const item = (state: NormalizedFacetConfig | null, action: Action, items: NormalizedFacetConfig[]): NormalizedFacetConfig => {
     switch (action.type) {
         case 'ADD_FACET_CONFIG_ITEM':
             return {
@@ -72,10 +79,24 @@ const item = (state: NormalizedFacetConfig | null, action: Action, items: Normal
     }
 };
 
+const multipleItems = (action: Action, items: NormalizedFacetConfig[]): NormalizedFacetConfig[] => {
+    if (action.type !== 'SET_FACET_CONFIG_ITEMS') {
+        return [];
+    }
+
+    items = [...items];
+    for (const facetConfig of action.payload.facetConfigs) {
+        items = [...items, item(null, { type: 'ADD_FACET_CONFIG_ITEM', payload: { facetConfig } }, items)];
+    }
+    return items;
+};
+
 export default (state: FacetConfigReducer = defaultState, action: Action) => {
     switch (action.type) {
         case 'ADD_FACET_CONFIG_ITEM':
             return [...state, item(null, action, state)];
+        case 'SET_FACET_CONFIG_ITEMS':
+            return [...multipleItems(action, state)];
         case 'MODIFY_FACET_CONFIG_ITEM': {
             const index = state.findIndex(config => config.id === action.payload.id);
             const nextState = [...state];
@@ -94,6 +115,13 @@ export const addFacetConfigItem = (facetConfig: FacetConfig): AddFacetConfigItem
     type: 'ADD_FACET_CONFIG_ITEM',
     payload: {
         facetConfig
+    }
+});
+
+export const setFacetConfigItems = (facetConfigs: FacetConfig[]): SetFacetConfigItemsAction => ({
+    type: 'SET_FACET_CONFIG_ITEMS',
+    payload: {
+        facetConfigs
     }
 });
 

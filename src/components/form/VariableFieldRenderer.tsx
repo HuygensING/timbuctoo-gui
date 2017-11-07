@@ -158,7 +158,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
             newFieldset[fieldName].field = newValue;
             this.props.modifyNode(newFieldset);
         }
-    };
+    }
 
     private onSelectChangeHandler = (option: OptionProps, settings: any, fieldName: string, childIndex: number) => {
         const item = this.props.item as NormalizedComponent;
@@ -207,7 +207,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
             // Send a fieldSet change
             this.props.modifyNode(newFieldset);
         }
-    };
+    }
 
     private onChangeHeadHandler = (option: OptionProps) => {
         const item = this.props.item as NormalizedComponent;
