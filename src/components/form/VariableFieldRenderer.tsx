@@ -207,7 +207,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
             // Send a fieldSet change
             this.props.modifyNode(newFieldset);
         }
-    };
+    }
 
     private onChangeHeadHandler = (option: OptionProps) => {
         const item = this.props.item as NormalizedComponent;
@@ -231,7 +231,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
 
         const newFieldset = EMPTY_VIEW_COMPONENTS[componentKey];
         this.props.modifyNode(newFieldset);
-    };
+    }
 }
 
 const mapStateToProps = (state: RootState) => ({
