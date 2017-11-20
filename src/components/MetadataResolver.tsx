@@ -1,7 +1,6 @@
 import React, { Component, ComponentClass } from 'react';
 import Client from '../services/ApolloClient';
 import { RouteComponentProps } from 'react-router';
-import { DataSetMetadata } from '../typings/schema';
 import Error from '../components/routes/Error';
 import NotFound from './routes/NotFound';
 
@@ -18,18 +17,14 @@ interface ErrorState {
     found: boolean;
 }
 
-interface DataProps {
-    metadata: {
-        dataSetMetadata: DataSetMetadata;
-    };
-    data: {
-        dataSets: any;
-    };
+export interface DataProps<TMetadata, TData> {
+    metadata: TMetadata;
+    data: TData;
     onRefetch: () => void;
     loading: boolean;
 }
 
-export type ResolvedApolloProps = DataProps & RouteComponentProps<any>;
+export type ResolvedApolloProps<T, U, V> = DataProps<T, U> & RouteComponentProps<V>;
 
 export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?: Function, resolverOptions?: { forceFetch: boolean; }) {
     return (WrappedComponent: ComponentClass<P>) => {

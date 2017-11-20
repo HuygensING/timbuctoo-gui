@@ -7,14 +7,14 @@ const ContentWrapper = styled(Content)`
     margin: 0 0 1rem 0;
 `;
 
-const ContentValue = (props) => {
-    if (!props.children) {
+const ContentValue = (props: {value: string | undefined}) => {
+    if (!props.value) {
         return null;
     }
 
     return (
         <ContentWrapper>
-            {props.children}
+            {props.value}
         </ContentWrapper>  
     );
 };

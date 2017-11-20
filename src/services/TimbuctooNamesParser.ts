@@ -54,7 +54,7 @@ const mapNames = (names: NameObjectProps[]): Name => {
     return name;
 };
 
-const parseName = (value: string): Name => {
+export const parseName = (value: string): Name => {
     const components = JSON.parse(value).components;
     return mapNames(components);
 };
