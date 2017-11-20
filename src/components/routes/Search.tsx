@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { CollectionMetadata } from '../../typings/schema';
+import { CollectionMetadata, DataSetMetadata } from '../../typings/schema';
 import FullHelmet from '../FullHelmet';
 import { Col, FullSection } from '../layout/Grid';
 import SearchForm from '../form/SearchForm';
@@ -15,7 +15,7 @@ import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
 import Pagination from '../search/Pagination';
 import Loading from '../Loading';
 
-type FullProps = ResolvedApolloProps;
+type FullProps = ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any>;
 
 class Search extends PureComponent<FullProps> {
 

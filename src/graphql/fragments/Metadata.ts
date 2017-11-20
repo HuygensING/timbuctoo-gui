@@ -42,13 +42,30 @@ const collectionPropertiesReference = gql`
         properties {
             items {
                 name
+                shortenedUri
                 isList
+                isInverse
                 isValueType
                 referencedCollections { items }
             }
         }
     }
 `;
+
+interface CollectionPropertiesReference {
+    properties: {
+        items: Array<{
+            name: string
+            shortenedUri: string
+            isList: boolean
+            isInverse: boolean
+            isValueType: boolean
+            referencedCollections: {
+                items: string[]
+            }
+        }>
+    };
+}
 
 const collectionIndexConfig = gql`
     fragment CollectionIndexConfig on CollectionMetadata {
@@ -109,4 +126,4 @@ const dataSetMetadataFragment = gql`
     ${collectionPropertiesDensity}
 `;
 
-export { dataSetMetadataFragment, collectionBase, collectionPropertiesDensity, collectionPropertiesReference, collectionSummaryProperties, collectionIndexConfig };
+export { dataSetMetadataFragment, collectionBase, collectionPropertiesDensity, collectionPropertiesReference, CollectionPropertiesReference, collectionSummaryProperties, collectionIndexConfig };

@@ -2,6 +2,14 @@
 
 const noContent = null;
 
+export function safeGet<T, U extends keyof T>(arr: T | undefined | null, index: U): T[U] | null {
+    if (arr) {
+        return arr[index];
+    } else {
+        return null;
+    }
+}
+
 const getDataSetValues = (dataSets: any, dataSetId: string) => {
     if (!dataSets || !dataSetId) { return noContent; }
 

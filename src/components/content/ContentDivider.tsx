@@ -2,7 +2,6 @@ import React from 'react';
 import styled from '../../styled-components';
 
 import { Title } from '../layout/StyledCopy';
-import { valueField } from '../../typings/index';
 
 const DividerLine = styled.figure`
     position: relative;
@@ -22,13 +21,13 @@ const DividerTitle = styled(Title)`
 `;
 
 interface Props {
-    title: valueField;
+    children?: any;
 }
 
-const ContentDivider = ({ title }: Props) => {
+const ContentDivider = ({ children }: Props) => {
     return (
         <DividerLine>
-            {title && <DividerTitle>{title}</DividerTitle>}
+            {children.length > 0 && <DividerTitle>{children}</DividerTitle>}
         </DividerLine>
     );
 };
