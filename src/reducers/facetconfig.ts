@@ -1,11 +1,10 @@
 import { FacetConfig } from '../typings/schema';
 import { NormalizedFacetConfig } from '../typings/index';
 import { arrayMove } from 'react-sortable-hoc';
-import { EMPTY_FACET_CONFIG } from '../constants/global';
 
 // state def
 export type FacetConfigReducer = NormalizedFacetConfig[];
-const defaultState: FacetConfigReducer = [{ id: 0, ...EMPTY_FACET_CONFIG }];
+const defaultState: FacetConfigReducer = [];
 
 // actions
 type AddFacetConfigItemAction = {
@@ -79,12 +78,12 @@ const item = (state: NormalizedFacetConfig | null, action: Action, items: Normal
     }
 };
 
-const multipleItems = (action: Action, items: NormalizedFacetConfig[]): NormalizedFacetConfig[] => {
+const multipleItems = (action: Action): NormalizedFacetConfig[] => {
     if (action.type !== 'SET_FACET_CONFIG_ITEMS') {
         return [];
     }
 
-    items = [...items];
+    let items: NormalizedFacetConfig[] = [];
     for (const facetConfig of action.payload.facetConfigs) {
         items = [...items, item(null, { type: 'ADD_FACET_CONFIG_ITEM', payload: { facetConfig } }, items)];
     }
@@ -96,7 +95,7 @@ export default (state: FacetConfigReducer = defaultState, action: Action) => {
         case 'ADD_FACET_CONFIG_ITEM':
             return [...state, item(null, action, state)];
         case 'SET_FACET_CONFIG_ITEMS':
-            return [...multipleItems(action, state)];
+            return [...multipleItems(action)];
         case 'MODIFY_FACET_CONFIG_ITEM': {
             const index = state.findIndex(config => config.id === action.payload.id);
             const nextState = [...state];

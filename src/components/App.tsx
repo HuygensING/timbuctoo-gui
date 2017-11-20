@@ -81,7 +81,7 @@ class App extends PureComponent<ChildProps<Props, Response>, State> {
 
         if (this.renderLoad && (data.error || data.aboutMe === null)) {
             this.renderLoad = false;
-            this.props.logOutUser();
+            this.props.logInUser(user.hsid);
         }
     }
 
