@@ -65,13 +65,13 @@ const item = (state: NormalizedFacetConfig | null, action: Action, items: Normal
     switch (action.type) {
         case 'ADD_FACET_CONFIG_ITEM':
             return {
+                ...action.payload.facetConfig,
                 id: lastId(items) + 1,
-                ...action.payload.facetConfig
             };
         case 'MODIFY_FACET_CONFIG_ITEM':
             return {
-                id: state!.id,
-                ...action.payload.facetConfig
+                ...action.payload.facetConfig,
+                id: state!.id
             };
         default:
             return state!;
