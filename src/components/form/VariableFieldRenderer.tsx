@@ -5,7 +5,7 @@ import { COMPONENT_FIELDS, COMPONENTS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
 import { default as Select, OptionProps } from './fields/Select';
 import InputField from './fields/Input';
-import { NormalizedComponent, ValueItem } from '../../typings/index';
+import { ConfigurableItem, NormalizedComponent, ValueItem } from '../../typings/index';
 import KeyValue from './fields/KeyValue';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect } from 'react-redux';
@@ -13,8 +13,10 @@ import {
     addViewConfigChild,
     addViewConfigNode,
     deleteViewConfigChild,
-    deleteViewConfigNode, denormalizeComponent,
-    getNodeById, lastId,
+    deleteViewConfigNode,
+    denormalizeComponent,
+    getNodeById,
+    lastId,
     modifyViewConfigNode,
     ViewConfigReducer
 } from '../../reducers/viewconfig';
@@ -54,9 +56,10 @@ const StyledDivider = styled.div`
 `;
 
 interface Props {
-    item: NormalizedComponent;
+    item: ConfigurableItem;
     items: ViewConfigReducer;
     match?: match<any>;
+    configType: 'view' | 'facet';
     modifyNode: (component: Component) => void;
     removeNode: (nodeId: number) => void;
     removeChild: (childId: number) => void;
@@ -67,7 +70,18 @@ interface Props {
 
 class VariableFormFieldRenderer extends PureComponent<Props> {
     render () {
-        const { item } = this.props;
+        if (this.props.configType === 'view') {
+            return this.renderComponentFields();
+        } else {
+            return (
+                <p>TODO VariableFieldRenderer: render facet fields.</p>
+            );
+        }
+    }
+
+    renderComponentFields () {
+        const item = this.props.item as NormalizedComponent;
+        const { configType } = this.props;
         const { childIds } = item;
 
         const valueList: ValueItem[] = [];
@@ -124,6 +138,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                         items={(
                             childIds.map(id => getNodeById(id, this.props.items))
                         )}
+                        configType={configType}
                         id={item.id}
                         noForm={true}
                     />
@@ -133,7 +148,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     }
 
     private onChangeHandler = (e: FormEvent<HTMLInputElement>, fieldName: string) => {
-        const { item } = this.props;
+        const item = this.props.item as NormalizedComponent;
 
         const newValue = e.currentTarget.value;
         const oldValue = item[fieldName].field;
@@ -146,7 +161,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     }
 
     private onSelectChangeHandler = (option: OptionProps, settings: any, fieldName: string, childIndex: number) => {
-        const { item } = this.props;
+        const item = this.props.item as NormalizedComponent;
 
         // todo: Move all this logic to redux side effects as a saga (see 'redux-saga' package)
 
@@ -195,7 +210,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     }
 
     private onChangeHeadHandler = (option: OptionProps) => {
-        const { item } = this.props;
+        const item = this.props.item as NormalizedComponent;
         const componentKey = option.value;
 
         if (componentKey === item.type) {

@@ -6,6 +6,7 @@ import User from '../components/icons/User';
 import Heart from '../components/icons/Heart';
 import Book from '../components/icons/Book';
 import GitBranch from '../components/icons/GitBranch';
+import { FacetConfig } from '../typings/schema';
 
 export const HSID: string = 'hsid';
 
@@ -64,3 +65,9 @@ export const MENU_ITEMS: MenuItemProp[] = [
         icon: GitBranch
     }
 ];
+
+export const EMPTY_FACET_CONFIG: FacetConfig = {
+    type: 'MultiSelect',
+    paths: [],
+    caption: null
+};

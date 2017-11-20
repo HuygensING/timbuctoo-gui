@@ -4,13 +4,15 @@ import Hamburger from './icons/Hamburger';
 import styled from 'styled-components';
 import { CONTAINER_PADDING, DRAGGABLE_COMPONENTS } from '../constants/global';
 import Accordeon from './Accordeon';
+import { ConfigurableItem } from '../typings/index';
 
 // TODO: Abstractify rendering components into the DraggableList.
 // If we pass a component as prop, which then needs to be dynamically wrapped into
 // a SortableElement, that component will destroy and create a new instance every time
 interface Props {
-    listItems: any[];
+    listItems: ConfigurableItem[];
     componentType: 'accordeon' | 'block';
+    configType: 'view' | 'facet';
     componentProps: any;
     onSortEnd: (props: { oldIndex: number, newIndex: number }) => void;
 }
@@ -33,7 +35,7 @@ class DraggableList extends PureComponent<Props> {
     }
 
     renderListItem (listItem: any, idx: number) {
-        const { componentType, componentProps } = this.props;
+        const { componentType, componentProps, configType } = this.props;
 
         if (componentType === DRAGGABLE_COMPONENTS.accordeon) {
             return (
@@ -41,6 +43,7 @@ class DraggableList extends PureComponent<Props> {
                     key={idx}
                     index={idx}
                     item={listItem}
+                    configType={configType}
                     idx={idx}
                     {...componentProps}
                 >
