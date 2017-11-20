@@ -42,7 +42,9 @@ const collectionPropertiesReference = gql`
         properties {
             items {
                 name
+                shortenedUri
                 isList
+                isInverse
                 isValueType
                 referencedCollections { items }
             }
@@ -54,7 +56,9 @@ interface CollectionPropertiesReference {
     properties: {
         items: Array<{
             name: string
+            shortenedUri: string
             isList: boolean
+            isInverse: boolean
             isValueType: boolean
             referencedCollections: {
                 items: string[]

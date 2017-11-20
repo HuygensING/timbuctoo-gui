@@ -1,44 +1,40 @@
 import React, { PureComponent } from 'react';
-import { RouteComponentProps } from 'react-router';
 
-import { Entity, ComponentConfig } from '../../typings/schema';
-
+import { ComponentConfig } from '../../typings/schema';
 import Loading from '../Loading';
 import FullHelmet from '../FullHelmet';
 import { Col, Grid } from '../layout/Grid';
 
-import MetadataResolver, { DataProps } from '../MetadataResolver';
+import MetadataResolver, { ResolvedApolloProps } from '../MetadataResolver';
 import { ComponentLoader } from '../../services/ComponentLoader';
 
 import { QUERY_ENTRY_PROPERTIES, QueryMetadata } from '../../graphql/queries/EntryProperties';
 import { QUERY_ENTRY_VALUES, QueryValues, makeDefaultViewConfig } from '../../graphql/queries/EntryValues';
+import NotFound from './NotFound';
+import { safeGet } from '../../services/GetDataSetValues';
 
 interface State {}
 
-class Entry extends PureComponent<DataProps<QueryMetadata, QueryValues> & RouteComponentProps<any>, State> {
+class Entry extends PureComponent<ResolvedApolloProps<QueryMetadata, QueryValues, any>, State> {
 
     render () {
         if (this.props.loading) { return <Loading />; }
         if (!this.props.metadata.dataSetMetadata) {
-            return null;
+            return <NotFound />;
         }
-        const collection = this.props.metadata.dataSetMetadata.collection;
-        const collectionList = this.props.metadata.dataSetMetadata.collectionList;
+        const { collection, collectionList } = this.props.metadata.dataSetMetadata;
         if (!collection) {
-            return null;
+            return <NotFound />;
         }
 
         const idPerUri: {[key: string]: string | undefined} = {};
         collectionList.items.map(coll => idPerUri[coll.itemType] = coll.collectionId);
         const componentConfigs = collection.viewConfig.length > 0 ? collection.viewConfig : makeDefaultViewConfig(collection.properties.items, collection.summaryProperties, collectionList.items);
-        if (!this.props.data.dataSets || !this.props.data.dataSets[this.props.match.params.dataSet]) {
-            return null;
+        
+        const entry = safeGet(safeGet(this.props.data.dataSets, this.props.match.params.dataSet), this.props.match.params.collection);
+        if (!entry) {
+            return <NotFound />;
         }
-        const dataSet = this.props.data.dataSets[this.props.match.params.dataSet];
-        if (!dataSet) {
-            return null;
-        }
-        const entry = dataSet[this.props.match.params.collection] as Entity;
         
         return (
             <section>

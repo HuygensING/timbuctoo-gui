@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import ContentTitle from '../components/content/ContentTitle';
 import ContentImage from '../components/content/ContentImage';
 import ContentLink from '../components/content/ContentLink';
 import ContentKeyValue from '../components/content/ContentKeyValue';
 import ContentDivider from '../components/content/ContentDivider';
+import ContentValue from '../components/content/ContentValue';
 import { ComponentConfig, Entity, Value, LeafComponentConfig, FormatterConfig } from '../typings/schema';
 import { valueToString } from '../services/getValue';
+import { safeGet } from '../services/GetDataSetValues';
 
 interface TypedUri { 
     uri: string; 
@@ -14,7 +16,7 @@ interface TypedUri {
 }
 type uriOrString = string | TypedUri;
 
-type pathResult = uriOrString[] | uriOrString | undefined;
+type pathResult = uriOrString[] | uriOrString | null;
 
 // `type: never` makes the type checker report an error if the case switch does not handle all types
 function checkUnknownComponent(type: never) {
@@ -31,26 +33,31 @@ function walkPath(pathStr: string | undefined, formatters: FormatterConfig, enti
         
         return walkPathStep(path, formatters, entity);
     }
-    return undefined;
+    return null;
 }
 
-function walkPathStep(path: string[], formatters: FormatterConfig, entity: Entity): pathResult {
-    if (path.length === 0) {
-        return entity.uri;
-    }
-    let result = entity[path[0]];
+export const DEFAULT_FORMATTERS: FormatterConfig = [{
+    type: 'http://timbuctoo.huygens.knaw.nl/datatypes/person-name',
+    name: 'PERSON_NAMES'
+}];
 
-    if (!result) {
-        return undefined;
-    } else if (Array.isArray(result)) {
-        let retVal: uriOrString[] = [];
-        for (const item of result) {
-            if (isValue(item)) {
-                retVal.push(valueToString(item, formatters.concat([{
-                    type: 'http://timbuctoo.huygens.knaw.nl/datatypes/person-name',
-                    name: 'PERSON_NAMES'
-                }])));
-            } else {
+function walkPathStep(path: string[], formatters: FormatterConfig, entity: Value | Entity): pathResult {
+    if (isValue(entity)) {
+        return valueToString(entity, formatters.concat(DEFAULT_FORMATTERS));
+    } else {
+        if (path.length === 0) {
+            return {
+                uri: entity.uri,
+                type: entity.__typename
+            };
+        }
+        let result = entity[path[0]];
+
+        if (!result) {
+            return null;
+        } else if (Array.isArray(result)) {
+            let retVal: uriOrString[] = [];
+            for (const item of result) {
                 const subResult = walkPathStep(path.slice(1), formatters, item);
                 if (subResult) {
                     if (Array.isArray(subResult)) {
@@ -60,36 +67,34 @@ function walkPathStep(path: string[], formatters: FormatterConfig, entity: Entit
                     }
                 }
             }
+            return retVal;
+        } else if (typeof result === 'string') {
+            if (path[0] === 'uri') {
+                return {
+                    uri: result,
+                    type: entity.__typename
+                };
+            } else {
+                return result;
+            }
+        } else {
+            return walkPathStep(path.slice(1), formatters, result);
         }
-        return retVal;
-    } else if (typeof result === 'string') {
-        console.log(entity, entity.__typename);
-        return {
-            uri: result,
-            type: entity.__typename
-        };
-    } else if (isValue(result)) {
-        return valueToString(result, formatters.concat([{
-            type: 'http://timbuctoo.huygens.knaw.nl/datatypes/person-name',
-            name: 'PERSON_NAMES'
-        }]));
-    } else {
-        return walkPathStep(path.slice(1), formatters, result);
     }
 }
 
-function getValueOrLiteral(component: LeafComponentConfig | undefined, data: Entity): pathResult {
+function getValueOrLiteral(component: LeafComponentConfig | null, data: Entity): pathResult {
     if (!component) {
-        return undefined;
+        return null;
     } else {
         switch (component.type) {
             case 'PATH':
                 return walkPath(component.value, component.formatter, data);
             case 'LITERAL':
-                return component.value;
+                return component.value || null;
             default:
                 checkUnknownComponent(component);
-                return undefined;
+                return null;
         }
     }
 }
@@ -111,14 +116,6 @@ function normalize(result: pathResult): {normalized: uriOrString[], wasSingle: b
         } else {
             return { normalized: [result], wasSingle: true };
         }
-    }
-}
-
-function join(result: uriOrString[]): string | null {
-    if (result.length === 0) {
-        return null;
-    } else {
-        return result.join(', ');
     }
 }
 
@@ -146,26 +143,18 @@ function valOrUri(item: string | {uri: string}): string {
     return typeof item === 'string' ? item : item.uri;
 }
 
-function safeGet<T, U extends keyof T>(arr: T | undefined, index: U): T[U] | undefined {
-    if (arr) {
-        return arr[index];
-    } else {
-        return undefined;
-    }
-}
-
-export class ComponentLoader extends Component<{ data: Entity, componentConfig: ComponentConfig, idPerUri: { [key: string]: string | undefined } }, {}> {
+export class ComponentLoader extends React.Component<{ data: Entity, componentConfig: ComponentConfig, idPerUri: { [key: string]: string | undefined } }, {}> {
     render(): JSX.Element | JSX.Element[] | null | string {
         const { data, componentConfig } = this.props;
         switch (componentConfig.type) {
             case 'DIVIDER':
-                return <ContentDivider>{join(normalize(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data)).normalized)}</ContentDivider>;
+                return <ContentDivider>{normalize(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data)).normalized[0]}</ContentDivider>;
             case 'TITLE':
                 return <ContentTitle>{normalize(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data)).normalized[0]}</ContentTitle>;
             case 'LITERAL':
-                return componentConfig.value || null;
+                return <ContentValue value={componentConfig.value} />;
             case 'PATH':
-                return normalize(walkPath(componentConfig.value, componentConfig.formatter, data)).normalized.map((x, i) => <li key={i}>{x}</li>);
+                return normalize(walkPath(componentConfig.value, componentConfig.formatter, data)).normalized.map((x, i) => <ContentValue key={i} value={x as string} />);
             case 'IMAGE':
                 const [srcs, alts] = makeArraysOfSameLength(
                     getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data),

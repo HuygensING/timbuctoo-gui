@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { CollectionMetadata } from '../../typings/schema';
+import { CollectionMetadata, DataSetMetadata } from '../../typings/schema';
 import Loading from '../Loading';
 import FullHelmet from '../FullHelmet';
 import Hero from '../hero/Hero';
@@ -23,7 +23,7 @@ interface StateProps {
     loggedIn: boolean;
 }
 
-type FullProps = ResolvedApolloProps & StateProps;
+type FullProps = ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any> & StateProps;
 
 class DataSet extends PureComponent<FullProps> {
 

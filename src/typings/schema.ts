@@ -101,8 +101,11 @@ export interface PropertyList {
 
 export interface Property {
     name: string;
+    uri: string;
+    shortenedUri: string;
     density: number;
     isList: boolean;
+    isInverse: boolean;
     referencedCollections: CollectionIdList;
     isValueType: boolean;
 }
