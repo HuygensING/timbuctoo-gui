@@ -1,6 +1,8 @@
 import { merge, replace } from 'lodash';
 import { ComponentValueField } from '../typings/schema';
-import { COMPONENT_FIELDS } from '../constants/global';
+
+// TODO: Should be refactored, this is old component stuff
+const COMPONENT_FIELDS = [1];
 
 const createValuesObject = (fields: ComponentValueField[]) => {
     const object = {};
@@ -17,6 +19,7 @@ const createValuesObject = (fields: ComponentValueField[]) => {
 
 const mutateQueryObject = (item, queryObject) => {
     // check every componentfield for values
+
     for (let key in COMPONENT_FIELDS) {
         if (COMPONENT_FIELDS.hasOwnProperty(key)) {
             const field = item[COMPONENT_FIELDS[key]];

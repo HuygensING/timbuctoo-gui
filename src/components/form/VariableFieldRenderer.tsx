@@ -1,11 +1,11 @@
 import React, { FormEvent, PureComponent } from 'react';
 import { match, withRouter } from 'react-router';
 import styled from '../../styled-components';
-import { COMPONENT_FIELDS, COMPONENTS } from '../../constants/global';
+import { COMPONENTS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
 import { default as Select, OptionProps } from './fields/Select';
 import InputField from './fields/Input';
-import { NormalizedComponent, ValueItem } from '../../typings/index';
+import { NormalizedComponent } from '../../typings/index';
 import KeyValue from './fields/KeyValue';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect } from 'react-redux';
@@ -19,8 +19,9 @@ import {
     ViewConfigReducer
 } from '../../reducers/viewconfig';
 import { ComponentConfig } from '../../typings/schema';
-import { EMPTY_NODE_COMPONENT , EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
+import { EMPTY_NODE_COMPONENT, EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
+import { isLeafOrNode } from '../../services/LeafOrNodeComponent';
 
 const Label = styled.label`
     display: inline-block;
@@ -66,25 +67,9 @@ interface Props {
 }
 
 class VariableFormFieldRenderer extends PureComponent<Props> {
+
     render () {
-        const { item } = this.props;
-        const { childIds } = item;
-
-        const valueList: ValueItem[] = [];
-
-        for (let key in COMPONENT_FIELDS) {
-            if (COMPONENT_FIELDS.hasOwnProperty(key)) {
-                const name = COMPONENT_FIELDS[key];
-                const obj = {
-                    value: item[name],
-                    name
-                };
-
-                if (item[name]) {
-                    valueList.push(obj);
-                }
-            }
-        }
+        const { item, item: { childIds, value, name, type } } = this.props;
 
         return (
             <StyledFieldset>
@@ -93,37 +78,39 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                     <Select
                         name={'Component'}
                         options={SELECT_COMPONENT_TYPES}
-                        selected={SELECT_COMPONENT_TYPES.find(({ value }) => value === item.type)}
-                        onChange={e => this.onChangeHeadHandler(e)}
+                        selected={SELECT_COMPONENT_TYPES.find((valueType) => valueType.value === item.type)}
+                        onChange={this.onChangeHeadHandler}
                     />
                 </StyledDivider>
-                {valueList.map((valueItem: ValueItem, idx: number) =>
-                    valueItem && valueItem.value && (
-                        <StyledDivider key={idx}>
-                            <Label htmlFor={`${item.name}_${valueItem.name}_0`}>{valueItem.name}</Label>
-                            <KeyValue
-                                valueItem={valueItem}
-                                onSelectChangeHandler={this.onSelectChangeHandler}
-                                collection={this.props.match && this.props.match.params.collection}
-                            />
-                            {typeof valueItem.value.field === 'string' && (
+
+                <StyledDivider>
+                    {typeof value === 'string' && <Label htmlFor={name}>{type}</Label>}
+                    {typeof value === 'string' && (
+                        type === 'PATH'
+                            ? (
+                                <KeyValue
+                                    valueItem={{ value: {}, name }}
+                                    onSelectChangeHandler={this.onSelectChangeHandler}
+                                    collection={this.props.match && this.props.match.params.collection}
+                                />
+                            )
+                            : (
                                 <StyledInputWrapper>
                                     <StyledInput
                                         type={'text'}
-                                        title={`${valueItem.name}_${0}`}
-                                        name={item.name}
-                                        defaultValue={valueItem.value.field}
-                                        onBlur={(e) => this.onChangeHandler(e, valueItem.name)}
+                                        title={name}
+                                        name={name}
+                                        defaultValue={value}
+                                        onBlur={this.onChangeHandler}
                                     />
                                 </StyledInputWrapper>
-                            )}
-                        </StyledDivider>
-                    ))}
+                            )
+                    )}
+                </StyledDivider>
+
                 {childIds.length > 0 && (
                     <DraggableForm
-                        items={(
-                            childIds.map(id => getNodeById(id, this.props.items))
-                        )}
+                        items={(childIds.map(id => getNodeById(id, this.props.items)))}
                         id={item.id}
                         noForm={true}
                     />
@@ -132,23 +119,28 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         );
     }
 
-    private onChangeHandler = (e: FormEvent<HTMLInputElement>, fieldName: string) => {
+    private onChangeHandler = (e: FormEvent<HTMLInputElement>): void | false => {
+        e.persist();
+
         const { item } = this.props;
-
         const newValue = e.currentTarget.value;
-        const oldValue = item[fieldName].field;
 
-        if (newValue !== oldValue) {
-            const newFieldset: ComponentConfig = denormalizeComponent({ ...item });
-            newFieldset[fieldName].field = newValue;
-            this.props.modifyNode(newFieldset);
+        if (newValue === item.value) {
+            return false;
         }
+
+        const newFieldset: ComponentConfig = denormalizeComponent({ ...item });
+        newFieldset.value = newValue;
+
+        return this.props.modifyNode(newFieldset);
     }
 
-    private onSelectChangeHandler = (option: OptionProps, settings: any, fieldName: string, childIndex: number) => {
+    private onSelectChangeHandler (option: OptionProps, settings: any, fieldName: string, childIndex: number) {
         const { item } = this.props;
 
         // todo: Move all this logic to redux side effects as a saga (see 'redux-saga' package)
+        // todo: Align with what the string will look like for the value of PATH component
+
 
         // Set the newValue object
         const newValue = {
@@ -202,21 +194,30 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
             return;
         }
 
-        if (componentKey !== COMPONENTS.keyValue) {
-            // we're not a keyvalue anymore, kill children
-            for (const child of item.childIds) {
-                this.props.removeChild(child);
-                this.props.removeNode(child);
-            }
-        } else {
-            // this is a keyvalue component now: push a new node and add it as child.
-            this.props.addNode(EMPTY_NODE_COMPONENT[COMPONENTS.title]);
-            this.props.addChild(this.props.lastId + 1);
-        }
+        let newFieldset: ComponentConfig | null = null;
 
-        const newFieldset = (componentKey === COMPONENTS.literal || COMPONENTS.path)
-            ? EMPTY_LEAF_COMPONENT[componentKey]
-            : EMPTY_NODE_COMPONENT[componentKey];
+        switch (isLeafOrNode(componentKey)) {
+            case 'leaf':
+                for (const child of item.childIds) {
+                    this.props.removeChild(child);
+                    this.props.removeNode(child);
+                }
+                newFieldset = EMPTY_LEAF_COMPONENT[componentKey];
+                break;
+
+            case 'node':
+                if (!item.childIds.length) {
+                    this.props.addNode(EMPTY_NODE_COMPONENT[COMPONENTS.path]);
+                    this.props.addChild(this.props.lastId + 1);
+                }
+                newFieldset = EMPTY_NODE_COMPONENT[componentKey];
+                break;
+
+            default:
+                return process.env.NODE_ENV === 'development'
+                    ? console.warn(`${componentKey} is no valid component-type.`)
+                    : false;
+        }
 
         this.props.modifyNode(newFieldset);
     }

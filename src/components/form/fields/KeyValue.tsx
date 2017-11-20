@@ -1,49 +1,41 @@
-import { ValueItem } from '../../../typings/index';
-import React, { PureComponent } from 'react';
+import React, { SFC } from 'react';
 import ConnectedSelect from './ConnectedSelect';
 import { ComponentValueField } from '../../../typings/schema';
 import { OptionProps } from './Select';
+import { ValueItem } from '../../../typings/index';
 
-type Props = {
-    valueItem: ValueItem,
-    collection?: string,
-    onSelectChangeHandler: (option: OptionProps, settings: any, fieldName: string, childIndex: number) => void
-};
-
-class KeyValue extends PureComponent<Props> {
-    componentWillMount () {
-        const { valueItem, collection } = this.props;
-
-        // If fields does exist but is empty, add a default field with current collection as reference
-        if (valueItem.value.fields && valueItem.value.fields.length === 0) {
-            valueItem.value.fields.push({
-                value: '',
-                reference: collection
-            });
-        }
-    }
-
-    render () {
-        const { valueItem } = this.props;
-        if (!valueItem.value.fields) {
-            return null;
-        }
-
-        return (
-            <span>
-                {valueItem.value.fields.map(({ value, reference }: ComponentValueField, childIdx: number) => (
-                        <ConnectedSelect
-                            key={childIdx}
-                            name={'select'}
-                            selected={{ key: value, value: value }}
-                            collectionId={reference}
-                            onChange={({ option, settings }) => this.props.onSelectChangeHandler(option, settings, valueItem.name, childIdx)}
-                        />
-                    )
-                )}
-            </span>
-        );
-    }
+interface Props {
+    valueItem: ValueItem;
+    collection?: string;
+    onSelectChangeHandler: (option: OptionProps, settings: any, fieldName: string, childIndex: number) => void;
 }
+
+const KeyValue: SFC<Props> = ({ valueItem: { value, name }, collection, onSelectChangeHandler }) => {
+
+    if (!value.fields) {
+        return null;
+    }
+
+    const fields = value.fields.length === 0 && !!collection
+        ? [{ value: '', reference: collection }]
+        : value.fields;
+
+    return (
+        <span>
+            {fields.map((field: ComponentValueField, childIdx: number) => (
+                    <ConnectedSelect
+                        key={childIdx}
+                        name={'select'}
+                        selected={{ key: field.value, value: field.value }}
+                        collectionId={field.reference}
+                        onChange={({ option, settings }) => (
+                            onSelectChangeHandler(option, settings, name, childIdx)
+                        )}
+                    />
+                )
+            )}
+        </span>
+    );
+};
 
 export default KeyValue;

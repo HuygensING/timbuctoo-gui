@@ -26,29 +26,8 @@ interface OptionSettingProps {
     };
 }
 
-interface SelectDefaultsProps {
-    selectedOption: OptionProps;
-}
-
 class SelectField extends Component<FullProps, State> {
-
-    defaults: SelectDefaultsProps;
-    optionSettings: OptionSettingProps;
-
-    constructor(props: FullProps) {
-        super(props);
-
-        this.defaults = {
-            selectedOption: {
-                value: '',
-                key: ''
-            }
-        };
-        this.optionSettings = {};
-
-        this.onChangeHandler = this.onChangeHandler.bind(this);
-        this.getOptionsFromQuery = this.getOptionsFromQuery.bind(this);
-    }
+    optionSettings: OptionSettingProps = {};
 
     render() {
         const { name, selected } = this.props;
@@ -68,7 +47,7 @@ class SelectField extends Component<FullProps, State> {
         );
     }
 
-    private onChangeHandler(option: OptionProps) {
+    private onChangeHandler = (option: OptionProps) => {
         const { onChange } = this.props;
 
         if (onChange) {
@@ -81,7 +60,7 @@ class SelectField extends Component<FullProps, State> {
         }
     }
 
-    private getOptionsFromQuery({ metadata }: FullProps, options: OptionProps[] = []) {
+    private getOptionsFromQuery = ({ metadata }: FullProps, options: OptionProps[] = []) => {
         if (metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection) {
             const collection = metadata.dataSetMetadata.collection;
             collection.properties.items.forEach((field) => {
