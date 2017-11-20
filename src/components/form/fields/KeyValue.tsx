@@ -7,7 +7,7 @@ import { OptionProps } from './Select';
 type Props = {
     valueItem: ValueItem,
     collection?: string,
-    onSelectChangeHandler: (option: OptionProps, settings: any, fieldName: string, childIndex: number) => void
+    onSelectChangeHandler: (option: OptionProps, fieldName: string, childIndex: number) => void
 };
 
 class KeyValue extends PureComponent<Props> {
@@ -37,7 +37,7 @@ class KeyValue extends PureComponent<Props> {
                             name={'select'}
                             selected={{ key: value, value: value }}
                             collectionId={reference}
-                            onChange={({ option, settings }) => this.props.onSelectChangeHandler(option, settings, valueItem.name, childIdx)}
+                            onChange={(options) => this.props.onSelectChangeHandler(options, valueItem.name, childIdx)}
                         />
                     )
                 )}

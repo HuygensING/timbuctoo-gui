@@ -59,6 +59,12 @@ export const lastId = (state: FacetConfigReducer): number => state
 export const getById = (id: number, state: FacetConfigReducer): NormalizedFacetConfig | undefined =>
     state.find(config => config.id === id);
 
+export const denormalizeFacetConfig = (config: NormalizedFacetConfig): FacetConfig => {
+    config = { ...config };
+    delete config.id;
+    return config;
+};
+
 // reducer
 
 const item = (state: NormalizedFacetConfig | null, action: Action, items: NormalizedFacetConfig[]): NormalizedFacetConfig => {

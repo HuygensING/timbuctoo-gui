@@ -72,12 +72,7 @@ class SelectField extends Component<FullProps, State> {
         const { onChange } = this.props;
 
         if (onChange) {
-            onChange({
-                option: option,
-                settings: {
-                    ...this.optionSettings[option.value]
-                }
-            });
+            onChange(option);
         }
     }
 

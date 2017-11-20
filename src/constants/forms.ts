@@ -1,5 +1,5 @@
 import { COMPONENT_FIELDS, COMPONENTS } from './global';
-import { ComponentType } from '../typings/schema';
+import { ComponentType, FacetConfigType } from '../typings/schema';
 
 export const FIELD_TITLES = {
     [COMPONENT_FIELDS.valueKey]: 'value',
@@ -34,3 +34,18 @@ export const SELECT_COMPONENT_TYPES: { key: string, value: ComponentType }[] = [
         value: COMPONENTS.divider
     }
 ];
+
+export const SELECT_FACET_TYPES: {key: string, value: FacetConfigType }[] = [
+    {
+        key: 'Multi-select',
+        value: 'MultiSelect'
+    },
+    {
+        key: 'Date range',
+        value: 'DateRange'
+    },
+    {
+        key: 'Hierarchical',
+        value: 'Hierarchical'
+    },
+] ;

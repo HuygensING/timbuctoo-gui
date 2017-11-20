@@ -5,7 +5,7 @@ import { COMPONENT_FIELDS, COMPONENTS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
 import { default as Select, OptionProps } from './fields/Select';
 import InputField from './fields/Input';
-import { ConfigurableItem, NormalizedComponent, ValueItem } from '../../typings/index';
+import { NormalizedComponent, ValueItem } from '../../typings/index';
 import KeyValue from './fields/KeyValue';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect } from 'react-redux';
@@ -56,10 +56,9 @@ const StyledDivider = styled.div`
 `;
 
 interface Props {
-    item: ConfigurableItem;
+    item: NormalizedComponent;
     items: ViewConfigReducer;
     match?: match<any>;
-    configType: 'view' | 'facet';
     modifyNode: (component: Component) => void;
     removeNode: (nodeId: number) => void;
     removeChild: (childId: number) => void;
@@ -68,20 +67,9 @@ interface Props {
     lastId: number;
 }
 
-class VariableFormFieldRenderer extends PureComponent<Props> {
+class ComponentFields extends PureComponent<Props> {
     render () {
-        if (this.props.configType === 'view') {
-            return this.renderComponentFields();
-        } else {
-            return (
-                <p>TODO VariableFieldRenderer: render facet fields.</p>
-            );
-        }
-    }
-
-    renderComponentFields () {
-        const item = this.props.item as NormalizedComponent;
-        const { configType } = this.props;
+        const item = this.props.item;
         const { childIds } = item;
 
         const valueList: ValueItem[] = [];
@@ -138,7 +126,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                         items={(
                             childIds.map(id => getNodeById(id, this.props.items))
                         )}
-                        configType={configType}
+                        configType="view"
                         id={item.id}
                         noForm={true}
                     />
@@ -148,7 +136,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
     }
 
     private onChangeHandler = (e: FormEvent<HTMLInputElement>, fieldName: string) => {
-        const item = this.props.item as NormalizedComponent;
+        const item = this.props.item;
 
         const newValue = e.currentTarget.value;
         const oldValue = item[fieldName].field;
@@ -160,15 +148,14 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         }
     }
 
-    private onSelectChangeHandler = (option: OptionProps, settings: any, fieldName: string, childIndex: number) => {
-        const item = this.props.item as NormalizedComponent;
+    private onSelectChangeHandler = (option: OptionProps, fieldName: string, childIndex: number) => {
+        const item = this.props.item;
 
         // todo: Move all this logic to redux side effects as a saga (see 'redux-saga' package)
 
         // Set the newValue object
         const newValue = {
             value: option.value,
-            reference: settings.reference
         };
 
         // Create reference for the oldValue
@@ -186,31 +173,13 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
             // Remove all items behind last changed index
             fields.splice(childIndex + 1, fields.length - childIndex);
 
-            // If isList boolean is true then push an items field to fields array
-            // This field is needed for the correct query
-            if (settings.isList) {
-                fields.push({
-                    value: 'items',
-                    reference: null
-                });
-            }
-
-            // If the newValue has a reference then create a new field at the end of the fields array
-            // This field will query based on the reference given
-            if (newValue.reference) {
-                fields.push({
-                    value: '',
-                    reference: newValue.reference
-                });
-            }
-
             // Send a fieldSet change
             this.props.modifyNode(newFieldset);
         }
     }
 
     private onChangeHeadHandler = (option: OptionProps) => {
-        const item = this.props.item as NormalizedComponent;
+        const item = this.props.item;
         const componentKey = option.value;
 
         if (componentKey === item.type) {
@@ -247,4 +216,4 @@ const mapDispatchToProps = (dispatch, { item: { id } }: Props) => ({
     addChild: (childId: number) => dispatch(addViewConfigChild(id, childId))
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(VariableFormFieldRenderer));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ComponentFields));

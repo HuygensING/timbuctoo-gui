@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import styled from '../styled-components';
 import Cross from './icons/Cross';
-import VariableFormFieldRenderer from './form/VariableFieldRenderer';
 import { CONTAINER_PADDING } from '../constants/global';
-import { ConfigurableItem } from '../typings/index';
+import { ConfigurableItem, NormalizedComponent, NormalizedFacetConfig } from '../typings/index';
+import ComponentFields from './form/ComponentFields';
+import FacetFields from './form/FacetFields';
 
 interface Props {
     item: ConfigurableItem;
@@ -41,9 +42,10 @@ const StyledTitle = styled.button`
   padding: 0 ${CONTAINER_PADDING * 3 - 1}rem;
   width: 100%;
   font: ${props => props.theme.fonts.subTitle};
+  text-align: left;
   
   &:focus {
-  outline: none;
+    outline: none;
   }
 `;
 
@@ -55,10 +57,15 @@ const CloseIcon = styled.button`
 
 class Accordeon extends PureComponent<Props, State> {
 
-    static renderForm (item: ConfigurableItem, configType: string, resolve: Function) {
+    static renderForm (item: ConfigurableItem, configType: 'view' | 'facet', resolve: Function) {
         return (
             <FieldContainer>
-                <VariableFormFieldRenderer item={item} resolveChange={resolve} configType={configType} />
+                {configType === 'view' && (
+                    <ComponentFields item={item as NormalizedComponent} resolveChange={resolve} />
+                )}
+                {configType === 'facet' && (
+                    <FacetFields item={item as NormalizedFacetConfig} />
+                )}
             </FieldContainer>
         );
     }
@@ -82,7 +89,7 @@ class Accordeon extends PureComponent<Props, State> {
         return (
             <AccordeonBox>
                 <StyledTitle type="button" onClick={openClose}>
-                    {item.type}
+                    {configType === 'view' ? item.type : (item as NormalizedFacetConfig).caption}
                 </StyledTitle>
 
                 {isOpen && Accordeon.renderForm(item, configType, resolve)}
