@@ -1,5 +1,5 @@
 import { Permissions } from './permissions';
-import { ComponentConfig, ComponentValue } from './schema';
+import { ComponentConfig, ComponentValue, ValueReference } from './schema';
 import { ComponentClass, SFC } from 'react';
 
 export interface KeyValueObject {
@@ -15,6 +15,7 @@ export type NormalizedComponent = ComponentConfig & {
     id: number
     childIds: number[],
     name: string
+    valueList?: ValueReference[]
 };
 
 export type valueField = {

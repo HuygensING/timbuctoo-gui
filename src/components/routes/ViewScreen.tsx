@@ -43,6 +43,11 @@ const exampleData: ComponentConfig[] = [
         ]
     },
     {
+        type: 'PATH',
+        formatter: [],
+        value: ''
+    },
+    {
         type: 'KEYVALUE',
         formatter: [],
         value: 'from',
@@ -60,7 +65,7 @@ const exampleData: ComponentConfig[] = [
                             {
                                 type: 'PATH',
                                 formatter: [],
-                                value: 'tim_hasResident.tim_gender'
+                                value: ''
                             }
                         ]
                     }
@@ -75,7 +80,7 @@ const exampleData: ComponentConfig[] = [
             {
                 type: 'PATH',
                 formatter: [],
-                value: 'tim_hasResident.clusius_Places.tim_country'
+                value: ''
             }
         ]
     }

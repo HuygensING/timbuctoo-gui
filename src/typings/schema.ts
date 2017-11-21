@@ -228,11 +228,18 @@ export interface LiteralComponentConfig extends GraphQlComponentConfig {
     subComponents?: ComponentConfig[];
 }
 
+export interface ValueReference {
+    ids: string[];
+    isList: boolean;
+    valueType: string | null;
+}
+
 export interface PathComponentConfig extends GraphQlComponentConfig {
     type: 'PATH';
     value?: string;
     formatter: FormatterConfig;
     subComponents?: ComponentConfig[];
+    valueList?: ValueReference[];
 }
   
 export interface TitleComponentConfig extends GraphQlComponentConfig {

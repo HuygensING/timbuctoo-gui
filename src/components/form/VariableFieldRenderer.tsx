@@ -6,7 +6,6 @@ import DraggableForm from './DraggableForm';
 import { default as Select, OptionProps } from './fields/Select';
 import InputField from './fields/Input';
 import { NormalizedComponent } from '../../typings/index';
-import KeyValue from './fields/KeyValue';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect } from 'react-redux';
 import {
@@ -18,10 +17,10 @@ import {
     modifyViewConfigNode,
     ViewConfigReducer
 } from '../../reducers/viewconfig';
-import { ComponentConfig } from '../../typings/schema';
-import { EMPTY_NODE_COMPONENT, EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
+import { ComponentConfig, PathComponentConfig, Property } from '../../typings/schema';
+import { EMPTY_COMPONENT, EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
-import { isLeafOrNode } from '../../services/LeafOrNodeComponent';
+import ConnectedSelect from './fields/ConnectedSelect';
 
 const Label = styled.label`
     display: inline-block;
@@ -69,7 +68,7 @@ interface Props {
 class VariableFormFieldRenderer extends PureComponent<Props> {
 
     render () {
-        const { item, item: { childIds, value, name, type } } = this.props;
+        const { item, item: { childIds, value, name, type, valueList } } = this.props;
 
         return (
             <StyledFieldset>
@@ -88,11 +87,25 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                     {typeof value === 'string' && (
                         type === 'PATH'
                             ? (
-                                <KeyValue
-                                    valueItem={{ value: {}, name }}
-                                    onSelectChangeHandler={this.onSelectChangeHandler}
-                                    collection={this.props.match && this.props.match.params.collection}
-                                />
+                                <span>
+                                    <ConnectedSelect
+                                        name={'select'}
+                                        selected={{ key: '', value: '' }}
+                                        collectionId={this.props.match && this.props.match.params.collection}
+                                        onChange={this.onSelectChangeHandler}
+                                    />
+                                    {!!valueList && valueList.map(({ ids, valueType }, childIdx: number) => (
+                                        !valueType
+                                            ? <ConnectedSelect
+                                                key={childIdx}
+                                                selected={{ key: '', value: '' }}
+                                                name={'select'}
+                                                collectionId={ids[0]}
+                                                onChange={(val, property) => this.onSelectChangeHandler(val, property, childIdx)}
+                                            />
+                                            : valueType
+                                    ))}
+                                </span>
                             )
                             : (
                                 <StyledInputWrapper>
@@ -135,55 +148,25 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         return this.props.modifyNode(newFieldset);
     }
 
-    private onSelectChangeHandler (option: OptionProps, settings: any, fieldName: string, childIndex: number) {
+    private onSelectChangeHandler = (collectionKey: string, { isList, isValueType, referencedCollections }: Property, idx: number = -1) => {
         const { item } = this.props;
 
-        // todo: Move all this logic to redux side effects as a saga (see 'redux-saga' package)
-        // todo: Align with what the string will look like for the value of PATH component
-
-
-        // Set the newValue object
-        const newValue = {
-            value: option.value,
-            reference: settings.reference
-        };
-
-        // Create reference for the oldValue
-        const oldValue = item[fieldName].fields[childIndex];
-
-        // Only update when newValue and oldValue are not matching
-        if (newValue !== oldValue) {
-            const newFieldset: ComponentConfig = denormalizeComponent({ ...item });
-            const fields = newFieldset[fieldName].fields;
-            fields[childIndex] = {
-                ...oldValue,
-                value: newValue.value
-            };
-
-            // Remove all items behind last changed index
-            fields.splice(childIndex + 1, fields.length - childIndex);
-
-            // If isList boolean is true then push an items field to fields array
-            // This field is needed for the correct query
-            if (settings.isList) {
-                fields.push({
-                    value: 'items',
-                    reference: null
-                });
-            }
-
-            // If the newValue has a reference then create a new field at the end of the fields array
-            // This field will query based on the reference given
-            if (newValue.reference) {
-                fields.push({
-                    value: '',
-                    reference: newValue.reference
-                });
-            }
-
-            // Send a fieldSet change
-            this.props.modifyNode(newFieldset);
+        if (!Array.isArray(item.valueList)) {
+            return false;
         }
+
+        const newFieldset = { ...item } as PathComponentConfig;
+
+        newFieldset.valueList = [
+            ...item.valueList.slice(0, idx > -1 ? (idx + 1) : 0),
+            {
+                ids: referencedCollections.items,
+                isList,
+                valueType: isValueType ? collectionKey : null,
+            }
+        ];
+
+        return this.props.modifyNode(newFieldset);
     }
 
     private onChangeHeadHandler = (option: OptionProps) => {
@@ -191,35 +174,28 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         const componentKey = option.value;
 
         if (componentKey === item.type) {
-            return;
+            return false;
         }
 
-        let newFieldset: ComponentConfig | null = null;
+        const newFieldset: ComponentConfig = { ...EMPTY_COMPONENT[componentKey] };
 
-        switch (isLeafOrNode(componentKey)) {
-            case 'leaf':
+        switch (componentKey) {
+            case COMPONENTS.path:
+            case COMPONENTS.literal:
                 for (const child of item.childIds) {
                     this.props.removeChild(child);
                     this.props.removeNode(child);
                 }
-                newFieldset = EMPTY_LEAF_COMPONENT[componentKey];
                 break;
-
-            case 'node':
+            default:
                 if (!item.childIds.length) {
-                    this.props.addNode(EMPTY_NODE_COMPONENT[COMPONENTS.path]);
+                    this.props.addNode(EMPTY_LEAF_COMPONENT[COMPONENTS.path]);
                     this.props.addChild(this.props.lastId + 1);
                 }
-                newFieldset = EMPTY_NODE_COMPONENT[componentKey];
                 break;
-
-            default:
-                return process.env.NODE_ENV === 'development'
-                    ? console.warn(`${componentKey} is no valid component-type.`)
-                    : false;
         }
 
-        this.props.modifyNode(newFieldset);
+        return this.props.modifyNode(newFieldset);
     }
 }
 
@@ -229,7 +205,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch, { item: { id } }: Props) => ({
-    modifyNode: (component: ComponentConfig) => dispatch(modifyViewConfigNode(id, component)),
+    modifyNode: (component: NormalizedComponent) => dispatch(modifyViewConfigNode(id, component)),
     removeChild: (childId: number) => dispatch(deleteViewConfigChild(id, childId)),
     removeNode: (nodeId: number) => dispatch(deleteViewConfigNode(nodeId)),
     addNode: (component: ComponentConfig) => dispatch(addViewConfigNode(component)),
