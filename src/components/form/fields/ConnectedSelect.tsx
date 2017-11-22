@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, ComponentType } from 'react';
 import { withRouter } from 'react-router';
 
 import QUERY_COLLECTION_EDIT_VIEW from '../../../graphql/queries/CollectionEditView';
 
 import Select, { OptionProps, SelectProps } from './Select';
-import MetadataResolver, { ResolvedApolloProps } from '../../MetadataResolver';
-import { DataSetMetadata } from '../../../typings/schema';
+import { MetaDataProps, default as metaDataResolver } from '../../../services/metaDataResolver';
+import { compose } from 'redux';
 
-interface Props {
+interface OwnProps extends SelectProps {
     collectionId?: string;
 }
 
-type FullProps = Props & SelectProps & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any>;
+type FullProps = OwnProps & MetaDataProps;
 
 interface State {
     isOpen: boolean;
@@ -35,7 +35,7 @@ class SelectField extends Component<FullProps, State> {
     defaults: SelectDefaultsProps;
     optionSettings: OptionSettingProps;
 
-    constructor(props: FullProps) {
+    constructor (props: FullProps) {
         super(props);
 
         this.defaults = {
@@ -50,7 +50,7 @@ class SelectField extends Component<FullProps, State> {
         this.getOptionsFromQuery = this.getOptionsFromQuery.bind(this);
     }
 
-    render() {
+    render () {
         const { name, selected } = this.props;
         const options: OptionProps[] = this.getOptionsFromQuery(this.props);
 
@@ -68,7 +68,7 @@ class SelectField extends Component<FullProps, State> {
         );
     }
 
-    private onChangeHandler(option: OptionProps) {
+    private onChangeHandler (option: OptionProps) {
         const { onChange } = this.props;
 
         if (onChange) {
@@ -81,7 +81,7 @@ class SelectField extends Component<FullProps, State> {
         }
     }
 
-    private getOptionsFromQuery({ metadata }: FullProps, options: OptionProps[] = []) {
+    private getOptionsFromQuery ({ metadata }: FullProps, options: OptionProps[] = []) {
         if (metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection) {
             const collection = metadata.dataSetMetadata.collection;
             collection.properties.items.forEach((field) => {
@@ -106,6 +106,10 @@ class SelectField extends Component<FullProps, State> {
     }
 }
 
-export default withRouter<Props & SelectProps>(
-    MetadataResolver<FullProps>(QUERY_COLLECTION_EDIT_VIEW)(SelectField)
-);
+export default compose<ComponentType<{}>>(
+    withRouter,
+    metaDataResolver(QUERY_COLLECTION_EDIT_VIEW)
+)(SelectField);
+// export default withRouter<Props & SelectProps>(
+//     MetadataResolver<FullProps>(QUERY_COLLECTION_EDIT_VIEW)(SelectField)
+// );

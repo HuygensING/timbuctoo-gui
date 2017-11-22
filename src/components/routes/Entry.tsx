@@ -1,50 +1,60 @@
-import React, { PureComponent } from 'react';
+import React, { ComponentType, PureComponent } from 'react';
 
-import { ComponentConfig } from '../../typings/schema';
+import { ComponentConfig, DataSetMetadata } from '../../typings/schema';
 import Loading from '../Loading';
 import FullHelmet from '../FullHelmet';
 import { Col, Grid } from '../layout/Grid';
-
-import MetadataResolver, { ResolvedApolloProps } from '../MetadataResolver';
 import { ComponentLoader } from '../../services/ComponentLoader';
-
-import { QUERY_ENTRY_PROPERTIES, QueryMetadata } from '../../graphql/queries/EntryProperties';
-import { QUERY_ENTRY_VALUES, QueryValues, makeDefaultViewConfig } from '../../graphql/queries/EntryValues';
+import { QUERY_ENTRY_PROPERTIES } from '../../graphql/queries/EntryProperties';
+import { makeDefaultViewConfig, QUERY_ENTRY_VALUES } from '../../graphql/queries/EntryValues';
 import NotFound from './NotFound';
 import { safeGet } from '../../services/GetDataSetValues';
+import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
+import { compose } from 'redux';
+import { branch, renderNothing } from 'recompose';
+import graphqlWithProps from '../../services/graphqlWithProps';
+import { ChildProps } from 'react-apollo';
 
-interface State {}
+type FullProps = ChildProps<MetaDataProps, { dataSets: DataSetMetadata }>;
 
-class Entry extends PureComponent<ResolvedApolloProps<QueryMetadata, QueryValues, any>, State> {
+class Entry extends PureComponent<FullProps> {
 
     render () {
-        if (this.props.loading) { return <Loading />; }
+        // todo replace all these if checks with HoC...
+        if (this.props.data!.loading) {
+            return <Loading/>;
+        }
         if (!this.props.metadata.dataSetMetadata) {
-            return <NotFound />;
+            return <NotFound/>;
         }
         const { collection, collectionList } = this.props.metadata.dataSetMetadata;
         if (!collection) {
-            return <NotFound />;
+            return <NotFound/>;
         }
 
-        const idPerUri: {[key: string]: string | undefined} = {};
+        const idPerUri: { [key: string]: string | undefined } = {};
         collectionList.items.map(coll => idPerUri[coll.itemType] = coll.collectionId);
         const componentConfigs = collection.viewConfig.length > 0 ? collection.viewConfig : makeDefaultViewConfig(collection.properties.items, collection.summaryProperties, collectionList.items);
-        
-        const entry = safeGet(safeGet(this.props.data.dataSets, this.props.match.params.dataSet), this.props.match.params.collection);
+
+        const entry = safeGet(safeGet(this.props.data!.dataSets, this.props.match.params.dataSet), this.props.match.params.collection);
         if (!entry) {
-            return <NotFound />;
+            return <NotFound/>;
         }
-        
+
         return (
             <section>
-                <FullHelmet pageName={`Entry - ${this.props.match.params.entry}`} />
+                <FullHelmet pageName={`Entry - ${this.props.match.params.entry}`}/>
                 <Grid xs={36} sm={24} xsOffset={6} smOffset={12}>
                     <Col xs={36} sm={24}>
                         {
-                            componentConfigs && 
+                            componentConfigs &&
                             componentConfigs.map((componentConfig, index) =>
-                                <ComponentLoader key={index} data={entry} componentConfig={componentConfig as ComponentConfig} idPerUri={idPerUri} />
+                                <ComponentLoader
+                                    key={index}
+                                    data={entry}
+                                    componentConfig={componentConfig as ComponentConfig}
+                                    idPerUri={idPerUri}
+                                />
                             )
                         }
                     </Col>
@@ -52,7 +62,13 @@ class Entry extends PureComponent<ResolvedApolloProps<QueryMetadata, QueryValues
             </section>
         );
     }
-
 }
 
-export default MetadataResolver(QUERY_ENTRY_PROPERTIES, QUERY_ENTRY_VALUES)(Entry);
+const onlyRenderWithMetadata = branch(
+    props => !!props.metadata,
+    renderNothing // todo add spinner?
+);
+
+const dataResolver = compose<ComponentType<any>>(metaDataResolver(QUERY_ENTRY_PROPERTIES), onlyRenderWithMetadata(graphqlWithProps(QUERY_ENTRY_VALUES)));
+
+export default dataResolver(Entry);
