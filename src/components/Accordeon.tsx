@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { SFC } from 'react';
 import styled from '../styled-components';
 import Cross from './icons/Cross';
 import { CONTAINER_PADDING } from '../constants/global';
-import { ConfigurableItem, NormalizedComponent, NormalizedFacetConfig } from '../typings/index';
+import { ConfigurableItem, NormalizedComponentConfig, NormalizedFacetConfig } from '../typings/index';
 import ComponentFields from './form/ComponentFields';
 import FacetFields from './form/FacetFields';
 
@@ -14,9 +14,6 @@ interface Props {
     resolveChange: Function;
     onDeleteFn?: Function;
     openCloseFn: Function;
-}
-
-interface State {
 }
 
 const FieldContainer = styled.section`
@@ -55,62 +52,38 @@ const CloseIcon = styled.button`
   top: ${CONTAINER_PADDING}rem;
 `;
 
-class Accordeon extends PureComponent<Props, State> {
+const Accordeon: SFC<Props> = ({ openCloseFn, item, openedIndex, resolveChange, onDeleteFn, idx, children, configType }) => {
+    const isOpen = openedIndex === idx;
+    const openClose = () => openCloseFn(isOpen ? null : idx);
+    const resolve = (val: ConfigurableItem) => {
+        resolveChange(val, idx);
+    };
 
-    static renderForm (item: ConfigurableItem, configType: 'view' | 'facet', resolve: Function) {
-        return (
+    return (
+        <AccordeonBox>
+            <StyledTitle type="button" onClick={openClose}>
+                {configType === 'view' ? item.type : (item as NormalizedFacetConfig).caption}
+            </StyledTitle>
+
+            {isOpen &&
             <FieldContainer>
                 {configType === 'view' && (
-                    <ComponentFields item={item as NormalizedComponent} resolveChange={resolve} />
+                    <ComponentFields item={item as NormalizedComponentConfig} resolveChange={resolve} />
                 )}
                 {configType === 'facet' && (
-                    <FacetFields item={item as NormalizedFacetConfig} />
+                    <FacetFields item={item as NormalizedFacetConfigConfig} />
                 )}
             </FieldContainer>
-        );
-    }
+            }
+            {children}
 
-    constructor (props: Props) {
-        super(props);
-
-        this.setActive = this.setActive.bind(this);
-        this.setInactive = this.setInactive.bind(this);
-    }
-
-    render () {
-        const { openCloseFn, item, openedIndex, resolveChange, onDeleteFn, idx, children, configType } = this.props;
-
-        const isOpen = openedIndex === idx;
-        const openClose = () => openCloseFn(isOpen ? null : idx);
-        const resolve = (val: ConfigurableItem) => {
-            resolveChange(val, idx);
-        };
-
-        return (
-            <AccordeonBox>
-                <StyledTitle type="button" onClick={openClose}>
-                    {configType === 'view' ? item.type : (item as NormalizedFacetConfig).caption}
-                </StyledTitle>
-
-                {isOpen && Accordeon.renderForm(item, configType, resolve)}
-                {children}
-
-                {onDeleteFn &&
-                <CloseIcon onClick={() => onDeleteFn(idx)}>
-                    <Cross/>
-                </CloseIcon>
-                }
-            </AccordeonBox>
-        );
-    }
-
-    private setActive () {
-        this.setState({ isActive: true });
-    }
-
-    private setInactive () {
-        this.setState({ isActive: false });
-    }
-}
+            {onDeleteFn &&
+            <CloseIcon onClick={() => onDeleteFn(idx)}>
+                <Cross/>
+            </CloseIcon>
+            }
+        </AccordeonBox>
+    );
+};
 
 export default Accordeon;

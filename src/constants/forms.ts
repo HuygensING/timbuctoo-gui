@@ -1,12 +1,5 @@
-import { COMPONENT_FIELDS, COMPONENTS } from './global';
+import { COMPONENTS } from './global';
 import { ComponentType, FacetConfigType } from '../typings/schema';
-
-export const FIELD_TITLES = {
-    [COMPONENT_FIELDS.valueKey]: 'value',
-    [COMPONENT_FIELDS.altKey]: 'alt text',
-    [COMPONENT_FIELDS.key]: 'key',
-    [COMPONENT_FIELDS.urlKey]: 'url',
-};
 
 export const SELECT_COMPONENT_TYPES: { key: string, value: ComponentType }[] = [
     {
@@ -14,8 +7,12 @@ export const SELECT_COMPONENT_TYPES: { key: string, value: ComponentType }[] = [
         value: COMPONENTS.title
     },
     {
-        key: 'Value',
-        value: COMPONENTS.value
+        key: 'Path',
+        value: COMPONENTS.path
+    },
+    {
+        key: 'Literal',
+        value: COMPONENTS.literal
     },
     {
         key: 'Image',

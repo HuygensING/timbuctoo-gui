@@ -1,4 +1,4 @@
-import React, { Component, ComponentClass } from 'react';
+import React, { Component, ComponentClass, StatelessComponent } from 'react';
 import Client from '../services/ApolloClient';
 import { RouteComponentProps } from 'react-router';
 import Error from '../components/routes/Error';
@@ -27,7 +27,7 @@ export interface DataProps<TMetadata, TData> {
 export type ResolvedApolloProps<T, U, V> = DataProps<T, U> & RouteComponentProps<V>;
 
 export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?: Function, resolverOptions?: { forceFetch: boolean; }) {
-    return (WrappedComponent: ComponentClass<P>) => {
+    return (WrappedComponent: ComponentClass<P> | StatelessComponent<P>) => {
         return class MetaDataQueryResolver extends Component<P & RouteComponentProps<any>, State> {
             noErrors: ErrorState = {
                 error: null,
@@ -49,10 +49,10 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
 
             static selectQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
                 if (isMetadataQuery && typeof metadataQuery === 'function') {
-                    return metadataQuery({ ...state, match: props.match, location: props.location, history: props.history });
+                    return metadataQuery({ ...state, ...props as object });
 
                 } else if (typeof dataQuery === 'function') {
-                    return dataQuery({ ...state, match: props.match, location: props.location, history: props.history });
+                    return dataQuery({ ...state, ...props as object });
                 }
 
                 return null;
