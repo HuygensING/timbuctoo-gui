@@ -14,13 +14,13 @@ const ImageWrapper = styled.figure`
     left: 0;
     margin: 0;
     width: 100%;
-    height: ${(props: ImageProps) => props.fill ? '100%' : 'initial'};
+    height: ${(props: ImageProps) => props.fillOut ? '100%' : 'initial'};
     
     &:before {
         content: '';
         display: block;
         padding-bottom: ${(props: ImageProps) => {
-            if (props.fill) {
+            if (props.fillOut) {
                 return 0;
             }
             return props.ratio ? `${ 100 / props.ratio }%` : '100%';
@@ -95,10 +95,10 @@ class Image extends PureComponent<ImageProps, State> {
     }
 
     render() {
-        const { ratio, fill, alt, contain, hover } = this.props;
+        const { ratio, fillOut, alt, contain, hover } = this.props;
         const { src, src2x } = this.state;
         return (
-            <ImageWrapper ratio={ratio} fill={fill} hover={hover}>
+            <ImageWrapper ratio={ratio} fillOut={fillOut} hover={hover}>
                 <Img
                     contain={contain}
                     onLoad={this.onLoad}

@@ -99,10 +99,7 @@ class DraggableForm extends PureComponent<Props, State> {
                     onSortEnd={this.onSortEnd}
                 />
                 <AddListButton type={'button'} onClick={this.addListItem}>+</AddListButton>
-                {this.props.noForm
-                    ? <StyledSubmitButton onClick={this.onSubmit}>save</StyledSubmitButton>
-                    : <StyledSubmitButton type="submit">save</StyledSubmitButton>
-                }
+                {!this.props.noForm && <StyledSubmitButton type="submit">save</StyledSubmitButton>}
             </div>
         );
     }

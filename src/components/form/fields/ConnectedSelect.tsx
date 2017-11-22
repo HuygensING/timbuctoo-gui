@@ -8,14 +8,14 @@ import MetadataResolver, { ResolvedApolloProps } from '../../MetadataResolver';
 import { CollectionMetadata, DataSetMetadata, Property } from '../../../typings/schema';
 import { compose } from 'redux';
 
-interface Props {
+interface OwnProps {
     collectionId?: string;
     onChange: (value: string, property: Property) => void;
 }
 
-type FullProps = Props & SelectProps & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any>;
+type Props = OwnProps & SelectProps & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any>;
 
-const SelectField: SFC<FullProps> = ({ name, selected, metadata, onChange }) => {
+const SelectField: SFC<Props> = ({ name, selected, metadata, onChange }) => {
 
     const collection: CollectionMetadata | null = metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection
         ? metadata.dataSetMetadata.collection
@@ -51,7 +51,7 @@ const SelectField: SFC<FullProps> = ({ name, selected, metadata, onChange }) => 
     );
 };
 
-export default compose(
+export default compose<SFC<OwnProps & SelectProps>>(
     withRouter,
     MetadataResolver(QUERY_COLLECTION_EDIT_VIEW)
 )(SelectField);

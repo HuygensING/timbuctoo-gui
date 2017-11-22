@@ -1,5 +1,5 @@
-import React, { FormEvent, PureComponent } from 'react';
-import { match, withRouter } from 'react-router';
+import React, { FormEvent, SFC } from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 import styled from '../../styled-components';
 import { COMPONENTS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
@@ -21,6 +21,7 @@ import { ComponentConfig, PathComponentConfig, Property } from '../../typings/sc
 import { EMPTY_COMPONENT, EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
 import ConnectedSelect from './fields/ConnectedSelect';
+import { compose } from 'redux';
 
 const Label = styled.label`
     display: inline-block;
@@ -53,92 +54,30 @@ const StyledDivider = styled.div`
     }
 `;
 
-interface Props {
-    configType: 'view' | 'facet';
+interface OwnProps {
     item: NormalizedComponentConfig;
-    items: ViewConfigReducer;
-    match?: match<any>;
+}
+
+interface DispatchProps {
     modifyNode: (component: ComponentConfig) => void;
     removeNode: (nodeId: number) => void;
     removeChild: (childId: number) => void;
     addChild: (childId: number) => void;
     addNode: (component: ComponentConfig) => void;
-    lastId: number;
 }
 
-class ComponentFields extends PureComponent<Props> {
-    render () {
-        const { item, item: { childIds, value, name, type, valueList }, configType } = this.props;
+interface StateProps {
+    items: ViewConfigReducer;
+    lastIdofViewComponents: number;
+}
 
-        return (
-            <StyledFieldset>
-                <StyledDivider>
-                    <Label htmlFor={name}>Component</Label>
-                    <Select
-                        name={'Component'}
-                        options={SELECT_COMPONENT_TYPES}
-                        selected={SELECT_COMPONENT_TYPES.find((valueType) => valueType.value === item.type)}
-                        onChange={this.onChangeHeadHandler}
-                    />
-                </StyledDivider>
+type Props = StateProps & DispatchProps & OwnProps & RouteComponentProps<any>;
 
-                <StyledDivider>
-                    {typeof value === 'string' && <Label htmlFor={name}>{type}</Label>}
-                    {typeof value === 'string' && (
-                        type === 'PATH'
-                            ? (
-                                <span>
-                                    <ConnectedSelect
-                                        name={'select'}
-                                        selected={{ key: '', value: '' }}
-                                        collectionId={this.props.match && this.props.match.params.collection}
-                                        onChange={this.onSelectChangeHandler}
-                                    />
-                                    {!!valueList && valueList.map(({ ids, valueType }, childIdx: number) => (
-                                        !valueType
-                                            ? <ConnectedSelect
-                                                key={childIdx}
-                                                selected={{ key: '', value: '' }}
-                                                name={'select'}
-                                                collectionId={ids[0]}
-                                                onChange={(val, property) => this.onSelectChangeHandler(val, property, childIdx)}
-                                            />
-                                            : valueType
-                                    ))}
-                                </span>
-                            )
-                            : (
-                                <StyledInputWrapper>
-                                    <StyledInput
-                                        type={'text'}
-                                        title={name}
-                                        name={name}
-                                        defaultValue={value}
-                                        onBlur={this.onChangeHandler}
-                                    />
-                                </StyledInputWrapper>
-                            )
-                    )}
-                </StyledDivider>
+const ComponentFields: SFC<Props> = ({ item, items, lastIdofViewComponents, match, modifyNode, removeChild, removeNode, addChild, addNode }) => {
 
-                {childIds.length > 0 && (
-                    <DraggableForm
-                        items={(
-                            childIds.map(id => getNodeById(id, this.props.items))
-                        )}
-                        configType={configType}
-                        id={item.id}
-                        noForm={true}
-                    />
-                )}
-            </StyledFieldset>
-        );
-    }
-
-    private onChangeHandler = (e: FormEvent<HTMLInputElement>): void | false => {
+    const onChangeHandler = (e: FormEvent<HTMLInputElement>): void | false => {
         e.persist();
 
-        const { item } = this.props;
         const newValue = e.currentTarget.value;
 
         if (newValue === item.value) {
@@ -148,12 +87,10 @@ class ComponentFields extends PureComponent<Props> {
         const newFieldset: ComponentConfig = denormalizeComponent({ ...item });
         newFieldset.value = newValue;
 
-        return this.props.modifyNode(newFieldset);
-    }
+        return modifyNode(newFieldset);
+    };
 
-    private onSelectChangeHandler = (collectionKey: string, { isList, isValueType, referencedCollections }: Property, idx: number = -1) => {
-        const { item } = this.props;
-
+    const onSelectChangeHandler = (collectionKey: string, { isList, isValueType, referencedCollections }: Property, idx: number = -1) => {
         if (!Array.isArray(item.valueList)) {
             return false;
         }
@@ -165,15 +102,14 @@ class ComponentFields extends PureComponent<Props> {
             {
                 ids: referencedCollections.items,
                 isList,
-                valueType: isValueType ? collectionKey : null,
+                valueType: isValueType ? collectionKey : null
             }
         ];
 
-        return this.props.modifyNode(newFieldset);
-    }
+        return modifyNode(newFieldset);
+    };
 
-    private onChangeHeadHandler = (option: OptionProps) => {
-        const { item } = this.props;
+    const onChangeHeadHandler = (option: OptionProps) => {
         const componentKey = option.value;
 
         if (componentKey === item.type) {
@@ -186,25 +122,89 @@ class ComponentFields extends PureComponent<Props> {
             case COMPONENTS.path:
             case COMPONENTS.literal:
                 for (const child of item.childIds) {
-                    this.props.removeChild(child);
-                    this.props.removeNode(child);
+                    removeChild(child);
+                    removeNode(child);
                 }
                 break;
             default:
                 if (!item.childIds.length) {
-                    this.props.addNode(EMPTY_LEAF_COMPONENT[COMPONENTS.path]);
-                    this.props.addChild(this.props.lastId + 1);
+                    addNode(EMPTY_LEAF_COMPONENT[COMPONENTS.path]);
+                    addChild(lastIdofViewComponents + 1);
                 }
                 break;
         }
 
-        return this.props.modifyNode(newFieldset);
-    }
-}
+        return modifyNode(newFieldset);
+    };
+
+    return (
+        <StyledFieldset>
+            <StyledDivider>
+                <Label htmlFor={name}>Component</Label>
+                <Select
+                    name={'Component'}
+                    options={SELECT_COMPONENT_TYPES}
+                    selected={SELECT_COMPONENT_TYPES.find((valueType) => valueType.value === item.type)}
+                    onChange={onChangeHeadHandler}
+                />
+            </StyledDivider>
+
+            <StyledDivider>
+                {typeof item.value === 'string' && <Label htmlFor={name}>{item.type}</Label>}
+                {typeof item.value === 'string' && (
+                    item.type === 'PATH'
+                        ? (
+                            <span>
+                                    <ConnectedSelect
+                                        name={'select'}
+                                        selected={{ key: '', value: '' }}
+                                        collectionId={match && match.params.collection}
+                                        onChange={onSelectChangeHandler}
+                                    />
+                                {!!item.valueList && item.valueList.map(({ ids, valueType }, childIdx: number) => (
+                                    !valueType
+                                        ? <ConnectedSelect
+                                            key={childIdx}
+                                            selected={{ key: '', value: '' }}
+                                            name={'select'}
+                                            collectionId={ids[0]}
+                                            onChange={(val, property) => onSelectChangeHandler(val, property, childIdx)}
+                                        />
+                                        : valueType
+                                ))}
+                                </span>
+                        )
+                        : (
+                            <StyledInputWrapper>
+                                <StyledInput
+                                    type={'text'}
+                                    title={name}
+                                    name={name}
+                                    defaultValue={item.value}
+                                    onBlur={onChangeHandler}
+                                />
+                            </StyledInputWrapper>
+                        )
+                )}
+            </StyledDivider>
+
+            {item.childIds.length > 0 && (
+                <DraggableForm
+                    items={(
+                        item.childIds.map(id => getNodeById(id, items))
+                    )}
+                    configType={'view'}
+                    id={item.id}
+                    noForm={true}
+                />
+            )}
+        </StyledFieldset>
+    );
+};
 
 const mapStateToProps = (state: RootState) => ({
     items: state.viewconfig,
-    lastId: lastId(state.viewconfig)
+    lastIdofViewComponents: lastId(state.viewconfig)
 });
 
 const mapDispatchToProps = (dispatch, { item: { id } }: Props) => ({
@@ -215,4 +215,7 @@ const mapDispatchToProps = (dispatch, { item: { id } }: Props) => ({
     addChild: (childId: number) => dispatch(addViewConfigChild(id, childId))
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ComponentFields));
+export default compose<SFC<OwnProps>>(
+    withRouter,
+    connect(mapStateToProps, mapDispatchToProps)
+)(ComponentFields);

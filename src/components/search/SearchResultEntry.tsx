@@ -57,7 +57,7 @@ const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataSet
             <ButtonLink to={url} data-small={true}>{translate('search.view_entry')}</ButtonLink>
             {imageUrl && imageUrl.indexOf('http') > -1 &&
             <ImageWrapper>
-                <Image src={imageUrl} ratio={1} fill={true}/>
+                <Image src={imageUrl} ratio={1} fillOut={true}/>
             </ImageWrapper>
             }
         </SearchItem>

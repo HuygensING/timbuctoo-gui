@@ -69,5 +69,5 @@ export const MENU_ITEMS: MenuItemProp[] = [
 export const EMPTY_FACET_CONFIG: FacetConfig = {
     type: 'MultiSelect',
     paths: [],
-    caption: null
+    caption: 'new multiselect'
 };

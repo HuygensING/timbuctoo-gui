@@ -52,12 +52,9 @@ const CloseIcon = styled.button`
   top: ${CONTAINER_PADDING}rem;
 `;
 
-const Accordeon: SFC<Props> = ({ openCloseFn, item, openedIndex, resolveChange, onDeleteFn, idx, children, configType }) => {
+const Accordeon: SFC<Props> = ({ openCloseFn, item, openedIndex, onDeleteFn, idx, children, configType }) => {
     const isOpen = openedIndex === idx;
     const openClose = () => openCloseFn(isOpen ? null : idx);
-    const resolve = (val: ConfigurableItem) => {
-        resolveChange(val, idx);
-    };
 
     return (
         <AccordeonBox>
@@ -68,10 +65,10 @@ const Accordeon: SFC<Props> = ({ openCloseFn, item, openedIndex, resolveChange, 
             {isOpen &&
             <FieldContainer>
                 {configType === 'view' && (
-                    <ComponentFields item={item as NormalizedComponentConfig} resolveChange={resolve} />
+                    <ComponentFields item={item as NormalizedComponentConfig} />
                 )}
                 {configType === 'facet' && (
-                    <FacetFields item={item as NormalizedFacetConfigConfig} />
+                    <FacetFields item={item as NormalizedFacetConfig} />
                 )}
             </FieldContainer>
             }

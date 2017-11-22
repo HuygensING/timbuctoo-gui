@@ -12,7 +12,7 @@ export interface SelectProps {
     name: string;
     selected: OptionProps;
     options?: OptionProps[];
-    onChange: (options: OptionProps) => void;
+    onChange: Function;
 }
 
 interface State {
