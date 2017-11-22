@@ -105,6 +105,7 @@ class ViewScreen extends PureComponent<FullProps, State> {
                     <Title>View screen</Title>
                     <DraggableForm
                         id={0}
+                        configType="view"
                         onSend={this.onSubmit}
                     />
                 </Section>

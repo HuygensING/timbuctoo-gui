@@ -3,10 +3,11 @@ import styled from '../styled-components';
 import Cross from './icons/Cross';
 import VariableFormFieldRenderer from './form/VariableFieldRenderer';
 import { CONTAINER_PADDING } from '../constants/global';
-import { NormalizedComponent } from '../typings/index';
+import { ConfigurableItem } from '../typings/index';
 
 interface Props {
-    item: NormalizedComponent;
+    item: ConfigurableItem;
+    configType: 'view' | 'facet';
     idx: number;
     openedIndex?: number;
     resolveChange: Function;
@@ -54,10 +55,10 @@ const CloseIcon = styled.button`
 
 class Accordeon extends PureComponent<Props, State> {
 
-    static renderForm (item: NormalizedComponent, resolve: Function) {
+    static renderForm (item: ConfigurableItem, configType: string, resolve: Function) {
         return (
             <FieldContainer>
-                <VariableFormFieldRenderer item={item} resolveChange={resolve}/>
+                <VariableFormFieldRenderer item={item} resolveChange={resolve} configType={configType} />
             </FieldContainer>
         );
     }
@@ -70,11 +71,11 @@ class Accordeon extends PureComponent<Props, State> {
     }
 
     render () {
-        const { openCloseFn, item, openedIndex, resolveChange, onDeleteFn, idx, children } = this.props;
+        const { openCloseFn, item, openedIndex, resolveChange, onDeleteFn, idx, children, configType } = this.props;
 
         const isOpen = openedIndex === idx;
         const openClose = () => openCloseFn(isOpen ? null : idx);
-        const resolve = (val: NormalizedComponent) => {
+        const resolve = (val: ConfigurableItem) => {
             resolveChange(val, idx);
         };
 
@@ -84,13 +85,13 @@ class Accordeon extends PureComponent<Props, State> {
                     {item.type}
                 </StyledTitle>
 
-                {isOpen && Accordeon.renderForm(item, resolve)}
+                {isOpen && Accordeon.renderForm(item, configType, resolve)}
                 {children}
 
                 {onDeleteFn &&
-                    <CloseIcon onClick={() => onDeleteFn(idx)}>
-                        <Cross />
-                    </CloseIcon>
+                <CloseIcon onClick={() => onDeleteFn(idx)}>
+                    <Cross/>
+                </CloseIcon>
                 }
             </AccordeonBox>
         );

@@ -8,7 +8,7 @@ const ROUTE_PATHS: KeyValueObject = {
     edit: '/edit'
 };
 
-const SUB_ROUTES: KeyValueObject = {
+const SUB_ROUTES = {
     dataSet: '/dataset',
     collection: '/collection',
     entry: '/entry',
@@ -21,12 +21,13 @@ const SUB_ROUTES: KeyValueObject = {
     partners: '/partners',
     properties: '/properties',
     facets: '/facets',
-    viewScreen: '/view-screen',
+    viewConfig: '/view-config',
+    facetConfig: '/facet-config',
     editScreen: '/edit-screen',
     records: '/records'
 };
 
-const ROUTE_KEYS: KeyValueObject = {
+const ROUTE_KEYS = {
     dataSet: 'dataSet',
     entry: 'entry',
     collection: 'collection',
