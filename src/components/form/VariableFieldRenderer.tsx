@@ -54,6 +54,7 @@ const StyledDivider = styled.div`
 `;
 
 interface Props {
+    configType: 'view' | 'facet';
     item: NormalizedComponent;
     items: ViewConfigReducer;
     match?: match<any>;
@@ -68,7 +69,7 @@ interface Props {
 class VariableFormFieldRenderer extends PureComponent<Props> {
 
     render () {
-        const { item, item: { childIds, value, name, type, valueList } } = this.props;
+        const { item, item: { childIds, value, name, type, valueList }, configType } = this.props;
 
         return (
             <StyledFieldset>
@@ -124,6 +125,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                 {childIds.length > 0 && (
                     <DraggableForm
                         items={(childIds.map(id => getNodeById(id, this.props.items)))}
+                        configType={configType}
                         id={item.id}
                         noForm={true}
                     />

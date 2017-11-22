@@ -4,13 +4,13 @@ import DraggableList from '../DraggableList';
 import { ConfigurableItem, NormalizedComponent } from '../../typings/index';
 import styled from '../../styled-components';
 import { COMPONENTS, DRAGGABLE_COMPONENTS, EMPTY_FACET_CONFIG } from '../../constants/global';
-import { Component, FacetConfig } from '../../typings/schema';
+import { ComponentConfig, FacetConfig } from '../../typings/schema';
 import { SubmitButton } from './fields/Buttons';
 import {
     addViewConfigChild, addViewConfigNode, getNodeById, lastId, sortViewConfigChild
 } from '../../reducers/viewconfig';
 import { connect } from 'react-redux';
-import EMPTY_VIEW_COMPONENTS from '../../constants/emptyViewComponents';
+import { EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
 import { addFacetConfigItem, sortFacetConfigItem } from '../../reducers/facetconfig';
 
@@ -20,7 +20,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    addItem: (item: Component | FacetConfig) => void;
+    addItem: (item: ComponentConfig | FacetConfig) => void;
     addChild: (childIndex: number) => void;
     sortItem: (oldIndex: number, newIndex: number) => void;
     removeItem: (id: number) => void;
@@ -115,7 +115,7 @@ class DraggableForm extends PureComponent<Props, State> {
     }
 
     private addListItem = () => {
-        this.props.addItem(this.props.configType === 'view' ? EMPTY_VIEW_COMPONENTS[COMPONENTS.value] : EMPTY_FACET_CONFIG);
+        this.props.addItem(this.props.configType === 'view' ? EMPTY_LEAF_COMPONENT[COMPONENTS.path] : EMPTY_FACET_CONFIG);
     }
 
     private onSubmit (e: any) {
@@ -129,7 +129,7 @@ const mapDispatchToProps = (dispatch, { id, configType, ...rest }: Props) => {
         return {
             sortItem: (oldIndex: number, newIndex: number) => dispatch(sortViewConfigChild(id, oldIndex, newIndex)),
             addChild: (childId) => dispatch(addViewConfigChild(id, childId)),
-            addItem: (component: Component) => dispatch(addViewConfigNode(component))
+            addItem: (component: ComponentConfig) => dispatch(addViewConfigNode(component))
         };
     } else {
         return {

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { SFC } from 'react';
 import styled from '../styled-components';
 import Cross from './icons/Cross';
 import VariableFormFieldRenderer from './form/VariableFieldRenderer';
@@ -13,9 +13,6 @@ interface Props {
     resolveChange: Function;
     onDeleteFn?: Function;
     openCloseFn: Function;
-}
-
-interface State {
 }
 
 const FieldContainer = styled.section`
@@ -53,57 +50,42 @@ const CloseIcon = styled.button`
   top: ${CONTAINER_PADDING}rem;
 `;
 
-class Accordeon extends PureComponent<Props, State> {
+const Accordeon: SFC<Props> = ({ openCloseFn, item, openedIndex, resolveChange, onDeleteFn, idx, children, configType }) => {
+    const isOpen = openedIndex === idx;
+    const openClose = () => openCloseFn(isOpen ? null : idx);
+    const resolve = (val: ConfigurableItem) => {
+        resolveChange(val, idx);
+    };
 
-    static renderForm (item: ConfigurableItem, configType: string, resolve: Function) {
-        return (
+    return (
+        <AccordeonBox>
+            <StyledTitle type="button" onClick={openClose}>
+                {item.type}
+            </StyledTitle>
+
+            {isOpen &&
             <FieldContainer>
-                <VariableFormFieldRenderer item={item} resolveChange={resolve} configType={configType} />
-            </FieldContainer>
-        );
-    }
-
-    constructor (props: Props) {
-        super(props);
-
-        this.setActive = this.setActive.bind(this);
-        this.setInactive = this.setInactive.bind(this);
-    }
-
-    render () {
-        const { openCloseFn, item, openedIndex, resolveChange, onDeleteFn, idx, children, configType } = this.props;
-
-        const isOpen = openedIndex === idx;
-        const openClose = () => openCloseFn(isOpen ? null : idx);
-        const resolve = (val: ConfigurableItem) => {
-            resolveChange(val, idx);
-        };
-
-        return (
-            <AccordeonBox>
-                <StyledTitle type="button" onClick={openClose}>
-                    {item.type}
-                </StyledTitle>
-
-                {isOpen && Accordeon.renderForm(item, configType, resolve)}
-                {children}
-
-                {onDeleteFn &&
-                <CloseIcon onClick={() => onDeleteFn(idx)}>
-                    <Cross/>
-                </CloseIcon>
+                { configType === 'view'
+                    ? (
+                        <VariableFormFieldRenderer
+                            item={item}
+                            resolveChange={resolve}
+                            configType={configType}
+                        />
+                    )
+                    : null
                 }
-            </AccordeonBox>
-        );
-    }
+            </FieldContainer>
+            }
+            {children}
 
-    private setActive () {
-        this.setState({ isActive: true });
-    }
-
-    private setInactive () {
-        this.setState({ isActive: false });
-    }
-}
+            {onDeleteFn &&
+            <CloseIcon onClick={() => onDeleteFn(idx)}>
+                <Cross/>
+            </CloseIcon>
+            }
+        </AccordeonBox>
+    );
+};
 
 export default Accordeon;

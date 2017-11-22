@@ -8,9 +8,9 @@ export default (translationKey: string): string => {
     const language = Languages[languageKey];
     const defaultLanguage = Languages[DEFAULT_LANGUAGE_KEY];
     
-    if (!(translationKey in language) && process.env.NODE_ENV === 'development') {
+    if (language && !(translationKey in language) && process.env.NODE_ENV === 'development') {
         console.error(`Translation key '${translationKey}' does not exist in language '${languageKey}'!`);
     }
 
-    return language[translationKey] || defaultLanguage[translationKey] || null;
+    return (language && language[translationKey]) || defaultLanguage[translationKey] || null;
 };
