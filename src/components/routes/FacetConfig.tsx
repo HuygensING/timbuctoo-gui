@@ -14,17 +14,26 @@ import Loading from '../Loading';
 import MetadataResolver from '../MetadataResolver';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import { connect } from 'react-redux';
-import { setFacetConfigItems } from '../../reducers/facetconfig';
+import { composeFacets, setFacetConfigItems } from '../../reducers/facetconfig';
+import { RootState } from '../../reducers/rootReducer';
+import { NormalizedFacetConfig } from '../../typings/index';
 
-interface Props {
-    setItems: (configs: IFacetConfig[]) => void;
+interface OwnProps {
     metadata?: {
         dataSetMetadata: DataSetMetadata;
     };
     loading: boolean;
 }
 
-type FullProps = Props & RouteComponentProps<any> & FormWrapperProps;
+interface StateProps {
+    normalizedFacets: NormalizedFacetConfig[];
+}
+
+interface DispatchProps {
+    setItems: (configs: IFacetConfig[], collectionId: string) => void;
+}
+
+type Props = OwnProps & StateProps & DispatchProps & RouteComponentProps<{ collection: string }> & FormWrapperProps;
 
 interface State {
 }
@@ -34,11 +43,11 @@ const Section = styled.div`
     padding-bottom: 3rem;
 `;
 
-class FacetConfig extends PureComponent<FullProps, State> {
-    componentWillReceiveProps (nextProps: FullProps) {
+class FacetConfig extends PureComponent<Props, State> {
+    componentWillReceiveProps (nextProps: Props) {
         const metadata = nextProps.metadata && nextProps.metadata.dataSetMetadata;
         if (metadata && metadata.collection && metadata.collection.indexConfig.facet.length) {
-            this.props.setItems(metadata.collection.indexConfig.facet);
+            this.props.setItems(metadata.collection.indexConfig.facet, this.props.match.params.collection);
         }
     }
 
@@ -56,6 +65,7 @@ class FacetConfig extends PureComponent<FullProps, State> {
                     <Title>View screen</Title>
                     <DraggableForm
                         configType="facet"
+                        id={0}
                         onSend={this.onSubmit}
                     />
                 </Section>
@@ -63,16 +73,20 @@ class FacetConfig extends PureComponent<FullProps, State> {
         );
     }
 
-    private onSubmit = (formValues: any[]) => {
-        // const query = createQueryStringFromFormFields(formValues);
-        // console.log('query', query);
-        // console.log(formValues);
-        alert('NOTIMPL');
+    private onSubmit = () => {
+        const facetconfig = composeFacets(this.props.normalizedFacets);
+        console.groupCollapsed('sending facet config:');
+        console.log(facetconfig);
+        console.groupEnd();
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    setItems: (configs: IFacetConfig[]) => dispatch(setFacetConfigItems(configs))
+const mapStateToProps = (state: RootState) => ({
+    normalizedFacets: state.facetconfig
 });
 
-export default MetadataResolver(QUERY_COLLECTION_PROPERTIES)(connect(null, mapDispatchToProps)(FacetConfig));
+const mapDispatchToProps = dispatch => ({
+    setItems: (configs: IFacetConfig[], collectionId: string) => dispatch(setFacetConfigItems(configs, collectionId))
+});
+
+export default MetadataResolver(QUERY_COLLECTION_PROPERTIES)(connect(mapStateToProps, mapDispatchToProps)(FacetConfig));

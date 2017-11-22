@@ -113,7 +113,7 @@ class ViewScreen extends PureComponent<FullProps, State> {
         );
     }
 
-    private onSubmit = (formValues: any[]) => {
+    private onSubmit = () => {
         // const query = createQueryStringFromFormFields(formValues);
         // console.log('query', query);
         // console.log(formValues);

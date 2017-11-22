@@ -10,13 +10,17 @@ export type pathResult = uriOrString[] | uriOrString | null;
 
 // TODO: Need to refactor this to make sure it uses the JSON.parse instead of iterating on string
 
+export const mendPath = (pathArray: string[][]): string => (
+    pathArray.map(path => path.join(':')).join('.')
+);
+
 export const splitPath = (pathStr: string, onlyKey: boolean = false): (string | string[])[] => (
     pathStr
         .split('.')
         .map(segment => onlyKey
-            ? segment.split(':')[0]
+            ? segment.split(':')[1]
             : segment.split(':')
-    )
+        )
 );
 
 export const walkPath = (pathStr: string | undefined, formatters: FormatterConfig, entity: Entity): pathResult => (

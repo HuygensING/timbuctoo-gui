@@ -13,7 +13,7 @@ import {
     addViewConfigNode,
     deleteViewConfigChild,
     deleteViewConfigNode, denormalizeComponent,
-    getNodeById, lastId,
+    lastId,
     modifyViewConfigNode,
     ViewConfigReducer
 } from '../../reducers/viewconfig';
@@ -190,9 +190,6 @@ const ComponentFields: SFC<Props> = ({ item, items, lastIdofViewComponents, matc
 
             {item.childIds.length > 0 && (
                 <DraggableForm
-                    items={(
-                        item.childIds.map(id => getNodeById(id, items))
-                    )}
                     configType={'view'}
                     id={item.id}
                     noForm={true}

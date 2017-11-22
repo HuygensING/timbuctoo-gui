@@ -21,7 +21,9 @@ export type NormalizedComponentConfig = NormalizedItem & ComponentConfig & {
     valueList?: ValueReference[]
 };
 
-export type NormalizedFacetConfig = NormalizedItem & FacetConfig;
+export type NormalizedFacetConfig = NormalizedItem & FacetConfig & {
+    referencePaths: (string[])[][]
+};
 
 export type ConfigurableItem = NormalizedComponentConfig | NormalizedFacetConfig;
 

@@ -13,6 +13,7 @@ export interface SelectProps {
     selected: OptionProps;
     options?: OptionProps[];
     onChange: Function;
+    disabled?: boolean;
 }
 
 interface State {
@@ -52,7 +53,7 @@ const Arrow = styled.figure`
     height: 0.8rem;
 
     margin: auto;
-    border-left: 0.4rem solid ${props => props.theme.colors.black};
+    border-left: 0.4rem solid ${props => props.disabled ? props.theme.colors.error : props.theme.colors.black};
     border-top: 0.4rem solid transparent;
     border-bottom: 0.4rem solid transparent;
     
@@ -72,8 +73,9 @@ const StyledSelect = styled.button`
     padding: .5rem 2rem .5rem 1rem;
     width: 100%;
     font: ${props => props.theme.fonts.body};
-    color: ${props => props.theme.colors.shade.dark};
-    border: 1px solid ${props => props.theme.colors.shade.medium};
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+    color: ${props => props.disabled ? props.theme.colors.error : props.theme.colors.shade.dark};
+    border: 1px solid ${props => props.disabled ? props.theme.colors.error : props.theme.colors.shade.medium};
     
     &:focus {
         outline: none;
@@ -132,7 +134,7 @@ class SelectField extends Component<SelectProps, State> {
     }
 
     render () {
-        const { name, options, selected } = this.props;
+        const { name, options, selected, disabled } = this.props;
         const { isOpen, selectedOption } = this.state;
 
         return (
@@ -152,8 +154,8 @@ class SelectField extends Component<SelectProps, State> {
                     ))}
                 </SelectHiddenFieldInput>
                 
-                <StyledSelect onClick={this.onSelectClick}>
-                    {selected && selected.value || selectedOption && selectedOption.key || name} <Arrow />
+                <StyledSelect onClick={this.onSelectClick} disabled={disabled}>
+                    {selected && selected.value || selectedOption && selectedOption.key || name} <Arrow disabled={disabled} />
                 </StyledSelect>
 
                 <StyledOptions isOpen={isOpen}>

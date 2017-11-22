@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, SFC } from 'react';
 
 import DraggableList from '../DraggableList';
 import { ConfigurableItem, NormalizedComponentConfig } from '../../typings/index';
@@ -13,6 +13,8 @@ import { connect } from 'react-redux';
 import { EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
 import { addFacetConfigItem, sortFacetConfigItem } from '../../reducers/facetconfig';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { compose } from 'redux';
 
 interface StateProps {
     items: ConfigurableItem[];
@@ -27,13 +29,13 @@ interface DispatchProps {
 }
 
 interface OwnProps {
-    onSend: (e: {}) => void;
+    onSend?: () => void;
     id: number;
     noForm?: boolean;
     configType: 'facet' | 'view';
 }
 
-type Props = StateProps & DispatchProps & OwnProps;
+type Props = StateProps & DispatchProps & OwnProps & RouteComponentProps<{ collection: string }>;
 
 interface State {
     openedIndex: number | null;
@@ -115,13 +117,16 @@ class DraggableForm extends PureComponent<Props, State> {
         this.props.addItem(this.props.configType === 'view' ? EMPTY_LEAF_COMPONENT[COMPONENTS.path] : EMPTY_FACET_CONFIG);
     }
 
-    private onSubmit (e: any) {
+    private onSubmit = (e: any) => {
         e.preventDefault();
-        // this.props.onSend(this.state.listItems);
+
+        if (this.props.onSend) {
+            this.props.onSend();
+        }
     }
 }
 
-const mapDispatchToProps = (dispatch, { id, configType, ...rest }: Props) => {
+const mapDispatchToProps = (dispatch, { id, configType, match, ...rest }: Props) => {
     if (configType === 'view') {
         return {
             sortItem: (oldIndex: number, newIndex: number) => dispatch(sortViewConfigChild(id, oldIndex, newIndex)),
@@ -130,13 +135,13 @@ const mapDispatchToProps = (dispatch, { id, configType, ...rest }: Props) => {
         };
     } else {
         return {
-            addItem: (facetConfig: FacetConfig) => dispatch(addFacetConfigItem(facetConfig)),
+            addItem: (facetConfig: FacetConfig, collectionId: string) => dispatch(addFacetConfigItem(facetConfig, match.params.collection)),
             sortItem: (oldIndex: number, newIndex: number) => dispatch(sortFacetConfigItem(oldIndex, newIndex)),
         };
     }
 };
 
-const mergeProps = (stateProps: StateProps, dispatchProps: DispatchProps, ownProps: OwnProps): Props => ({
+const mergeProps = (stateProps: StateProps, dispatchProps: DispatchProps, ownProps: OwnProps & RouteComponentProps<{ collection: string }>): Props => ({
     ...stateProps,
     ...dispatchProps,
     ...ownProps,
@@ -163,4 +168,7 @@ const mapStateToProps = (state: RootState, { id, configType }: Props) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(DraggableForm);
+export default compose<SFC<OwnProps>>(
+    withRouter,
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)
+)(DraggableForm);

@@ -16,15 +16,14 @@ interface OwnProps {
 type Props = OwnProps & SelectProps & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any>;
 
 const SelectField: SFC<Props> = ({ name, selected, metadata, onChange }) => {
-
     const collection: CollectionMetadata | null = metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection
         ? metadata.dataSetMetadata.collection
         : null;
 
     const options: OptionProps[] = collection
-        ? collection.properties.items.map(
-            property => ({ key: property.name, value: property.name })
-        )
+        ? collection.properties.items
+            .filter((property: Property) => !property.isInverse && property.name !== 'rdf_type')
+            .map(property => ({ key: property.name, value: property.name }))
         : [];
 
     const onChangeHandler = (option: OptionProps) => {
@@ -37,16 +36,13 @@ const SelectField: SFC<Props> = ({ name, selected, metadata, onChange }) => {
         }
     };
 
-    if (!options.length) {
-        return null;
-    }
-
     return (
         <Select
             name={name}
             options={options}
             selected={selected}
             onChange={onChangeHandler}
+            disabled={!options.length}
         />
     );
 };
