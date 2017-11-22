@@ -1,28 +1,26 @@
 import React, { FormEvent, PureComponent } from 'react';
 import { match, withRouter } from 'react-router';
 import styled from '../../styled-components';
-import { COMPONENT_FIELDS, COMPONENTS } from '../../constants/global';
+import { COMPONENTS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
 import { default as Select, OptionProps } from './fields/Select';
 import InputField from './fields/Input';
-import { ConfigurableItem, NormalizedComponent, ValueItem } from '../../typings/index';
-import KeyValue from './fields/KeyValue';
+import { NormalizedComponentConfig } from '../../typings/index';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect } from 'react-redux';
 import {
     addViewConfigChild,
     addViewConfigNode,
     deleteViewConfigChild,
-    deleteViewConfigNode,
-    denormalizeComponent,
-    getNodeById,
-    lastId,
+    deleteViewConfigNode, denormalizeComponent,
+    getNodeById, lastId,
     modifyViewConfigNode,
     ViewConfigReducer
 } from '../../reducers/viewconfig';
-import { Component } from '../../typings/schema';
-import EMPTY_VIEW_COMPONENTS from '../../constants/emptyViewComponents';
+import { ComponentConfig, PathComponentConfig, Property } from '../../typings/schema';
+import { EMPTY_COMPONENT, EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
+import ConnectedSelect from './fields/ConnectedSelect';
 
 const Label = styled.label`
     display: inline-block;
@@ -56,49 +54,22 @@ const StyledDivider = styled.div`
 `;
 
 interface Props {
-    item: ConfigurableItem;
+    configType: 'view' | 'facet';
+    item: NormalizedComponentConfig;
     items: ViewConfigReducer;
     match?: match<any>;
-    configType: 'view' | 'facet';
-    modifyNode: (component: Component) => void;
+    modifyNode: (component: ComponentConfig) => void;
     removeNode: (nodeId: number) => void;
     removeChild: (childId: number) => void;
     addChild: (childId: number) => void;
-    addNode: (component: Component) => void;
+    addNode: (component: ComponentConfig) => void;
     lastId: number;
 }
 
 class VariableFormFieldRenderer extends PureComponent<Props> {
+
     render () {
-        if (this.props.configType === 'view') {
-            return this.renderComponentFields();
-        } else {
-            return (
-                <p>TODO VariableFieldRenderer: render facet fields.</p>
-            );
-        }
-    }
-
-    renderComponentFields () {
-        const item = this.props.item as NormalizedComponent;
-        const { configType } = this.props;
-        const { childIds } = item;
-
-        const valueList: ValueItem[] = [];
-
-        for (let key in COMPONENT_FIELDS) {
-            if (COMPONENT_FIELDS.hasOwnProperty(key)) {
-                const name = COMPONENT_FIELDS[key];
-                const obj = {
-                    value: item[name],
-                    name
-                };
-
-                if (item[name]) {
-                    valueList.push(obj);
-                }
-            }
-        }
+        const { item, item: { childIds, value, name, type, valueList }, configType } = this.props;
 
         return (
             <StyledFieldset>
@@ -107,37 +78,53 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                     <Select
                         name={'Component'}
                         options={SELECT_COMPONENT_TYPES}
-                        selected={SELECT_COMPONENT_TYPES.find(({ value }) => value === item.type)}
-                        onChange={e => this.onChangeHeadHandler(e)}
+                        selected={SELECT_COMPONENT_TYPES.find((valueType) => valueType.value === item.type)}
+                        onChange={this.onChangeHeadHandler}
                     />
                 </StyledDivider>
-                {valueList.map((valueItem: ValueItem, idx: number) =>
-                    valueItem && valueItem.value && (
-                        <StyledDivider key={idx}>
-                            <Label htmlFor={`${item.name}_${valueItem.name}_0`}>{valueItem.name}</Label>
-                            <KeyValue
-                                valueItem={valueItem}
-                                onSelectChangeHandler={this.onSelectChangeHandler}
-                                collection={this.props.match && this.props.match.params.collection}
-                            />
-                            {typeof valueItem.value.field === 'string' && (
+
+                <StyledDivider>
+                    {typeof value === 'string' && <Label htmlFor={name}>{type}</Label>}
+                    {typeof value === 'string' && (
+                        type === 'PATH'
+                            ? (
+                                <span>
+                                    <ConnectedSelect
+                                        name={'select'}
+                                        selected={{ key: '', value: '' }}
+                                        collectionId={this.props.match && this.props.match.params.collection}
+                                        onChange={this.onSelectChangeHandler}
+                                    />
+                                    {!!valueList && valueList.map(({ ids, valueType }, childIdx: number) => (
+                                        !valueType
+                                            ? <ConnectedSelect
+                                                key={childIdx}
+                                                selected={{ key: '', value: '' }}
+                                                name={'select'}
+                                                collectionId={ids[0]}
+                                                onChange={(val, property) => this.onSelectChangeHandler(val, property, childIdx)}
+                                            />
+                                            : valueType
+                                    ))}
+                                </span>
+                            )
+                            : (
                                 <StyledInputWrapper>
                                     <StyledInput
                                         type={'text'}
-                                        title={`${valueItem.name}_${0}`}
-                                        name={item.name}
-                                        defaultValue={valueItem.value.field}
-                                        onBlur={(e) => this.onChangeHandler(e, valueItem.name)}
+                                        title={name}
+                                        name={name}
+                                        defaultValue={value}
+                                        onBlur={this.onChangeHandler}
                                     />
                                 </StyledInputWrapper>
-                            )}
-                        </StyledDivider>
-                    ))}
+                            )
+                    )}
+                </StyledDivider>
+
                 {childIds.length > 0 && (
                     <DraggableForm
-                        items={(
-                            childIds.map(id => getNodeById(id, this.props.items))
-                        )}
+                        items={(childIds.map(id => getNodeById(id, this.props.items)))}
                         configType={configType}
                         id={item.id}
                         noForm={true}
@@ -147,90 +134,70 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         );
     }
 
-    private onChangeHandler = (e: FormEvent<HTMLInputElement>, fieldName: string) => {
-        const item = this.props.item as NormalizedComponent;
+    private onChangeHandler = (e: FormEvent<HTMLInputElement>): void | false => {
+        e.persist();
 
+        const { item } = this.props;
         const newValue = e.currentTarget.value;
-        const oldValue = item[fieldName].field;
 
-        if (newValue !== oldValue) {
-            const newFieldset: Component = denormalizeComponent({ ...item });
-            newFieldset[fieldName].field = newValue;
-            this.props.modifyNode(newFieldset);
+        if (newValue === item.value) {
+            return false;
         }
+
+        const newFieldset: ComponentConfig = denormalizeComponent({ ...item });
+        newFieldset.value = newValue;
+
+        return this.props.modifyNode(newFieldset);
     }
 
-    private onSelectChangeHandler = (option: OptionProps, settings: any, fieldName: string, childIndex: number) => {
-        const item = this.props.item as NormalizedComponent;
+    private onSelectChangeHandler = (collectionKey: string, { isList, isValueType, referencedCollections }: Property, idx: number = -1) => {
+        const { item } = this.props;
 
-        // todo: Move all this logic to redux side effects as a saga (see 'redux-saga' package)
-
-        // Set the newValue object
-        const newValue = {
-            value: option.value,
-            reference: settings.reference
-        };
-
-        // Create reference for the oldValue
-        const oldValue = item[fieldName].fields[childIndex];
-
-        // Only update when newValue and oldValue are not matching
-        if (newValue !== oldValue) {
-            const newFieldset: Component = denormalizeComponent({ ...item });
-            const fields = newFieldset[fieldName].fields;
-            fields[childIndex] = {
-                ...oldValue,
-                value: newValue.value
-            };
-
-            // Remove all items behind last changed index
-            fields.splice(childIndex + 1, fields.length - childIndex);
-
-            // If isList boolean is true then push an items field to fields array
-            // This field is needed for the correct query
-            if (settings.isList) {
-                fields.push({
-                    value: 'items',
-                    reference: null
-                });
-            }
-
-            // If the newValue has a reference then create a new field at the end of the fields array
-            // This field will query based on the reference given
-            if (newValue.reference) {
-                fields.push({
-                    value: '',
-                    reference: newValue.reference
-                });
-            }
-
-            // Send a fieldSet change
-            this.props.modifyNode(newFieldset);
+        if (!Array.isArray(item.valueList)) {
+            return false;
         }
+
+        const newFieldset = { ...item } as PathComponentConfig;
+
+        newFieldset.valueList = [
+            ...item.valueList.slice(0, idx > -1 ? (idx + 1) : 0),
+            {
+                ids: referencedCollections.items,
+                isList,
+                valueType: isValueType ? collectionKey : null,
+            }
+        ];
+
+        return this.props.modifyNode(newFieldset);
     }
 
     private onChangeHeadHandler = (option: OptionProps) => {
-        const item = this.props.item as NormalizedComponent;
+        const { item } = this.props;
         const componentKey = option.value;
 
         if (componentKey === item.type) {
-            return;
+            return false;
         }
 
-        if (componentKey !== COMPONENTS.keyValue) {
-            // we're not a keyvalue anymore, kill children
-            for (const child of item.childIds) {
-                this.props.removeChild(child);
-                this.props.removeNode(child);
-            }
-        } else {
-            // this is a keyvalue component now: push a new node and add it as child.
-            this.props.addNode(EMPTY_VIEW_COMPONENTS[COMPONENTS.title]);
-            this.props.addChild(this.props.lastId + 1);
+        const newFieldset: ComponentConfig = { ...EMPTY_COMPONENT[componentKey] };
+
+        switch (componentKey) {
+            case COMPONENTS.path:
+            case COMPONENTS.literal:
+                for (const child of item.childIds) {
+                    this.props.removeChild(child);
+                    this.props.removeNode(child);
+                }
+                break;
+            default:
+                if (!item.childIds.length) {
+                    this.props.addNode(EMPTY_LEAF_COMPONENT[COMPONENTS.path]);
+                    this.props.addChild(this.props.lastId + 1);
+                }
+                break;
         }
 
-        const newFieldset = EMPTY_VIEW_COMPONENTS[componentKey];
-        this.props.modifyNode(newFieldset);
+        return this.props.modifyNode(newFieldset);
     }
 }
 
@@ -240,10 +207,10 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch, { item: { id } }: Props) => ({
-    modifyNode: (component: Component) => dispatch(modifyViewConfigNode(id, component)),
+    modifyNode: (component: NormalizedComponentConfig) => dispatch(modifyViewConfigNode(id, component)),
     removeChild: (childId: number) => dispatch(deleteViewConfigChild(id, childId)),
     removeNode: (nodeId: number) => dispatch(deleteViewConfigNode(nodeId)),
-    addNode: (component: Component) => dispatch(addViewConfigNode(component)),
+    addNode: (component: ComponentConfig) => dispatch(addViewConfigNode(component)),
     addChild: (childId: number) => dispatch(addViewConfigChild(id, childId))
 });
 

@@ -32,6 +32,8 @@ const collectionPropertiesDensity = gql`
                 name
                 density
                 isList
+                isValueType
+                referencedCollections { items }
             }
         }
     }

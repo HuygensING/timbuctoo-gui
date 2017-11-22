@@ -116,85 +116,92 @@ const StyledOption = withProps<StyledOptionProps>(styled.button)`
 
 class SelectField extends Component<SelectProps, State> {
 
-    input: JSX.Element;
-
-    defaults: {
-        selectedOption: {
-            value: '',
-            key: ''
-        }
-    };
-
-    static renderOptionField({ key, value }: OptionProps, idx: number): JSX.Element {
-        return (
-            <option key={`${key}-${idx}`} value={value}>{key}</option>
-        );
-    }
-
-    constructor(props: SelectProps) {
+    constructor (props: SelectProps) {
         super(props);
 
         this.state = {
             isOpen: false,
             selectedOption: props.selected
         };
-
-        this.renderStyledOptionField = this.renderStyledOptionField.bind(this);
-        this.onSelectClick = this.onSelectClick.bind(this);
-        this.onOptionClick = this.onOptionClick.bind(this);
     }
     
-    handleClickOutside() {
+    handleClickOutside () {
         this.setState({
             isOpen: false
         });
     }
 
-    renderStyledOptionField(option: OptionProps, idx: number): JSX.Element {
-        const { key, value } = option;
-        const { selected } = this.props;
+    render () {
+        const { name, options, selected } = this.props;
+        const { isOpen, selectedOption } = this.state;
+
         return (
-            <StyledOption selected={value === selected.value} onClick={(e: any) => this.onOptionClick(e, option)} key={`${key}-${idx}`}>{key}</StyledOption>
+            <SelectWrapper>
+                <SelectHiddenFieldInput
+                    onChange={this.onOptionChange}
+                    name={name}
+                    defaultValue={selected && selected.value || selectedOption && selectedOption.value}
+                >
+                    {options && options.map((option: OptionProps, idx: number) => (
+                        <option
+                            key={`${option.key}-${idx}`}
+                            value={option.value}
+                        >
+                            {option.key}
+                        </option>
+                    ))}
+                </SelectHiddenFieldInput>
+                
+                <StyledSelect onClick={this.onSelectClick}>
+                    {selected && selected.value || selectedOption && selectedOption.key || name} <Arrow />
+                </StyledSelect>
+
+                <StyledOptions isOpen={isOpen}>
+                    {options && options.map((option: OptionProps, idx: number) => (
+                        <StyledOption
+                            selected={option.value === selected.value}
+                            onClick={(e: any) => this.onOptionClick(e, option)}
+                            key={`${option.key}-${idx}`}
+                        >
+                            {option.key}
+                        </StyledOption>
+                    ))}
+                </StyledOptions>
+            </SelectWrapper>
         );
     }
 
-    onSelectClick(e: any) {
+    private onSelectClick = (e: any) => {
         e.preventDefault();
         this.setState({
             isOpen: !this.state.isOpen
         });
     }
 
-    onOptionClick(e: any, option: OptionProps) {
+    private onOptionClick (e: any, option: OptionProps) {
+        e.preventDefault();
+        this.setNewOption(option);
+    }
+
+    private onOptionChange = (e) => {
         e.preventDefault();
 
-        // // TODO: Try to update the actual select options so we trigger the default onChange handler
+        const option = {
+            key: e.target.value,
+            value: e.target.value
+        };
+
+        this.setNewOption(option);
+    }
+
+    private setNewOption (option: OptionProps) {
+        // TODO: Try to update the actual select options so we trigger the default onChange handler
         this.props.onChange(option);
 
         this.setState({
             isOpen: false,
             selectedOption: option
         });
-    }
-
-    render() {
-        const { name, options, selected } = this.props;
-        const { isOpen, selectedOption } = this.state;
-
-        return (
-            <SelectWrapper>
-                <SelectHiddenFieldInput name={name} defaultValue={selected && selected.value || selectedOption && selectedOption.value}>
-                    {options && options.map(SelectField.renderOptionField)}
-                </SelectHiddenFieldInput>
-                
-                <StyledSelect onClick={this.onSelectClick}>
-                    {selected && selected.value || selectedOption && selectedOption.key || name} <Arrow />
-                </StyledSelect>
-                <StyledOptions isOpen={isOpen}>
-                    {options && options.map(this.renderStyledOptionField)}
-                </StyledOptions>
-            </SelectWrapper>
-        );
     }
 }
 
