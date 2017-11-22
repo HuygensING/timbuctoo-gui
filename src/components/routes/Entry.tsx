@@ -11,11 +11,12 @@ import NotFound from './NotFound';
 import { safeGet } from '../../services/GetDataSetValues';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import { compose } from 'redux';
-import { branch, renderNothing } from 'recompose';
 import graphqlWithProps from '../../services/graphqlWithProps';
 import { ChildProps } from 'react-apollo';
+import { RouteComponentProps, withRouter } from 'react-router';
+import renderLoaderIfNoMetadata from '../../services/renderLoaderIfNoMetadata';
 
-type FullProps = ChildProps<MetaDataProps, { dataSets: DataSetMetadata }>;
+type FullProps = ChildProps<MetaDataProps & RouteComponentProps<any>, { dataSets: DataSetMetadata }>;
 
 class Entry extends PureComponent<FullProps> {
 
@@ -64,11 +65,13 @@ class Entry extends PureComponent<FullProps> {
     }
 }
 
-const onlyRenderWithMetadata = branch(
-    props => !!props.metadata,
-    renderNothing // todo add spinner?
+const dataResolver = compose<ComponentType<{}>>(
+    withRouter,
+    metaDataResolver(QUERY_ENTRY_PROPERTIES),
+    renderLoaderIfNoMetadata,
+    graphqlWithProps(QUERY_ENTRY_VALUES)
 );
 
-const dataResolver = compose<ComponentType<any>>(metaDataResolver(QUERY_ENTRY_PROPERTIES), onlyRenderWithMetadata(graphqlWithProps(QUERY_ENTRY_VALUES)));
+// const dataResolver = compose<ComponentType<any>>(metaDataResolver(QUERY_ENTRY_PROPERTIES), onlyRenderWithMetadata(graphqlWithProps(QUERY_ENTRY_VALUES)));
 
 export default dataResolver(Entry);
