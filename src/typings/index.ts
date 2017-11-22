@@ -9,13 +9,13 @@ export interface KeyValueObject {
     [name: string]: string;
 }
 
-// base type of NormalizedComponent & NormalizedFacetConfig
+// base type of NormalizedComponentConfig & NormalizedFacetConfig
 export interface NormalizedItem {
     type: FacetConfigType | ComponentType;
     id: number;
 }
 
-export type NormalizedComponent = NormalizedItem & ComponentConfig & {
+export type NormalizedComponentConfig = NormalizedItem & ComponentConfig & {
     childIds: number[],
     name: string
     valueList?: ValueReference[]
@@ -23,7 +23,7 @@ export type NormalizedComponent = NormalizedItem & ComponentConfig & {
 
 export type NormalizedFacetConfig = NormalizedItem & FacetConfig;
 
-export type ConfigurableItem = NormalizedComponent | NormalizedFacetConfig;
+export type ConfigurableItem = NormalizedComponentConfig | NormalizedFacetConfig;
 
 export interface DataSetProps {
     dataSetId: string;

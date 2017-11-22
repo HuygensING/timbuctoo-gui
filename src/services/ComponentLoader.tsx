@@ -81,9 +81,7 @@ export class ComponentLoader extends React.Component<{ data: Entity, componentCo
 
     render(): JSX.Element | JSX.Element[] | null | string {
         const { data, componentConfig } = this.props;
-
-        console.log(componentConfig);
-
+        
         switch (componentConfig.type) {
             case 'DIVIDER':
                 return <ContentDivider>{normalize(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data)).normalized[0]}</ContentDivider>;

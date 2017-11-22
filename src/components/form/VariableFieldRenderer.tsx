@@ -5,7 +5,7 @@ import { COMPONENTS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
 import { default as Select, OptionProps } from './fields/Select';
 import InputField from './fields/Input';
-import { NormalizedComponent } from '../../typings/index';
+import { NormalizedComponentConfig } from '../../typings/index';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect } from 'react-redux';
 import {
@@ -55,7 +55,7 @@ const StyledDivider = styled.div`
 
 interface Props {
     configType: 'view' | 'facet';
-    item: NormalizedComponent;
+    item: NormalizedComponentConfig;
     items: ViewConfigReducer;
     match?: match<any>;
     modifyNode: (component: ComponentConfig) => void;
@@ -207,7 +207,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch, { item: { id } }: Props) => ({
-    modifyNode: (component: NormalizedComponent) => dispatch(modifyViewConfigNode(id, component)),
+    modifyNode: (component: NormalizedComponentConfig) => dispatch(modifyViewConfigNode(id, component)),
     removeChild: (childId: number) => dispatch(deleteViewConfigChild(id, childId)),
     removeNode: (nodeId: number) => dispatch(deleteViewConfigNode(nodeId)),
     addNode: (component: ComponentConfig) => dispatch(addViewConfigNode(component)),

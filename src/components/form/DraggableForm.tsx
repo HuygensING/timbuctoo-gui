@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 
 import DraggableList from '../DraggableList';
-import { ConfigurableItem, NormalizedComponent } from '../../typings/index';
+import { ConfigurableItem, NormalizedComponentConfig } from '../../typings/index';
 import styled from '../../styled-components';
 import { COMPONENTS, DRAGGABLE_COMPONENTS, EMPTY_FACET_CONFIG } from '../../constants/global';
 import { ComponentConfig, FacetConfig } from '../../typings/schema';
@@ -154,7 +154,7 @@ const mergeProps = (stateProps: StateProps, dispatchProps: DispatchProps, ownPro
 const mapStateToProps = (state: RootState, { id, configType }: Props) => {
     let items: ConfigurableItem[];
     if (configType === 'view') {
-        const myNode: NormalizedComponent = getNodeById(id, state.viewconfig)!;
+        const myNode: NormalizedComponentConfig = getNodeById(id, state.viewconfig)!;
         items = myNode.childIds.map(childId => getNodeById(childId, state.viewconfig)!);
     } else {
         items = state.facetconfig;

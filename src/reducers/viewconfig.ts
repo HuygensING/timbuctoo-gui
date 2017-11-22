@@ -1,9 +1,9 @@
 import { ComponentConfig } from '../typings/schema';
 import { arrayMove } from 'react-sortable-hoc';
-import { NormalizedComponent } from '../typings/index';
+import { NormalizedComponentConfig } from '../typings/index';
 import { LEAF_COMPONENTS } from '../constants/global';
 
-export type ViewConfigReducer = NormalizedComponent[];
+export type ViewConfigReducer = NormalizedComponentConfig[];
 
 const initialState: ViewConfigReducer = [];
 
@@ -20,7 +20,7 @@ type ModifyViewConfigNodeAction = {
     type: 'MODIFY_VIEW_CONFIG_NODE',
     payload: {
         nodeId: number,
-        component: NormalizedComponent
+        component: NormalizedComponentConfig
     }
 };
 
@@ -73,7 +73,7 @@ const normalizeTree = (tree: ComponentConfig[], startIndex: number = -1): ViewCo
     // Flatten a tree of Components into an array of NormalizedComponents with a root branch (index 0)
 
     let idx = startIndex;
-    let flatTree: NormalizedComponent[] = [];
+    let flatTree: NormalizedComponentConfig[] = [];
 
     const normalizeBranch = (branch: ComponentConfig) => {
         idx++;
@@ -88,7 +88,7 @@ const normalizeTree = (tree: ComponentConfig[], startIndex: number = -1): ViewCo
             }
         }
 
-        const normalizedComponent: NormalizedComponent = {
+        const normalizedComponent: NormalizedComponentConfig = {
             ...branch,
             id,
             childIds: children,
@@ -120,7 +120,7 @@ const normalizeTree = (tree: ComponentConfig[], startIndex: number = -1): ViewCo
     return flatTree;
 };
 
-export const getNodeById = (id: number, state: ViewConfigReducer): NormalizedComponent | undefined =>
+export const getNodeById = (id: number, state: ViewConfigReducer): NormalizedComponentConfig | undefined =>
     state.find(item => item.id === id);
 
 export const lastId = (state: ViewConfigReducer): number => state
@@ -140,7 +140,7 @@ const deleteMany = (state: ViewConfigReducer, ids: number[]): ViewConfigReducer 
     return state;
 };
 
-export const denormalizeComponent = (item: NormalizedComponent): ComponentConfig => {
+export const denormalizeComponent = (item: NormalizedComponentConfig): ComponentConfig => {
     item = { ...item };
     delete item.id;
     delete item.childIds;
@@ -163,7 +163,7 @@ const childIds = (state: number[], action: Action) => {
     }
 };
 
-const node = (state: NormalizedComponent | null, action: Action, items: NormalizedComponent[]): NormalizedComponent => {
+const node = (state: NormalizedComponentConfig | null, action: Action, items: NormalizedComponentConfig[]): NormalizedComponentConfig => {
     switch (action.type) {
         case 'ADD_VIEW_CONFIG_NODE': {
             const id = lastId(items) + 1;
@@ -232,7 +232,7 @@ export const addViewConfigNode = (component: ComponentConfig): AddViewConfigNode
     }
 });
 
-export const modifyViewConfigNode = (nodeId, component: NormalizedComponent): ModifyViewConfigNodeAction => ({
+export const modifyViewConfigNode = (nodeId, component: NormalizedComponentConfig): ModifyViewConfigNodeAction => ({
     type: 'MODIFY_VIEW_CONFIG_NODE',
     payload: {
         nodeId,

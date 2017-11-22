@@ -166,30 +166,7 @@ export interface SummaryProperties {
     image?: Value;
 }
 
-export interface ComponentList {
-    prevCursor?: string;
-    nextCursor?: string;
-    query?: string;
-    items: Array<Component>;
-}
-
-export interface Component {
-    type: ComponentType;
-    value?: ComponentValue;
-    key?: ComponentValue;
-    title?: ComponentValue;
-    url?: ComponentValue;
-    alt?: ComponentValue;
-    tree?: string;
-    values?: Array<Component>;
-}
-
 export type ComponentType = 'PATH' | 'LITERAL' | 'TITLE' | 'IMAGE' | 'LINK' | 'DIVIDER' | 'KEYVALUE';
-
-export interface ComponentValue {
-    field?: string;
-    fields?: Array<ComponentValueField>;
-}
 
 export interface ComponentValueField {
     value: string;
@@ -348,13 +325,6 @@ export interface MimeType {
     name: string;
 }
 
-export interface ComponentInput {
-    type: ComponentType;
-    subComponents?: Component[];
-    value?: string;
-    path?: string;
-}
-
 export interface FacetInput {
     caption: string;
     options: Array<OptionInput>;
@@ -383,7 +353,7 @@ export interface SetFacetsRootMutationArgs {
 }
 
 export interface ViewComponentsInput {
-    components?: Array<ComponentInput>;
+    components?: Array<GraphQlComponentConfig>;
     dataSetId: string;
     collectionId: string;
     query: string;
