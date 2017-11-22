@@ -1,7 +1,7 @@
 import { SUB_ROUTES } from './routeNaming';
 import { ButtonVariant } from '../typings/layout';
 import { MenuItemProp } from '../typings';
-import { ComponentFieldType, ComponentTypes } from '../typings/viewComponents';
+import { ComponentTypes } from '../typings/viewComponents';
 import User from '../components/icons/User';
 import Heart from '../components/icons/Heart';
 import Book from '../components/icons/Book';
@@ -18,22 +18,22 @@ export const DRAGGABLE_COMPONENTS = {
 
 export const UNKNOWN_VOCABULARY = 'vocabulary_unknown';
 
-export const COMPONENTS: ComponentTypes = {
+export const LEAF_COMPONENTS: ComponentTypes = {
+    literal: 'LITERAL',
+    path: 'PATH'
+};
+
+export const NODE_COMPONENTS: ComponentTypes = {
     title: 'TITLE',
-    value: 'VALUE',
     image: 'IMAGE',
     link: 'LINK',
     keyValue: 'KEYVALUE',
-    divider: 'DIVIDER',
-    tree: 'TREE'
+    divider: 'DIVIDER'
 };
 
-export const COMPONENT_FIELDS: ComponentFieldType = {
-    valueKey: 'value',
-    urlKey: 'url',
-    altKey: 'alt',
-    key: 'key',
-    title: 'title'
+export const COMPONENTS: ComponentTypes = {
+    ...LEAF_COMPONENTS,
+    ...NODE_COMPONENTS
 };
 
 export const BUTTON_VARIANT: {[name: string]: ButtonVariant} = {

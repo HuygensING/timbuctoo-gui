@@ -166,30 +166,7 @@ export interface SummaryProperties {
     image?: Value;
 }
 
-export interface ComponentList {
-    prevCursor?: string;
-    nextCursor?: string;
-    query?: string;
-    items: Array<Component>;
-}
-
-export interface Component {
-    type: ComponentType;
-    value?: ComponentValue;
-    key?: ComponentValue;
-    title?: ComponentValue;
-    url?: ComponentValue;
-    alt?: ComponentValue;
-    tree?: string;
-    values?: Array<Component>;
-}
-
-export type ComponentType = 'TITLE' | 'VALUE' | 'IMAGE' | 'LINK' | 'DIVIDER' | 'KEYVALUE' | 'TREE';
-
-export interface ComponentValue {
-    field?: string;
-    fields?: Array<ComponentValueField>;
-}
+export type ComponentType = 'PATH' | 'LITERAL' | 'TITLE' | 'IMAGE' | 'LINK' | 'DIVIDER' | 'KEYVALUE';
 
 export interface ComponentValueField {
     value: string;
@@ -197,13 +174,14 @@ export interface ComponentValueField {
     isList?: boolean;
 }
 
-export type ComponentConfig =
-  ImageComponentConfig |
-  LinkComponentConfig |
-  KeyvalueComponentConfig |
-  TitleComponentConfig |
-  DividerComponentConfig |
-  LeafComponentConfig;
+export type ComponentConfig = NodeComponentConfig | LeafComponentConfig;
+
+export type NodeComponentConfig =
+    ImageComponentConfig |
+    LinkComponentConfig |
+    KeyvalueComponentConfig |
+    TitleComponentConfig |
+    DividerComponentConfig;
 
 export type LeafComponentConfig =
   LiteralComponentConfig |
@@ -227,11 +205,18 @@ export interface LiteralComponentConfig extends GraphQlComponentConfig {
     subComponents?: ComponentConfig[];
 }
 
+export interface ValueReference {
+    ids: string[];
+    isList: boolean;
+    valueType: string | null;
+}
+
 export interface PathComponentConfig extends GraphQlComponentConfig {
     type: 'PATH';
     value?: string;
     formatter: FormatterConfig;
     subComponents?: ComponentConfig[];
+    valueList?: ValueReference[];
 }
   
 export interface TitleComponentConfig extends GraphQlComponentConfig {
@@ -340,13 +325,6 @@ export interface MimeType {
     name: string;
 }
 
-export interface ComponentInput {
-    type: ComponentType;
-    subComponents?: Component[];
-    value?: string;
-    path?: string;
-}
-
 export interface FacetInput {
     caption: string;
     options: Array<OptionInput>;
@@ -375,7 +353,7 @@ export interface SetFacetsRootMutationArgs {
 }
 
 export interface ViewComponentsInput {
-    components?: Array<ComponentInput>;
+    components?: Array<GraphQlComponentConfig>;
     dataSetId: string;
     collectionId: string;
     query: string;

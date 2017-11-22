@@ -1,111 +1,57 @@
-import React, { Component } from 'react';
+import React, { SFC } from 'react';
 import { withRouter } from 'react-router';
 
 import QUERY_COLLECTION_EDIT_VIEW from '../../../graphql/queries/CollectionEditView';
 
 import Select, { OptionProps, SelectProps } from './Select';
 import MetadataResolver, { ResolvedApolloProps } from '../../MetadataResolver';
-import { DataSetMetadata } from '../../../typings/schema';
+import { CollectionMetadata, DataSetMetadata, Property } from '../../../typings/schema';
+import { compose } from 'redux';
 
 interface Props {
     collectionId?: string;
+    onChange: (value: string, property: Property) => void;
 }
 
 type FullProps = Props & SelectProps & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any>;
 
-interface State {
-    isOpen: boolean;
-    selectedOption: OptionProps;
-}
+const SelectField: SFC<FullProps> = ({ name, selected, metadata, onChange }) => {
 
-interface OptionSettingProps {
-    [name: string]: {
-        reference?: string;
-        isList?: boolean;
-        isValue?: boolean;
+    const collection: CollectionMetadata | null = metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection
+        ? metadata.dataSetMetadata.collection
+        : null;
+
+    const options: OptionProps[] = collection
+        ? collection.properties.items.map(
+            property => ({ key: property.name, value: property.name })
+        )
+        : [];
+
+    const onChangeHandler = (option: OptionProps) => {
+        const property = collection
+            ? collection.properties.items.find(field => field.name === option.value)
+            : null;
+
+        if (property && onChange) {
+            onChange(option.value, property);
+        }
     };
-}
 
-interface SelectDefaultsProps {
-    selectedOption: OptionProps;
-}
-
-class SelectField extends Component<FullProps, State> {
-
-    defaults: SelectDefaultsProps;
-    optionSettings: OptionSettingProps;
-
-    constructor(props: FullProps) {
-        super(props);
-
-        this.defaults = {
-            selectedOption: {
-                value: '',
-                key: ''
-            }
-        };
-        this.optionSettings = {};
-
-        this.onChangeHandler = this.onChangeHandler.bind(this);
-        this.getOptionsFromQuery = this.getOptionsFromQuery.bind(this);
+    if (!options.length) {
+        return null;
     }
 
-    render() {
-        const { name, selected } = this.props;
-        const options: OptionProps[] = this.getOptionsFromQuery(this.props);
+    return (
+        <Select
+            name={name}
+            options={options}
+            selected={selected}
+            onChange={onChangeHandler}
+        />
+    );
+};
 
-        if (!options || options.length === 0) {
-            return null;
-        }
-
-        return (
-            <Select
-                name={name}
-                options={options}
-                selected={selected}
-                onChange={this.onChangeHandler}
-            />
-        );
-    }
-
-    private onChangeHandler(option: OptionProps) {
-        const { onChange } = this.props;
-
-        if (onChange) {
-            onChange({
-                option: option,
-                settings: {
-                    ...this.optionSettings[option.value]
-                }
-            });
-        }
-    }
-
-    private getOptionsFromQuery({ metadata }: FullProps, options: OptionProps[] = []) {
-        if (metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection) {
-            const collection = metadata.dataSetMetadata.collection;
-            collection.properties.items.forEach((field) => {
-                // Now references only the first item.
-                const reference = field.referencedCollections && field.referencedCollections.items[0];
-                if (field.name) {
-                    this.optionSettings[field.name] = {
-                        reference,
-                        isList: field.isList,
-                        isValue: field.isValueType
-                    };
-                }
-
-                options.push({
-                    key: field.name || '',
-                    value: field.name || ''
-                });
-            });
-        }
-
-        return options;
-    }
-}
-
-export default withRouter<Props & SelectProps>(
-    MetadataResolver<FullProps>(QUERY_COLLECTION_EDIT_VIEW)(SelectField)
-);
+export default compose(
+    withRouter,
+    MetadataResolver(QUERY_COLLECTION_EDIT_VIEW)
+)(SelectField);

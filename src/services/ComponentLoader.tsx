@@ -6,81 +6,15 @@ import ContentLink from '../components/content/ContentLink';
 import ContentKeyValue from '../components/content/ContentKeyValue';
 import ContentDivider from '../components/content/ContentDivider';
 import ContentValue from '../components/content/ContentValue';
-import { ComponentConfig, Entity, Value, LeafComponentConfig, FormatterConfig } from '../typings/schema';
-import { valueToString } from '../services/getValue';
-import { safeGet } from '../services/GetDataSetValues';
 
-interface TypedUri { 
-    uri: string; 
-    type: string;
-}
-type uriOrString = string | TypedUri;
+import { pathResult, uriOrString, walkPath } from './walkPath';
+import { safeGet } from './GetDataSetValues';
 
-type pathResult = uriOrString[] | uriOrString | null;
+import { ComponentConfig, Entity, LeafComponentConfig } from '../typings/schema';
 
 // `type: never` makes the type checker report an error if the case switch does not handle all types
 function checkUnknownComponent(type: never) {
     console.error(`Type ${(type as ComponentConfig).type} is not handled!`);
-}
-
-function isValue(obj: Value | Entity): obj is Value {
-    return obj.hasOwnProperty('value');
-}
-
-function walkPath(pathStr: string | undefined, formatters: FormatterConfig, entity: Entity): pathResult {
-    if (pathStr) {
-        const path = pathStr.split('.').map(segment => segment.split(':')[0]);
-        
-        return walkPathStep(path, formatters, entity);
-    }
-    return null;
-}
-
-export const DEFAULT_FORMATTERS: FormatterConfig = [{
-    type: 'http://timbuctoo.huygens.knaw.nl/datatypes/person-name',
-    name: 'PERSON_NAMES'
-}];
-
-function walkPathStep(path: string[], formatters: FormatterConfig, entity: Value | Entity): pathResult {
-    if (isValue(entity)) {
-        return valueToString(entity, formatters.concat(DEFAULT_FORMATTERS));
-    } else {
-        if (path.length === 0) {
-            return {
-                uri: entity.uri,
-                type: entity.__typename
-            };
-        }
-        let result = entity[path[0]];
-
-        if (!result) {
-            return null;
-        } else if (Array.isArray(result)) {
-            let retVal: uriOrString[] = [];
-            for (const item of result) {
-                const subResult = walkPathStep(path.slice(1), formatters, item);
-                if (subResult) {
-                    if (Array.isArray(subResult)) {
-                        retVal = retVal.concat(subResult);
-                    } else {
-                        retVal.push(subResult);
-                    }
-                }
-            }
-            return retVal;
-        } else if (typeof result === 'string') {
-            if (path[0] === 'uri') {
-                return {
-                    uri: result,
-                    type: entity.__typename
-                };
-            } else {
-                return result;
-            }
-        } else {
-            return walkPathStep(path.slice(1), formatters, result);
-        }
-    }
 }
 
 function getValueOrLiteral(component: LeafComponentConfig | null, data: Entity): pathResult {
@@ -144,8 +78,10 @@ function valOrUri(item: string | {uri: string}): string {
 }
 
 export class ComponentLoader extends React.Component<{ data: Entity, componentConfig: ComponentConfig, idPerUri: { [key: string]: string | undefined } }, {}> {
+
     render(): JSX.Element | JSX.Element[] | null | string {
         const { data, componentConfig } = this.props;
+        
         switch (componentConfig.type) {
             case 'DIVIDER':
                 return <ContentDivider>{normalize(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data)).normalized[0]}</ContentDivider>;
