@@ -81,8 +81,7 @@ class App extends PureComponent<ChildProps<Props, Response>, State> {
 
         if (this.renderLoad && (data.error || data.aboutMe === null)) {
             this.renderLoad = false;
-            // TODO: don't forget to put this back when merging!! this.props.logOutUser();
-            this.props.logInUser(user.hsid);
+            this.props.logOutUser();
         }
     }
 
