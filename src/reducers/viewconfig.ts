@@ -19,7 +19,7 @@ type AddViewConfigNodeAction = {
 };
 
 type ModifyViewConfigNodeAction = {
-    type: 'MODIFY_VIEW_CONFIG_NODE',
+    type: 'MODIFY_VIEW_CONFIG_NODE' | 'SWITCH_VIEW_CONFIG_NODE',
     payload: {
         nodeId: number,
         component: NormalizedComponentConfig
@@ -164,7 +164,7 @@ const childIds = (state: number[], action: Action) => {
     }
 };
 
-const node = (state: NormalizedComponentConfig | null, action: Action, items: NormalizedComponentConfig[]): NormalizedComponentConfig => {
+const node = (state: NormalizedComponentConfig | ComponentConfig | null, action: Action, items: NormalizedComponentConfig[]): NormalizedComponentConfig => {
     switch (action.type) {
         case 'ADD_VIEW_CONFIG_NODE': {
             const id = lastId(items) + 1;
@@ -178,25 +178,28 @@ const node = (state: NormalizedComponentConfig | null, action: Action, items: No
         case 'MODIFY_VIEW_CONFIG_NODE':  // TODO: Make sure it get's normalized in case of total component switch. It doesn't break, but it's not nice either
             return {
                 ...action.payload.component,
-                id: state!.id,
-                childIds: state!.childIds,
-                name: createName(action.payload.component.type, state!.id)
+                id: (state as NormalizedComponentConfig).id,
+                childIds: (state as NormalizedComponentConfig).childIds,
+                name: createName(action.payload.component.type, (state as NormalizedComponentConfig).id)
             };
+        case 'SWITCH_VIEW_CONFIG_NODE':
+            return state as NormalizedComponentConfig;
         case 'ADD_VIEW_CONFIG_CHILD':
         case 'DELETE_VIEW_CONFIG_CHILD':
         case 'SORT_VIEW_CONFIG_CHILD':
             return {
-                ...state!,
-                childIds: childIds(state!.childIds, action)
+                ...state as NormalizedComponentConfig,
+                childIds: childIds((state as NormalizedComponentConfig).childIds, action)
             };
         default:
-            return state!; // todo don't unwrap optional???
+            return state as NormalizedComponentConfig; // todo don't unwrap optional???
     }
 };
 
 export default (state = initialState, action: Action): ViewConfigReducer => {
     switch (action.type) {
         case 'MODIFY_VIEW_CONFIG_NODE':
+        case 'SWITCH_VIEW_CONFIG_NODE':
         case 'SORT_VIEW_CONFIG_CHILD':
         case 'DELETE_VIEW_CONFIG_CHILD':
         case 'ADD_VIEW_CONFIG_CHILD': {
@@ -236,6 +239,14 @@ export const addViewConfigNode = (component: ComponentConfig, collectionId: stri
 
 export const modifyViewConfigNode = (nodeId: number, component: NormalizedComponentConfig): ModifyViewConfigNodeAction => ({
     type: 'MODIFY_VIEW_CONFIG_NODE',
+    payload: {
+        nodeId,
+        component
+    }
+});
+
+export const switchViewConfigNode = (nodeId: number, component: NormalizedComponentConfig): ModifyViewConfigNodeAction => ({
+    type: 'SWITCH_VIEW_CONFIG_NODE',
     payload: {
         nodeId,
         component

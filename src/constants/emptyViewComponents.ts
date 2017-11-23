@@ -1,5 +1,10 @@
 import { COMPONENTS } from './global';
-import { ComponentConfig, LeafComponentConfig, NodeComponentConfig } from '../typings/schema';
+import {
+    ComponentConfig, DividerComponentConfig, ImageComponentConfig, KeyvalueComponentConfig, LeafComponentConfig,
+    LinkComponentConfig, LiteralComponentConfig,
+    NodeComponentConfig, PathComponentConfig,
+    TitleComponentConfig
+} from '../typings/schema';
 import { ComponentTypes } from '../typings/viewComponents';
 
 type EmptyComponentsMap = {
@@ -20,14 +25,14 @@ export const EMPTY_LEAF_COMPONENT: EmptyLeafComponentsMap = {
         value: '',
         formatter: [],
         subComponents: []
-    },
+    } as LiteralComponentConfig,
     [COMPONENTS.path]: {
         type: 'PATH',
         value: '',
         valueList: [],
         formatter: [],
         subComponents: []
-    },
+    } as PathComponentConfig,
 };
 
 // TODO: Create the right initial values for this
@@ -38,7 +43,7 @@ export const EMPTY_NODE_COMPONENT: EmptyNodeComponentsMap = {
         subComponents: [
             { ...EMPTY_LEAF_COMPONENT[COMPONENTS.LITERAL] }
         ]
-    },
+    } as TitleComponentConfig,
     [COMPONENTS.image]: {
         type: 'IMAGE',
         formatter: [],
@@ -46,7 +51,7 @@ export const EMPTY_NODE_COMPONENT: EmptyNodeComponentsMap = {
             { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] },
             { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }
         ]
-    },
+    } as ImageComponentConfig,
     [COMPONENTS.link]: {
         type: 'LINK',
         formatter: [],
@@ -54,7 +59,7 @@ export const EMPTY_NODE_COMPONENT: EmptyNodeComponentsMap = {
             { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] },
             { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }
         ]
-    },
+    } as LinkComponentConfig,
     [COMPONENTS.keyValue]: {
         type: 'KEYVALUE',
         formatter: [],
@@ -62,7 +67,7 @@ export const EMPTY_NODE_COMPONENT: EmptyNodeComponentsMap = {
         subComponents: [
             { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }
         ]
-    },
+    } as KeyvalueComponentConfig,
 
     [COMPONENTS.divider]: {
         type: 'DIVIDER',
@@ -70,7 +75,7 @@ export const EMPTY_NODE_COMPONENT: EmptyNodeComponentsMap = {
         subComponents: [
             { ...EMPTY_LEAF_COMPONENT[COMPONENTS.LITERAL] }
         ]
-    }
+    } as DividerComponentConfig
 };
 
 export const EMPTY_COMPONENT: EmptyComponentsMap = {

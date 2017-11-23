@@ -1,6 +1,6 @@
 import { Permissions } from './permissions';
 import {
-    ComponentConfig, ComponentType, FacetConfig, FacetConfigType
+    ComponentConfig, FacetConfig, FacetConfigType,
 } from './schema';
 import { ComponentClass, SFC } from 'react';
 
@@ -10,7 +10,6 @@ export interface KeyValueObject {
 
 // base type of NormalizedComponentConfig & NormalizedFacetConfig
 export interface NormalizedItem {
-    type: FacetConfigType | ComponentType;
     id: number;
 }
 
@@ -23,6 +22,7 @@ export type NormalizedComponentConfig = NormalizedItem & ComponentConfig & {
 };
 
 export type NormalizedFacetConfig = NormalizedItem & FacetConfig & {
+    type: FacetConfigType,
     referencePaths: ReferencePath[]
 };
 

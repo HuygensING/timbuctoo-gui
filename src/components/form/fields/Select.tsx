@@ -176,7 +176,7 @@ class SelectField extends Component<SelectProps, State> {
                             onClick={(e: any) => this.onOptionClick(e, option)}
                             key={`${option.key}-${idx}`}
                         >
-                            {option.key}
+                            {option.value}
                         </StyledOption>
                     ))}
                 </StyledOptions>

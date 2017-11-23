@@ -1,7 +1,6 @@
 import React, { FormEvent, SFC } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import styled from '../../styled-components';
-import { COMPONENTS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
 import { default as Select, OptionProps } from './fields/Select';
 import InputField from './fields/Input';
@@ -18,7 +17,7 @@ import {
     ViewConfigReducer
 } from '../../reducers/viewconfig';
 import { ComponentConfig } from '../../typings/schema';
-import { EMPTY_COMPONENT, EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
+import { EMPTY_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
 import { compose } from 'redux';
 import ReferencePathSelector from './fields/ReferencePathSelector';
@@ -83,26 +82,19 @@ const ComponentFields: SFC<Props> = ({ item, lastIdofViewComponents, modifyNode,
             return false;
         }
 
-        const newFieldset: ComponentConfig = { ...EMPTY_COMPONENT[componentKey] };
+        const { id, childIds, name } = item;
 
-        switch (componentKey) {
-            case COMPONENTS.path:
-            case COMPONENTS.literal:
-                for (const child of item.childIds) {
-                    removeChild(child);
-                    removeNode(child);
-                }
-                break;
-            default:
-                if (!item.childIds.length) {
-                    addNode(EMPTY_LEAF_COMPONENT[COMPONENTS.path]);
-                    addChild(lastIdofViewComponents + 1);
-                }
-                break;
-        }
+        const newFieldset: NormalizedComponentConfig = {
+            ...EMPTY_COMPONENT[componentKey],
+            id, childIds, name
+        };
+
+        // TODO: maak hier een switchNode van en replace childIds with index stuff
 
         return modifyNode(newFieldset);
     };
+
+    console.log(item);
 
     return (
         <FieldContainer>

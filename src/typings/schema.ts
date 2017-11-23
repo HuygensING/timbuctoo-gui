@@ -202,13 +202,7 @@ export interface GraphQlComponentConfig {
 export interface LiteralComponentConfig extends GraphQlComponentConfig {
     type: 'LITERAL';
     value?: string;
-    subComponents?: ComponentConfig[];
-}
-
-export interface ValueReference {
-    ids: string[];
-    isList: boolean;
-    valueType: string | null;
+    subComponents?: ComponentConfig[] | undefined;
 }
 
 export interface PathComponentConfig extends GraphQlComponentConfig {
@@ -216,7 +210,6 @@ export interface PathComponentConfig extends GraphQlComponentConfig {
     value?: string;
     formatter: FormatterConfig;
     subComponents?: ComponentConfig[];
-    valueList?: ValueReference[];
 }
   
 export interface TitleComponentConfig extends GraphQlComponentConfig {
