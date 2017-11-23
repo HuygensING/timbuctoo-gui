@@ -1,7 +1,6 @@
 import React, { ComponentType, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { CollectionMetadata } from '../../typings/schema';
-import Loading from '../Loading';
 import FullHelmet from '../FullHelmet';
 import Hero from '../hero/Hero';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
@@ -20,6 +19,7 @@ import QUERY_DATASET from '../../graphql/queries/DataSet';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'redux';
+import renderLoader from '../../services/renderLoader';
 
 interface StateProps {
     loggedIn: boolean;
@@ -33,10 +33,6 @@ type Props =
 class DataSet extends PureComponent<Props> {
 
     render () {
-        if (this.props.metadata.loading) {
-            return <Loading/>;
-        }
-
         const { dataSetId, title, description, imageUrl, collectionList, owner, contact } = this.props.metadata.dataSetMetadata!;
 
         const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
@@ -116,6 +112,7 @@ const mapStateToProps = (state) => ({
 
 export default compose<ComponentType<{}>>(
     withRouter,
-    connect(mapStateToProps),
-    metaDataResolver(QUERY_DATASET)
+    metaDataResolver(QUERY_DATASET),
+    renderLoader('metadata'),
+    connect(mapStateToProps)
 )(DataSet);

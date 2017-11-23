@@ -12,24 +12,19 @@ import { getCollectionValues } from '../../services/GetDataSetValues';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
 import Pagination from '../search/Pagination';
-import Loading from '../Loading';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import graphqlWithProps from '../../services/graphqlWithProps';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import renderLoaderIfNoMetadata from '../../services/renderLoaderIfNoMetadata';
 import { ChildProps } from 'react-apollo';
+import renderLoader from '../../services/renderLoader';
 
 type FullProps = ChildProps<MetaDataProps, { dataSets: DataSetMetadata }>;
 
 class Search extends PureComponent<FullProps> {
 
     render () {
-        if (!this.props.metadata || !this.props.metadata.dataSetMetadata) {
-            return <Loading/>;
-        }
-
-        const { collectionList, dataSetId, collection } = this.props.metadata.dataSetMetadata;
+        const { collectionList, dataSetId, collection } = this.props.metadata.dataSetMetadata!;
 
         const collectionValues = getCollectionValues(this.props.data!.dataSets, dataSetId, collection!.collectionListId);
         const fields = getValuesFromObject(collection!.summaryProperties);
@@ -94,8 +89,9 @@ class Search extends PureComponent<FullProps> {
 const dataResolver = compose<ComponentType<{}>>(
     withRouter,
     metaDataResolver(QUERY_COLLECTION_PROPERTIES),
-    renderLoaderIfNoMetadata,
-    graphqlWithProps(QUERY_COLLECTION_VALUES)
+    renderLoader('metadata'),
+    graphqlWithProps(QUERY_COLLECTION_VALUES),
+    renderLoader()
 );
 
 export default dataResolver(Search);

@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import { lifecycle } from 'recompose';
 import { compose } from 'redux';
+import renderLoader from '../../services/renderLoader';
 
 interface DispatchProps {
     setTree: (components: ComponentConfig[]) => void;
@@ -110,6 +111,7 @@ export default compose<SFC<{}>>(
     connect(null, mapDispatchToProps),
     withRouter,
     metaDataResolver(QUERY_COLLECTION_PROPERTIES),
+    renderLoader('metadata'),
     lifecycle({
         componentWillMount (nextProps: FullProps) {
             this.props.setTree(exampleData);

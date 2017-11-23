@@ -7,13 +7,13 @@ import styled from '../../styled-components';
 import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
 import { FacetConfig as IFacetConfig } from '../../typings/schema';
-import Loading from '../Loading';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import { connect } from 'react-redux';
 import { setFacetConfigItems } from '../../reducers/facetconfig';
 import { compose } from 'redux';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import { lifecycle } from 'recompose';
+import renderLoader from '../../services/renderLoader';
 
 interface DispatchProps {
     setItems: (configs: IFacetConfig[]) => void;
@@ -27,9 +27,6 @@ const Section = styled.div`
 `;
 
 const FacetConfig: SFC<FullProps> = (props: FullProps) => {
-    if (props.metadata.loading) {
-        return <Loading/>;
-    }
     // const { collection } = this.props.metadata.dataSetMetadata;
     return (
         <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
@@ -60,5 +57,6 @@ export default compose<SFC<{}>>(
                 this.props.setItems(metadata.collection.indexConfig.facet);
             }
         }
-    })
+    }),
+    renderLoader('metadata')
 )(FacetConfig);

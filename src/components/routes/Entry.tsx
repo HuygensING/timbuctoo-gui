@@ -1,7 +1,6 @@
 import React, { ComponentType, PureComponent } from 'react';
 
 import { ComponentConfig, DataSetMetadata } from '../../typings/schema';
-import Loading from '../Loading';
 import FullHelmet from '../FullHelmet';
 import { Col, Grid } from '../layout/Grid';
 import { ComponentLoader } from '../../services/ComponentLoader';
@@ -14,17 +13,13 @@ import { compose } from 'redux';
 import graphqlWithProps from '../../services/graphqlWithProps';
 import { ChildProps } from 'react-apollo';
 import { RouteComponentProps, withRouter } from 'react-router';
-import renderLoaderIfNoMetadata from '../../services/renderLoaderIfNoMetadata';
+import renderLoader from '../../services/renderLoader';
 
 type FullProps = ChildProps<MetaDataProps & RouteComponentProps<any>, { dataSets: DataSetMetadata }>;
 
 class Entry extends PureComponent<FullProps> {
 
     render () {
-        // todo replace all these if checks with HoC...
-        if (this.props.data!.loading) {
-            return <Loading/>;
-        }
         if (!this.props.metadata.dataSetMetadata) {
             return <NotFound/>;
         }
@@ -68,8 +63,9 @@ class Entry extends PureComponent<FullProps> {
 const dataResolver = compose<ComponentType<{}>>(
     withRouter,
     metaDataResolver(QUERY_ENTRY_PROPERTIES),
-    renderLoaderIfNoMetadata,
-    graphqlWithProps(QUERY_ENTRY_VALUES)
+    renderLoader('metadata'),
+    graphqlWithProps(QUERY_ENTRY_VALUES),
+    renderLoader()
 );
 
 // const dataResolver = compose<ComponentType<any>>(metaDataResolver(QUERY_ENTRY_PROPERTIES), onlyRenderWithMetadata(graphqlWithProps(QUERY_ENTRY_VALUES)));
