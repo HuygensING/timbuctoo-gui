@@ -11,18 +11,25 @@ import { compose } from 'redux';
 interface OwnProps {
     collectionId?: string;
     onChange: (value: string, property: Property) => void;
+    shownAsMultipleItems?: boolean;
 }
 
 type Props = OwnProps & SelectProps & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any>;
 
-const SelectField: SFC<Props> = ({ name, selected, metadata, onChange }) => {
+const SelectField: SFC<Props> = ({ name, selected, metadata, onChange, shownAsMultipleItems = false }) => {
     const collection: CollectionMetadata | null = metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection
         ? metadata.dataSetMetadata.collection
         : null;
 
+    const hiddenOptions = ['rdf_type'];
+
+    const filterOptions = (property: Property) => (
+        hiddenOptions.find(optionName => optionName !== property.name)
+    );
+
     const options: OptionProps[] = collection
         ? collection.properties.items
-            .filter((property: Property) => !property.isInverse && property.name !== 'rdf_type')
+            .filter(filterOptions)
             .map(property => ({ key: property.name, value: property.name }))
         : [];
 
@@ -41,6 +48,7 @@ const SelectField: SFC<Props> = ({ name, selected, metadata, onChange }) => {
             name={name}
             options={options}
             selected={selected}
+            shownAsMultipleItems={shownAsMultipleItems}
             onChange={onChangeHandler}
             disabled={!options.length}
         />

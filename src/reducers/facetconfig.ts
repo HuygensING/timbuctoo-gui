@@ -75,7 +75,7 @@ export const denormalizeFacetConfig = (config: NormalizedFacetConfig): FacetConf
 };
 
 export const composeFacets = (facetConfigs: NormalizedFacetConfig[]): FacetConfig[] => (
-    facetConfigs.map(denormalizeFacetConfig)
+    facetConfigs.map(denormalizeFacetConfig) // TODO: make sure it returns a message or something in case of error
 );
 
 // reducer

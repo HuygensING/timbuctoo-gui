@@ -14,6 +14,7 @@ export interface SelectProps {
     options?: OptionProps[];
     onChange: Function;
     disabled?: boolean;
+    shownAsMultipleItems?: boolean;
 }
 
 interface State {
@@ -60,13 +61,13 @@ const Arrow = styled.figure`
     transform: translateY(-50%);
 `;
 
-const SelectWrapper = styled.div`
+const SelectWrapper = withProps<{ shownAsMultipleItems?: boolean; }>(styled.div)`
     position: relative;
     display: inline-block;
-    margin: 0 10px 10px 0;
+    margin: 0 ${props => props.shownAsMultipleItems ? '15px' : '10px'} 10px 0;
 `;
 
-const StyledSelect = styled.button`
+const StyledSelect = withProps<{ shownAsMultipleItems?: boolean; }>(styled.button)`
     background: ${props => props.theme.colors.white};
     min-width: 10rem;
     border-radius: .25rem;
@@ -76,6 +77,14 @@ const StyledSelect = styled.button`
     cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
     color: ${props => props.disabled ? props.theme.colors.error : props.theme.colors.shade.dark};
     border: 1px solid ${props => props.disabled ? props.theme.colors.error : props.theme.colors.shade.medium};
+    
+    ${props => props.shownAsMultipleItems
+        ? `box-shadow: 1px 1px 0 1px ${props.theme.colors.white}, 
+                       2px 2px 0 1px ${props.theme.colors.shade.medium}, 
+                       4px 4px 0 1px ${props.theme.colors.white}, 
+                       5px 5px 0 1px ${props.theme.colors.shade.medium};`
+        : ''
+    }
     
     &:focus {
         outline: none;
@@ -134,11 +143,11 @@ class SelectField extends Component<SelectProps, State> {
     }
 
     render () {
-        const { name, options, selected, disabled } = this.props;
+        const { name, options, selected, disabled, shownAsMultipleItems } = this.props;
         const { isOpen, selectedOption } = this.state;
 
         return (
-            <SelectWrapper>
+            <SelectWrapper shownAsMultipleItems={shownAsMultipleItems}>
                 <SelectHiddenFieldInput
                     onChange={this.onOptionChange}
                     name={name}
@@ -154,7 +163,7 @@ class SelectField extends Component<SelectProps, State> {
                     ))}
                 </SelectHiddenFieldInput>
                 
-                <StyledSelect onClick={this.onSelectClick} disabled={disabled}>
+                <StyledSelect onClick={this.onSelectClick} disabled={disabled} shownAsMultipleItems={shownAsMultipleItems}>
                     {selected && selected.value || selectedOption && selectedOption.key || name} <Arrow disabled={disabled} />
                 </StyledSelect>
 
