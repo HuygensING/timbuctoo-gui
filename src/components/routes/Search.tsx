@@ -15,11 +15,11 @@ import Pagination from '../search/Pagination';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import graphqlWithProps from '../../services/graphqlWithProps';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
-import { ChildProps } from 'react-apollo';
+import { RouteComponentProps, withRouter } from 'react-router';
 import renderLoader from '../../services/renderLoader';
+import { ChildProps } from 'react-apollo';
 
-type FullProps = ChildProps<MetaDataProps, { dataSets: DataSetMetadata }>;
+type FullProps = ChildProps<MetaDataProps & RouteComponentProps<{ dataSet: string, collection: string }>, { dataSets: DataSetMetadata }>;
 
 class Search extends PureComponent<FullProps> {
 
@@ -35,11 +35,11 @@ class Search extends PureComponent<FullProps> {
 
         return (
             <section>
-                <FullHelmet pageName={`search: dataSetId`}/>
+                <FullHelmet pageName={`search: dataSetId`} />
 
                 <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={1}>
                     {/* TODO: Connect the fulltext search as well */}
-                    <SearchForm type={'collection'}/>
+                    <SearchForm type={'collection'} />
                 </Col>
 
                 <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={.5}>
@@ -88,9 +88,9 @@ class Search extends PureComponent<FullProps> {
 
 const dataResolver = compose<ComponentType<{}>>(
     withRouter,
-    metaDataResolver(QUERY_COLLECTION_PROPERTIES),
+    metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
-    graphqlWithProps(QUERY_COLLECTION_VALUES),
+    graphqlWithProps<FullProps>(QUERY_COLLECTION_VALUES),
     renderLoader()
 );
 

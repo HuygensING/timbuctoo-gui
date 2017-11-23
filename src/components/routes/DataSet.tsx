@@ -15,9 +15,9 @@ import CollectionTags from '../CollectionTags';
 import About from '../About';
 import { Title } from '../layout/StyledCopy';
 import EditCollectionBar from '../dataSet/EditCollectionBar';
-import QUERY_DATASET from '../../graphql/queries/DataSet';
+import QUERY_DATASET, { Props as DataSetProps } from '../../graphql/queries/DataSet';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import { compose } from 'redux';
 import renderLoader from '../../services/renderLoader';
 
@@ -28,7 +28,7 @@ interface StateProps {
 type Props =
     MetaDataProps
     & StateProps
-    & RouteComponentProps<any>;
+    & DataSetProps;
 
 class DataSet extends PureComponent<Props> {
 
@@ -41,7 +41,7 @@ class DataSet extends PureComponent<Props> {
 
         return (
             <section>
-                <FullHelmet pageName={`Dataset: ${title}`}/>
+                <FullHelmet pageName={`Dataset: ${title}`} />
 
                 <Hero
                     title={getValue(title)}
@@ -67,7 +67,11 @@ class DataSet extends PureComponent<Props> {
                                     .filter(isKnown)
                                     .map((collection, idx) =>
                                         <li key={idx}>
-                                            <EditCollectionBar key={idx} collection={collection} dataSetId={dataSetId}/>
+                                            <EditCollectionBar 
+                                                key={idx} 
+                                                collection={collection}
+                                                dataSetId={dataSetId} 
+                                            />
                                         </li>
                                     )
                                 }
@@ -78,8 +82,8 @@ class DataSet extends PureComponent<Props> {
 
                 <Col sm={48}>
                     <GridSection tag={'div'} gridSize={48} gridOffset={0} cols={2} colSizeOffset={2} gridSpacing={2}>
-                        <Colophon owner={owner} contact={contact}/>
-                        <Dummy text={'Partners'} height={10}/>
+                        <Colophon owner={owner} contact={contact} />
+                        <Dummy text={'Partners'} height={10} />
                     </GridSection>
                 </Col>
 
@@ -102,7 +106,7 @@ class DataSet extends PureComponent<Props> {
             return null;
         }
 
-        return <About title={title} body={body}/>;
+        return <About title={title} body={body} />;
     }
 }
 

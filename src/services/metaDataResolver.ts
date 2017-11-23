@@ -14,7 +14,7 @@ export type MetaDataProps = {
  * Basically a copy of graphqlWithProps. however,
  * returned data gets remapped to the 'metadata' prop.
  */
-export default <T> (query: (props: any) => any) => ( // todo better typing
+export default <T> (query: (props: T) => any) => (
     compose<T>(
         graphqlWithProps(query),
         mapProps(({ data, ...rest }) => ({

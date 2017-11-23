@@ -19,7 +19,11 @@ interface DispatchProps {
     setItems: (configs: IFacetConfig[]) => void;
 }
 
-type FullProps = MetaDataProps & DispatchProps & RouteComponentProps<any> & FormWrapperProps;
+type FullProps =
+    MetaDataProps
+    & DispatchProps
+    & RouteComponentProps<{ dataSet: string, collection: string }>
+    & FormWrapperProps;
 
 const Section = styled.div`
     width: 100%;
@@ -49,7 +53,7 @@ const mapDispatchToProps = dispatch => ({
 export default compose<SFC<{}>>(
     connect(null, mapDispatchToProps),
     withRouter,
-    metaDataResolver(QUERY_COLLECTION_PROPERTIES),
+    metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     lifecycle({
         componentWillReceiveProps (nextProps: FullProps) {
             const metadata = nextProps.metadata && nextProps.metadata.dataSetMetadata;
