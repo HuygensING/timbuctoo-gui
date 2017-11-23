@@ -5,7 +5,7 @@ import { COMPONENTS } from '../../constants/global';
 import DraggableForm from './DraggableForm';
 import { default as Select, OptionProps } from './fields/Select';
 import InputField from './fields/Input';
-import { NormalizedComponentConfig } from '../../typings/index';
+import { NormalizedComponentConfig, ReferencePath } from '../../typings/index';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect } from 'react-redux';
 import {
@@ -17,11 +17,11 @@ import {
     modifyViewConfigNode,
     ViewConfigReducer
 } from '../../reducers/viewconfig';
-import { ComponentConfig, PathComponentConfig, Property } from '../../typings/schema';
+import { ComponentConfig } from '../../typings/schema';
 import { EMPTY_COMPONENT, EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
-import ConnectedSelect from './fields/ConnectedSelect';
 import { compose } from 'redux';
+import ReferencePathSelector from './fields/ReferencePathSelector';
 
 const Label = styled.label`
     display: inline-block;
@@ -90,24 +90,9 @@ const ComponentFields: SFC<Props> = ({ item, items, lastIdofViewComponents, matc
         return modifyNode(newFieldset);
     };
 
-    const onSelectChangeHandler = (collectionKey: string, { isList, isValueType, referencedCollections }: Property, idx: number = -1) => {
-        if (!Array.isArray(item.valueList)) {
-            return false;
-        }
-
-        const newFieldset = { ...item } as PathComponentConfig;
-
-        newFieldset.valueList = [
-            ...item.valueList.slice(0, idx > -1 ? (idx + 1) : 0),
-            {
-                ids: referencedCollections.items,
-                isList,
-                valueType: isValueType ? collectionKey : null
-            }
-        ];
-
-        return modifyNode(newFieldset);
-    };
+    const onSelectChangeHandler = (newPath: ReferencePath) => (
+        modifyNode({ ...item, referencePath: newPath })
+    );
 
     const onChangeHeadHandler = (option: OptionProps) => {
         const componentKey = option.value;
@@ -154,25 +139,10 @@ const ComponentFields: SFC<Props> = ({ item, items, lastIdofViewComponents, matc
                 {typeof item.value === 'string' && (
                     item.type === 'PATH'
                         ? (
-                            <span>
-                                    <ConnectedSelect
-                                        name={'select'}
-                                        selected={{ key: '', value: '' }}
-                                        collectionId={match && match.params.collection}
-                                        onChange={onSelectChangeHandler}
-                                    />
-                                {!!item.valueList && item.valueList.map(({ ids, valueType }, childIdx: number) => (
-                                    !valueType
-                                        ? <ConnectedSelect
-                                            key={childIdx}
-                                            selected={{ key: '', value: '' }}
-                                            name={'select'}
-                                            collectionId={ids[0]}
-                                            onChange={(val, property) => onSelectChangeHandler(val, property, childIdx)}
-                                        />
-                                        : valueType
-                                ))}
-                                </span>
+                            <ReferencePathSelector
+                                onChange={onSelectChangeHandler}
+                                paths={item.referencePath as ReferencePath}
+                            />
                         )
                         : (
                             <StyledInputWrapper>
@@ -204,11 +174,11 @@ const mapStateToProps = (state: RootState) => ({
     lastIdofViewComponents: lastId(state.viewconfig)
 });
 
-const mapDispatchToProps = (dispatch, { item: { id } }: Props) => ({
+const mapDispatchToProps = (dispatch, { item: { id }, match }: Props) => ({
     modifyNode: (component: NormalizedComponentConfig) => dispatch(modifyViewConfigNode(id, component)),
     removeChild: (childId: number) => dispatch(deleteViewConfigChild(id, childId)),
     removeNode: (nodeId: number) => dispatch(deleteViewConfigNode(nodeId)),
-    addNode: (component: ComponentConfig) => dispatch(addViewConfigNode(component)),
+    addNode: (component: ComponentConfig) => dispatch(addViewConfigNode(component, match.params.collection)),
     addChild: (childId: number) => dispatch(addViewConfigChild(id, childId))
 });
 

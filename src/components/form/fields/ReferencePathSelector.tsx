@@ -1,14 +1,14 @@
 import React, { SFC } from 'react';
 import { Property } from '../../../typings/schema';
 import ConnectedSelect from './ConnectedSelect';
-import styled from '../../../styled-components';
+import styled, { withProps } from '../../../styled-components';
 
 interface Props {
     onChange: (newPaths: (string[])[]) => void;
     paths: (string[])[];
 }
 
-const Value = styled.div`
+const Value = withProps<{ shownAsMultipleItems: boolean; }>(styled.div)`
     display: inline-block;
     padding: .5rem 1rem .5rem 1rem;
     text-align: center;
@@ -16,6 +16,15 @@ const Value = styled.div`
     color: ${props => props.theme.colors.primary.medium};
     margin: 0 10px 10px 0;
     border-radius: .25rem;
+    ${props => props.shownAsMultipleItems
+    ? ` position: relative;
+        top: -2px;
+        box-shadow: 1px 1px 0 1px ${props.theme.colors.white}, 
+                       2px 2px 0 1px ${props.theme.colors.primary.medium}, 
+                       4px 4px 0 1px ${props.theme.colors.white}, 
+                       5px 5px 0 1px ${props.theme.colors.primary.medium};`
+    : ''
+    }
 `;
 
 const VALUE: string = 'value';
@@ -52,14 +61,16 @@ const ReferencePathSelector: SFC<Props> = ({ paths, onChange }) => {
                         return null;
                     }
 
+                    const isMultiple = paths[childIdx - 1] && paths[childIdx - 1][1] === ITEMS;
+
                     if (value === VALUE) {
-                        return <Value>{value}</Value>;
+                        return <Value shownAsMultipleItems={isMultiple}>{value}</Value>;
                     }
 
                     return (
                         <ConnectedSelect
                             key={childIdx}
-                            shownAsMultipleItems={paths[childIdx - 1] && paths[childIdx - 1][1] === ITEMS}
+                            shownAsMultipleItems={isMultiple}
                             selected={{ key: value, value: value }}
                             name={`select`}
                             collectionId={collectionKey}

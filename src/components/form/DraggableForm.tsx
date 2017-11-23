@@ -131,7 +131,7 @@ const mapDispatchToProps = (dispatch, { id, configType, match, ...rest }: Props)
         return {
             sortItem: (oldIndex: number, newIndex: number) => dispatch(sortViewConfigChild(id, oldIndex, newIndex)),
             addChild: (childId) => dispatch(addViewConfigChild(id, childId)),
-            addItem: (component: ComponentConfig) => dispatch(addViewConfigNode(component))
+            addItem: (component: ComponentConfig) => dispatch(addViewConfigNode(component, match.params.collection))
         };
     } else {
         return {

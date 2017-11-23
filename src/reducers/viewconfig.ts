@@ -2,6 +2,7 @@ import { ComponentConfig } from '../typings/schema';
 import { arrayMove } from 'react-sortable-hoc';
 import { NormalizedComponentConfig } from '../typings/index';
 import { LEAF_COMPONENTS } from '../constants/global';
+import { createReferencePath } from '../services/walkPath';
 
 export type ViewConfigReducer = NormalizedComponentConfig[];
 
@@ -12,7 +13,8 @@ const initialState: ViewConfigReducer = [];
 type AddViewConfigNodeAction = {
     type: 'ADD_VIEW_CONFIG_NODE',
     payload: {
-        component: ComponentConfig
+        component: ComponentConfig,
+        collectionId: string
     }
 };
 
@@ -51,7 +53,8 @@ type DeleteViewConfigItemAction = {
 type SetTreeAction = {
     type: 'SET_VIEW_CONFIG_TREE',
     payload: {
-        components: ComponentConfig[]
+        components: ComponentConfig[],
+        collectionId: string
     }
 };
 
@@ -69,7 +72,7 @@ export const createName = (typename: string, idx: number, field?: string): strin
     `${idx}_${typename}${field ? '_' + field : ''}`
 );
 
-const normalizeTree = (tree: ComponentConfig[], startIndex: number = -1): ViewConfigReducer => {
+const normalizeTree = (tree: ComponentConfig[], collectionId: string, startIndex: number = -1): ViewConfigReducer => {
     // Flatten a tree of Components into an array of NormalizedComponents with a root branch (index 0)
 
     let idx = startIndex;
@@ -95,10 +98,8 @@ const normalizeTree = (tree: ComponentConfig[], startIndex: number = -1): ViewCo
             name: createName(branch.type, id)
         };
 
-        if (branch.type === LEAF_COMPONENTS.path) {
-            normalizedComponent.valueList = branch.value && !!branch.value.length
-                ? JSON.parse(branch.value)
-                : [];
+        if (branch.type === LEAF_COMPONENTS.path && typeof branch.value === 'string') {
+            normalizedComponent.referencePath = createReferencePath(branch.value, collectionId);
         }
 
         if (branch.subComponents) {
@@ -209,7 +210,7 @@ export default (state = initialState, action: Action): ViewConfigReducer => {
         case 'ADD_VIEW_CONFIG_NODE': {
             return [
                 ...state,
-                ...normalizeTree([action.payload.component], lastId(state))
+                ...normalizeTree([action.payload.component], action.payload.collectionId, lastId(state))
             ];
         }
         case 'DELETE_VIEW_CONFIG_NODE': {
@@ -218,21 +219,22 @@ export default (state = initialState, action: Action): ViewConfigReducer => {
             return deleteMany(state, [nodeId, ...descendantIds]);
         }
         case 'SET_VIEW_CONFIG_TREE': {
-            return normalizeTree(action.payload.components);
+            return normalizeTree(action.payload.components, action.payload.collectionId);
         }
         default:
             return state;
     }
 };
 
-export const addViewConfigNode = (component: ComponentConfig): AddViewConfigNodeAction => ({
+export const addViewConfigNode = (component: ComponentConfig, collectionId: string): AddViewConfigNodeAction => ({
     type: 'ADD_VIEW_CONFIG_NODE',
     payload: {
-        component
+        component,
+        collectionId
     }
 });
 
-export const modifyViewConfigNode = (nodeId, component: NormalizedComponentConfig): ModifyViewConfigNodeAction => ({
+export const modifyViewConfigNode = (nodeId: number, component: NormalizedComponentConfig): ModifyViewConfigNodeAction => ({
     type: 'MODIFY_VIEW_CONFIG_NODE',
     payload: {
         nodeId,
@@ -240,14 +242,14 @@ export const modifyViewConfigNode = (nodeId, component: NormalizedComponentConfi
     }
 });
 
-export const deleteViewConfigNode = (nodeId): DeleteViewConfigItemAction => ({
+export const deleteViewConfigNode = (nodeId: number): DeleteViewConfigItemAction => ({
     type: 'DELETE_VIEW_CONFIG_NODE',
     payload: {
         nodeId
     }
 });
 
-export const addViewConfigChild = (nodeId, childId): ViewConfigChildAction => ({
+export const addViewConfigChild = (nodeId: number, childId: number): ViewConfigChildAction => ({
     type: 'ADD_VIEW_CONFIG_CHILD',
     payload: {
         nodeId,
@@ -255,7 +257,7 @@ export const addViewConfigChild = (nodeId, childId): ViewConfigChildAction => ({
     }
 });
 
-export const deleteViewConfigChild = (nodeId, childId): ViewConfigChildAction => ({
+export const deleteViewConfigChild = (nodeId: number, childId: number): ViewConfigChildAction => ({
     type: 'DELETE_VIEW_CONFIG_CHILD',
     payload: {
         nodeId,
@@ -263,7 +265,7 @@ export const deleteViewConfigChild = (nodeId, childId): ViewConfigChildAction =>
     }
 });
 
-export const sortViewConfigChild = (nodeId, oldIndex, newIndex): SortViewConfigChildAction => ({
+export const sortViewConfigChild = (nodeId: number, oldIndex: number, newIndex: number): SortViewConfigChildAction => ({
     type: 'SORT_VIEW_CONFIG_CHILD',
     payload: {
         nodeId,
@@ -273,9 +275,10 @@ export const sortViewConfigChild = (nodeId, oldIndex, newIndex): SortViewConfigC
 });
 
 // clears & builds a new tree. This is one way operation (for now)
-export const setTree = (components: ComponentConfig[]) => ({
+export const setTree = (components: ComponentConfig[], collectionId: string) => ({
     type: 'SET_VIEW_CONFIG_TREE',
     payload: {
-        components
+        components,
+        collectionId
     }
 });

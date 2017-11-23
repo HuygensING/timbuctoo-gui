@@ -16,11 +16,11 @@ import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionPropert
 import { setTree } from '../../reducers/viewconfig';
 import { connect } from 'react-redux';
 
-interface Props {
+interface DispatchProps {
     setTree: (components: ComponentConfig[]) => void;
 }
 
-type FullProps = Props & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any> & RouteComponentProps<any> & FormWrapperProps;
+type FullProps = DispatchProps & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any> & RouteComponentProps<{ collection: string }> & FormWrapperProps;
 
 interface State {
 }
@@ -121,8 +121,8 @@ class ViewScreen extends PureComponent<FullProps, State> {
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    setTree: (components: ComponentConfig[]) => dispatch(setTree(components))
+const mapDispatchToProps = (dispatch, { match }: RouteComponentProps<{ collection: string }>) => ({
+    setTree: (components: ComponentConfig[]) => dispatch(setTree(components, match.params.collection))
 });
 
 export default MetadataResolver(QUERY_COLLECTION_PROPERTIES)(

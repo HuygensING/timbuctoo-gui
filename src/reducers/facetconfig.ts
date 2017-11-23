@@ -1,7 +1,7 @@
 import { FacetConfig } from '../typings/schema';
-import { NormalizedFacetConfig } from '../typings/index';
+import { NormalizedFacetConfig, ReferencePath } from '../typings/index';
 import { arrayMove } from 'react-sortable-hoc';
-import { mendPath, splitPath } from '../services/walkPath';
+import { createReferencePath, mendPath } from '../services/walkPath';
 
 // state def
 export type FacetConfigReducer = NormalizedFacetConfig[];
@@ -79,16 +79,11 @@ export const composeFacets = (facetConfigs: NormalizedFacetConfig[]): FacetConfi
 );
 
 // reducer
-const references = (payload: { facetConfig: { paths: string[] }, collectionId: string }): (string[])[][] => {
+const references = (payload: { facetConfig: { paths: string[] }, collectionId: string }): ReferencePath[] => {
     let referencePaths: (string[])[][] = [];
 
     for (const path of payload.facetConfig.paths) {
-        // initial
-        const newReferencePath = [
-            [payload.collectionId],
-            ...(splitPath(path) as string[][])
-        ];
-        referencePaths = [ ...referencePaths, newReferencePath ];
+        referencePaths = [ ...referencePaths, createReferencePath(path, payload.collectionId) ];
     }
 
     if (!referencePaths.length) {

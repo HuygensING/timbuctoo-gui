@@ -79,7 +79,9 @@ const StyledSelect = withProps<{ shownAsMultipleItems?: boolean; }>(styled.butto
     border: 1px solid ${props => props.disabled ? props.theme.colors.error : props.theme.colors.shade.medium};
     
     ${props => props.shownAsMultipleItems
-        ? `box-shadow: 1px 1px 0 1px ${props.theme.colors.white}, 
+        ? ` position: relative;
+            top: -2px;
+            box-shadow: 1px 1px 0 1px ${props.theme.colors.white}, 
                        2px 2px 0 1px ${props.theme.colors.shade.medium}, 
                        4px 4px 0 1px ${props.theme.colors.white}, 
                        5px 5px 0 1px ${props.theme.colors.shade.medium};`
