@@ -1,5 +1,4 @@
 import React, { FormEvent, SFC } from 'react';
-import styled from '../../styled-components';
 import { NormalizedFacetConfig } from '../../typings/index';
 import InputField from './fields/Input';
 import { FacetConfig, FacetConfigType } from '../../typings/schema';
@@ -8,6 +7,10 @@ import { connect } from 'react-redux';
 import Select, { OptionProps } from './fields/Select';
 import { SELECT_FACET_TYPES } from '../../constants/forms';
 import ReferencePathSelector from './fields/ReferencePathSelector';
+import { ButtonAdd } from '../layout/Button';
+import { compose } from 'redux';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { Field, FieldContainer, FieldLabel, FieldValue } from './fields/StyledField';
 
 interface OwnProps {
     item: NormalizedFacetConfig;
@@ -18,27 +21,15 @@ interface DispatchProps {
     modify: (config: NormalizedFacetConfig) => void;
 }
 
-type Props = OwnProps & DispatchProps;
+type Props = OwnProps & DispatchProps & RouteComponentProps<{ collection: string; }>;
 
-const Container = styled.div`
-    width: 100%;
+const FacetField = Field.extend`
+  margin-top: 2rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid ${props => props.theme.colors.shade.light};
 `;
 
-const Field = styled.div`
-    display: flex;
-    align-items: center;
-    margin: 1rem 0;
-`;
-
-const Label = styled.label`
-    flex: 2;
-`;
-
-const Value = styled.div`
-    flex: 2;
-`;
-
-const FacetFields: SFC<Props> = ({ item, modify }) => {
+const FacetFields: SFC<Props> = ({ item, modify, match }) => {
     const onSelectChangeHandler = (newPaths: string[][], pathIdx: number) => {
         const modifiedItem: NormalizedFacetConfig = { ...item };
         modifiedItem.referencePaths[pathIdx] = newPaths;
@@ -46,11 +37,15 @@ const FacetFields: SFC<Props> = ({ item, modify }) => {
         modify(modifiedItem);
     };
 
+    const addPathHandler = () => modify(
+        { ...item, referencePaths: [...item.referencePaths, [[match.params.collection]]] }
+    );
+
     return (
-        <Container>
+        <FieldContainer>
             <Field>
-                <Label htmlFor={`${item.id}_type`}>Type</Label>
-                <Value>
+                <FieldLabel htmlFor={`${item.id}_type`}>Type</FieldLabel>
+                <FieldValue>
                     <Select
                         name={`${item.id}_type`}
                         selected={SELECT_FACET_TYPES.find(({ value }) => value === item.type)}
@@ -59,11 +54,11 @@ const FacetFields: SFC<Props> = ({ item, modify }) => {
                             modify({ ...item, type: value as FacetConfigType })
                         )}
                     />
-                </Value>
+                </FieldValue>
             </Field>
             <Field>
-                <Label htmlFor={`${item.id}_caption`}>Caption</Label>
-                <Value>
+                <FieldLabel htmlFor={`${item.id}_caption`}>Caption</FieldLabel>
+                <FieldValue>
                     <InputField
                         name={`${item.id}_caption`}
                         value={item.caption!}
@@ -71,11 +66,11 @@ const FacetFields: SFC<Props> = ({ item, modify }) => {
                             modify({ ...item, caption })
                         )}
                     />
-                </Value>
+                </FieldValue>
             </Field>
-            <Field>
-                <Label htmlFor={`${item.id}_facets`}>Facets</Label>
-                <Value>
+            <FacetField>
+                <FieldLabel htmlFor={`${item.id}_facets`}>Facets</FieldLabel>
+                <FieldValue>
                     {
                         item.referencePaths.map((paths, pathIdx) => (
                             <ReferencePathSelector
@@ -85,9 +80,10 @@ const FacetFields: SFC<Props> = ({ item, modify }) => {
                             />
                         ))
                     }
-                </Value>
-            </Field>
-        </Container>
+                    <ButtonAdd onClick={addPathHandler}>Add a path</ButtonAdd>
+                </FieldValue>
+            </FacetField>
+        </FieldContainer>
     );
 };
 
@@ -95,4 +91,7 @@ const mapDispatchToProps = (dispatch, { item: { id } }: Props) => ({
     modify: (modifiedItem: NormalizedFacetConfig) => dispatch(modifyFacetConfig(id, modifiedItem))
 });
 
-export default connect<never, DispatchProps, OwnProps>(null, mapDispatchToProps)(FacetFields);
+export default compose<SFC<OwnProps>>(
+    withRouter,
+    connect(null, mapDispatchToProps)
+)(FacetFields);

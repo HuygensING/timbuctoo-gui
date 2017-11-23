@@ -8,6 +8,14 @@ interface Props {
     paths: (string[])[];
 }
 
+const SelectContainer = styled.div`
+    &:not(:first-child) {
+      padding-top: 1rem;
+      margin-top: .5rem;
+      border-top: 1px solid ${props => props.theme.colors.shade.light};
+    }
+`;
+
 const Value = withProps<{ shownAsMultipleItems: boolean; }>(styled.div)`
     display: inline-block;
     padding: .5rem 1rem .5rem 1rem;
@@ -54,7 +62,7 @@ const ReferencePathSelector: SFC<Props> = ({ paths, onChange }) => {
     };
 
     return (
-        <div>
+        <SelectContainer>
             {
                 paths.map(([collectionKey, value], childIdx: number) => {
                     if (value === ITEMS) {
@@ -79,7 +87,7 @@ const ReferencePathSelector: SFC<Props> = ({ paths, onChange }) => {
                     );
                 })
             }
-        </div>
+        </SelectContainer>
     );
 };
 

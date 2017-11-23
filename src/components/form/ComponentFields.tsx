@@ -22,16 +22,7 @@ import { EMPTY_COMPONENT, EMPTY_LEAF_COMPONENT } from '../../constants/emptyView
 import { RootState } from '../../reducers/rootReducer';
 import { compose } from 'redux';
 import ReferencePathSelector from './fields/ReferencePathSelector';
-
-const Label = styled.label`
-    display: inline-block;
-    clear: left;
-    min-width: 5rem;
-`;
-
-const StyledFieldset = styled.fieldset`
-    width: 100%;
-`;
+import { Field, FieldContainer, FieldLabel, FieldValue } from './fields/StyledField';
 
 const StyledInput = styled(InputField)`
     display: inline-block;
@@ -43,15 +34,6 @@ const StyledInput = styled(InputField)`
 
 const StyledInputWrapper = styled.div`
     display: inline-block;
-`;
-
-const StyledDivider = styled.div`
-    margin-bottom: 1rem;
-    display: flex;
-    
-    &:last-child {
-        margin-bottom: 0;
-    }
 `;
 
 interface OwnProps {
@@ -73,7 +55,7 @@ interface StateProps {
 
 type Props = StateProps & DispatchProps & OwnProps & RouteComponentProps<any>;
 
-const ComponentFields: SFC<Props> = ({ item, items, lastIdofViewComponents, match, modifyNode, removeChild, removeNode, addChild, addNode }) => {
+const ComponentFields: SFC<Props> = ({ item, lastIdofViewComponents, modifyNode, removeChild, removeNode, addChild, addNode }) => {
 
     const onChangeHandler = (e: FormEvent<HTMLInputElement>): void | false => {
         e.persist();
@@ -123,40 +105,46 @@ const ComponentFields: SFC<Props> = ({ item, items, lastIdofViewComponents, matc
     };
 
     return (
-        <StyledFieldset>
-            <StyledDivider>
-                <Label htmlFor={name}>Component</Label>
-                <Select
-                    name={'Component'}
-                    options={SELECT_COMPONENT_TYPES}
-                    selected={SELECT_COMPONENT_TYPES.find((valueType) => valueType.value === item.type)}
-                    onChange={onChangeHeadHandler}
-                />
-            </StyledDivider>
+        <FieldContainer>
+            <Field>
+                <FieldLabel htmlFor={name}>Component</FieldLabel>
+                <FieldValue>
+                    <Select
+                        name={'Component'}
+                        options={SELECT_COMPONENT_TYPES}
+                        selected={SELECT_COMPONENT_TYPES.find((valueType) => valueType.value === item.type)}
+                        onChange={onChangeHeadHandler}
+                    />
+                </FieldValue>
+            </Field>
 
-            <StyledDivider>
-                {typeof item.value === 'string' && <Label htmlFor={name}>{item.type}</Label>}
+            <Field>
+                {typeof item.value === 'string' && <FieldLabel htmlFor={name}>{item.type}</FieldLabel>}
                 {typeof item.value === 'string' && (
-                    item.type === 'PATH'
-                        ? (
-                            <ReferencePathSelector
-                                onChange={onSelectChangeHandler}
-                                paths={item.referencePath as ReferencePath}
-                            />
-                        )
-                        : (
-                            <StyledInputWrapper>
-                                <StyledInput
-                                    type={'text'}
-                                    title={name}
-                                    name={name}
-                                    defaultValue={item.value}
-                                    onBlur={onChangeHandler}
-                                />
-                            </StyledInputWrapper>
-                        )
+                    <FieldValue>
+                        {(
+                            item.type === 'PATH'
+                                ? (
+                                    <ReferencePathSelector
+                                        onChange={onSelectChangeHandler}
+                                        paths={item.referencePath as ReferencePath}
+                                    />
+                                )
+                                : (
+                                    <StyledInputWrapper>
+                                        <StyledInput
+                                            type={'text'}
+                                            title={name}
+                                            name={name}
+                                            defaultValue={item.value}
+                                            onBlur={onChangeHandler}
+                                        />
+                                    </StyledInputWrapper>
+                                )
+                        )}
+                    </FieldValue>
                 )}
-            </StyledDivider>
+            </Field>
 
             {item.childIds.length > 0 && (
                 <DraggableForm
@@ -165,7 +153,7 @@ const ComponentFields: SFC<Props> = ({ item, items, lastIdofViewComponents, matc
                     noForm={true}
                 />
             )}
-        </StyledFieldset>
+        </FieldContainer>
     );
 };
 

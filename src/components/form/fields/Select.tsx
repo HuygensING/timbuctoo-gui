@@ -64,7 +64,7 @@ const Arrow = styled.figure`
 const SelectWrapper = withProps<{ shownAsMultipleItems?: boolean; }>(styled.div)`
     position: relative;
     display: inline-block;
-    margin: 0 ${props => props.shownAsMultipleItems ? '15px' : '10px'} 10px 0;
+    margin: 0 ${props => props.shownAsMultipleItems ? '15px 15px' : '10px 10px'} 0;
 `;
 
 const StyledSelect = withProps<{ shownAsMultipleItems?: boolean; }>(styled.button)`
