@@ -81,7 +81,13 @@ class App extends PureComponent<ChildProps<Props, Response>, State> {
 
         if (this.renderLoad && (data.error || data.aboutMe === null)) {
             this.renderLoad = false;
-            this.props.logInUser(user.hsid);
+            
+            // todo: remove this check once there's a real authentication system
+            if (process.env.NODE_ENV !== 'development') {
+                this.props.logOutUser();
+            } else {
+                this.props.logInUser(user.hsid);
+            }
         }
     }
 
