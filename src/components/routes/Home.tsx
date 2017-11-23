@@ -30,8 +30,7 @@ interface Props {
     user: UserReducer;
 }
 
-interface State {
-}
+interface State {}
 
 type FullProps = Props & ApolloProps & RouteComponentProps<any>;
 
@@ -40,13 +39,13 @@ class Home extends Component<FullProps, State> {
         data: {
             promotedDataSets: [],
             aboutMe: {
-                name:  null,
+                name: null,
                 personalInfo: null
             }
         }
     };
 
-    renderFeatured (promoted: DataSetMetadata[]) {
+    renderFeatured(promoted: DataSetMetadata[]) {
         return (
             <GridSection title={translate('home.featured.title')} cols={5} colSizeOffset={2}>
                 {this.renderFeaturedItems(promoted)}
@@ -54,18 +53,20 @@ class Home extends Component<FullProps, State> {
         );
     }
 
-    renderFeaturedItems (promoted: DataSetMetadata[]) {
-        if (!promoted.length) { return <div>Loading</div>; }
+    renderFeaturedItems(promoted: DataSetMetadata[]) {
+        if (!promoted.length) {
+            return <div>Loading</div>;
+        }
         return promoted.map((props, idx: number) => <FeaturedContentBlock key={idx} {...props} {...this.props.user} />);
     }
 
-    render () {
+    render() {
         const { promotedDataSets, aboutMe } = this.props.data;
 
         const heroDataSetPath: string | null = this.selectFirstSet();
         return (
             <Grid>
-                <FullHelmet pageName="home"/>
+                <FullHelmet pageName="home" />
                 <Hero
                     title={translate('home.hero.title')}
                     content={translate('home.hero.content')}
@@ -76,17 +77,34 @@ class Home extends Component<FullProps, State> {
 
                 {promotedDataSets && this.renderFeatured(promotedDataSets)}
 
-                <ListContent smOffset={3} sm={20} smPaddingY={1} title={translate('home.recently_modified.title')} data={promotedDataSets}/>
-                <ListContent smOffset={2} sm={20} smPaddingY={1} title={translate('home.most_popular.title')} data={promotedDataSets}/>
+                <ListContent
+                    smOffset={3}
+                    sm={20}
+                    smPaddingY={1}
+                    title={translate('home.recently_modified.title')}
+                    data={promotedDataSets}
+                />
+                <ListContent
+                    smOffset={2}
+                    sm={20}
+                    smPaddingY={1}
+                    title={translate('home.most_popular.title')}
+                    data={promotedDataSets}
+                />
 
                 <Col sm={48}>
-                    {aboutMe && <About title={aboutMe ? getValue(aboutMe.name) : null} body={aboutMe ? getValue(aboutMe.personalInfo) : null} />}
+                    {aboutMe && (
+                        <About
+                            title={aboutMe ? getValue(aboutMe.name) : null}
+                            body={aboutMe ? getValue(aboutMe.personalInfo) : null}
+                        />
+                    )}
                 </Col>
             </Grid>
         );
     }
 
-    private selectFirstSet () {
+    private selectFirstSet() {
         const { promotedDataSets } = this.props.data;
 
         if (promotedDataSets && promotedDataSets.length > 0) {
@@ -105,9 +123,15 @@ class Home extends Component<FullProps, State> {
 const query = gql`
     query Home {
         promotedDataSets {
-            imageUrl { value }
-            title { value }
-            description { value }
+            imageUrl {
+                value
+            }
+            title {
+                value
+            }
+            description {
+                value
+            }
             dataSetId
         }
         aboutMe {
@@ -118,10 +142,8 @@ const query = gql`
     }
 `;
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     user: state.user
 });
 
-export default graphql(query)(
-    connect(mapStateToProps)(Home)
-);
+export default graphql(query)(connect(mapStateToProps)(Home));

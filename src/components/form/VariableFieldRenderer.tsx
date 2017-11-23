@@ -12,8 +12,10 @@ import {
     addViewConfigChild,
     addViewConfigNode,
     deleteViewConfigChild,
-    deleteViewConfigNode, denormalizeComponent,
-    getNodeById, lastId,
+    deleteViewConfigNode,
+    denormalizeComponent,
+    getNodeById,
+    lastId,
     modifyViewConfigNode,
     ViewConfigReducer
 } from '../../reducers/viewconfig';
@@ -34,9 +36,9 @@ const StyledFieldset = styled.fieldset`
 
 const StyledInput = styled(InputField)`
     display: inline-block;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
     width: auto;
-    margin-right: .5rem;
+    margin-right: 0.5rem;
     max-width: 10rem;
 `;
 
@@ -47,7 +49,7 @@ const StyledInputWrapper = styled.div`
 const StyledDivider = styled.div`
     margin-bottom: 1rem;
     display: flex;
-    
+
     &:last-child {
         margin-bottom: 0;
     }
@@ -67,8 +69,7 @@ interface Props {
 }
 
 class VariableFormFieldRenderer extends PureComponent<Props> {
-
-    render () {
+    render() {
         const { item, item: { childIds, value, name, type, valueList }, configType } = this.props;
 
         return (
@@ -78,53 +79,56 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
                     <Select
                         name={'Component'}
                         options={SELECT_COMPONENT_TYPES}
-                        selected={SELECT_COMPONENT_TYPES.find((valueType) => valueType.value === item.type)}
+                        selected={SELECT_COMPONENT_TYPES.find(valueType => valueType.value === item.type)}
                         onChange={this.onChangeHeadHandler}
                     />
                 </StyledDivider>
 
                 <StyledDivider>
                     {typeof value === 'string' && <Label htmlFor={name}>{type}</Label>}
-                    {typeof value === 'string' && (
-                        type === 'PATH'
-                            ? (
-                                <span>
-                                    <ConnectedSelect
-                                        name={'select'}
-                                        selected={{ key: '', value: '' }}
-                                        collectionId={this.props.match && this.props.match.params.collection}
-                                        onChange={this.onSelectChangeHandler}
-                                    />
-                                    {!!valueList && valueList.map(({ ids, valueType }, childIdx: number) => (
-                                        !valueType
-                                            ? <ConnectedSelect
-                                                key={childIdx}
-                                                selected={{ key: '', value: '' }}
-                                                name={'select'}
-                                                collectionId={ids[0]}
-                                                onChange={(val, property) => this.onSelectChangeHandler(val, property, childIdx)}
-                                            />
-                                            : valueType
-                                    ))}
-                                </span>
-                            )
-                            : (
-                                <StyledInputWrapper>
-                                    <StyledInput
-                                        type={'text'}
-                                        title={name}
-                                        name={name}
-                                        defaultValue={value}
-                                        onBlur={this.onChangeHandler}
-                                    />
-                                </StyledInputWrapper>
-                            )
-                    )}
+                    {typeof value === 'string' &&
+                        (type === 'PATH' ? (
+                            <span>
+                                <ConnectedSelect
+                                    name={'select'}
+                                    selected={{ key: '', value: '' }}
+                                    collectionId={this.props.match && this.props.match.params.collection}
+                                    onChange={this.onSelectChangeHandler}
+                                />
+                                {!!valueList &&
+                                    valueList.map(
+                                        ({ ids, valueType }, childIdx: number) =>
+                                            !valueType ? (
+                                                <ConnectedSelect
+                                                    key={childIdx}
+                                                    selected={{ key: '', value: '' }}
+                                                    name={'select'}
+                                                    collectionId={ids[0]}
+                                                    onChange={(val, property) =>
+                                                        this.onSelectChangeHandler(val, property, childIdx)
+                                                    }
+                                                />
+                                            ) : (
+                                                valueType
+                                            )
+                                    )}
+                            </span>
+                        ) : (
+                            <StyledInputWrapper>
+                                <StyledInput
+                                    type={'text'}
+                                    title={name}
+                                    name={name}
+                                    defaultValue={value}
+                                    onBlur={this.onChangeHandler}
+                                />
+                            </StyledInputWrapper>
+                        ))}
                 </StyledDivider>
 
                 {childIds.length > 0 && (
                     <DraggableForm
-                        items={(childIds.map(id => getNodeById(id, this.props.items)))}
+                        items={childIds.map(id => getNodeById(id, this.props.items))}
                         configType={configType}
                         id={item.id}
                         noForm={true}
@@ -148,9 +152,13 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         newFieldset.value = newValue;
 
         return this.props.modifyNode(newFieldset);
-    }
+    };
 
-    private onSelectChangeHandler = (collectionKey: string, { isList, isValueType, referencedCollections }: Property, idx: number = -1) => {
+    private onSelectChangeHandler = (
+        collectionKey: string,
+        { isList, isValueType, referencedCollections }: Property,
+        idx: number = -1
+    ) => {
         const { item } = this.props;
 
         if (!Array.isArray(item.valueList)) {
@@ -160,16 +168,16 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         const newFieldset = { ...item } as PathComponentConfig;
 
         newFieldset.valueList = [
-            ...item.valueList.slice(0, idx > -1 ? (idx + 1) : 0),
+            ...item.valueList.slice(0, idx > -1 ? idx + 1 : 0),
             {
                 ids: referencedCollections.items,
                 isList,
-                valueType: isValueType ? collectionKey : null,
+                valueType: isValueType ? collectionKey : null
             }
         ];
 
         return this.props.modifyNode(newFieldset);
-    }
+    };
 
     private onChangeHeadHandler = (option: OptionProps) => {
         const { item } = this.props;
@@ -198,7 +206,7 @@ class VariableFormFieldRenderer extends PureComponent<Props> {
         }
 
         return this.props.modifyNode(newFieldset);
-    }
+    };
 }
 
 const mapStateToProps = (state: RootState) => ({

@@ -5,7 +5,7 @@ import { ThemeProps } from './typings/layout';
 type StyledFunction<T> = styledComponents.ThemedStyledFunction<T, ThemeProps>;
 
 function withProps<T, U extends HTMLElement = HTMLElement>(
-    styledFunction: StyledFunction<React.HTMLProps<U>>,
+    styledFunction: StyledFunction<React.HTMLProps<U>>
 ): StyledFunction<T & React.HTMLProps<U>> {
     return styledFunction;
 }

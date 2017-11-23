@@ -1,6 +1,8 @@
 import { gql } from 'react-apollo';
 import {
-    collectionBase, collectionIndexConfig, collectionPropertiesDensity,
+    collectionBase,
+    collectionIndexConfig,
+    collectionPropertiesDensity,
     collectionSummaryProperties
 } from '../fragments/Metadata';
 
@@ -25,7 +27,9 @@ const QUERY_COLLECTION_PROPERTIES = ({ match }) => {
         }
     `;
 
-    return gql`${query}${collectionBase}${collectionPropertiesDensity}${collectionSummaryProperties}${collectionIndexConfig}`;
+    return gql`${query}${collectionBase}${collectionPropertiesDensity}${collectionSummaryProperties}${
+        collectionIndexConfig
+    }`;
 };
 
 export default QUERY_COLLECTION_PROPERTIES;

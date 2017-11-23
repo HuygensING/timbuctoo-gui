@@ -14,8 +14,8 @@ const ImageWrapper = styled.figure`
     left: 0;
     margin: 0;
     width: 100%;
-    height: ${(props: ImageProps) => props.fill ? '100%' : 'initial'};
-    
+    height: ${(props: ImageProps) => (props.fill ? '100%' : 'initial')};
+
     &:before {
         content: '';
         display: block;
@@ -23,7 +23,7 @@ const ImageWrapper = styled.figure`
             if (props.fill) {
                 return 0;
             }
-            return props.ratio ? `${ 100 / props.ratio }%` : '100%';
+            return props.ratio ? `${100 / props.ratio}%` : '100%';
         }};
     }
 
@@ -45,7 +45,7 @@ const Img = styled.img`
     position: absolute;
     width: 100%;
     height: 100%;
-    object-fit: ${(props: ImageProps) => props.contain ? 'contain' : 'cover'};
+    object-fit: ${(props: ImageProps) => (props.contain ? 'contain' : 'cover')};
     top: 0;
     left: 0;
     transform: scale(1);
@@ -54,7 +54,6 @@ const Img = styled.img`
 `;
 
 class Image extends PureComponent<ImageProps, State> {
-
     image: HTMLImageElement;
 
     constructor(props: ImageProps) {
@@ -68,13 +67,13 @@ class Image extends PureComponent<ImageProps, State> {
         this.onLoad = this.onLoad.bind(this);
         this.onError = this.onError.bind(this);
     }
-    
+
     componentDidMount() {
         if (this.image && this.image.complete) {
             this.onLoad();
         }
     }
-    
+
     onLoad() {
         const { onLoad } = this.props;
         this.image.style.opacity = '1';
@@ -103,7 +102,7 @@ class Image extends PureComponent<ImageProps, State> {
                     contain={contain}
                     onLoad={this.onLoad}
                     onError={this.onError}
-                    innerRef={image => this.image = image}
+                    innerRef={image => (this.image = image)}
                     srcSet={`${src} 1x, ${src2x || src} 2x`}
                     alt={alt}
                 />

@@ -11,18 +11,17 @@ const List = styled.ul`
     list-style: none;
 `;
 
-const ListContent = (props) => {
-
+const ListContent = props => {
     function renderContent(data: any) {
-        return data && data.map((content, index) => <ListContentItem key={index} {...content} />) || <div>Loading</div>;
+        return (
+            (data && data.map((content, index) => <ListContentItem key={index} {...content} />)) || <div>Loading</div>
+        );
     }
 
     return (
         <Col {...props}>
             <Title>{props.title}</Title>
-            <List>
-                {renderContent(props.data)}
-            </List>
+            <List>{renderContent(props.data)}</List>
             {/* <pre>{JSON.stringify(props, null, 4)}</pre> */}
         </Col>
     );

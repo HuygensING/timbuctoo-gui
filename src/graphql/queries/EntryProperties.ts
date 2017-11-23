@@ -19,7 +19,8 @@ export const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
                 collection(collectionId: "${collectionCursor ? collectionCursor : match.params.collection}") {
                     title { value }
                     collectionId
-                    ${!collectionCursor && `
+                    ${!collectionCursor &&
+                        `
                         ...CollectionPropertiesReference
                     `}
                     viewConfig {
@@ -43,9 +44,9 @@ interface CollectionMetadataLocal extends CollectionPropertiesReference {
     collectionId: string;
     viewConfig: ComponentsFragment;
     summaryProperties: {
-        title?: { value: string }
-        description?: { value: string }
-        image?: { value: string }
+        title?: { value: string };
+        description?: { value: string };
+        image?: { value: string };
     };
 }
 
@@ -54,11 +55,11 @@ export interface QueryMetadata {
     dataSetMetadata?: {
         collectionList: {
             items: Array<{
-                itemType: string
+                itemType: string;
                 collectionId: string;
                 summaryProperties: {
-                    title?: { value: string }
-                }
+                    title?: { value: string };
+                };
             }>;
         };
         collection?: CollectionMetadataLocal;

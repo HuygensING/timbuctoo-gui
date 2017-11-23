@@ -26,7 +26,7 @@ const AvatarMask = withProps<{ propSize: SIZE }>(styled.figure)`
 const Avatar: SFC<Props> = ({ size, src }) => {
     return (
         <AvatarMask propSize={size}>
-            <Image src={src} ratio={1}/>
+            <Image src={src} ratio={1} />
         </AvatarMask>
     );
 };

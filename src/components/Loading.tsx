@@ -11,7 +11,7 @@ const rotate360 = keyframes`
 `;
 
 const LoadingView = styled(Logo)`
-  	animation: ${rotate360} 2s linear infinite;
+    animation: ${rotate360} 2s linear infinite;
     position: absolute;
     z-index: 1;
     top: 50%;
@@ -20,12 +20,6 @@ const LoadingView = styled(Logo)`
     margin-left: -2.5rem;
 `;
 
-const Loading: SFC<Props> = () => (
-    <LoadingView
-        color={theme.colors.shade.dark}
-        width={'5rem'}
-        height={'5rem'}
-    />
-);
+const Loading: SFC<Props> = () => <LoadingView color={theme.colors.shade.dark} width={'5rem'} height={'5rem'} />;
 
 export default Loading;

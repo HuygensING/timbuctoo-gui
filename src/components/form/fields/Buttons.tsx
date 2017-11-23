@@ -6,7 +6,7 @@ const ResetButton = styled.button`
     font: ${props => props.theme.fonts.body};
     position: absolute;
     right: 0;
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     z-index: 2;
 `;
 

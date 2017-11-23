@@ -28,7 +28,7 @@ const ImageWrapper = styled.figure`
     }};
 `;
 
-const ContentImage = (props: {src?: string, alt?: string, options: {ratio?: number}}) => {
+const ContentImage = (props: { src?: string; alt?: string; options: { ratio?: number } }) => {
     const options = {
         type: IMAGE_TYPES.normal,
         ratio: IMAGE_RATIO.landscape
@@ -40,7 +40,7 @@ const ContentImage = (props: {src?: string, alt?: string, options: {ratio?: numb
 
     return (
         <ImageWrapper {...options}>
-            <Image src={src} alt={alt} ratio={options.ratio}/>
+            <Image src={src} alt={alt} ratio={options.ratio} />
         </ImageWrapper>
     );
 };

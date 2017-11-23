@@ -28,7 +28,9 @@ export function valueToString(value: Value, formatters: FormatterConfig): string
     switch (formatterName) {
         case 'PERSON_NAMES':
             try {
-                return JSON.parse(value.value).components.map(x => x.value).join(' ');
+                return JSON.parse(value.value)
+                    .components.map(x => x.value)
+                    .join(' ');
             } catch (e) {
                 console.error(e);
             }
@@ -75,13 +77,13 @@ const getValuesFromObject = (valueObj: any): KeyValue => {
 const createQueryFromValue = (valueObj: any, properties: PropertyList) => {
     const value = getValue(valueObj);
 
-    if (!value) { return ''; }
+    if (!value) {
+        return '';
+    }
 
     for (let i = 0, len = properties.items.length; i < len; i++) {
         if (properties.items[i].name === value) {
-            return properties.items[i].isList
-                ? `${value} { items { value } }`
-                : `${value} { value }`;
+            return properties.items[i].isList ? `${value} { items { value } }` : `${value} { value }`;
         }
     }
 

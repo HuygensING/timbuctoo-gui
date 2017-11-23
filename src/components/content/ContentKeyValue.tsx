@@ -28,13 +28,13 @@ const Key = styled(Content)`
         width: 100%;
     }
 `;
-    
+
 const Values = styled.div`
     display: inline-block;
     width: 80%;
     padding-left: 1rem;
     vertical-align: top;
-    
+
     @media (max-width: ${BREAKPOINT.MOBILE}) {
         width: 100%;
         padding-left: 0;
@@ -46,9 +46,11 @@ const ContentKeyValue = (props: Props) => {
 
     return (
         <KeyValueWrapper>
-            <Key tag="h2"><span title={label}>{label}</span>:</Key>
+            <Key tag="h2">
+                <span title={label}>{label}</span>:
+            </Key>
             <Values>{children}</Values>
-        </KeyValueWrapper>      
+        </KeyValueWrapper>
     );
 };
 

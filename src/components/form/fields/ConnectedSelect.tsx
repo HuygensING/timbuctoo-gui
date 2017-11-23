@@ -16,21 +16,17 @@ interface Props {
 type FullProps = Props & SelectProps & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any>;
 
 const SelectField: SFC<FullProps> = ({ name, selected, metadata, onChange }) => {
-
-    const collection: CollectionMetadata | null = metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection
-        ? metadata.dataSetMetadata.collection
-        : null;
+    const collection: CollectionMetadata | null =
+        metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection
+            ? metadata.dataSetMetadata.collection
+            : null;
 
     const options: OptionProps[] = collection
-        ? collection.properties.items.map(
-            property => ({ key: property.name, value: property.name })
-        )
+        ? collection.properties.items.map(property => ({ key: property.name, value: property.name }))
         : [];
 
     const onChangeHandler = (option: OptionProps) => {
-        const property = collection
-            ? collection.properties.items.find(field => field.name === option.value)
-            : null;
+        const property = collection ? collection.properties.items.find(field => field.name === option.value) : null;
 
         if (property && onChange) {
             onChange(option.value, property);
@@ -41,17 +37,7 @@ const SelectField: SFC<FullProps> = ({ name, selected, metadata, onChange }) => 
         return null;
     }
 
-    return (
-        <Select
-            name={name}
-            options={options}
-            selected={selected}
-            onChange={onChangeHandler}
-        />
-    );
+    return <Select name={name} options={options} selected={selected} onChange={onChangeHandler} />;
 };
 
-export default compose(
-    withRouter,
-    MetadataResolver(QUERY_COLLECTION_EDIT_VIEW)
-)(SelectField);
+export default compose(withRouter, MetadataResolver(QUERY_COLLECTION_EDIT_VIEW))(SelectField);

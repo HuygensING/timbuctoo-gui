@@ -11,7 +11,9 @@ export function safeGet<T, U extends keyof T>(arr: T | undefined | null, index: 
 }
 
 const getDataSetValues = (dataSets: any, dataSetId: string) => {
-    if (!dataSets || !dataSetId) { return noContent; }
+    if (!dataSets || !dataSetId) {
+        return noContent;
+    }
 
     return dataSets[dataSetId];
 };
@@ -19,7 +21,9 @@ const getDataSetValues = (dataSets: any, dataSetId: string) => {
 const getCollectionValues = (dataSets: any, dataSetId: string, collectionId: string | null) => {
     const dataSetValues = getDataSetValues(dataSets, dataSetId);
 
-    if (!dataSetValues || !collectionId) { return noContent; }
+    if (!dataSetValues || !collectionId) {
+        return noContent;
+    }
 
     return dataSetValues[collectionId];
 };

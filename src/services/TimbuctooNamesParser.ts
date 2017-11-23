@@ -4,7 +4,7 @@ const TYPES = {
     role_name: 'ROLE_NAME',
     add_name: 'ADD_NAME',
     name_link: 'NAME_LINK',
-    gen_name: 'GEN_NAME',
+    gen_name: 'GEN_NAME'
 };
 
 type NameTypes = 'SURNAME' | 'FORENAME' | 'ROLE_NAME' | 'ADD_NAME' | 'NAME_LINK' | 'GEN_NAME';
@@ -33,7 +33,7 @@ const mapNames = (names: NameObjectProps[]): Name => {
     };
     let currentName;
     for (let i = 0, limit = names.length; i < limit; i++) {
-        currentName = names[ i ];
+        currentName = names[i];
         switch (currentName.type) {
             case TYPES.forename:
                 name.firstName = currentName.value;
@@ -67,19 +67,17 @@ export const getFullNames = (items: TypeValue[]): Name[] => {
     const names: Name[] = [];
 
     items.forEach(item => {
-        names.push(
-            parseName(item.value)
-        );
+        names.push(parseName(item.value));
     });
 
     return names;
 };
-    
-export const getFullName = ({ items }: {items: TypeValue[]}): Name => {
+
+export const getFullName = ({ items }: { items: TypeValue[] }): Name => {
     return parseName(items[0].value);
 };
 
-export const getFullNameString = (obj: {items: TypeValue[]}): string => {
+export const getFullNameString = (obj: { items: TypeValue[] }): string => {
     const { firstName, middleName, lastName } = getFullName(obj);
     return `${firstName ? firstName : ''} ${middleName ? middleName : ''} ${lastName ? lastName : ''}`;
 };

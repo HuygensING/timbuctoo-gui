@@ -7,7 +7,7 @@ interface Props {
 }
 
 const SvgWrapper = styled.svg`
-  cursor: move;
+    cursor: move;
 `;
 
 const Hamburger: SFC<Props> = props => (
@@ -19,7 +19,7 @@ const Hamburger: SFC<Props> = props => (
             fillRule="evenodd"
             strokeLinecap="round"
         >
-            <path d="M1 1h16M1 5h16M1 9h16"/>
+            <path d="M1 1h16M1 5h16M1 9h16" />
         </g>
     </SvgWrapper>
 );

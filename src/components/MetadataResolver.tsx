@@ -26,7 +26,11 @@ export interface DataProps<TMetadata, TData> {
 
 export type ResolvedApolloProps<T, U, V> = DataProps<T, U> & RouteComponentProps<V>;
 
-export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?: Function, resolverOptions?: { forceFetch: boolean; }) {
+export default function MetadataResolver<P>(
+    metadataQuery: Function,
+    dataQuery?: Function,
+    resolverOptions?: { forceFetch: boolean }
+) {
     return (WrappedComponent: ComponentClass<P> | StatelessComponent<P>) => {
         return class MetaDataQueryResolver extends Component<P & RouteComponentProps<any>, State> {
             noErrors: ErrorState = {
@@ -40,36 +44,37 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
             noQuery: boolean;
             refetch: () => void = this.onRefetch.bind(this);
 
-            state = this.defaultState = {
+            state = (this.defaultState = {
                 ...this.noErrors,
                 metadata: null,
                 data: null,
                 onRefetch: this.refetch
-            };
+            });
 
-            static selectQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
+            static selectQuery(props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean) {
                 if (isMetadataQuery && typeof metadataQuery === 'function') {
-                    return metadataQuery({ ...state, ...props as object });
-
+                    return metadataQuery({ ...state, ...(props as object) });
                 } else if (typeof dataQuery === 'function') {
-                    return dataQuery({ ...state, ...props as object });
+                    return dataQuery({ ...state, ...(props as object) });
                 }
 
                 return null;
             }
 
-            componentDidMount () {
+            componentDidMount() {
                 if (!this.noQuery) {
                     this.queryGraph(this.props, this.state, true);
                 }
             }
 
-            componentWillUpdate (nextProps: Readonly<P & RouteComponentProps<any>>, nextState: State) {
+            componentWillUpdate(nextProps: Readonly<P & RouteComponentProps<any>>, nextState: State) {
                 if (this.noQuery) {
                     return;
                 }
 
-                const isRouteChange = this.props.match.params !== nextProps.match.params || this.props.location.search !== nextProps.location.search;
+                const isRouteChange =
+                    this.props.match.params !== nextProps.match.params ||
+                    this.props.location.search !== nextProps.location.search;
                 const metadataChanged = !this.onlyMetadata && this.state.metadata !== nextState.metadata;
 
                 if (isRouteChange || metadataChanged) {
@@ -78,12 +83,12 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 }
             }
 
-            onRefetch () {
+            onRefetch() {
                 const forceFetch = true;
                 this.queryGraph(this.props, this.state, true, forceFetch);
             }
 
-            render () {
+            render() {
                 if (!this.loading && !this.state.found) {
                     return <NotFound />;
                 }
@@ -93,11 +98,15 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 }
 
                 const loadingProps = { loading: this.loading };
-                return <WrappedComponent {...this.props} {...this.state} {...loadingProps}/>;
+                return <WrappedComponent {...this.props} {...this.state} {...loadingProps} />;
             }
 
-            private queryGraph (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean, forceFetch: boolean = false) {
-
+            private queryGraph(
+                props: Readonly<P & RouteComponentProps<any>>,
+                state: State,
+                isMetadataQuery: boolean,
+                forceFetch: boolean = false
+            ) {
                 if (!isMetadataQuery && this.onlyMetadata) {
                     return null;
                 }
@@ -105,25 +114,28 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 return this.doQuery(props, state, isMetadataQuery, forceFetch);
             }
 
-            private doQuery (props: Readonly<P & RouteComponentProps<any>>, state: State, isMetadataQuery: boolean, forceFetch: boolean) {
+            private doQuery(
+                props: Readonly<P & RouteComponentProps<any>>,
+                state: State,
+                isMetadataQuery: boolean,
+                forceFetch: boolean
+            ) {
                 const query = MetaDataQueryResolver.selectQuery(props, state, isMetadataQuery);
 
                 if (!query) {
                     return this.setNotFound();
                 }
 
-                Client.query({ fetchPolicy: forceFetch ? 'network-only' : 'cache-first' , query })
-                    .then((res) => this.setQuery(res, isMetadataQuery))
+                Client.query({ fetchPolicy: forceFetch ? 'network-only' : 'cache-first', query })
+                    .then(res => this.setQuery(res, isMetadataQuery))
                     .catch(err => this.setError(err));
             }
 
-            private setQuery ({ data }: any, isMetadataQuery: boolean) {
-                return isMetadataQuery
-                    ? this.setMetadata(data)
-                    : this.setData(data);
+            private setQuery({ data }: any, isMetadataQuery: boolean) {
+                return isMetadataQuery ? this.setMetadata(data) : this.setData(data);
             }
 
-            private setMetadata (metadata: any) {
+            private setMetadata(metadata: any) {
                 if (this.onlyMetadata && this.loading) {
                     this.loading = false;
 
@@ -138,7 +150,7 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 });
             }
 
-            private setData (data: any) {
+            private setData(data: any) {
                 this.loading = false;
 
                 this.setState(prevState => ({
@@ -147,7 +159,7 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 }));
             }
 
-            private setNotFound () {
+            private setNotFound() {
                 this.loading = false;
 
                 this.setState({
@@ -156,7 +168,7 @@ export default function MetadataResolver<P>(metadataQuery: Function, dataQuery?:
                 });
             }
 
-            private setError (err: Error) {
+            private setError(err: Error) {
                 this.loading = false;
 
                 this.setState({

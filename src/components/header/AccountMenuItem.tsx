@@ -40,30 +40,25 @@ const IconWrapper = styled.figure`
 const IconColor = '#114235';
 
 const AccountMenuItem: SFC<Props> = ({ onClick, to = '/', icon: Icon, children }) => {
-
     const renderIcon = () => (
         <IconWrapper>
-            <Icon color={IconColor}/>
+            <Icon color={IconColor} />
         </IconWrapper>
     );
 
     return (
         <MenuItem>
-            {
-                onClick
-                    ? (
-                        <Button onClick={onClick}>
-                            {renderIcon()}
-                            {children}
-                        </Button>
-                    )
-                    : (
-                        <LinkedButton to={to}>
-                            {renderIcon()}
-                            {children}
-                        </LinkedButton>
-                    )
-            }
+            {onClick ? (
+                <Button onClick={onClick}>
+                    {renderIcon()}
+                    {children}
+                </Button>
+            ) : (
+                <LinkedButton to={to}>
+                    {renderIcon()}
+                    {children}
+                </LinkedButton>
+            )}
         </MenuItem>
     );
 };

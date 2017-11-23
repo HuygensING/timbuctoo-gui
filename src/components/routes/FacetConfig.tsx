@@ -26,8 +26,7 @@ interface Props {
 
 type FullProps = Props & RouteComponentProps<any> & FormWrapperProps;
 
-interface State {
-}
+interface State {}
 
 const Section = styled.div`
     width: 100%;
@@ -35,29 +34,26 @@ const Section = styled.div`
 `;
 
 class FacetConfig extends PureComponent<FullProps, State> {
-    componentWillReceiveProps (nextProps: FullProps) {
+    componentWillReceiveProps(nextProps: FullProps) {
         const metadata = nextProps.metadata && nextProps.metadata.dataSetMetadata;
         if (metadata && metadata.collection && metadata.collection.indexConfig.facet.length) {
             this.props.setItems(metadata.collection.indexConfig.facet);
         }
     }
 
-    render () {
+    render() {
         // TODO: add when Components are available
 
         if (this.props.loading) {
-            return <Loading/>;
+            return <Loading />;
         }
         // const { collection } = this.props.metadata.dataSetMetadata;
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
                 <Section>
-                    <FullHelmet pageName="View screen"/>
+                    <FullHelmet pageName="View screen" />
                     <Title>View screen</Title>
-                    <DraggableForm
-                        configType="facet"
-                        onSend={this.onSubmit}
-                    />
+                    <DraggableForm configType="facet" onSend={this.onSubmit} />
                 </Section>
             </Grid>
         );
@@ -68,7 +64,7 @@ class FacetConfig extends PureComponent<FullProps, State> {
         // console.log('query', query);
         // console.log(formValues);
         alert('NOTIMPL');
-    }
+    };
 }
 
 const mapDispatchToProps = dispatch => ({

@@ -26,29 +26,35 @@ interface StateProps {
 type FullProps = ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any> & StateProps;
 
 class DataSet extends PureComponent<FullProps> {
-
-    static renderCollectionBar (collection: CollectionMetadata, idx: number, dataSetId: string) {
+    static renderCollectionBar(collection: CollectionMetadata, idx: number, dataSetId: string) {
         return (
             <li key={idx}>
-                <EditCollectionBar key={idx} collection={collection} dataSetId={dataSetId}/>
+                <EditCollectionBar key={idx} collection={collection} dataSetId={dataSetId} />
             </li>
         );
     }
 
-    render () {
+    render() {
         if (this.props.loading || !this.props.metadata.dataSetMetadata) {
-            return <Loading />; 
+            return <Loading />;
         }
 
-        const { dataSetId, title, description, imageUrl, collectionList, owner, contact } = this.props.metadata.dataSetMetadata;
+        const {
+            dataSetId,
+            title,
+            description,
+            imageUrl,
+            collectionList,
+            owner,
+            contact
+        } = this.props.metadata.dataSetMetadata;
 
-        const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
-            ? collectionList.items
-            : [];
+        const collectionItems: CollectionMetadata[] =
+            collectionList && collectionList.items ? collectionList.items : [];
 
         return (
             <section>
-                <FullHelmet pageName={`Dataset: ${title}`}/>
+                <FullHelmet pageName={`Dataset: ${title}`} />
 
                 <Hero
                     title={getValue(title)}
@@ -58,11 +64,8 @@ class DataSet extends PureComponent<FullProps> {
                     buttonText={'Search this dataset'}
                 />
 
-                <Col sm={42} smOffset={3} smPaddingBottom={.5}>
-                    <CollectionTags
-                        colKeys={reorderUnknownsInList(collectionItems)}
-                        dataSetId={dataSetId}
-                    />
+                <Col sm={42} smOffset={3} smPaddingBottom={0.5}>
+                    <CollectionTags colKeys={reorderUnknownsInList(collectionItems)} dataSetId={dataSetId} />
                 </Col>
 
                 {this.renderEditCollections(collectionItems, dataSetId)}
@@ -70,7 +73,7 @@ class DataSet extends PureComponent<FullProps> {
                 <Col sm={48}>
                     <GridSection tag={'div'} gridSize={48} gridOffset={0} cols={2} colSizeOffset={2} gridSpacing={2}>
                         <Colophon owner={owner} contact={contact} />
-                        <Dummy text={'Partners'} height={10}/>
+                        <Dummy text={'Partners'} height={10} />
                     </GridSection>
                 </Col>
 
@@ -79,7 +82,7 @@ class DataSet extends PureComponent<FullProps> {
         );
     }
 
-    private renderProvenanceInfo () {
+    private renderProvenanceInfo() {
         const { provenanceInfo } = this.props.metadata.dataSetMetadata;
 
         if (!provenanceInfo) {
@@ -93,10 +96,10 @@ class DataSet extends PureComponent<FullProps> {
             return null;
         }
 
-        return <About title={title} body={body}/>;
+        return <About title={title} body={body} />;
     }
 
-    private renderEditCollections (collectionItems: CollectionMetadata[], dataSetId: string) {
+    private renderEditCollections(collectionItems: CollectionMetadata[], dataSetId: string) {
         const { loggedIn } = this.props;
 
         if (!loggedIn) {
@@ -104,16 +107,13 @@ class DataSet extends PureComponent<FullProps> {
         }
 
         return (
-            <Col sm={42} smOffset={3} smPaddingBottom={.5}>
+            <Col sm={42} smOffset={3} smPaddingBottom={0.5}>
                 <section>
                     <Title>Collection</Title>
                     <ul>
                         {collectionItems
                             .filter(isKnown)
-                            .map((collection, idx) =>
-                                DataSet.renderCollectionBar(collection , idx, dataSetId)
-                            )
-                        }
+                            .map((collection, idx) => DataSet.renderCollectionBar(collection, idx, dataSetId))}
                     </ul>
                 </section>
             </Col>
@@ -121,10 +121,8 @@ class DataSet extends PureComponent<FullProps> {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     loggedIn: state.user.loggedIn
 });
 
-export default MetadataResolver(QUERY_DATASET)(
-    connect(mapStateToProps)(DataSet)
-);
+export default MetadataResolver(QUERY_DATASET)(connect(mapStateToProps)(DataSet));

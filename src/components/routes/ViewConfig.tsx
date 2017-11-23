@@ -20,10 +20,12 @@ interface Props {
     setTree: (components: ComponentConfig[]) => void;
 }
 
-type FullProps = Props & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any> & RouteComponentProps<any> & FormWrapperProps;
+type FullProps = Props &
+    ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any> &
+    RouteComponentProps<any> &
+    FormWrapperProps;
 
-interface State {
-}
+interface State {}
 
 const Section = styled.div`
     width: 100%;
@@ -87,27 +89,23 @@ const exampleData: ComponentConfig[] = [
 ];
 
 class ViewScreen extends PureComponent<FullProps, State> {
-    componentWillMount () {
+    componentWillMount() {
         this.props.setTree(exampleData);
     }
 
-    render () {
+    render() {
         // TODO: add when Components are available
 
         if (this.props.loading) {
-            return <Loading/>;
+            return <Loading />;
         }
         // const { collection } = this.props.metadata.dataSetMetadata;
         return (
             <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
                 <Section>
-                    <FullHelmet pageName="View screen"/>
+                    <FullHelmet pageName="View screen" />
                     <Title>View screen</Title>
-                    <DraggableForm
-                        id={0}
-                        configType="view"
-                        onSend={this.onSubmit}
-                    />
+                    <DraggableForm id={0} configType="view" onSend={this.onSubmit} />
                 </Section>
             </Grid>
         );
@@ -118,13 +116,11 @@ class ViewScreen extends PureComponent<FullProps, State> {
         // console.log('query', query);
         // console.log(formValues);
         alert('NOTIMPL');
-    }
+    };
 }
 
 const mapDispatchToProps = dispatch => ({
     setTree: (components: ComponentConfig[]) => dispatch(setTree(components))
 });
 
-export default MetadataResolver(QUERY_COLLECTION_PROPERTIES)(
-    connect(null, mapDispatchToProps)(ViewScreen)
-);
+export default MetadataResolver(QUERY_COLLECTION_PROPERTIES)(connect(null, mapDispatchToProps)(ViewScreen));

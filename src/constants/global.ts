@@ -36,7 +36,7 @@ export const COMPONENTS: ComponentTypes = {
     ...NODE_COMPONENTS
 };
 
-export const BUTTON_VARIANT: {[name: string]: ButtonVariant} = {
+export const BUTTON_VARIANT: { [name: string]: ButtonVariant } = {
     normal: 'normal',
     inverted: 'inverted',
     dark: 'dark',

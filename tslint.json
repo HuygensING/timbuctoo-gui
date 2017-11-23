@@ -29,7 +29,7 @@
         "forin": true,
         "handle-callback-err": [true, "^(err|error)$"],
         "import-spacing": true,
-        "indent": [ true, "spaces" ],
+        "indent": [ false ], //handled by prettier
         "interface-name": [true, "never-prefix"],
         "jsdoc-format": true,
         "jsx-no-lambda": false,
@@ -86,16 +86,12 @@
         ],
         "quotemark": [true, "single", "jsx-double"],
         "radix": true,
-        "semicolon": [true, "always"],
+        "semicolon": [false],
         "switch-default": true,
         "ter-arrow-spacing": [true],
         "ter-func-call-spacing": [true],
         "ter-indent": [
-            true,
-            4,
-            {
-                "SwitchCase": 1
-            }
+            false
         ],
         "trailing-comma": [true, {"singleline": "never"}],
 
