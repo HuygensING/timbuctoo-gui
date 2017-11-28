@@ -7,7 +7,11 @@ import { COMPONENTS, DRAGGABLE_COMPONENTS, EMPTY_FACET_CONFIG } from '../../cons
 import { ComponentConfig, FacetConfig } from '../../typings/schema';
 import { SubmitButton } from './fields/Buttons';
 import {
-    addViewConfigChild, addViewConfigNode, getNodeById, lastId, sortViewConfigChild
+    addViewConfigChild,
+    addViewConfigNode,
+    getNodeById,
+    lastId,
+    sortViewConfigChild
 } from '../../reducers/viewconfig';
 import { connect } from 'react-redux';
 import { EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
@@ -40,47 +44,40 @@ interface State {
 }
 
 const AddListButton = styled.button`
-  width: 100%;
-  border: 1px dashed ${props => props.theme.colors.shade.light};
-  padding: 1rem 1.75rem;
-  margin-bottom: 1.5rem;
-  font: ${props => props.theme.fonts.title};
-  text-align: right;
-  cursor: pointer;
-  border-radius: .25rem;
-  
-  &:hover {
-    color: ${props => props.theme.colors.primary.medium};
-    border-color: ${props => props.theme.colors.primary.light};
-  }
+    width: 100%;
+    border: 1px dashed ${props => props.theme.colors.shade.light};
+    padding: 1rem 1.75rem;
+    margin-bottom: 1.5rem;
+    font: ${props => props.theme.fonts.title};
+    text-align: right;
+    cursor: pointer;
+    border-radius: 0.25rem;
+
+    &:hover {
+        color: ${props => props.theme.colors.primary.medium};
+        border-color: ${props => props.theme.colors.primary.light};
+    }
 `;
 
 const StyledSubmitButton = SubmitButton.extend`
-  max-width: 15rem;
-  float: right;
+    max-width: 15rem;
+    float: right;
 `;
 
 class DraggableForm extends PureComponent<Props, State> {
-
     state = {
         openedIndex: null
     };
 
-    render () {
-        return this.props.noForm
-            ? this.renderContent()
-            : (
-                <form onSubmit={this.onSubmit}>
-                    {this.renderContent()}
-                </form>
-            );
+    render() {
+        return this.props.noForm ? this.renderContent() : <form onSubmit={this.onSubmit}>{this.renderContent()}</form>;
     }
 
     private openCloseFn = (idx: number) => {
         this.setState({ openedIndex: idx });
-    }
+    };
 
-    private renderContent () {
+    private renderContent() {
         const { openedIndex } = this.state;
         const { items, configType } = this.props;
         const componentProps = {
@@ -98,27 +95,32 @@ class DraggableForm extends PureComponent<Props, State> {
                     useDragHandle={true}
                     onSortEnd={this.onSortEnd}
                 />
-                <AddListButton type={'button'} onClick={this.addListItem}>+</AddListButton>
-                {this.props.noForm
-                    ? <StyledSubmitButton onClick={this.onSubmit}>save</StyledSubmitButton>
-                    : <StyledSubmitButton type="submit">save</StyledSubmitButton>
-                }
+                <AddListButton type={'button'} onClick={this.addListItem}>
+                    +
+                </AddListButton>
+                {this.props.noForm ? (
+                    <StyledSubmitButton onClick={this.onSubmit}>save</StyledSubmitButton>
+                ) : (
+                    <StyledSubmitButton type="submit">save</StyledSubmitButton>
+                )}
             </div>
         );
     }
 
-    private onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }) => {
+    private onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
         this.setState(state => ({
             openedIndex: oldIndex === state.openedIndex ? newIndex : state.openedIndex
         }));
         this.props.sortItem(oldIndex, newIndex);
-    }
+    };
 
     private addListItem = () => {
-        this.props.addItem(this.props.configType === 'view' ? EMPTY_LEAF_COMPONENT[COMPONENTS.path] : EMPTY_FACET_CONFIG);
-    }
+        this.props.addItem(
+            this.props.configType === 'view' ? EMPTY_LEAF_COMPONENT[COMPONENTS.path] : EMPTY_FACET_CONFIG
+        );
+    };
 
-    private onSubmit (e: any) {
+    private onSubmit(e: any) {
         e.preventDefault();
         // this.props.onSend(this.state.listItems);
     }
@@ -128,13 +130,13 @@ const mapDispatchToProps = (dispatch, { id, configType, ...rest }: Props) => {
     if (configType === 'view') {
         return {
             sortItem: (oldIndex: number, newIndex: number) => dispatch(sortViewConfigChild(id, oldIndex, newIndex)),
-            addChild: (childId) => dispatch(addViewConfigChild(id, childId)),
+            addChild: childId => dispatch(addViewConfigChild(id, childId)),
             addItem: (component: ComponentConfig) => dispatch(addViewConfigNode(component))
         };
     } else {
         return {
             addItem: (facetConfig: FacetConfig) => dispatch(addFacetConfigItem(facetConfig)),
-            sortItem: (oldIndex: number, newIndex: number) => dispatch(sortFacetConfigItem(oldIndex, newIndex)),
+            sortItem: (oldIndex: number, newIndex: number) => dispatch(sortFacetConfigItem(oldIndex, newIndex))
         };
     }
 };

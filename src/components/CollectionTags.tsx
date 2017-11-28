@@ -15,7 +15,7 @@ interface State {
 }
 
 class CollectionTags extends PureComponent<Props, State> {
-    constructor () {
+    constructor() {
         super();
 
         this.state = {
@@ -25,11 +25,11 @@ class CollectionTags extends PureComponent<Props, State> {
         this.toggleOpen = this.toggleOpen.bind(this);
     }
 
-    toggleOpen (idx: number | null) {
+    toggleOpen(idx: number | null) {
         this.setState({ isOpen: idx });
     }
 
-    renderButton (collection: CollectionMetadata, idx: number) {
+    renderButton(collection: CollectionMetadata, idx: number) {
         const { currentCollectionListId, dataSetId, replace } = this.props;
 
         return (
@@ -46,13 +46,11 @@ class CollectionTags extends PureComponent<Props, State> {
         );
     }
 
-    render () {
+    render() {
         const { colKeys } = this.props;
         return (
             <div>
-                <ul>
-                    {colKeys.map((col, idx) => this.renderButton(col, idx))}
-                </ul>
+                <ul>{colKeys.map((col, idx) => this.renderButton(col, idx))}</ul>
             </div>
         );
     }

@@ -6,14 +6,7 @@ const COMPONENT_FIELDS = [1];
 
 const createValuesObject = (fields: ComponentValueField[]) => {
     const object = {};
-    fields.reduce(
-        (obj, { value }: ComponentValueField) => (
-            value.length > 0
-                ? obj[value] = {}
-                : {}
-        ),
-        object
-    );
+    fields.reduce((obj, { value }: ComponentValueField) => (value.length > 0 ? (obj[value] = {}) : {}), object);
     return object;
 };
 
@@ -37,11 +30,9 @@ const mutateQueryObject = (item, queryObject) => {
     }
 };
 
-const createObjectFromFormFields = (items) => {
+const createObjectFromFormFields = items => {
     const queryObject = {};
-    items.forEach(
-        item => mutateQueryObject(item, queryObject)
-    );
+    items.forEach(item => mutateQueryObject(item, queryObject));
     return queryObject;
 };
 
@@ -62,7 +53,7 @@ const createQueryStringFromObject = (object: {}) => {
     return queryString.substring(1, queryString.length - 1);
 };
 
-const createQueryStringFromFormFields = (items) => {
+const createQueryStringFromFormFields = items => {
     const queryObject = createObjectFromFormFields(items);
 
     return createQueryStringFromObject(queryObject);

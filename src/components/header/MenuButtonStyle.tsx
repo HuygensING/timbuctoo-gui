@@ -1,9 +1,9 @@
 import { css } from '../../styled-components';
 
 export const MenuButtonStyle = css`
-    padding: .25rem 1rem;
+    padding: 0.25rem 1rem;
     border: 1px solid #fff;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     position: absolute;
     background: transparent;
     font: ${props => props.theme.fonts.body};

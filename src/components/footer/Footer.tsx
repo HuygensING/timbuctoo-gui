@@ -22,7 +22,7 @@ interface Props {
 const FooterContainer = styled(Grid)`
     flex-shrink: 0;
     padding: ${calcColWidth(1)} ${calcColWidth(3)};
-    background-color: ${(props) => props.theme.colors.black};
+    background-color: ${props => props.theme.colors.black};
 `;
 
 const MenuLink = styled(Link)`
@@ -34,11 +34,11 @@ const WhiteCol = styled(Col)`
 `;
 
 const H1 = styled.h1`
-    ${srOnly}
+    ${srOnly};
 `;
 
 const Dt = styled.dt`
-    ${srOnly}
+    ${srOnly};
 `;
 
 const Dd = styled.dd`
@@ -51,21 +51,18 @@ const Dl = styled.dl`
     margin: 0;
     padding: 0;
     color: #fff;
-    font: ${p => p.theme.fonts.body}    
+    font: ${p => p.theme.fonts.body};
 `;
 
 const Footer: SFC<Props> = ({ isLoggedIn, onLogOut, switchLanguage }) => {
-
     const renderMenu = () => {
         return (
             <ul>
-                {
-                    MENU_ITEMS.map((item: MenuItemProp, idx: number) => (
-                        <li key={idx}>
-                            <MenuLink to={item.path}>{item.name}</MenuLink>
-                        </li>
-                    ))
-                }
+                {MENU_ITEMS.map((item: MenuItemProp, idx: number) => (
+                    <li key={idx}>
+                        <MenuLink to={item.path}>{item.name}</MenuLink>
+                    </li>
+                ))}
             </ul>
         );
     };
@@ -73,13 +70,13 @@ const Footer: SFC<Props> = ({ isLoggedIn, onLogOut, switchLanguage }) => {
     return (
         <FooterContainer tag={'footer'}>
             <H1>Footer</H1>
-            {
-                isLoggedIn &&
+            {isLoggedIn && (
                 <WhiteCol sm={8}>
                     {renderMenu()}
-                    <button onClick={() => switchLanguage('nl')}>NL</button> | <button onClick={() => switchLanguage('en')}>EN</button>
+                    <button onClick={() => switchLanguage('nl')}>NL</button> |{' '}
+                    <button onClick={() => switchLanguage('en')}>EN</button>
                 </WhiteCol>
-            }
+            )}
             <WhiteCol sm={8} smOffset={isLoggedIn ? 26 : 34}>
                 <Content color={'#fff'}>{translate('footer.powered_by')}:</Content>
                 <Dl>
@@ -90,7 +87,9 @@ const Footer: SFC<Props> = ({ isLoggedIn, onLogOut, switchLanguage }) => {
                     <Dd>{addressData.street}</Dd>
 
                     <Dt>{translate('footer.address')}</Dt>
-                    <Dd>{addressData.zip} {addressData.city}</Dd>
+                    <Dd>
+                        {addressData.zip} {addressData.city}
+                    </Dd>
 
                     <Dt>{translate('footer.phone')}</Dt>
                     <Dd>{addressData.phone}</Dd>
@@ -109,7 +108,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onLogOut: () => dispatch(LogOutUser()),
-    switchLanguage: (language) => dispatch(SwitchLanguage(language))
+    switchLanguage: language => dispatch(SwitchLanguage(language))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Footer);

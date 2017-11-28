@@ -1,6 +1,6 @@
 import { injectGlobal } from 'styled-components';
 
-export default () => (
+export default () =>
     injectGlobal`
         @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 
@@ -42,5 +42,4 @@ export default () => (
           border: 0;
           padding: 0;
         }
-    `
-);
+    `;

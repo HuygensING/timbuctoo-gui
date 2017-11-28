@@ -1,11 +1,13 @@
 import { gql } from 'react-apollo';
 import {
-    collectionBase, collectionIndexConfig, collectionPropertiesDensity,
+    collectionBase,
+    collectionIndexConfig,
+    collectionPropertiesDensity,
     collectionSummaryProperties
 } from '../fragments/Metadata';
 import { RouteComponentProps } from 'react-router';
 
-type Props = RouteComponentProps<{ dataSet: string, collection: string }>;
+type Props = RouteComponentProps<{ dataSet: string; collection: string }>;
 
 const QUERY_COLLECTION_PROPERTIES = ({ match }: Props) => {
     const query = `
@@ -28,7 +30,9 @@ const QUERY_COLLECTION_PROPERTIES = ({ match }: Props) => {
         }
     `;
 
-    return gql`${query}${collectionBase}${collectionPropertiesDensity}${collectionSummaryProperties}${collectionIndexConfig}`;
+    return gql`${query}${collectionBase}${collectionPropertiesDensity}${collectionSummaryProperties}${
+        collectionIndexConfig
+    }`;
 };
 
 export default QUERY_COLLECTION_PROPERTIES;

@@ -85,19 +85,15 @@ const exampleData: ComponentConfig[] = [
 
 const ViewConfig: SFC<FullProps> = (props: FullProps) => {
     if (props.metadata.loading) {
-        return <Loading/>;
+        return <Loading />;
     }
     // const { collection } = this.props.metadata.dataSetMetadata;
     return (
         <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
             <Section>
-                <FullHelmet pageName="View screen"/>
+                <FullHelmet pageName="View screen" />
                 <Title>View screen</Title>
-                <DraggableForm
-                    id={0}
-                    configType="view"
-                    onSend={() => alert('NOTIMPL!')}
-                />
+                <DraggableForm id={0} configType="view" onSend={() => alert('NOTIMPL!')} />
             </Section>
         </Grid>
     );
@@ -113,7 +109,7 @@ export default compose<SFC<{}>>(
     metaDataResolver(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
     lifecycle({
-        componentWillMount (nextProps: FullProps) {
+        componentWillMount(nextProps: FullProps) {
             this.props.setTree(exampleData);
         }
     })

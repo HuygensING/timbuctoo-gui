@@ -25,11 +25,7 @@ interface Props {
 }
 
 const ContentDivider = ({ children }: Props) => {
-    return (
-        <DividerLine>
-            {children.length > 0 && <DividerTitle>{children}</DividerTitle>}
-        </DividerLine>
-    );
+    return <DividerLine>{children.length > 0 && <DividerTitle>{children}</DividerTitle>}</DividerLine>;
 };
 
 export default ContentDivider;

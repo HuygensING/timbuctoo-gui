@@ -7,16 +7,12 @@ const ContentWrapper = styled(Content)`
     margin: 0 0 1rem 0;
 `;
 
-const ContentValue = (props: {value: string | undefined}) => {
+const ContentValue = (props: { value: string | undefined }) => {
     if (!props.value) {
         return null;
     }
 
-    return (
-        <ContentWrapper>
-            {props.value}
-        </ContentWrapper>  
-    );
+    return <ContentWrapper>{props.value}</ContentWrapper>;
 };
 
 export default ContentValue;

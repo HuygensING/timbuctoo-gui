@@ -2,12 +2,12 @@ import { lighten, darken } from 'polished/lib';
 import { ThemeProps } from '../typings/layout';
 
 const COLORS = {
-    timbuctooGreen: '#269075', /* Viridian */
-    white: '#FFFFFF', /* white */
-    lightGrey: '#EBEBEB', /* Ash grey */
-    grey: '#888888', /* Taupe gray */
-    darkGrey: '#5C5C5C', /* Davy's grey */
-    black: '#323232', /* Olive Drab #7 */
+    timbuctooGreen: '#269075' /* Viridian */,
+    white: '#FFFFFF' /* white */,
+    lightGrey: '#EBEBEB' /* Ash grey */,
+    grey: '#888888' /* Taupe gray */,
+    darkGrey: '#5C5C5C' /* Davy's grey */,
+    black: '#323232' /* Olive Drab #7 */,
     red: '#D0021B'
 };
 
@@ -32,7 +32,7 @@ const theme: ThemeProps = {
         title: '500 1.5rem/1.2 Roboto, sans-serif',
         subTitle: '500 1rem/1.2 Roboto, sans-serif',
         body: '400 .875rem/1.6 Roboto, sans-serif'
-    },
+    }
 };
 
 export default theme;

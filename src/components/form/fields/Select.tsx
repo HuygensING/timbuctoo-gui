@@ -31,10 +31,10 @@ interface StyledOptionProps {
 const SelectHiddenFieldInput = styled.select`
     display: none;
     appearance: none;
-	line-height: normal;
-	position: relative;
-	background-position: right 10px top 50%;
-	background-repeat: no-repeat;
+    line-height: normal;
+    position: relative;
+    background-position: right 10px top 50%;
+    background-repeat: no-repeat;
     ${StandardStyledFormElements};
 
     @media (max-width: 767px) {
@@ -46,7 +46,7 @@ const Arrow = styled.figure`
     position: absolute;
     display: block;
     top: 50%;
-    right: .5rem;
+    right: 0.5rem;
 
     width: 0.8rem;
     height: 0.8rem;
@@ -55,7 +55,7 @@ const Arrow = styled.figure`
     border-left: 0.4rem solid ${props => props.theme.colors.black};
     border-top: 0.4rem solid transparent;
     border-bottom: 0.4rem solid transparent;
-    
+
     transform: translateY(-50%);
 `;
 
@@ -68,18 +68,18 @@ const SelectWrapper = styled.div`
 const StyledSelect = styled.button`
     background: ${props => props.theme.colors.white};
     min-width: 10rem;
-    border-radius: .25rem;
-    padding: .5rem 2rem .5rem 1rem;
+    border-radius: 0.25rem;
+    padding: 0.5rem 2rem 0.5rem 1rem;
     width: 100%;
     font: ${props => props.theme.fonts.body};
     color: ${props => props.theme.colors.shade.dark};
     border: 1px solid ${props => props.theme.colors.shade.medium};
-    
+
     &:focus {
         outline: none;
         border-color: ${props => props.theme.colors.primary.medium};
     }
-    
+
     @media (max-width: 767px) {
         display: none;
     }
@@ -88,12 +88,12 @@ const StyledSelect = styled.button`
 const StyledOptions = withProps<StyledOptionsProps>(styled.ul)`
     position: absolute;
     overflow: hidden;
-    opacity: ${props => props.isOpen ? '1' : '0'};
-    visibility: ${props => props.isOpen ? 'visible' : 'hidden'};
+    opacity: ${props => (props.isOpen ? '1' : '0')};
+    visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
     top: 0;
     left: 0;
     width: 100%;
-    height: ${props => props.isOpen ? 'auto' : '0px'};
+    height: ${props => (props.isOpen ? 'auto' : '0px')};
     box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.1);
     border-radius: .25rem;
     background: ${props => props.theme.colors.white};
@@ -106,7 +106,7 @@ const StyledOption = withProps<StyledOptionProps>(styled.button)`
     padding: 0.5rem 1rem;
     outline: none;
     font: ${props => props.theme.fonts.body};
-    background: ${props => props.selected ? props.theme.colors.shade.light : props.theme.colors.white};
+    background: ${props => (props.selected ? props.theme.colors.shade.light : props.theme.colors.white)};
     transition: background 0.15s ease-in-out;
 
     &:hover {
@@ -115,8 +115,7 @@ const StyledOption = withProps<StyledOptionProps>(styled.button)`
 `;
 
 class SelectField extends Component<SelectProps, State> {
-
-    constructor (props: SelectProps) {
+    constructor(props: SelectProps) {
         super(props);
 
         this.state = {
@@ -124,14 +123,14 @@ class SelectField extends Component<SelectProps, State> {
             selectedOption: props.selected
         };
     }
-    
-    handleClickOutside () {
+
+    handleClickOutside() {
         this.setState({
             isOpen: false
         });
     }
 
-    render () {
+    render() {
         const { name, options, selected } = this.props;
         const { isOpen, selectedOption } = this.state;
 
@@ -140,32 +139,31 @@ class SelectField extends Component<SelectProps, State> {
                 <SelectHiddenFieldInput
                     onChange={this.onOptionChange}
                     name={name}
-                    defaultValue={selected && selected.value || selectedOption && selectedOption.value}
+                    defaultValue={(selected && selected.value) || (selectedOption && selectedOption.value)}
                 >
-                    {options && options.map((option: OptionProps, idx: number) => (
-                        <option
-                            key={`${option.key}-${idx}`}
-                            value={option.value}
-                        >
-                            {option.key}
-                        </option>
-                    ))}
+                    {options &&
+                        options.map((option: OptionProps, idx: number) => (
+                            <option key={`${option.key}-${idx}`} value={option.value}>
+                                {option.key}
+                            </option>
+                        ))}
                 </SelectHiddenFieldInput>
-                
+
                 <StyledSelect onClick={this.onSelectClick}>
-                    {selected && selected.value || selectedOption && selectedOption.key || name} <Arrow />
+                    {(selected && selected.value) || (selectedOption && selectedOption.key) || name} <Arrow />
                 </StyledSelect>
 
                 <StyledOptions isOpen={isOpen}>
-                    {options && options.map((option: OptionProps, idx: number) => (
-                        <StyledOption
-                            selected={option.value === selected.value}
-                            onClick={(e: any) => this.onOptionClick(e, option)}
-                            key={`${option.key}-${idx}`}
-                        >
-                            {option.key}
-                        </StyledOption>
-                    ))}
+                    {options &&
+                        options.map((option: OptionProps, idx: number) => (
+                            <StyledOption
+                                selected={option.value === selected.value}
+                                onClick={(e: any) => this.onOptionClick(e, option)}
+                                key={`${option.key}-${idx}`}
+                            >
+                                {option.key}
+                            </StyledOption>
+                        ))}
                 </StyledOptions>
             </SelectWrapper>
         );
@@ -176,14 +174,14 @@ class SelectField extends Component<SelectProps, State> {
         this.setState({
             isOpen: !this.state.isOpen
         });
-    }
+    };
 
-    private onOptionClick (e: any, option: OptionProps) {
+    private onOptionClick(e: any, option: OptionProps) {
         e.preventDefault();
         this.setNewOption(option);
     }
 
-    private onOptionChange = (e) => {
+    private onOptionChange = e => {
         e.preventDefault();
 
         const option = {
@@ -192,9 +190,9 @@ class SelectField extends Component<SelectProps, State> {
         };
 
         this.setNewOption(option);
-    }
+    };
 
-    private setNewOption (option: OptionProps) {
+    private setNewOption(option: OptionProps) {
         // TODO: Try to update the actual select options so we trigger the default onChange handler
         this.props.onChange(option);
 

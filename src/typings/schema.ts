@@ -177,19 +177,17 @@ export interface ComponentValueField {
 export type ComponentConfig = NodeComponentConfig | LeafComponentConfig;
 
 export type NodeComponentConfig =
-    ImageComponentConfig |
-    LinkComponentConfig |
-    KeyvalueComponentConfig |
-    TitleComponentConfig |
-    DividerComponentConfig;
+    | ImageComponentConfig
+    | LinkComponentConfig
+    | KeyvalueComponentConfig
+    | TitleComponentConfig
+    | DividerComponentConfig;
 
-export type LeafComponentConfig =
-  LiteralComponentConfig |
-  PathComponentConfig;
+export type LeafComponentConfig = LiteralComponentConfig | PathComponentConfig;
 
 export type FormatterName = 'STRING' | 'PERSON_NAMES';
 
-export type FormatterConfig = Array<{type: string, name: FormatterName }>;
+export type FormatterConfig = Array<{ type: string; name: FormatterName }>;
 // This is the type that is serialized to graphql
 export interface GraphQlComponentConfig {
     type: string;
@@ -218,7 +216,7 @@ export interface PathComponentConfig extends GraphQlComponentConfig {
     subComponents?: ComponentConfig[];
     valueList?: ValueReference[];
 }
-  
+
 export interface TitleComponentConfig extends GraphQlComponentConfig {
     type: 'TITLE';
     subComponents?: [LeafComponentConfig];
@@ -305,7 +303,7 @@ export interface RoleWithMembers {
 }
 
 export type DataSetPermission =
-    'SEARCH_AND_VIEW'
+    | 'SEARCH_AND_VIEW'
     | 'DOWNLOAD_DUMP'
     | 'FORK'
     | 'PUBLISH'

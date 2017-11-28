@@ -23,7 +23,7 @@ const SearchItem = styled.section`
 `;
 
 const ImageWrapper = styled.figure`
-    position: absolute; 
+    position: absolute;
     top: 0;
     right: 0;
     width: 40%;
@@ -37,12 +37,12 @@ const MaxWidth = css`
 
 const SearchTitle = styled(Subtitle)`
     margin: 0;
-    ${MaxWidth}
+    ${MaxWidth};
 `;
 
 const SearchDescription = styled(Content)`
     margin-bottom: 1rem;
-    ${MaxWidth}
+    ${MaxWidth};
 `;
 
 const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataSetId, uri }: ResultDataSetMetadata) => {
@@ -50,16 +50,17 @@ const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataSet
 
     return (
         <SearchItem>
-            <SearchTitle tag="h1">
-                {title}
-            </SearchTitle>
+            <SearchTitle tag="h1">{title}</SearchTitle>
             <SearchDescription>{description}</SearchDescription>
-            <ButtonLink to={url} data-small={true}>{translate('search.view_entry')}</ButtonLink>
-            {imageUrl && imageUrl.indexOf('http') > -1 &&
-            <ImageWrapper>
-                <Image src={imageUrl} ratio={1} fill={true}/>
-            </ImageWrapper>
-            }
+            <ButtonLink to={url} data-small={true}>
+                {translate('search.view_entry')}
+            </ButtonLink>
+            {imageUrl &&
+                imageUrl.indexOf('http') > -1 && (
+                    <ImageWrapper>
+                        <Image src={imageUrl} ratio={1} fill={true} />
+                    </ImageWrapper>
+                )}
         </SearchItem>
     );
 };

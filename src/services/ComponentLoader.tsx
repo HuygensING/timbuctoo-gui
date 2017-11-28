@@ -33,7 +33,7 @@ function getValueOrLiteral(component: LeafComponentConfig | null, data: Entity):
     }
 }
 
-function normalize(result: pathResult): {normalized: uriOrString[], wasSingle: boolean} {
+function normalize(result: pathResult): { normalized: uriOrString[]; wasSingle: boolean } {
     if (!result) {
         return { normalized: [], wasSingle: true };
     } else if (Array.isArray(result)) {
@@ -56,7 +56,7 @@ function normalize(result: pathResult): {normalized: uriOrString[], wasSingle: b
 function makeArraysOfSameLength(arrA: pathResult, arrB: pathResult): [uriOrString[], uriOrString[]] {
     let { normalized: normalizedA, wasSingle: wasSingleA } = normalize(arrA);
     let { normalized: normalizedB, wasSingle: wasSingleB } = normalize(arrB);
-    
+
     if (wasSingleA && !wasSingleB) {
         normalizedA = normalizedB.map(() => normalizedA[0]);
     }
@@ -73,24 +73,36 @@ function makeArraysOfSameLength(arrA: pathResult, arrB: pathResult): [uriOrStrin
     return [normalizedA, normalizedB];
 }
 
-function valOrUri(item: string | {uri: string}): string {
+function valOrUri(item: string | { uri: string }): string {
     return typeof item === 'string' ? item : item.uri;
 }
 
-export class ComponentLoader extends React.Component<{ data: Entity, componentConfig: ComponentConfig, idPerUri: { [key: string]: string | undefined } }, {}> {
-
+export class ComponentLoader extends React.Component<
+    { data: Entity; componentConfig: ComponentConfig; idPerUri: { [key: string]: string | undefined } },
+    {}
+> {
     render(): JSX.Element | JSX.Element[] | null | string {
         const { data, componentConfig } = this.props;
-        
+
         switch (componentConfig.type) {
             case 'DIVIDER':
-                return <ContentDivider>{normalize(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data)).normalized[0]}</ContentDivider>;
+                return (
+                    <ContentDivider>
+                        {normalize(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data)).normalized[0]}
+                    </ContentDivider>
+                );
             case 'TITLE':
-                return <ContentTitle>{normalize(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data)).normalized[0]}</ContentTitle>;
+                return (
+                    <ContentTitle>
+                        {normalize(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data)).normalized[0]}
+                    </ContentTitle>
+                );
             case 'LITERAL':
                 return <ContentValue value={componentConfig.value} />;
             case 'PATH':
-                return normalize(walkPath(componentConfig.value, componentConfig.formatter, data)).normalized.map((x, i) => <ContentValue key={i} value={x as string} />);
+                return normalize(walkPath(componentConfig.value, componentConfig.formatter, data)).normalized.map(
+                    (x, i) => <ContentValue key={i} value={x as string} />
+                );
             case 'IMAGE':
                 const [srcs, alts] = makeArraysOfSameLength(
                     getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data),
@@ -98,12 +110,7 @@ export class ComponentLoader extends React.Component<{ data: Entity, componentCo
                 );
                 // What to do if the arrays are of a different size? use empty string for all the different items
                 return srcs.map((src, i) => (
-                    <ContentImage
-                        key={i}
-                        src={valOrUri(src)}
-                        alt={valOrUri(alts[i])}
-                        options={{}}
-                    />
+                    <ContentImage key={i} src={valOrUri(src)} alt={valOrUri(alts[i])} options={{}} />
                 ));
             case 'LINK':
                 const [tos, values] = makeArraysOfSameLength(
@@ -125,12 +132,25 @@ export class ComponentLoader extends React.Component<{ data: Entity, componentCo
                 });
                 return retVal;
             case 'KEYVALUE':
-                return <ContentKeyValue label={componentConfig.value} data={data} >{(componentConfig.subComponents || []).map((component: ComponentConfig, index: number) => <ComponentLoader key={index} componentConfig={component} data={data} idPerUri={this.props.idPerUri} />)}</ContentKeyValue>;
+                return (
+                    <ContentKeyValue label={componentConfig.value} data={data}>
+                        {(componentConfig.subComponents || []).map((component: ComponentConfig, index: number) => (
+                            <ComponentLoader
+                                key={index}
+                                componentConfig={component}
+                                data={data}
+                                idPerUri={this.props.idPerUri}
+                            />
+                        ))}
+                    </ContentKeyValue>
+                );
             default:
                 checkUnknownComponent(componentConfig);
-                return process.env.NODE_ENV === 'development' ? 
-                    <span style={{ color: 'white', background: 'red' }}>unhandled: {JSON.stringify(componentConfig)}</span> : 
-                    null;
+                return process.env.NODE_ENV === 'development' ? (
+                    <span style={{ color: 'white', background: 'red' }}>
+                        unhandled: {JSON.stringify(componentConfig)}
+                    </span>
+                ) : null;
         }
     }
 }

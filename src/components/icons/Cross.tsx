@@ -6,20 +6,20 @@ interface Props {
 }
 
 const SvgWrapper = styled.svg`
-  cursor: pointer;
-  
-  & path {
-    color: ${props => props.theme.colors.shade.medium}
-  }
-  
-  &:hover {
+    cursor: pointer;
+
     & path {
-      color: ${props => props.theme.colors.error}
+        color: ${props => props.theme.colors.shade.medium};
     }
-  }
+
+    &:hover {
+        & path {
+            color: ${props => props.theme.colors.error};
+        }
+    }
 `;
 
-const Cross: SFC<Props> = (props) => (
+const Cross: SFC<Props> = props => (
     <SvgWrapper {...props} width="16" height="16" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
         <title>Cross</title>
         <path

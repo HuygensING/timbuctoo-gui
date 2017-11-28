@@ -25,7 +25,6 @@ interface StoreProps {
 }
 
 const SearchForm: SFC<Props & StoreProps> = ({ defaultValues, type, handleChange, requestSearch }) => {
-
     const onChange = (e: any) => {
         e.preventDefault();
         const val = e.target.value;
@@ -63,10 +62,9 @@ const SearchForm: SFC<Props & StoreProps> = ({ defaultValues, type, handleChange
                         </ResetButton>
                     )}
                 </Col>
-                <Col sm={3} smOffset={.5}>
+                <Col sm={3} smOffset={0.5}>
                     <SubmitButton type={'submit'}>{translate('search.search')}</SubmitButton>
                 </Col>
-
             </Grid>
         </form>
     );

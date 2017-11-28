@@ -51,21 +51,24 @@ const Hero = ({ title, content, searchPath, buttonText, imgUrl = defaultImgUrl }
     return (
         <Col>
             <HeroImageWrapper>
-                <Image
-                    src={imgUrl}
-                    fill={true}
-                    defaultSrc={defaultImgUrl}
-                />
-                <DarkenImage/>
+                <Image src={imgUrl} fill={true} defaultSrc={defaultImgUrl} />
+                <DarkenImage />
             </HeroImageWrapper>
             <CenteredContent>
-                <Title align="center" color={theme.colors.white}>{title}</Title>
-                {content && <Content align="center" color={theme.colors.white}>{content}</Content>}
-                {searchPath && buttonText && (
-                    <ButtonContainer>
-                        <ButtonLink to={searchPath}>{buttonText}</ButtonLink>
-                    </ButtonContainer>
+                <Title align="center" color={theme.colors.white}>
+                    {title}
+                </Title>
+                {content && (
+                    <Content align="center" color={theme.colors.white}>
+                        {content}
+                    </Content>
                 )}
+                {searchPath &&
+                    buttonText && (
+                        <ButtonContainer>
+                            <ButtonLink to={searchPath}>{buttonText}</ButtonLink>
+                        </ButtonContainer>
+                    )}
             </CenteredContent>
         </Col>
     );

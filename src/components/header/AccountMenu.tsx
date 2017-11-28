@@ -44,14 +44,14 @@ class AccountMenu extends PureComponent<Props, State> {
     state = {
         isOpen: false
     };
-    
+
     renderLoginButton() {
         return <LoginLink />;
     }
 
     renderAvatarButton() {
         const { user } = this.props;
-        return <AvatarButton user={user} onClick={this.onAvatarClickHandler}/>;
+        return <AvatarButton user={user} onClick={this.onAvatarClickHandler} />;
     }
 
     renderMenu() {
@@ -61,16 +61,18 @@ class AccountMenu extends PureComponent<Props, State> {
                 <MenuHeader>
                     <Subtitle>{user.name}</Subtitle>
                     <AvatarContainer>
-                        <Avatar size={SIZE.large} src={user.avatar}/>
+                        <Avatar size={SIZE.large} src={user.avatar} />
                     </AvatarContainer>
                 </MenuHeader>
                 <ul>
-                    {
-                        MENU_ITEMS.map((item: MenuItemProp, idx: number) => (
-                            <AccountMenuItem key={idx} to={item.path} icon={item.icon}>{item.name}</AccountMenuItem>
-                        ))
-                    }
-                    <AccountMenuItem icon={Logout} onClick={onLogOut}>Log out</AccountMenuItem>
+                    {MENU_ITEMS.map((item: MenuItemProp, idx: number) => (
+                        <AccountMenuItem key={idx} to={item.path} icon={item.icon}>
+                            {item.name}
+                        </AccountMenuItem>
+                    ))}
+                    <AccountMenuItem icon={Logout} onClick={onLogOut}>
+                        Log out
+                    </AccountMenuItem>
                 </ul>
             </Tooltip>
         );
@@ -90,7 +92,7 @@ class AccountMenu extends PureComponent<Props, State> {
     private onAvatarClickHandler = (e: any) => {
         const isOpen = !this.state.isOpen;
         this.setState({ isOpen });
-    }
+    };
 }
 
 export default AccountMenu;

@@ -45,8 +45,8 @@ interface ToggleFilterAction {
 interface SubmitSearchAction {
     type: 'SUBMIT_SEARCH';
     payload: {
-        type: keyof FullTextSearch,
-        value: string
+        type: keyof FullTextSearch;
+        value: string;
     };
 }
 
@@ -57,13 +57,12 @@ interface RequestCallAction {
 type Action = MergeFilterAction | ToggleFilterAction | SubmitSearchAction | RequestCallAction;
 
 // Helpers
-const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] => (
-    facets.map((facet) => {
-        const config = configs.find(
-            (configItem, idx) => {
-                const num = facet.caption.split('_')[1];
-                return Number(num) === idx || (!!configItem.caption && facet.caption === configItem.caption);
-            });
+const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] =>
+    facets.map(facet => {
+        const config = configs.find((configItem, idx) => {
+            const num = facet.caption.split('_')[1];
+            return Number(num) === idx || (!!configItem.caption && facet.caption === configItem.caption);
+        });
 
         return {
             paths: config ? config.paths : [],
@@ -71,23 +70,20 @@ const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] => (
             caption: facet.caption,
             values: facet.options || []
         };
-    })
-);
+    });
 
 const setNewSelected = (newFilters: EsFilter[], key: string, valueName: string) => {
     newFilters.forEach((newFilter, filterIdx) => {
         newFilter.paths.forEach(path => {
             if (path === key) {
-                newFilter.values.forEach(
-                    (newValue, valueIdx) => {
-                        if (newValue.name === valueName) {
-                            const value = { ...newValue, selected: true };
-                            let values = newFilter.values.slice();
-                            values[valueIdx] = value;
-                            newFilters[filterIdx] = { ...newFilter, values };
-                        }
+                newFilter.values.forEach((newValue, valueIdx) => {
+                    if (newValue.name === valueName) {
+                        const value = { ...newValue, selected: true };
+                        let values = newFilter.values.slice();
+                        values[valueIdx] = value;
+                        newFilters[filterIdx] = { ...newFilter, values };
                     }
-                );
+                });
             }
         });
     });
@@ -100,21 +96,17 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location) => 
         const searchObj = JSON.parse(search);
 
         if (searchObj.bool.must.length > 0) {
-            searchObj.bool.must.forEach(
-                matches => {
-                    if (!matches.bool || !matches.bool.should) {
-                        return;
-                    }
-
-                    matches.bool.should.forEach(
-                        obj => {
-                            const key = Object.keys(obj.match)[0];
-                            const value = obj.match[key];
-                            return setNewSelected(newFilters, key.slice(0, -4), value);
-                        }
-                    );
+            searchObj.bool.must.forEach(matches => {
+                if (!matches.bool || !matches.bool.should) {
+                    return;
                 }
-            );
+
+                matches.bool.should.forEach(obj => {
+                    const key = Object.keys(obj.match)[0];
+                    const value = obj.match[key];
+                    return setNewSelected(newFilters, key.slice(0, -4), value);
+                });
+            });
         }
     }
 };

@@ -6,7 +6,7 @@ import { Content } from '../layout/StyledCopy';
 const checkMark = require('../../assets/icons/checkmark.svg');
 
 const Amount = styled.span`
-   float: right;
+    float: right;
 `;
 
 interface Props {
@@ -33,11 +33,11 @@ const CheckBox = withProps<{ isSelected?: boolean }>(styled.figure)`
     height: 1rem;
     border: 1px  solid ${props => props.theme.colors.shade.medium};
     border-radius: .125rem;
-    ${props => props.isSelected ? checkBoxChecked : ''}
+    ${props => (props.isSelected ? checkBoxChecked : '')}
 `;
 
 const Fieldset = styled.fieldset`
-    padding: .25rem 0 .25rem 2rem;
+    padding: 0.25rem 0 0.25rem 2rem;
     cursor: pointer;
     position: relative;
 `;
@@ -45,10 +45,7 @@ const Fieldset = styled.fieldset`
 const maxAmount: number = 100;
 
 const MultiselectFormOption: SFC<Props> = ({ option, onToggle }) => {
-
-    const name = option.name.length > maxAmount
-        ? `${option.name.substr(0, maxAmount)}...`
-        : option.name;
+    const name = option.name.length > maxAmount ? `${option.name.substr(0, maxAmount)}...` : option.name;
 
     return (
         <li key={option.name}>

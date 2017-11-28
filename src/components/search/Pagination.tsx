@@ -18,8 +18,8 @@ const Container = styled.div`
 `;
 
 const Button = ButtonLinkBase.extend`
-    margin: .25rem;
-    
+    margin: 0.25rem;
+
     @media (max-width: ${BREAKPOINT.MOBILE}) {
         flex: 2;
     }
@@ -31,11 +31,21 @@ const Pagination: SFC<Props & RouteComponentProps<any>> = ({ nextCursor, prevCur
 
     return (
         <Container>
-            <Button data-small={true} to={{ pathname, search: `${searchParam}cursor=${prevCursor}` }} disabled={!prevCursor} replace={true}>
-                <Caret rotate={true}/>
+            <Button
+                data-small={true}
+                to={{ pathname, search: `${searchParam}cursor=${prevCursor}` }}
+                disabled={!prevCursor}
+                replace={true}
+            >
+                <Caret rotate={true} />
             </Button>
-            <Button data-small={true} to={{ pathname, search: `${searchParam}cursor=${nextCursor}` }} disabled={!nextCursor} replace={true}>
-                <Caret/>
+            <Button
+                data-small={true}
+                to={{ pathname, search: `${searchParam}cursor=${nextCursor}` }}
+                disabled={!nextCursor}
+                replace={true}
+            >
+                <Caret />
             </Button>
         </Container>
     );

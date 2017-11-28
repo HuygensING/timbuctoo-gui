@@ -19,11 +19,10 @@ interface DispatchProps {
     setItems: (configs: IFacetConfig[]) => void;
 }
 
-type FullProps =
-    MetaDataProps
-    & DispatchProps
-    & RouteComponentProps<{ dataSet: string, collection: string }>
-    & FormWrapperProps;
+type FullProps = MetaDataProps &
+    DispatchProps &
+    RouteComponentProps<{ dataSet: string; collection: string }> &
+    FormWrapperProps;
 
 const Section = styled.div`
     width: 100%;
@@ -35,12 +34,9 @@ const FacetConfig: SFC<FullProps> = (props: FullProps) => {
     return (
         <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
             <Section>
-                <FullHelmet pageName="View screen"/>
+                <FullHelmet pageName="View screen" />
                 <Title>View screen</Title>
-                <DraggableForm
-                    configType="facet"
-                    onSend={() => alert('NOTIMPL!')}
-                />
+                <DraggableForm configType="facet" onSend={() => alert('NOTIMPL!')} />
             </Section>
         </Grid>
     );
@@ -55,7 +51,7 @@ export default compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     lifecycle({
-        componentWillReceiveProps (nextProps: FullProps) {
+        componentWillReceiveProps(nextProps: FullProps) {
             const metadata = nextProps.metadata && nextProps.metadata.dataSetMetadata;
             if (metadata && metadata.collection && metadata.collection.indexConfig.facet.length) {
                 this.props.setItems(metadata.collection.indexConfig.facet);

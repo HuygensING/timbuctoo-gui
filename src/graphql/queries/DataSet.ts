@@ -2,7 +2,7 @@ import { gql } from 'react-apollo';
 import { dataSetMetadataFragment } from '../fragments/Metadata';
 import { RouteComponentProps } from 'react-router';
 
-export type Props = RouteComponentProps<{ dataSet: string, collection: string }>;
+export type Props = RouteComponentProps<{ dataSet: string; collection: string }>;
 
 const QUERY_DATASET = ({ match }: Props) => {
     const query = `

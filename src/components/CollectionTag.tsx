@@ -45,36 +45,39 @@ const PropertyLabel = styled(Label)`
     margin-right: 1rem;
 `;
 
-const DensityLabel = styled(Label)`
-`;
+const DensityLabel = styled(Label)``;
 
 const getButtonVariant = (CollectionIsKnown: boolean, CollectionIsSelected: boolean): ButtonVariant => {
     if (!CollectionIsKnown) {
         return BUTTON_VARIANT.disabled;
     }
 
-    return CollectionIsSelected
-        ? BUTTON_VARIANT.dark
-        : BUTTON_VARIANT.inverted;
+    return CollectionIsSelected ? BUTTON_VARIANT.dark : BUTTON_VARIANT.inverted;
 };
 
-const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, currentCollectionListId, dataSetId, replace }) => {
+const CollectionTag: SFC<Props> = ({
+    isOpen,
+    index,
+    toggleOpen,
+    collection,
+    currentCollectionListId,
+    dataSetId,
+    replace
+}) => {
     const { title, collectionId, collectionListId, properties, total } = collection;
 
     const renderPropertiesPanel = () => {
         return (
             <Tooltip>
                 <PropertiesHeader>
-                    <Subtitle>{collectionId} ({total})</Subtitle>
-                    <PropertyLabel>{translate('details.collection.property')}</PropertyLabel><DensityLabel>{translate('details.collection.density')}</DensityLabel>
+                    <Subtitle>
+                        {collectionId} ({total})
+                    </Subtitle>
+                    <PropertyLabel>{translate('details.collection.property')}</PropertyLabel>
+                    <DensityLabel>{translate('details.collection.density')}</DensityLabel>
                 </PropertiesHeader>
                 {properties.items.map((property: Property, idx: number) => (
-                    <ProgressBar
-                        key={idx}
-                        label={property.name}
-                        width={'100px'}
-                        progress={property.density}
-                    />
+                    <ProgressBar key={idx} label={property.name} width={'100px'} progress={property.density} />
                 ))}
             </Tooltip>
         );
@@ -85,11 +88,8 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
         const collectionSelected = !!currentCollectionListId && currentCollectionListId === collectionListId;
 
         const buttonVariant = getButtonVariant(collectionKnown, collectionSelected);
-        const buttonTitle = getValue(title) || (
-            collectionKnown
-                ? collectionId
-                : translate('details.collection.unknown')
-        );
+        const buttonTitle =
+            getValue(title) || (collectionKnown ? collectionId : translate('details.collection.unknown'));
 
         return (
             <ButtonLink
@@ -106,10 +106,7 @@ const CollectionTag: SFC<Props> = ({ isOpen, index, toggleOpen, collection, curr
     };
 
     return (
-        <ListItem
-            onMouseEnter={() => toggleOpen(index)}
-            onMouseLeave={() => toggleOpen(null)}
-        >
+        <ListItem onMouseEnter={() => toggleOpen(index)} onMouseLeave={() => toggleOpen(null)}>
             {renderButton()}
             {isOpen && renderPropertiesPanel()}
         </ListItem>
