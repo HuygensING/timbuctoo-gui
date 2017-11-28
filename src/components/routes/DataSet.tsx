@@ -1,7 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, { ComponentType, PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { CollectionMetadata, DataSetMetadata } from '../../typings/schema';
-import Loading from '../Loading';
+import { CollectionMetadata } from '../../typings/schema';
 import FullHelmet from '../FullHelmet';
 import Hero from '../hero/Hero';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
@@ -16,31 +15,25 @@ import CollectionTags from '../CollectionTags';
 import About from '../About';
 import { Title } from '../layout/StyledCopy';
 import EditCollectionBar from '../dataSet/EditCollectionBar';
-import MetadataResolver, { ResolvedApolloProps } from '../MetadataResolver';
-import QUERY_DATASET from '../../graphql/queries/DataSet';
+import QUERY_DATASET, { Props as DataSetProps } from '../../graphql/queries/DataSet';
+import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
+import { withRouter } from 'react-router';
+import { compose } from 'redux';
+import renderLoader from '../../services/renderLoader';
 
 interface StateProps {
     loggedIn: boolean;
 }
 
-type FullProps = ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any> & StateProps;
+type Props =
+    MetaDataProps
+    & StateProps
+    & DataSetProps;
 
-class DataSet extends PureComponent<FullProps> {
-
-    static renderCollectionBar (collection: CollectionMetadata, idx: number, dataSetId: string) {
-        return (
-            <li key={idx}>
-                <EditCollectionBar key={idx} collection={collection} dataSetId={dataSetId}/>
-            </li>
-        );
-    }
+class DataSet extends PureComponent<Props> {
 
     render () {
-        if (this.props.loading || !this.props.metadata.dataSetMetadata) {
-            return <Loading />; 
-        }
-
-        const { dataSetId, title, description, imageUrl, collectionList, owner, contact } = this.props.metadata.dataSetMetadata;
+        const { dataSetId, title, description, imageUrl, collectionList, owner, contact } = this.props.metadata.dataSetMetadata!;
 
         const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
             ? collectionList.items
@@ -48,13 +41,13 @@ class DataSet extends PureComponent<FullProps> {
 
         return (
             <section>
-                <FullHelmet pageName={`Dataset: ${title}`}/>
+                <FullHelmet pageName={`Dataset: ${title}`} />
 
                 <Hero
                     title={getValue(title)}
                     content={getValue(description)}
                     imgUrl={getValue(imageUrl)}
-                    searchPath={`${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionItems[0].collectionId)}`}
+                    searchPath={collectionItems.length ? `${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionItems[0].collectionId)}` : ''}
                     buttonText={'Search this dataset'}
                 />
 
@@ -65,12 +58,32 @@ class DataSet extends PureComponent<FullProps> {
                     />
                 </Col>
 
-                {this.renderEditCollections(collectionItems, dataSetId)}
+                {this.props.loggedIn && (
+                    <Col sm={42} smOffset={3} smPaddingBottom={.5}>
+                        <section>
+                            <Title>Collection</Title>
+                            <ul>
+                                {collectionItems
+                                    .filter(isKnown)
+                                    .map((collection, idx) =>
+                                        <li key={idx}>
+                                            <EditCollectionBar 
+                                                key={idx} 
+                                                collection={collection}
+                                                dataSetId={dataSetId} 
+                                            />
+                                        </li>
+                                    )
+                                }
+                            </ul>
+                        </section>
+                    </Col>
+                )}
 
                 <Col sm={48}>
                     <GridSection tag={'div'} gridSize={48} gridOffset={0} cols={2} colSizeOffset={2} gridSpacing={2}>
                         <Colophon owner={owner} contact={contact} />
-                        <Dummy text={'Partners'} height={10}/>
+                        <Dummy text={'Partners'} height={10} />
                     </GridSection>
                 </Col>
 
@@ -80,7 +93,7 @@ class DataSet extends PureComponent<FullProps> {
     }
 
     private renderProvenanceInfo () {
-        const { provenanceInfo } = this.props.metadata.dataSetMetadata;
+        const { provenanceInfo } = this.props.metadata.dataSetMetadata!;
 
         if (!provenanceInfo) {
             return null;
@@ -93,31 +106,7 @@ class DataSet extends PureComponent<FullProps> {
             return null;
         }
 
-        return <About title={title} body={body}/>;
-    }
-
-    private renderEditCollections (collectionItems: CollectionMetadata[], dataSetId: string) {
-        const { loggedIn } = this.props;
-
-        if (!loggedIn) {
-            return false;
-        }
-
-        return (
-            <Col sm={42} smOffset={3} smPaddingBottom={.5}>
-                <section>
-                    <Title>Collection</Title>
-                    <ul>
-                        {collectionItems
-                            .filter(isKnown)
-                            .map((collection, idx) =>
-                                DataSet.renderCollectionBar(collection , idx, dataSetId)
-                            )
-                        }
-                    </ul>
-                </section>
-            </Col>
-        );
+        return <About title={title} body={body} />;
     }
 }
 
@@ -125,6 +114,9 @@ const mapStateToProps = (state) => ({
     loggedIn: state.user.loggedIn
 });
 
-export default MetadataResolver(QUERY_DATASET)(
-    connect(mapStateToProps)(DataSet)
-);
+export default compose<ComponentType<{}>>(
+    withRouter,
+    metaDataResolver(QUERY_DATASET),
+    renderLoader('metadata'),
+    connect(mapStateToProps)
+)(DataSet);

@@ -3,8 +3,11 @@ import {
     collectionBase, collectionIndexConfig, collectionPropertiesDensity,
     collectionSummaryProperties
 } from '../fragments/Metadata';
+import { RouteComponentProps } from 'react-router';
 
-const QUERY_COLLECTION_PROPERTIES = ({ match }) => {
+type Props = RouteComponentProps<{ dataSet: string, collection: string }>;
+
+const QUERY_COLLECTION_PROPERTIES = ({ match }: Props) => {
     const query = `
         query CollectionProperties {
             dataSetMetadata(dataSetId: "${match.params.dataSet}") {

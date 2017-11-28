@@ -2,8 +2,11 @@ import { gql } from 'react-apollo';
 import { collectionPropertiesReference, CollectionPropertiesReference } from '../fragments/Metadata';
 import { componentsFragment, ComponentsFragment } from '../fragments/Components';
 import { checkTypes, Query } from '../../typings/schema';
+import { RouteComponentProps } from 'react-router';
 
-export const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
+export type Props = RouteComponentProps<{dataSet: string, collection: string}>;
+
+export const QUERY_ENTRY_PROPERTIES = ({ match }: Props) => {
     const query = `
         query EntryProperties {
             dataSetMetadata(dataSetId: "${match.params.dataSet}") {
@@ -16,12 +19,10 @@ export const QUERY_ENTRY_PROPERTIES = ({ match, collectionCursor = null }) => {
                         }
                     }
                 }
-                collection(collectionId: "${collectionCursor ? collectionCursor : match.params.collection}") {
+                collection(collectionId: "${match.params.collection}") {
                     title { value }
                     collectionId
-                    ${!collectionCursor && `
-                        ...CollectionPropertiesReference
-                    `}
+                    ...CollectionPropertiesReference
                     viewConfig {
                         ...ComponentsFragment
                     }
