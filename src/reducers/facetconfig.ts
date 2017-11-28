@@ -1,6 +1,7 @@
-import { FacetConfig } from '../typings/schema';
+import { DataSetMetadata, FacetConfig } from '../typings/schema';
 import { NormalizedFacetConfig } from '../typings/index';
 import { arrayMove } from 'react-sortable-hoc';
+import { GraphToStateAction } from './rootReducer';
 
 // state def
 export type FacetConfigReducer = NormalizedFacetConfig[];
@@ -11,12 +12,6 @@ type AddFacetConfigItemAction = {
     type: 'ADD_FACET_CONFIG_ITEM',
     payload: {
         facetConfig: FacetConfig
-    }
-};
-type SetFacetConfigItemsAction = {
-    type: 'SET_FACET_CONFIG_ITEMS',
-    payload: {
-        facetConfigs: FacetConfig[]
     }
 };
 
@@ -45,10 +40,10 @@ type SortFacetConfigItemAction = {
 
 type Action =
     AddFacetConfigItemAction
-    | SetFacetConfigItemsAction
     | DeleteFacetConfigItemAction
     | ModifyFacetConfigItemAction
-    | SortFacetConfigItemAction;
+    | SortFacetConfigItemAction
+    | GraphToStateAction;
 
 // selectors
 
@@ -66,7 +61,7 @@ const item = (state: NormalizedFacetConfig | null, action: Action, items: Normal
         case 'ADD_FACET_CONFIG_ITEM':
             return {
                 ...action.payload.facetConfig,
-                id: lastId(items) + 1,
+                id: lastId(items) + 1
             };
         case 'MODIFY_FACET_CONFIG_ITEM':
             return {
@@ -78,13 +73,9 @@ const item = (state: NormalizedFacetConfig | null, action: Action, items: Normal
     }
 };
 
-const multipleItems = (action: Action): NormalizedFacetConfig[] => {
-    if (action.type !== 'SET_FACET_CONFIG_ITEMS') {
-        return [];
-    }
-
+const multipleItems = (facetConfigs: FacetConfig[]): NormalizedFacetConfig[] => {
     let items: NormalizedFacetConfig[] = [];
-    for (const facetConfig of action.payload.facetConfigs) {
+    for (const facetConfig of facetConfigs) {
         items = [...items, item(null, { type: 'ADD_FACET_CONFIG_ITEM', payload: { facetConfig } }, items)];
     }
     return items;
@@ -94,8 +85,16 @@ export default (state: FacetConfigReducer = defaultState, action: Action) => {
     switch (action.type) {
         case 'ADD_FACET_CONFIG_ITEM':
             return [...state, item(null, action, state)];
-        case 'SET_FACET_CONFIG_ITEMS':
-            return [...multipleItems(action)];
+        case 'GRAPH_TO_STATE':
+            if (action.key !== 'facetconfig') {
+                return state;
+            }
+            const metadata = action.payload.dataSetMetadata as DataSetMetadata;
+            if (metadata && metadata.collection && metadata.collection.indexConfig.facet.length) {
+                return [...multipleItems(metadata.collection.indexConfig.facet)];
+            } else {
+                return state;
+            }
         case 'MODIFY_FACET_CONFIG_ITEM': {
             const index = state.findIndex(config => config.id === action.payload.id);
             const nextState = [...state];
@@ -114,13 +113,6 @@ export const addFacetConfigItem = (facetConfig: FacetConfig): AddFacetConfigItem
     type: 'ADD_FACET_CONFIG_ITEM',
     payload: {
         facetConfig
-    }
-});
-
-export const setFacetConfigItems = (facetConfigs: FacetConfig[]): SetFacetConfigItemsAction => ({
-    type: 'SET_FACET_CONFIG_ITEMS',
-    payload: {
-        facetConfigs
     }
 });
 

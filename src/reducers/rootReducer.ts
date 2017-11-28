@@ -7,6 +7,18 @@ import facetconfig, { FacetConfigReducer } from './facetconfig';
 
 import Client from '../services/ApolloClient';
 
+export type GraphToStateAction = {
+    type: 'GRAPH_TO_STATE',
+    key: string,
+    payload: any
+};
+
+export const graphToState = (key: string, payload: any): GraphToStateAction => ({
+    type: 'GRAPH_TO_STATE',
+    key,
+    payload
+});
+
 export interface RootState {
     user: UserReducer;
     search: SearchReducer;

@@ -113,6 +113,7 @@ export default compose<SFC<{}>>(
     metaDataResolver(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
     lifecycle({
+        // todo remove this & add graphToState here once real data is returned by graph
         componentWillMount (nextProps: FullProps) {
             this.props.setTree(exampleData);
         }
