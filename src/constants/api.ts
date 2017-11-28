@@ -1,4 +1,14 @@
-const { REACT_APP_API_URL, REACT_APP_LOGIN_URL } = process.env;
+declare global {
+    interface Window {
+        // added in public/dynamic_env.js
+        dynamicEnv: {
+            REACT_APP_API_URL: string;
+            REACT_APP_LOGIN_URL: string;
+        };
+    }
+}
+
+const { REACT_APP_API_URL, REACT_APP_LOGIN_URL } = Object.assign({}, process.env, window.dynamicEnv);
 
 if (!REACT_APP_API_URL) {
     console.error('You forgot to add the API URL (REACT_APP_API_URL) in the .env file');
