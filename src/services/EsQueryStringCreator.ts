@@ -33,7 +33,7 @@ export interface EsMatch {
  * @param {string[]} paths
  * @returns {string}
  */
-export const setFirstPathAsString = (paths: string[]): string => (`${paths[0]}.raw`);
+export const setFirstPathAsString = (paths: string[]): string => `${paths[0]}.raw`;
 
 /** retrieve all selected values, create a new 'match' for each of them and add them to the query
  *

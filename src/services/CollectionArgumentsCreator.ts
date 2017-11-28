@@ -12,8 +12,8 @@ interface Agg {
         name: {
             terms: {
                 field: string;
-            }
-        }
+            };
+        };
     };
 }
 
@@ -33,29 +33,26 @@ const doubleStringify = (obj: {}): string => JSON.stringify(JSON.stringify(obj))
 const setFilteredSearchObj = (searchObj: EsQuery, field: string): EsQuery => {
     const filteredSearchObj: EsQuery = { bool: { must: [] } };
 
-    searchObj.bool.must.forEach(
-        (obj: EsMatches) => {
-            if (obj.hasOwnProperty('query_string')) {
-                filteredSearchObj.bool.must.push(obj);
+    searchObj.bool.must.forEach((obj: EsMatches) => {
+        if (obj.hasOwnProperty('query_string')) {
+            filteredSearchObj.bool.must.push(obj);
+        } else if (obj.bool && obj.bool.should && obj.bool.should.length > 0 && obj.bool.should[0].match) {
+            const { match } = obj.bool.should[0];
+            let keyIsField: boolean = false;
 
-            } else if (obj.bool && obj.bool.should && obj.bool.should.length > 0 && obj.bool.should[0].match) {
-                const { match } = obj.bool.should[0];
-                let keyIsField: boolean = false;
-
-                for (let key in match) {
-                    if (match.hasOwnProperty(key)) {
-                        if (key === field) {
-                            keyIsField = true;
-                        }
+            for (let key in match) {
+                if (match.hasOwnProperty(key)) {
+                    if (key === field) {
+                        keyIsField = true;
                     }
                 }
+            }
 
-                if (!keyIsField) {
-                    filteredSearchObj.bool.must.push(obj);
-                }
+            if (!keyIsField) {
+                filteredSearchObj.bool.must.push(obj);
             }
         }
-    );
+    });
 
     return filteredSearchObj;
 };
@@ -71,7 +68,6 @@ const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Agg
 
     const entries = facets.entries();
     for (const [idx, { paths, caption, type }] of entries) {
-
         if (type === 'MultiSelect' && (caption || type) && paths) {
             const field = setFirstPathAsString(paths);
             const filter = searchObj ? setFilteredSearchObj(searchObj, field) : {};
@@ -102,9 +98,8 @@ const setElasticSearchParams = (indexConfig: IndexConfig, search: string): strin
     const searchObj: EsQuery | null = search ? JSON.parse(search) : null;
     const aggs: Aggs = createAggsString(indexConfig.facet, searchObj);
 
-    const elasticSearchParams: ElasticSearchParams = !search || !searchObj
-        ? { aggs }
-        : { aggs, post_filter: searchObj };
+    const elasticSearchParams: ElasticSearchParams =
+        !search || !searchObj ? { aggs } : { aggs, post_filter: searchObj };
 
     return doubleStringify(elasticSearchParams);
 };

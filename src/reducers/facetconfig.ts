@@ -9,37 +9,37 @@ const defaultState: FacetConfigReducer = [];
 
 // actions
 type AddFacetConfigItemAction = {
-    type: 'ADD_FACET_CONFIG_ITEM',
+    type: 'ADD_FACET_CONFIG_ITEM';
     payload: {
-        facetConfig: FacetConfig
-    }
+        facetConfig: FacetConfig;
+    };
 };
 
 type DeleteFacetConfigItemAction = {
-    type: 'DELETE_FACET_CONFIG_ITEM',
+    type: 'DELETE_FACET_CONFIG_ITEM';
     payload: {
-        id: number
-    }
+        id: number;
+    };
 };
 
 type ModifyFacetConfigItemAction = {
-    type: 'MODIFY_FACET_CONFIG_ITEM',
+    type: 'MODIFY_FACET_CONFIG_ITEM';
     payload: {
-        id: number,
-        facetConfig: FacetConfig
-    }
+        id: number;
+        facetConfig: FacetConfig;
+    };
 };
 
 type SortFacetConfigItemAction = {
-    type: 'SORT_FACET_CONFIG_ITEM',
+    type: 'SORT_FACET_CONFIG_ITEM';
     payload: {
-        oldIndex: number,
-        newIndex: number
-    }
+        oldIndex: number;
+        newIndex: number;
+    };
 };
 
 type Action =
-    AddFacetConfigItemAction
+    | AddFacetConfigItemAction
     | DeleteFacetConfigItemAction
     | ModifyFacetConfigItemAction
     | SortFacetConfigItemAction
@@ -47,16 +47,21 @@ type Action =
 
 // selectors
 
-export const lastId = (state: FacetConfigReducer): number => state
-    .map(config => config.id)
-    .reduce(((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue)), -1);
+export const lastId = (state: FacetConfigReducer): number =>
+    state
+        .map(config => config.id)
+        .reduce((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue), -1);
 
 export const getById = (id: number, state: FacetConfigReducer): NormalizedFacetConfig | undefined =>
     state.find(config => config.id === id);
 
 // reducer
 
-const item = (state: NormalizedFacetConfig | null, action: Action, items: NormalizedFacetConfig[]): NormalizedFacetConfig => {
+const item = (
+    state: NormalizedFacetConfig | null,
+    action: Action,
+    items: NormalizedFacetConfig[]
+): NormalizedFacetConfig => {
     switch (action.type) {
         case 'ADD_FACET_CONFIG_ITEM':
             return {

@@ -16,8 +16,7 @@ export interface ResultDataSetMetadata {
     collections: CollectionMetadataList;
 }
 
-const SearchItem = styled.section`
-`;
+const SearchItem = styled.section``;
 
 const CollectionList = styled.ul`
     margin: 0;
@@ -29,31 +28,31 @@ const CollectionListItem = styled.li`
     margin-right: 5px;
 `;
 
-const CollectionLabel = styled(Label)`
-`;
+const CollectionLabel = styled(Label)``;
 
 const SearchResulDataset = (props: ResultDataSetMetadata) => {
     const { title, description, collections, imageUrl } = props;
 
-    const renderCollections = () => (
+    const renderCollections = () =>
         collections.items.map((collection, index) => (
             <CollectionListItem key={index}>
-                <CollectionLabel>{collection.title} ({collection.properties && collection.properties.items.length})</CollectionLabel>
+                <CollectionLabel>
+                    {collection.title} ({collection.properties && collection.properties.items.length})
+                </CollectionLabel>
             </CollectionListItem>
-        ))
-    );
+        ));
 
     const imageSrc = imageUrl ? imageUrl : '';
 
     return (
         <SearchItem>
-            <Image src={imageSrc} ratio={4 / 2}/>
+            <Image src={imageSrc} ratio={4 / 2} />
             <Subtitle tag="h1">{title}</Subtitle>
-            <CollectionList>
-                {renderCollections()}
-            </CollectionList>
+            <CollectionList>{renderCollections()}</CollectionList>
             <Content>{description}</Content>
-            <ButtonLink to="/" data-small={true}>{translate('search.view_dataset')}</ButtonLink>
+            <ButtonLink to="/" data-small={true}>
+                {translate('search.view_dataset')}
+            </ButtonLink>
         </SearchItem>
     );
 };

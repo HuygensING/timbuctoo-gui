@@ -1,7 +1,7 @@
 import { COMPONENTS } from './global';
 import { ComponentType } from '../typings/schema';
 
-export const SELECT_COMPONENT_TYPES: { key: string, value: ComponentType }[] = [
+export const SELECT_COMPONENT_TYPES: { key: string; value: ComponentType }[] = [
     {
         key: 'Title',
         value: COMPONENTS.title

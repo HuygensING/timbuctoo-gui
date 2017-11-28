@@ -36,7 +36,8 @@ const Progress = withProps<Props>(styled.figure)`
     position: relative;
     width: ${props => `${props.progress}%`};
     height: 100%;
-    background: ${props => props.progress && props.progress >= 100 ? props.theme.colors.primary.light : props.theme.colors.shade.medium};
+    background: ${props =>
+        props.progress && props.progress >= 100 ? props.theme.colors.primary.light : props.theme.colors.shade.medium};
     transform-origin: left;
     // animation: ${ProgressAnimation} 1s ease-in-out;
 `;
@@ -49,7 +50,6 @@ interface Props {
 }
 
 const ProgressBar: SFC<Props> = ({ label, width, progress, filter = FILTERED_LABELS }) => {
-
     // Check if label exists, if not don't render component
     if (!label) {
         return null;

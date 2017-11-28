@@ -12,10 +12,7 @@ import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver
 import renderLoader from '../../services/renderLoader';
 import graphToState from '../../services/graphToState';
 
-type FullProps =
-    MetaDataProps
-    & RouteComponentProps<{ dataSet: string, collection: string }>
-    & FormWrapperProps;
+type FullProps = MetaDataProps & RouteComponentProps<{ dataSet: string; collection: string }> & FormWrapperProps;
 
 const Section = styled.div`
     width: 100%;
@@ -29,10 +26,7 @@ const FacetConfig: SFC<FullProps> = (props: FullProps) => {
             <Section>
                 <FullHelmet pageName="View screen" />
                 <Title>View screen</Title>
-                <DraggableForm
-                    configType="facet"
-                    onSend={() => alert('NOTIMPL!')}
-                />
+                <DraggableForm configType="facet" onSend={() => alert('NOTIMPL!')} />
             </Section>
         </Grid>
     );

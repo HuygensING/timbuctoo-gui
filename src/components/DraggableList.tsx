@@ -14,27 +14,26 @@ interface Props {
     componentType: 'accordeon' | 'block';
     configType: 'view' | 'facet';
     componentProps: any;
-    onSortEnd: (props: { oldIndex: number, newIndex: number }) => void;
+    onSortEnd: (props: { oldIndex: number; newIndex: number }) => void;
 }
 
 const DraggableIcon = styled(Hamburger)`
-  position: absolute;
-  left: ${CONTAINER_PADDING}rem;
-  top: ${CONTAINER_PADDING}rem;
+    position: absolute;
+    left: ${CONTAINER_PADDING}rem;
+    top: ${CONTAINER_PADDING}rem;
 `;
 
 const DragHandle = SortableHandle(DraggableIcon);
 const DraggableElement = SortableElement(Accordeon);
 
 class DraggableList extends PureComponent<Props> {
-
-    constructor () {
+    constructor() {
         super();
 
         this.renderListItem = this.renderListItem.bind(this);
     }
 
-    renderListItem (listItem: any, idx: number) {
+    renderListItem(listItem: any, idx: number) {
         const { componentType, componentProps, configType } = this.props;
 
         if (componentType === DRAGGABLE_COMPONENTS.accordeon) {
@@ -47,7 +46,7 @@ class DraggableList extends PureComponent<Props> {
                     idx={idx}
                     {...componentProps}
                 >
-                    <DragHandle/>
+                    <DragHandle />
                 </DraggableElement>
             );
         }
@@ -55,12 +54,10 @@ class DraggableList extends PureComponent<Props> {
         return null;
     }
 
-    render () {
+    render() {
         const { listItems } = this.props;
 
-        return (
-            <ul>{listItems.map(this.renderListItem)}</ul>
-        );
+        return <ul>{listItems.map(this.renderListItem)}</ul>;
     }
 }
 

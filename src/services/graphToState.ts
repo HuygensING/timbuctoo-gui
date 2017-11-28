@@ -12,18 +12,17 @@ import { graphToState } from '../reducers/rootReducer';
  * @param {string} prop Connects the reducer key to the component. Defaults to `key` name, so pass this argument if you need a different name.
  */
 
-export default (key: string, dataProp: string = 'data', prop: string = key) => (
+export default (key: string, dataProp: string = 'data', prop: string = key) =>
     compose(
         connect(
             state => ({ [key]: state[key] }),
             dispatch => ({ graphToState: (payload: any) => dispatch(graphToState(key, payload)) })
         ),
         lifecycle({
-            componentWillReceiveProps (nextProps: any) {
+            componentWillReceiveProps(nextProps: any) {
                 if (!shallowEqual(nextProps[dataProp], this.props[dataProp])) {
                     this.props.graphToState(nextProps[dataProp]);
                 }
             }
         })
-    )
-);
+    );

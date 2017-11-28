@@ -15,14 +15,14 @@ import { Dummy } from './Dummy';
 
 // TODO: this is just a simple loading effect, should be way cooler
 const StyledForm = withProps<{ loading: boolean }>(styled.form)`
-    opacity: ${props => props.loading ? .5 : 1};
+    opacity: ${props => (props.loading ? 0.5 : 1)};
 `;
 
 interface Props {
     currentCollectionListId: string;
     loading: boolean;
     collection: {
-        facets: Facet[]
+        facets: Facet[];
     } | null;
     facetConfigs: FacetConfig[];
 }
@@ -40,7 +40,7 @@ class Filters extends PureComponent<FullProps, {}> {
     onlyFilterChanged: boolean = false;
     id: string | null;
 
-    static mergeFilter (props: FullProps): void {
+    static mergeFilter(props: FullProps): void {
         const { collection, facetConfigs, mergeFilter, location } = props;
 
         if (collection && collection.facets) {
@@ -48,32 +48,32 @@ class Filters extends PureComponent<FullProps, {}> {
         }
     }
 
-    componentWillMount (): void {
+    componentWillMount(): void {
         Filters.mergeFilter(this.props);
     }
 
-    componentWillReceiveProps (nextProps: FullProps) {
+    componentWillReceiveProps(nextProps: FullProps) {
         // already has a filter, but needs to merge it with the new intel
         if (!nextProps.loading && this.onlyFilterChanged) {
             this.onlyFilterChanged = false;
             Filters.mergeFilter(nextProps);
 
-        // in case of route change save id for next rerender
+            // in case of route change save id for next rerender
         } else if (this.props.currentCollectionListId !== nextProps.currentCollectionListId) {
             this.id = this.props.currentCollectionListId;
 
-        // merge the old with the new
+            // merge the old with the new
         } else if (this.id && this.id !== nextProps.currentCollectionListId) {
             this.id = null;
             Filters.mergeFilter(nextProps);
 
-        // need a new call with new intel after changing the form
+            // need a new call with new intel after changing the form
         } else if (nextProps.callRequested && !this.props.callRequested) {
             this.pushQueryString(nextProps);
         }
     }
 
-    pushQueryString (props: FullProps) {
+    pushQueryString(props: FullProps) {
         const { history, location, filters, fullText } = props;
         const query = createEsQueryString(filters, fullText);
         const searchParam = query ? `?search=${encode(query)}` : '';
@@ -83,20 +83,15 @@ class Filters extends PureComponent<FullProps, {}> {
         history.replace(location.pathname + searchParam);
     }
 
-    render () {
+    render() {
         const { loading, filters } = this.props;
 
         return (
             <StyledForm onSubmit={e => e.preventDefault()} loading={loading}>
                 <Title>{translate('globals.filters')}</Title>
-                <Dummy text={'search-filter'} height={1} marginY={.5}/>
-                {
-                    filters.length > 0 && filters.map(
-                        (filter, idx) => (
-                            <MultiSelectForm key={idx} filter={filter} index={idx} />
-                        )
-                    )
-                }
+                <Dummy text={'search-filter'} height={1} marginY={0.5} />
+                {filters.length > 0 &&
+                    filters.map((filter, idx) => <MultiSelectForm key={idx} filter={filter} index={idx} />)}
             </StyledForm>
         );
     }
@@ -108,10 +103,9 @@ const mapStateToProps = (state: RootState) => ({
     callRequested: state.search.callRequested
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    mergeFilter: (config: FacetConfig[], options: Facet[], location: Location) => dispatch(mergeFilters(config, options, location))
+const mapDispatchToProps = dispatch => ({
+    mergeFilter: (config: FacetConfig[], options: Facet[], location: Location) =>
+        dispatch(mergeFilters(config, options, location))
 });
 
-export default withRouter(
-    connect(mapStateToProps, mapDispatchToProps)(Filters)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Filters));

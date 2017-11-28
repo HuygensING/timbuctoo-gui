@@ -13,18 +13,20 @@ const networkInterface = createNetworkInterface({
     }
 });
 
-networkInterface.use([{
-    applyMiddleware(req: any, next: NextFunction) {
-        if (!req.options.headers) {
-            req.options.headers = {};
-        }
+networkInterface.use([
+    {
+        applyMiddleware(req: any, next: NextFunction) {
+            if (!req.options.headers) {
+                req.options.headers = {};
+            }
 
-        // get the authentication token from state if available
-        const state: RootState = store.getState();
-        req.options.headers.authorization = state && state.user && state.user.hsid ? state.user.hsid : null;
-        next();
+            // get the authentication token from state if available
+            const state: RootState = store.getState();
+            req.options.headers.authorization = state && state.user && state.user.hsid ? state.user.hsid : null;
+            next();
+        }
     }
-}]);
+]);
 
 const Client = new ApolloClient({
     networkInterface

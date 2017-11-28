@@ -10,53 +10,53 @@ const initialState: ViewConfigReducer = [];
 // action definitions
 
 type AddViewConfigNodeAction = {
-    type: 'ADD_VIEW_CONFIG_NODE',
+    type: 'ADD_VIEW_CONFIG_NODE';
     payload: {
-        component: ComponentConfig
-    }
+        component: ComponentConfig;
+    };
 };
 
 type ModifyViewConfigNodeAction = {
-    type: 'MODIFY_VIEW_CONFIG_NODE',
+    type: 'MODIFY_VIEW_CONFIG_NODE';
     payload: {
-        nodeId: number,
-        component: NormalizedComponentConfig
-    }
+        nodeId: number;
+        component: NormalizedComponentConfig;
+    };
 };
 
 type ViewConfigChildAction = {
-    type: 'ADD_VIEW_CONFIG_CHILD' | 'DELETE_VIEW_CONFIG_CHILD',
+    type: 'ADD_VIEW_CONFIG_CHILD' | 'DELETE_VIEW_CONFIG_CHILD';
     payload: {
-        nodeId: number,
-        childId: number
-    }
+        nodeId: number;
+        childId: number;
+    };
 };
 
 type SortViewConfigChildAction = {
-    type: 'SORT_VIEW_CONFIG_CHILD',
+    type: 'SORT_VIEW_CONFIG_CHILD';
     payload: {
-        nodeId: number,
-        oldIndex: number,
-        newIndex: number
-    }
+        nodeId: number;
+        oldIndex: number;
+        newIndex: number;
+    };
 };
 
 type DeleteViewConfigItemAction = {
-    type: 'DELETE_VIEW_CONFIG_NODE',
+    type: 'DELETE_VIEW_CONFIG_NODE';
     payload: {
-        nodeId: number
-    }
+        nodeId: number;
+    };
 };
 
 type SetTreeAction = {
-    type: 'SET_VIEW_CONFIG_TREE',
+    type: 'SET_VIEW_CONFIG_TREE';
     payload: {
-        components: ComponentConfig[]
-    }
+        components: ComponentConfig[];
+    };
 };
 
 type Action =
-    AddViewConfigNodeAction
+    | AddViewConfigNodeAction
     | DeleteViewConfigItemAction
     | ViewConfigChildAction
     | ModifyViewConfigNodeAction
@@ -65,9 +65,8 @@ type Action =
 
 // selectors
 
-export const createName = (typename: string, idx: number, field?: string): string => (
-    `${idx}_${typename}${field ? '_' + field : ''}`
-);
+export const createName = (typename: string, idx: number, field?: string): string =>
+    `${idx}_${typename}${field ? '_' + field : ''}`;
 
 const normalizeTree = (tree: ComponentConfig[], startIndex: number = -1): ViewConfigReducer => {
     // Flatten a tree of Components into an array of NormalizedComponents with a root branch (index 0)
@@ -96,19 +95,14 @@ const normalizeTree = (tree: ComponentConfig[], startIndex: number = -1): ViewCo
         };
 
         if (branch.type === LEAF_COMPONENTS.path) {
-            normalizedComponent.valueList = branch.value && !!branch.value.length
-                ? JSON.parse(branch.value)
-                : [];
+            normalizedComponent.valueList = branch.value && !!branch.value.length ? JSON.parse(branch.value) : [];
         }
 
         if (branch.subComponents) {
             delete normalizedComponent.subComponents;
         }
 
-        flatTree = [
-            ...flatTree,
-            normalizedComponent
-        ];
+        flatTree = [...flatTree, normalizedComponent];
     };
 
     normalizeBranch({
@@ -123,13 +117,16 @@ const normalizeTree = (tree: ComponentConfig[], startIndex: number = -1): ViewCo
 export const getNodeById = (id: number, state: ViewConfigReducer): NormalizedComponentConfig | undefined =>
     state.find(item => item.id === id);
 
-export const lastId = (state: ViewConfigReducer): number => state
-    .map(item => item.id)
-    .reduce(((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue)), -1);
+export const lastId = (state: ViewConfigReducer): number =>
+    state
+        .map(item => item.id)
+        .reduce((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue), -1);
 
-const getAllDescendantIds = (state: ViewConfigReducer, nodeId: number) => (
-    getNodeById(nodeId, state)!.childIds.reduce((acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)], [])
-);
+const getAllDescendantIds = (state: ViewConfigReducer, nodeId: number) =>
+    getNodeById(nodeId, state)!.childIds.reduce(
+        (acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)],
+        []
+    );
 
 const deleteMany = (state: ViewConfigReducer, ids: number[]): ViewConfigReducer => {
     state = [...state];
@@ -163,7 +160,11 @@ const childIds = (state: number[], action: Action) => {
     }
 };
 
-const node = (state: NormalizedComponentConfig | null, action: Action, items: NormalizedComponentConfig[]): NormalizedComponentConfig => {
+const node = (
+    state: NormalizedComponentConfig | null,
+    action: Action,
+    items: NormalizedComponentConfig[]
+): NormalizedComponentConfig => {
     switch (action.type) {
         case 'ADD_VIEW_CONFIG_NODE': {
             const id = lastId(items) + 1;
@@ -174,7 +175,7 @@ const node = (state: NormalizedComponentConfig | null, action: Action, items: No
                 name: createName(action.payload.component.type, id)
             };
         }
-        case 'MODIFY_VIEW_CONFIG_NODE':  // TODO: Make sure it get's normalized in case of total component switch. It doesn't break, but it's not nice either
+        case 'MODIFY_VIEW_CONFIG_NODE': // TODO: Make sure it get's normalized in case of total component switch. It doesn't break, but it's not nice either
             return {
                 ...action.payload.component,
                 id: state!.id,
@@ -207,10 +208,7 @@ export default (state = initialState, action: Action): ViewConfigReducer => {
             return nextState;
         }
         case 'ADD_VIEW_CONFIG_NODE': {
-            return [
-                ...state,
-                ...normalizeTree([action.payload.component], lastId(state))
-            ];
+            return [...state, ...normalizeTree([action.payload.component], lastId(state))];
         }
         case 'DELETE_VIEW_CONFIG_NODE': {
             const nodeId = action.payload.nodeId;
