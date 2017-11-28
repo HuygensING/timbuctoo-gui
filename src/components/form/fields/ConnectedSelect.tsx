@@ -1,20 +1,20 @@
 import React, { SFC } from 'react';
-import { withRouter } from 'react-router';
-
-import QUERY_COLLECTION_EDIT_VIEW from '../../../graphql/queries/CollectionEditView';
-
+import { RouteComponentProps, withRouter } from 'react-router';
+import QUERY_COLLECTION_EDIT_VIEW, {
+    Props as CollectionEditViewProps
+} from '../../../graphql/queries/CollectionEditView';
 import Select, { OptionProps, SelectProps } from './Select';
-import MetadataResolver, { ResolvedApolloProps } from '../../MetadataResolver';
-import { CollectionMetadata, DataSetMetadata, Property } from '../../../typings/schema';
+import { CollectionMetadata, Property } from '../../../typings/schema';
 import { compose } from 'redux';
+import { default as metaDataResolver, MetaDataProps } from '../../../services/metaDataResolver';
 
-interface OwnProps {
+interface OwnProps extends SelectProps, CollectionEditViewProps {
     collectionId?: string;
     onChange: (value: string, property: Property) => void;
     shownAsMultipleItems?: boolean;
 }
 
-type Props = OwnProps & SelectProps & ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any>;
+export type Props = OwnProps & RouteComponentProps<{ dataSet: string }> & MetaDataProps;
 
 const SelectField: SFC<Props> = ({ name, selected, metadata, onChange, shownAsMultipleItems = false }) => {
     const collection: CollectionMetadata | null = metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection
@@ -55,7 +55,4 @@ const SelectField: SFC<Props> = ({ name, selected, metadata, onChange, shownAsMu
     );
 };
 
-export default compose<SFC<OwnProps & SelectProps>>(
-    withRouter,
-    MetadataResolver(QUERY_COLLECTION_EDIT_VIEW)
-)(SelectField);
+export default compose<SFC<OwnProps>>(withRouter, metaDataResolver<Props>(QUERY_COLLECTION_EDIT_VIEW))(SelectField);

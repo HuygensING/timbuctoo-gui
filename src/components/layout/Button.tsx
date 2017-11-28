@@ -36,9 +36,9 @@ const BaseButtonStyling = css`
     border: 1px solid ${props => props.theme.colors.shade.medium};
     text-align: center;
     padding: 0.5rem 1rem;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     cursor: pointer;
-    
+
     &:hover {
         color: ${props => props.theme.colors.white};
         border: 1px solid ${props => props.theme.colors.shade.dark};
@@ -48,7 +48,7 @@ const BaseButtonStyling = css`
 
 const SmallButtonStyling = css`
     padding: 0 0.5rem;
-    border-radius: .15rem;
+    border-radius: 0.15rem;
 `;
 
 export const ButtonAdd = withProps<ButtonProps, HTMLButtonElement>(styled.button)`
@@ -83,14 +83,14 @@ export const ButtonLink = withProps<LinkProps & ButtonProps>(styled(Link))`
     ${BaseButtonStyling};
     color: ${props => setColor(props, props['data-variant'])};
     background-color: ${props => setBackgroundColor(props, props['data-variant'])};
-    ${props => props['data-small'] ? SmallButtonStyling : ''};
-    opacity: ${props => (props['data-variant'] === BUTTON_VARIANT.disabled) ? 0.4 : 1 };
+    ${props => (props['data-small'] ? SmallButtonStyling : '')};
+    opacity: ${props => (props['data-variant'] === BUTTON_VARIANT.disabled ? 0.4 : 1)};
 `;
 
 export const Button = withProps<ButtonProps, HTMLButtonElement>(styled.button)`
     ${BaseButtonStyling};
     color: ${props => setColor(props, props['data-variant'])};
     background-color: ${props => setBackgroundColor(props, props['data-variant'])};
-    ${props => props['data-small'] ? SmallButtonStyling : ''};
-    opacity: ${props => (props['data-variant'] === BUTTON_VARIANT.disabled) ? 0.4 : 1 };
+    ${props => (props['data-small'] ? SmallButtonStyling : '')};
+    opacity: ${props => (props['data-variant'] === BUTTON_VARIANT.disabled ? 0.4 : 1)};
 `;

@@ -46,24 +46,22 @@ const Main = styled.div`
 
 interface Props {
     data: {
-        error: boolean,
-        loading: boolean,
-        aboutMe: AboutMe
+        error: boolean;
+        loading: boolean;
+        aboutMe: AboutMe;
     };
     user: UserReducer;
     logInUser: (hsid: string) => void;
     logOutUser: () => void;
 }
 
-interface State {
-
-}
+interface State {}
 
 class App extends PureComponent<ChildProps<Props, Response>, State> {
     renderLoad: boolean = true;
     history = createBrowserHistory();
 
-    componentWillMount () {
+    componentWillMount() {
         this.checkRenderLoad(this.props.user);
 
         this.history.listen((location: Location) => {
@@ -74,44 +72,56 @@ class App extends PureComponent<ChildProps<Props, Response>, State> {
         });
     }
 
-    componentWillReceiveProps ({ data, user }: Props) {
-        if (!user.loggedIn && data.aboutMe && data.aboutMe.id && this.props.data.aboutMe !== data.aboutMe && user.hsid.length > 0) {
+    componentWillReceiveProps({ data, user }: Props) {
+        if (
+            !user.loggedIn &&
+            data.aboutMe &&
+            data.aboutMe.id &&
+            this.props.data.aboutMe !== data.aboutMe &&
+            user.hsid.length > 0
+        ) {
             this.props.logInUser(user.hsid);
         }
 
         if (this.renderLoad && (data.error || data.aboutMe === null)) {
             this.renderLoad = false;
-            this.props.logInUser(user.hsid);
+
+            // todo: remove this check once there's a real authentication system
+            if (process.env.NODE_ENV !== 'development') {
+                this.props.logOutUser();
+            } else {
+                this.props.logInUser(user.hsid);
+            }
         }
     }
 
-    componentWillUpdate (nextProps: Props) {
+    componentWillUpdate(nextProps: Props) {
         this.checkRenderLoad(nextProps.user);
     }
 
-    render () {
+    render() {
         // TODO: switch <Loading/> for an <Authenticating /> component
         return (
             <ThemeProvider theme={theme}>
-                {
-                    this.renderLoad
-                        ? <Loading/>
-                        : <Router history={this.history}>
-                            <GridWithMargin>
-                                <Header height={headerHeight}/>
-                                <Main>
-                                    <Routes />
-                                </Main>
-                                <Footer/>
-                                <PoweredBy/>
-                            </GridWithMargin>
-                        </Router>
-                }
+                {this.renderLoad ? (
+                    <Loading />
+                ) : (
+                    <Router history={this.history}>
+                        <GridWithMargin>
+                            <Header height={headerHeight} />
+                            <Main>
+                                <Routes />
+                            </Main>
+                            <Footer />
+                            <PoweredBy />
+                        </GridWithMargin>
+                    </Router>
+                )}
             </ThemeProvider>
         );
     }
 
-    private checkRenderLoad (user: UserReducer) {
+    private checkRenderLoad(user: UserReducer) {
         if (!user.hsid || user.loggedIn) {
             this.renderLoad = false;
         }
@@ -123,7 +133,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    logInUser: (val) => dispatch(LogInUser(val)),
+    logInUser: val => dispatch(LogInUser(val)),
     logOutUser: () => dispatch(LogOutUser())
 });
 
@@ -135,6 +145,4 @@ const query = gql`
     }
 `;
 
-export default graphql(query)(
-    connect(mapStateToProps, mapDispatchToProps)(App)
-);
+export default graphql(query)(connect(mapStateToProps, mapDispatchToProps)(App));

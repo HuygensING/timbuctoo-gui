@@ -9,12 +9,12 @@ const StyledLink = withProps<LinkProps>(styled(Link))`
     text-decoration: underline;
 `;
 
-const ContentLink = ({ to, value }: { to?: string, value?: string}) => {
-    if (!to || !value) { return null; }
+const ContentLink = ({ to, value }: { to?: string; value?: string }) => {
+    if (!to || !value) {
+        return null;
+    }
 
-    return (
-        <StyledLink to={to}>{value}</StyledLink>
-    );
+    return <StyledLink to={to}>{value}</StyledLink>;
 };
 
 export default ContentLink;

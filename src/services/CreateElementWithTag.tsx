@@ -14,10 +14,18 @@ const CreateElementWithTag = (props: any, defaultTag: string = 'div') => {
     const tag = props.tag || defaultTag;
     switch (tag) {
         case CustomTags.navlink:
-            return <RouterNavLink to={props.to} exact={props.exact} {...elementProps}>{props.children}</RouterNavLink>;
+            return (
+                <RouterNavLink to={props.to} exact={props.exact} {...elementProps}>
+                    {props.children}
+                </RouterNavLink>
+            );
 
         case CustomTags.link:
-            return <RouterLink to={props.to} {...elementProps}>{props.children}</RouterLink>;
+            return (
+                <RouterLink to={props.to} {...elementProps}>
+                    {props.children}
+                </RouterLink>
+            );
 
         default:
             return React.createElement(props.tag || defaultTag, elementProps || null, props.children);

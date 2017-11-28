@@ -86,9 +86,9 @@ const Accordeon: SFC<Props> = ({ openCloseFn, item, openedIndex, deleteNode, idx
             {children}
 
             {deleteNode &&
-            <CloseIcon onClick={deleteNode}>
-                <Cross/>
-            </CloseIcon>
+                <CloseIcon onClick={deleteNode}>
+                    <Cross/>
+                </CloseIcon>
             }
         </AccordeonBox>
     );

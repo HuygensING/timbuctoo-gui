@@ -42,7 +42,7 @@ const Sub = styled(Subtitle)`
 `;
 
 const Button = ButtonBase.extend`
-  margin: 1rem .5rem 0 0;
+    margin: 1rem 0.5rem 0 0;
 `;
 
 class MultiSelectForm extends PureComponent<FullProps, State> {
@@ -60,13 +60,13 @@ class MultiSelectForm extends PureComponent<FullProps, State> {
         });
 
         return array;
-    }
+    };
 
     public toggleField = (val: string) => {
         this.props.updateField(this.props.index, val, this.props.filters);
-    }
+    };
 
-    render () {
+    render() {
         const { caption, values } = this.props.filter;
         const { amountShown } = this.state;
 
@@ -81,37 +81,35 @@ class MultiSelectForm extends PureComponent<FullProps, State> {
         return (
             <Section>
                 <Sub>{caption}</Sub>
-                <Dummy absolute={true} height={'1.5rem'} width={'3.5rem'} text={'toggle'}/>
+                <Dummy absolute={true} height={'1.5rem'} width={'3.5rem'} text={'toggle'} />
                 <ul>
-                    {
-                        shownOptions.map((option, idx) => (
-                            <MultiselectFormOption key={idx} option={option} onToggle={this.toggleField} />
-                        ))
-                    }
+                    {shownOptions.map((option, idx) => (
+                        <MultiselectFormOption key={idx} option={option} onToggle={this.toggleField} />
+                    ))}
                 </ul>
-                {
-                    isFiltering && couldDoLess &&
-                    <Button data-small={true} onClick={this.showLess}>{translate('search.less')}</Button>
-                }
-                {
-                    isFiltering && couldDoMore &&
-                    <Button data-small={true} onClick={this.showMore}>{translate('search.more')}</Button>
-                }
+                {isFiltering &&
+                    couldDoLess && (
+                        <Button data-small={true} onClick={this.showLess}>
+                            {translate('search.less')}
+                        </Button>
+                    )}
+                {isFiltering &&
+                    couldDoMore && (
+                        <Button data-small={true} onClick={this.showMore}>
+                            {translate('search.more')}
+                        </Button>
+                    )}
             </Section>
         );
     }
 
     private showMore = () => {
-        this.setState(
-            (prevState: State) => ({ amountShown: prevState.amountShown + MultiSelectForm.showStep })
-        );
-    }
+        this.setState((prevState: State) => ({ amountShown: prevState.amountShown + MultiSelectForm.showStep }));
+    };
 
     private showLess = () => {
-        this.setState(
-            (prevState: State) => ({ amountShown: prevState.amountShown - MultiSelectForm.showStep })
-        );
-    }
+        this.setState((prevState: State) => ({ amountShown: prevState.amountShown - MultiSelectForm.showStep }));
+    };
 }
 
 const mapStateToProps = (state: RootState) => ({

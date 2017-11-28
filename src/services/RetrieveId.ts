@@ -4,13 +4,15 @@ import { HSID } from '../constants/global';
 type Query = string | null;
 
 const getQueryStringValue = (query: string, key: string): Query => {
-    if (query.length <= 0) { return null; }
+    if (query.length <= 0) {
+        return null;
+    }
 
     let queryStringValue: Query = null;
 
     const keyValues = query.split('&');
 
-    keyValues.forEach((value) => {
+    keyValues.forEach(value => {
         if (value.indexOf(key) > -1) {
             queryStringValue = value.split('=')[1];
         }

@@ -38,7 +38,7 @@ interface LogoutAction {
 interface SwitchLanguageAction {
     type: 'SWITCH_LANGUAGE';
     payload: {
-        language: string
+        language: string;
     };
 }
 export type Action = LoginAction | LogoutAction | SwitchLanguageAction;
@@ -59,7 +59,7 @@ export default (state: UserReducer = initialState, action: Action) => {
                 ...state,
                 language: action.payload.language
             };
-            
+
         default:
             return state;
     }

@@ -5,12 +5,13 @@ import { keyframes } from '../../styled-components';
 import { lighten } from 'polished';
 import { LinkProps } from 'react-router-dom';
 
-const setColor = props => (props.theme.colors[props.color] && props.theme.colors[props.color].medium)
-    || props.color
-    || props.theme.colors.black;
-const setCaps = props => props.isCaps ? 'uppercase' : 'initial';
-const setLetterSpacing = props => props.isCaps ? '0.13em' : '0';
-const setAlignment = props => props.align ? props.align : 'left';
+const setColor = props =>
+    (props.theme.colors[props.color] && props.theme.colors[props.color].medium) ||
+    props.color ||
+    props.theme.colors.black;
+const setCaps = props => (props.isCaps ? 'uppercase' : 'initial');
+const setLetterSpacing = props => (props.isCaps ? '0.13em' : '0');
+const setAlignment = props => (props.align ? props.align : 'left');
 
 export interface StyledCopyLinkProps {
     children?: any;
@@ -37,17 +38,22 @@ const EmptyStyle = css`
     &:empty {
         width: ${props => `${Math.random() * 200}px`};
         display: block;
-        background: ${props => lighten(.2, props.theme.colors.shade.light)};
+        background: ${props => lighten(0.2, props.theme.colors.shade.light)};
         height: 1rem;
-        
+
         &:before {
             content: '';
             display: block;
             width: 100%;
             height: 1.5rem;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 50%,rgba(255,255,255,0) 100%);           
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
             animation: ${anim} 1.7s infinite;
-            opacity: .5;
+            opacity: 0.5;
         }
     }
 `;
@@ -82,8 +88,8 @@ export const Title = styled((props: ElementProps) => CreateElementWithTag(props,
     text-align: ${setAlignment};
     color: ${setColor};
     letter-spacing: ${setLetterSpacing};
-    
-    ${EmptyStyle}
+
+    ${EmptyStyle};
 `;
 
 /*
@@ -95,7 +101,7 @@ export const Title = styled((props: ElementProps) => CreateElementWithTag(props,
 */
 export const Subtitle = styled((props: ElementProps) => CreateElementWithTag(props, 'h2'))`
     margin: 1.1vw 0;
-    font: ${(props) => props.theme.fonts.subTitle};
+    font: ${props => props.theme.fonts.subTitle};
     text-transform: ${setCaps};
     text-align: ${setAlignment};
     color: ${setColor};
@@ -111,7 +117,7 @@ export const Subtitle = styled((props: ElementProps) => CreateElementWithTag(pro
 */
 export const Content = styled((props: ElementProps) => CreateElementWithTag(props, 'p'))`
     margin: 0;
-    font: ${(props) => props.theme.fonts.body};
+    font: ${props => props.theme.fonts.body};
     text-transform: ${setCaps};
     text-align: ${setAlignment};
     color: ${setColor};
@@ -127,12 +133,12 @@ export const Content = styled((props: ElementProps) => CreateElementWithTag(prop
  */
 export const Label = styled((props: ElementProps) => CreateElementWithTag(props, 'span'))`
     margin: 0;
-    font: ${(props) => props.theme.fonts.body};
+    font: ${props => props.theme.fonts.body};
     text-transform: ${setCaps};
     text-align: ${setAlignment};
     color: ${setColor};
     letter-spacing: ${setLetterSpacing};
- `;
+`;
 
 /*
  * Link
@@ -142,21 +148,23 @@ export const Label = styled((props: ElementProps) => CreateElementWithTag(props,
  * <Link to="/route" >
  */
 
-export const Link = styled((props: ElementProps & StyledCopyLinkProps & LinkProps) => CreateElementWithTag(props, 'Link'))`
+export const Link = styled((props: ElementProps & StyledCopyLinkProps & LinkProps) =>
+    CreateElementWithTag(props, 'Link')
+)`
     margin: 0;
-    font: ${(props) => props.theme.fonts.body};
+    font: ${props => props.theme.fonts.body};
     text-transform: ${setCaps};
     text-align: ${setAlignment};
     color: ${setColor};
     letter-spacing: ${setLetterSpacing};
 
     text-decoration: none;
-    
+
     &:hover {
-        color: ${(props) => 
-        (props.hoverColor && props.theme.colors[props.hoverColor] && props.theme.colors[props.hoverColor].medium) 
-        || props.hoverColor 
-        || props.theme.colors.shade.dark};
+        color: ${props =>
+            (props.hoverColor && props.theme.colors[props.hoverColor] && props.theme.colors[props.hoverColor].medium) ||
+            props.hoverColor ||
+            props.theme.colors.shade.dark};
     }
 `;
 
@@ -167,6 +175,6 @@ export const srOnly = css`
     padding: 0;
     margin: -1px;
     overflow: hidden;
-    clip: rect(0,0,0,0);
+    clip: rect(0, 0, 0, 0);
     border: 0;
 `;

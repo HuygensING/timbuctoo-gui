@@ -2,16 +2,24 @@ import { gql } from 'react-apollo';
 
 const contactFragment = gql`
     fragment ContactFragment on ContactInfo {
-        name { value }
-        email { value }
+        name {
+            value
+        }
+        email {
+            value
+        }
     }
 `;
 
 const provenanceFragment = gql`
     fragment ProvenanceInfoFragment on DataSetMetadata {
         provenanceInfo {
-            title { value }
-            body { value }
+            title {
+                value
+            }
+            body {
+                value
+            }
         }
     }
 `;
@@ -19,7 +27,9 @@ const provenanceFragment = gql`
 const collectionBase = gql`
     fragment CollectionBase on CollectionMetadata {
         total
-        title { value }
+        title {
+            value
+        }
         collectionId
         collectionListId
     }
@@ -33,7 +43,9 @@ const collectionPropertiesDensity = gql`
                 density
                 isList
                 isValueType
-                referencedCollections { items }
+                referencedCollections {
+                    items
+                }
             }
         }
     }
@@ -48,7 +60,9 @@ const collectionPropertiesReference = gql`
                 isList
                 isInverse
                 isValueType
-                referencedCollections { items }
+                referencedCollections {
+                    items
+                }
             }
         }
     }
@@ -57,15 +71,15 @@ const collectionPropertiesReference = gql`
 interface CollectionPropertiesReference {
     properties: {
         items: Array<{
-            name: string
-            shortenedUri: string
-            isList: boolean
-            isInverse: boolean
-            isValueType: boolean
+            name: string;
+            shortenedUri: string;
+            isList: boolean;
+            isInverse: boolean;
+            isValueType: boolean;
             referencedCollections: {
-                items: string[]
-            }
-        }>
+                items: string[];
+            };
+        }>;
     };
 }
 
@@ -91,9 +105,15 @@ const collectionIndexConfig = gql`
 const collectionSummaryProperties = gql`
     fragment CollectionSummaryProperties on CollectionMetadata {
         summaryProperties {
-            title { value }
-            description { value }
-            image { value }
+            title {
+                value
+            }
+            description {
+                value
+            }
+            image {
+                value
+            }
         }
     }
 `;
@@ -128,4 +148,12 @@ const dataSetMetadataFragment = gql`
     ${collectionPropertiesDensity}
 `;
 
-export { dataSetMetadataFragment, collectionBase, collectionPropertiesDensity, collectionPropertiesReference, CollectionPropertiesReference, collectionSummaryProperties, collectionIndexConfig };
+export {
+    dataSetMetadataFragment,
+    collectionBase,
+    collectionPropertiesDensity,
+    collectionPropertiesReference,
+    CollectionPropertiesReference,
+    collectionSummaryProperties,
+    collectionIndexConfig
+};

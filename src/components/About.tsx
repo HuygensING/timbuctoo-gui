@@ -18,11 +18,11 @@ const StyledCol = styled(Col)`
 `;
 
 const Toggle = Button.extend`
-  margin-top: 2rem;
+    margin-top: 2rem;
 `;
 
 class About extends PureComponent<Props, State> {
-    constructor () {
+    constructor() {
         super();
 
         this.state = {
@@ -32,13 +32,11 @@ class About extends PureComponent<Props, State> {
         this.toggleState = this.toggleState.bind(this);
     }
 
-    toggleState () {
-        this.setState(
-            { isOpen: !this.state.isOpen }
-        );
+    toggleState() {
+        this.setState({ isOpen: !this.state.isOpen });
     }
 
-    render () {
+    render() {
         const { body, title } = this.props;
 
         if (!body || !title) {
@@ -46,20 +44,16 @@ class About extends PureComponent<Props, State> {
         }
 
         const toggleActive = body.length > 300;
-        const bodyText = toggleActive && !this.state.isOpen
-            ? body.substr(0, 300)
-            : body;
+        const bodyText = toggleActive && !this.state.isOpen ? body.substr(0, 300) : body;
 
         return (
             <Grid sm={48}>
                 <StyledCol sm={48} smPadding={3}>
                     <Title>{title}</Title>
                     <Content>{bodyText}</Content>
-                    {toggleActive &&
-                        <Toggle onClick={this.toggleState}>
-                            {this.state.isOpen ? 'Show less' : 'Show more'}
-                        </Toggle>
-                    }
+                    {toggleActive && (
+                        <Toggle onClick={this.toggleState}>{this.state.isOpen ? 'Show less' : 'Show more'}</Toggle>
+                    )}
                 </StyledCol>
             </Grid>
         );

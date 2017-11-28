@@ -1,8 +1,12 @@
 import { gql } from 'react-apollo';
 import { createQueryFromValue } from '../../services/getValue';
 import setCollectionArguments from '../../services/CollectionArgumentsCreator';
+import { RouteComponentProps } from 'react-router';
+import { MetaDataProps } from '../../services/metaDataResolver';
 
-const QUERY_COLLECTION_VALUES = ({ match, location, metadata }) => {
+export type Props = RouteComponentProps<{ dataSet: string }> & MetaDataProps;
+
+const QUERY_COLLECTION_VALUES = ({ match, location, metadata }: Props) => {
     if (!metadata.dataSetMetadata || !metadata.dataSetMetadata.collection) {
         return null;
     }

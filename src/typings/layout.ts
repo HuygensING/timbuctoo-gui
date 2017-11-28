@@ -1,13 +1,13 @@
 export interface Colors {
     readonly primary: {
-        light: string,
-        medium: string,
-        dark: string
+        light: string;
+        medium: string;
+        dark: string;
     };
     readonly shade: {
-        light: string,
-        medium: string,
-        dark: string
+        light: string;
+        medium: string;
+        dark: string;
     };
     readonly error: string;
     readonly white: string;

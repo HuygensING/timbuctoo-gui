@@ -5,7 +5,7 @@ interface Props {
     color?: string;
 }
 
-const Edit: SFC<Props> = (props) => {
+const Edit: SFC<Props> = props => {
     return (
         <svg {...props} width="11" height="11" viewBox="0 0 11 11" xmlns="http://www.w3.org/2000/svg">
             <title>Edit</title>

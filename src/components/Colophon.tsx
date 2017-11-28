@@ -11,15 +11,14 @@ interface Props {
 }
 
 const StyledSection = styled.section`
-  margin-left: ${calcColWidth(3)};
+    margin-left: ${calcColWidth(3)};
 `;
 
 const HiddenDt = styled.dt`
-  ${srOnly}
+    ${srOnly};
 `;
 
 const Colophon: SFC<Props> = ({ owner, contact }) => {
-
     const renderItem = (title: string, item?: ContactInfo) => {
         if (!item) {
             return null;
@@ -39,7 +38,9 @@ const Colophon: SFC<Props> = ({ owner, contact }) => {
                     <HiddenDt>Name</HiddenDt>
                     <dd>{name}</dd>
                     <HiddenDt>Emailaddress</HiddenDt>
-                    <dd><a href={`mailto:${email}`}>{email}</a></dd>
+                    <dd>
+                        <a href={`mailto:${email}`}>{email}</a>
+                    </dd>
                 </dl>
             </li>
         );

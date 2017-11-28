@@ -64,7 +64,6 @@ const StyledSubmitButton = SubmitButton.extend`
 `;
 
 class DraggableForm extends PureComponent<Props, State> {
-
     state = {
         openedIndex: null
     };
@@ -81,7 +80,7 @@ class DraggableForm extends PureComponent<Props, State> {
 
     private openCloseFn = (idx: number) => {
         this.setState({ openedIndex: idx });
-    }
+    };
 
     private renderContent () {
         const { openedIndex } = this.state;
@@ -107,12 +106,12 @@ class DraggableForm extends PureComponent<Props, State> {
         );
     }
 
-    private onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }) => {
+    private onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
         this.setState(state => ({
             openedIndex: oldIndex === state.openedIndex ? newIndex : state.openedIndex
         }));
         this.props.sortItem(oldIndex, newIndex);
-    }
+    };
 
     private addListItem = () => {
         this.props.addItem(this.props.configType === 'view' ? EMPTY_LEAF_COMPONENT[COMPONENTS.path] : EMPTY_FACET_CONFIG);

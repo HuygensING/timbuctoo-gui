@@ -14,8 +14,20 @@ interface Props {
     gridSpacing?: number;
 }
 
-const GridSection: SFC<Props> = ({ tag = 'section', children, title, gridSize = 42, gridOffset = 3, colSizeOffset = gridOffset, cols = 2, rowSpacing = colSizeOffset, gridSpacing = 0 }) => {
-    if (!children) { return null; }
+const GridSection: SFC<Props> = ({
+    tag = 'section',
+    children,
+    title,
+    gridSize = 42,
+    gridOffset = 3,
+    colSizeOffset = gridOffset,
+    cols = 2,
+    rowSpacing = colSizeOffset,
+    gridSpacing = 0
+}) => {
+    if (!children) {
+        return null;
+    }
 
     const calcColSize = () => {
         const amountOffsetPerRow = cols - 1;
@@ -27,8 +39,10 @@ const GridSection: SFC<Props> = ({ tag = 'section', children, title, gridSize = 
 
     const colSize = calcColSize();
 
-    const offset = (idx) => {
-        if (cols <= 1 || idx === 0 || idx % cols === 0) { return 0; }
+    const offset = idx => {
+        if (cols <= 1 || idx === 0 || idx % cols === 0) {
+            return 0;
+        }
         return colSizeOffset;
     };
 
@@ -42,7 +56,12 @@ const GridSection: SFC<Props> = ({ tag = 'section', children, title, gridSize = 
 
     return (
         <Grid tag={tag} sm={gridSize} smOffset={gridOffset}>
-            {title && title.length > 0 && <Col sm={gridSize} smPaddingTop={gridSpacing}><Title>{title}</Title></Col>}
+            {title &&
+                title.length > 0 && (
+                    <Col sm={gridSize} smPaddingTop={gridSpacing}>
+                        <Title>{title}</Title>
+                    </Col>
+                )}
             {renderAllItems}
         </Grid>
     );

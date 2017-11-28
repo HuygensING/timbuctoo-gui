@@ -27,12 +27,14 @@ function generateComponentsNest(depth: number, maxDepth?: number) {
 export type ComponentsFragment = Array<{
     type: string;
     value?: string;
-    subComponents?: ComponentsFragment
+    subComponents?: ComponentsFragment;
     formatter: Array<{
-        type: string
-        name: string
-    }>
+        type: string;
+        name: string;
+    }>;
 }>;
 
 export const maximumComponentNesting = 10;
-export const componentsFragment = gql`fragment ComponentsFragment on Component {${generateComponentsNest(maximumComponentNesting)}}`;
+export const componentsFragment = gql`fragment ComponentsFragment on Component {${generateComponentsNest(
+    maximumComponentNesting
+)}}`;

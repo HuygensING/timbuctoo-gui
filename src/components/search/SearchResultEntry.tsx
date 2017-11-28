@@ -23,7 +23,7 @@ const SearchItem = styled.section`
 `;
 
 const ImageWrapper = styled.figure`
-    position: absolute; 
+    position: absolute;
     top: 0;
     right: 0;
     width: 40%;
@@ -37,12 +37,12 @@ const MaxWidth = css`
 
 const SearchTitle = styled(Subtitle)`
     margin: 0;
-    ${MaxWidth}
+    ${MaxWidth};
 `;
 
 const SearchDescription = styled(Content)`
     margin-bottom: 1rem;
-    ${MaxWidth}
+    ${MaxWidth};
 `;
 
 const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataSetId, uri }: ResultDataSetMetadata) => {
