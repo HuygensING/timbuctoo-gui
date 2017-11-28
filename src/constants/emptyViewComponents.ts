@@ -1,10 +1,5 @@
 import { COMPONENTS } from './global';
-import {
-    ComponentConfig, DividerComponentConfig, ImageComponentConfig, KeyvalueComponentConfig, LeafComponentConfig,
-    LinkComponentConfig, LiteralComponentConfig,
-    NodeComponentConfig, PathComponentConfig,
-    TitleComponentConfig
-} from '../typings/schema';
+import { ComponentConfig, LeafComponentConfig, NodeComponentConfig } from '../typings/schema';
 import { ComponentTypes } from '../typings/viewComponents';
 
 type EmptyComponentsMap = {
@@ -25,14 +20,13 @@ export const EMPTY_LEAF_COMPONENT: EmptyLeafComponentsMap = {
         value: '',
         formatter: [],
         subComponents: []
-    } as LiteralComponentConfig,
+    },
     [COMPONENTS.path]: {
         type: 'PATH',
         value: '',
-        valueList: [],
         formatter: [],
         subComponents: []
-    } as PathComponentConfig,
+    },
 };
 
 // TODO: Create the right initial values for this
@@ -41,41 +35,41 @@ export const EMPTY_NODE_COMPONENT: EmptyNodeComponentsMap = {
         type: 'TITLE',
         formatter: [],
         subComponents: [
-            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.LITERAL] }
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.literal] }
         ]
-    } as TitleComponentConfig,
+    },
     [COMPONENTS.image]: {
         type: 'IMAGE',
         formatter: [],
         subComponents: [
-            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] },
-            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] },
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] }
         ]
-    } as ImageComponentConfig,
+    },
     [COMPONENTS.link]: {
         type: 'LINK',
         formatter: [],
         subComponents: [
-            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] },
-            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] },
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] }
         ]
-    } as LinkComponentConfig,
+    },
     [COMPONENTS.keyValue]: {
         type: 'KEYVALUE',
         formatter: [],
         value: '',
         subComponents: [
-            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] }
         ]
-    } as KeyvalueComponentConfig,
+    },
 
     [COMPONENTS.divider]: {
         type: 'DIVIDER',
         formatter: [],
         subComponents: [
-            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.LITERAL] }
+            { ...EMPTY_LEAF_COMPONENT[COMPONENTS.literal] }
         ]
-    } as DividerComponentConfig
+    }
 };
 
 export const EMPTY_COMPONENT: EmptyComponentsMap = {

@@ -32,6 +32,7 @@ interface OwnProps {
     onSend?: () => void;
     id: number;
     noForm?: boolean;
+    maxItems?: number;
     configType: 'facet' | 'view';
 }
 
@@ -84,7 +85,7 @@ class DraggableForm extends PureComponent<Props, State> {
 
     private renderContent () {
         const { openedIndex } = this.state;
-        const { items, configType } = this.props;
+        const { items, maxItems, configType } = this.props;
         const componentProps = {
             openedIndex,
             openCloseFn: this.openCloseFn
@@ -100,7 +101,7 @@ class DraggableForm extends PureComponent<Props, State> {
                     useDragHandle={true}
                     onSortEnd={this.onSortEnd}
                 />
-                <AddListButton type={'button'} onClick={this.addListItem}>+</AddListButton>
+                {(!maxItems || items.length < maxItems) && <AddListButton type={'button'} onClick={this.addListItem}>+</AddListButton>}
                 {!this.props.noForm && <StyledSubmitButton type="submit">save</StyledSubmitButton>}
             </div>
         );

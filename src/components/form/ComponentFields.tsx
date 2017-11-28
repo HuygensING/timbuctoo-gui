@@ -8,12 +8,8 @@ import { NormalizedComponentConfig, ReferencePath } from '../../typings/index';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect } from 'react-redux';
 import {
-    addViewConfigChild,
-    addViewConfigNode,
     deleteViewConfigChild,
-    deleteViewConfigNode, denormalizeComponent,
-    lastId,
-    modifyViewConfigNode,
+    deleteViewConfigNode, denormalizeComponent, lastId, modifyViewConfigNode, switchViewConfigNode,
     ViewConfigReducer
 } from '../../reducers/viewconfig';
 import { ComponentConfig } from '../../typings/schema';
@@ -22,6 +18,7 @@ import { RootState } from '../../reducers/rootReducer';
 import { compose } from 'redux';
 import ReferencePathSelector from './fields/ReferencePathSelector';
 import { Field, FieldContainer, FieldLabel, FieldValue } from './fields/StyledField';
+import { COMPONENTS } from '../../constants/global';
 
 const StyledInput = styled(InputField)`
     display: inline-block;
@@ -41,6 +38,7 @@ interface OwnProps {
 
 interface DispatchProps {
     modifyNode: (component: ComponentConfig) => void;
+    switchNode: (component: NormalizedComponentConfig) => void;
     removeNode: (nodeId: number) => void;
     removeChild: (childId: number) => void;
     addChild: (childId: number) => void;
@@ -54,7 +52,20 @@ interface StateProps {
 
 type Props = StateProps & DispatchProps & OwnProps & RouteComponentProps<any>;
 
-const ComponentFields: SFC<Props> = ({ item, lastIdofViewComponents, modifyNode, removeChild, removeNode, addChild, addNode }) => {
+const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeChild }) => {
+
+    const setMaxItems = (): number => {
+        switch (item.type) {
+            case COMPONENTS.title:
+            case COMPONENTS.divider:
+                return 1;
+            case COMPONENTS.link:
+            case COMPONENTS.image:
+                return 2;
+            default:
+                return 10;
+        }
+    };
 
     const onChangeHandler = (e: FormEvent<HTMLInputElement>): void | false => {
         e.persist();
@@ -89,12 +100,14 @@ const ComponentFields: SFC<Props> = ({ item, lastIdofViewComponents, modifyNode,
             id, childIds, name
         };
 
-        // TODO: maak hier een switchNode van en replace childIds with index stuff
+        if (item.childIds) {
+            for (const childId of item.childIds) {
+                removeChild(childId);
+            }
+        }
 
-        return modifyNode(newFieldset);
+        return switchNode(newFieldset);
     };
-
-    console.log(item);
 
     return (
         <FieldContainer>
@@ -140,6 +153,7 @@ const ComponentFields: SFC<Props> = ({ item, lastIdofViewComponents, modifyNode,
 
             {item.childIds.length > 0 && (
                 <DraggableForm
+                    maxItems={setMaxItems()}
                     configType={'view'}
                     id={item.id}
                     noForm={true}
@@ -155,11 +169,10 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch, { item: { id }, match }: Props) => ({
-    modifyNode: (component: NormalizedComponentConfig) => dispatch(modifyViewConfigNode(id, component)),
     removeChild: (childId: number) => dispatch(deleteViewConfigChild(id, childId)),
     removeNode: (nodeId: number) => dispatch(deleteViewConfigNode(nodeId)),
-    addNode: (component: ComponentConfig) => dispatch(addViewConfigNode(component, match.params.collection)),
-    addChild: (childId: number) => dispatch(addViewConfigChild(id, childId))
+    switchNode: (component: NormalizedComponentConfig) => dispatch(switchViewConfigNode(id, component, match.params.collection)),
+    modifyNode: (component: NormalizedComponentConfig) => dispatch(modifyViewConfigNode(id, component)),
 });
 
 export default compose<SFC<OwnProps>>(

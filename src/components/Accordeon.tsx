@@ -1,12 +1,15 @@
 import React, { SFC } from 'react';
+import { connect } from 'react-redux';
 import styled from '../styled-components';
 import Cross from './icons/Cross';
 import { CONTAINER_PADDING } from '../constants/global';
 import { ConfigurableItem, NormalizedComponentConfig, NormalizedFacetConfig } from '../typings/index';
 import ComponentFields from './form/ComponentFields';
 import FacetFields from './form/FacetFields';
+import { deleteViewConfigNode } from '../reducers/viewconfig';
+import { deleteFacetConfigItem } from '../reducers/facetconfig';
 
-interface Props {
+interface OwnProps {
     item: ConfigurableItem;
     configType: 'view' | 'facet';
     idx: number;
@@ -15,6 +18,12 @@ interface Props {
     onDeleteFn?: Function;
     openCloseFn: Function;
 }
+
+interface DispatchProps {
+    deleteNode: () => void;
+}
+
+type Props = DispatchProps & OwnProps;
 
 const FieldContainer = styled.section`
   display: flex;
@@ -52,9 +61,11 @@ const CloseIcon = styled.button`
   top: ${CONTAINER_PADDING}rem;
 `;
 
-const Accordeon: SFC<Props> = ({ openCloseFn, item, openedIndex, onDeleteFn, idx, children, configType }) => {
+const Accordeon: SFC<Props> = ({ openCloseFn, item, openedIndex, deleteNode, idx, children, configType }) => {
     const isOpen = openedIndex === idx;
     const openClose = () => openCloseFn(isOpen ? null : idx);
+
+    if (!item) { return null; }
 
     return (
         <AccordeonBox>
@@ -74,8 +85,8 @@ const Accordeon: SFC<Props> = ({ openCloseFn, item, openedIndex, onDeleteFn, idx
             }
             {children}
 
-            {onDeleteFn &&
-            <CloseIcon onClick={() => onDeleteFn(idx)}>
+            {deleteNode &&
+            <CloseIcon onClick={deleteNode}>
                 <Cross/>
             </CloseIcon>
             }
@@ -83,4 +94,21 @@ const Accordeon: SFC<Props> = ({ openCloseFn, item, openedIndex, onDeleteFn, idx
     );
 };
 
-export default Accordeon;
+const mapDispatchToProps = (dispatch, { configType, item }: OwnProps) => {
+    console.log(item);
+    if (configType === 'view') {
+        return {
+            deleteNode: () => dispatch(deleteViewConfigNode(item.id))
+        };
+    }
+
+    if (configType === 'facet') {
+        return {
+            deleteNode: () => dispatch(deleteFacetConfigItem(item.id))
+        };
+    }
+
+    return {};
+};
+
+export default connect(null, mapDispatchToProps)(Accordeon);

@@ -19,9 +19,18 @@ type AddViewConfigNodeAction = {
 };
 
 type ModifyViewConfigNodeAction = {
-    type: 'MODIFY_VIEW_CONFIG_NODE' | 'SWITCH_VIEW_CONFIG_NODE',
+    type: 'MODIFY_VIEW_CONFIG_NODE',
     payload: {
         nodeId: number,
+        component: NormalizedComponentConfig
+    }
+};
+
+type SwitchViewConfigNodeAction = {
+    type: 'SWITCH_VIEW_CONFIG_NODE',
+    payload: {
+        nodeId: number,
+        collectionId: string,
         component: NormalizedComponentConfig
     }
 };
@@ -63,6 +72,7 @@ type Action =
     | DeleteViewConfigItemAction
     | ViewConfigChildAction
     | ModifyViewConfigNodeAction
+    | SwitchViewConfigNodeAction
     | SortViewConfigChildAction
     | SetTreeAction;
 
@@ -77,6 +87,10 @@ const normalizeTree = (tree: ComponentConfig[], collectionId: string, startIndex
 
     let idx = startIndex;
     let flatTree: NormalizedComponentConfig[] = [];
+
+    console.group('normalizing tree');
+    console.log('initial for:');
+    console.log(tree);
 
     const normalizeBranch = (branch: ComponentConfig) => {
         idx++;
@@ -164,7 +178,7 @@ const childIds = (state: number[], action: Action) => {
     }
 };
 
-const node = (state: NormalizedComponentConfig | ComponentConfig | null, action: Action, items: NormalizedComponentConfig[]): NormalizedComponentConfig => {
+const node = (state: NormalizedComponentConfig | ComponentConfig | null, action: Action, items: NormalizedComponentConfig[], childNodes: NormalizedComponentConfig[] = []): NormalizedComponentConfig => {
     switch (action.type) {
         case 'ADD_VIEW_CONFIG_NODE': {
             const id = lastId(items) + 1;
@@ -175,15 +189,23 @@ const node = (state: NormalizedComponentConfig | ComponentConfig | null, action:
                 name: createName(action.payload.component.type, id)
             };
         }
-        case 'MODIFY_VIEW_CONFIG_NODE':  // TODO: Make sure it get's normalized in case of total component switch. It doesn't break, but it's not nice either
+        case 'MODIFY_VIEW_CONFIG_NODE':
             return {
                 ...action.payload.component,
                 id: (state as NormalizedComponentConfig).id,
                 childIds: (state as NormalizedComponentConfig).childIds,
                 name: createName(action.payload.component.type, (state as NormalizedComponentConfig).id)
             };
-        case 'SWITCH_VIEW_CONFIG_NODE':
-            return state as NormalizedComponentConfig;
+        case 'SWITCH_VIEW_CONFIG_NODE': {
+            const newNode = { ...action.payload.component } as ComponentConfig;
+            delete newNode.subComponents;
+
+            return {
+                ...normalizeTree([newNode], action.payload.collectionId)[0],
+                id: (state as NormalizedComponentConfig).id,
+                childIds: childNodes.map(childNode => childNode.id)
+            };
+        }
         case 'ADD_VIEW_CONFIG_CHILD':
         case 'DELETE_VIEW_CONFIG_CHILD':
         case 'SORT_VIEW_CONFIG_CHILD':
@@ -199,7 +221,6 @@ const node = (state: NormalizedComponentConfig | ComponentConfig | null, action:
 export default (state = initialState, action: Action): ViewConfigReducer => {
     switch (action.type) {
         case 'MODIFY_VIEW_CONFIG_NODE':
-        case 'SWITCH_VIEW_CONFIG_NODE':
         case 'SORT_VIEW_CONFIG_CHILD':
         case 'DELETE_VIEW_CONFIG_CHILD':
         case 'ADD_VIEW_CONFIG_CHILD': {
@@ -210,6 +231,22 @@ export default (state = initialState, action: Action): ViewConfigReducer => {
             nextState[nodeIndex] = nextNode;
             return nextState;
         }
+
+        case 'SWITCH_VIEW_CONFIG_NODE': {
+            const { nodeId, component, collectionId } = action.payload;
+
+            const newChildNodes = normalizeTree(component.subComponents || [], collectionId, lastId(state));
+            newChildNodes.pop();
+            const nodeIndex = state.findIndex(item => item.id === nodeId);
+
+            const nextNode = node(state[nodeIndex], action, state, newChildNodes);
+
+            const nextState = [...state];
+            nextState[nodeIndex] = nextNode;
+
+            return [ ...nextState, ...newChildNodes];
+        }
+
         case 'ADD_VIEW_CONFIG_NODE': {
             return [
                 ...state,
@@ -245,10 +282,11 @@ export const modifyViewConfigNode = (nodeId: number, component: NormalizedCompon
     }
 });
 
-export const switchViewConfigNode = (nodeId: number, component: NormalizedComponentConfig): ModifyViewConfigNodeAction => ({
+export const switchViewConfigNode = (nodeId: number, component: NormalizedComponentConfig, collectionId: string): SwitchViewConfigNodeAction => ({
     type: 'SWITCH_VIEW_CONFIG_NODE',
     payload: {
         nodeId,
+        collectionId,
         component
     }
 });
