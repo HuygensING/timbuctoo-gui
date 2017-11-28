@@ -1,7 +1,7 @@
 import { COMPONENTS } from './global';
 import { ComponentType, FacetConfigType } from '../typings/schema';
 
-export const SELECT_COMPONENT_TYPES: { key: string, value: ComponentType }[] = [
+export const SELECT_COMPONENT_TYPES: { key: string; value: ComponentType }[] = [
     {
         key: 'Title',
         value: COMPONENTS.title
@@ -32,7 +32,7 @@ export const SELECT_COMPONENT_TYPES: { key: string, value: ComponentType }[] = [
     }
 ];
 
-export const SELECT_FACET_TYPES: {key: string, value: FacetConfigType }[] = [
+export const SELECT_FACET_TYPES: { key: string; value: FacetConfigType }[] = [
     {
         key: 'Multi-select',
         value: 'MultiSelect'
@@ -44,5 +44,5 @@ export const SELECT_FACET_TYPES: {key: string, value: FacetConfigType }[] = [
     {
         key: 'Hierarchical',
         value: 'Hierarchical'
-    },
-] ;
+    }
+];

@@ -90,13 +90,9 @@ const ViewConfig: SFC<FullProps> = props => {
     return (
         <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
             <Section>
-                <FullHelmet pageName="View screen"/>
+                <FullHelmet pageName="View screen" />
                 <Title>View screen</Title>
-                <DraggableForm
-                    id={0}
-                    configType="view"
-                    onSend={onSubmit}
-                />
+                <DraggableForm id={0} configType="view" onSend={onSubmit} />
             </Section>
         </Grid>
     );

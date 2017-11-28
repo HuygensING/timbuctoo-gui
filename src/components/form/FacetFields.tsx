@@ -21,12 +21,12 @@ interface DispatchProps {
     modify: (config: NormalizedFacetConfig) => void;
 }
 
-type Props = OwnProps & DispatchProps & RouteComponentProps<{ collection: string; }>;
+type Props = OwnProps & DispatchProps & RouteComponentProps<{ collection: string }>;
 
 const FacetField = Field.extend`
-  margin-top: 2rem;
-  padding-top: 2.5rem;
-  border-top: 1px solid ${props => props.theme.colors.shade.light};
+    margin-top: 2rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid ${props => props.theme.colors.shade.light};
 `;
 
 const FacetFields: SFC<Props> = ({ item, modify, match }) => {
@@ -37,9 +37,8 @@ const FacetFields: SFC<Props> = ({ item, modify, match }) => {
         modify(modifiedItem);
     };
 
-    const addPathHandler = () => modify(
-        { ...item, referencePaths: [...item.referencePaths, [[match.params.collection]]] }
-    );
+    const addPathHandler = () =>
+        modify({ ...item, referencePaths: [...item.referencePaths, [[match.params.collection]]] });
 
     return (
         <FieldContainer>
@@ -50,9 +49,7 @@ const FacetFields: SFC<Props> = ({ item, modify, match }) => {
                         name={`${item.id}_type`}
                         selected={SELECT_FACET_TYPES.find(({ value }) => value === item.type)}
                         options={SELECT_FACET_TYPES}
-                        onChange={({ value }: OptionProps) => (
-                            modify({ ...item, type: value as FacetConfigType })
-                        )}
+                        onChange={({ value }: OptionProps) => modify({ ...item, type: value as FacetConfigType })}
                     />
                 </FieldValue>
             </Field>
@@ -62,24 +59,22 @@ const FacetFields: SFC<Props> = ({ item, modify, match }) => {
                     <InputField
                         name={`${item.id}_caption`}
                         value={item.caption!}
-                        onChange={({ currentTarget: { value: caption } }: FormEvent<HTMLInputElement>) => (
+                        onChange={({ currentTarget: { value: caption } }: FormEvent<HTMLInputElement>) =>
                             modify({ ...item, caption })
-                        )}
+                        }
                     />
                 </FieldValue>
             </Field>
             <FacetField>
                 <FieldLabel htmlFor={`${item.id}_facets`}>Facets</FieldLabel>
                 <FieldValue>
-                    {
-                        item.referencePaths.map((paths, pathIdx) => (
-                            <ReferencePathSelector
-                                onChange={newPaths => onSelectChangeHandler(newPaths, pathIdx)}
-                                paths={paths}
-                                key={pathIdx}
-                            />
-                        ))
-                    }
+                    {item.referencePaths.map((paths, pathIdx) => (
+                        <ReferencePathSelector
+                            onChange={newPaths => onSelectChangeHandler(newPaths, pathIdx)}
+                            paths={paths}
+                            key={pathIdx}
+                        />
+                    ))}
                     <ButtonAdd onClick={addPathHandler}>Add a path</ButtonAdd>
                 </FieldValue>
             </FacetField>
@@ -91,7 +86,4 @@ const mapDispatchToProps = (dispatch, { item: { id } }: Props) => ({
     modify: (modifiedItem: NormalizedFacetConfig) => dispatch(modifyFacetConfig(id, modifiedItem))
 });
 
-export default compose<SFC<OwnProps>>(
-    withRouter,
-    connect(null, mapDispatchToProps)
-)(FacetFields);
+export default compose<SFC<OwnProps>>(withRouter, connect(null, mapDispatchToProps))(FacetFields);

@@ -9,45 +9,45 @@ const defaultState: FacetConfigReducer = [];
 
 // actions
 type AddFacetConfigItemAction = {
-    type: 'ADD_FACET_CONFIG_ITEM',
+    type: 'ADD_FACET_CONFIG_ITEM';
     payload: {
-        facetConfig: FacetConfig,
-        collectionId: string
-    }
+        facetConfig: FacetConfig;
+        collectionId: string;
+    };
 };
 type SetFacetConfigItemsAction = {
-    type: 'SET_FACET_CONFIG_ITEMS',
+    type: 'SET_FACET_CONFIG_ITEMS';
     payload: {
-        collectionId: string,
-        facetConfigs: FacetConfig[]
-    }
+        collectionId: string;
+        facetConfigs: FacetConfig[];
+    };
 };
 
 type DeleteFacetConfigItemAction = {
-    type: 'DELETE_FACET_CONFIG_ITEM',
+    type: 'DELETE_FACET_CONFIG_ITEM';
     payload: {
-        id: number
-    }
+        id: number;
+    };
 };
 
 type ModifyFacetConfigItemAction = {
-    type: 'MODIFY_FACET_CONFIG_ITEM',
+    type: 'MODIFY_FACET_CONFIG_ITEM';
     payload: {
-        id: number,
-        facetConfig: NormalizedFacetConfig
-    }
+        id: number;
+        facetConfig: NormalizedFacetConfig;
+    };
 };
 
 type SortFacetConfigItemAction = {
-    type: 'SORT_FACET_CONFIG_ITEM',
+    type: 'SORT_FACET_CONFIG_ITEM';
     payload: {
-        oldIndex: number,
-        newIndex: number
-    }
+        oldIndex: number;
+        newIndex: number;
+    };
 };
 
 type Action =
-    AddFacetConfigItemAction
+    | AddFacetConfigItemAction
     | SetFacetConfigItemsAction
     | DeleteFacetConfigItemAction
     | ModifyFacetConfigItemAction
@@ -55,9 +55,10 @@ type Action =
 
 // selectors
 
-export const lastId = (state: FacetConfigReducer): number => state
-    .map(config => config.id)
-    .reduce(((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue)), -1);
+export const lastId = (state: FacetConfigReducer): number =>
+    state
+        .map(config => config.id)
+        .reduce((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue), -1);
 
 export const getById = (id: number, state: FacetConfigReducer): NormalizedFacetConfig | undefined =>
     state.find(config => config.id === id);
@@ -74,32 +75,35 @@ export const denormalizeFacetConfig = (config: NormalizedFacetConfig): FacetConf
     return config;
 };
 
-export const composeFacets = (facetConfigs: NormalizedFacetConfig[]): FacetConfig[] => (
-    facetConfigs.map(denormalizeFacetConfig) // TODO: make sure it returns a message or something in case of error
-);
+export const composeFacets = (facetConfigs: NormalizedFacetConfig[]): FacetConfig[] =>
+    facetConfigs.map(denormalizeFacetConfig); // TODO: make sure it returns a message or something in case of error
 
 // reducer
-const references = (payload: { facetConfig: { paths: string[] }, collectionId: string }): ReferencePath[] => {
+const references = (payload: { facetConfig: { paths: string[] }; collectionId: string }): ReferencePath[] => {
     let referencePaths: (string[])[][] = [];
 
     for (const path of payload.facetConfig.paths) {
-        referencePaths = [ ...referencePaths, createReferencePath(path, payload.collectionId) ];
+        referencePaths = [...referencePaths, createReferencePath(path, payload.collectionId)];
     }
 
     if (!referencePaths.length) {
-        referencePaths = [[ [payload.collectionId] ]];
+        referencePaths = [[[payload.collectionId]]];
     }
 
     return referencePaths;
 };
 
-const item = (state: NormalizedFacetConfig | null, action: Action, items: NormalizedFacetConfig[]): NormalizedFacetConfig => {
+const item = (
+    state: NormalizedFacetConfig | null,
+    action: Action,
+    items: NormalizedFacetConfig[]
+): NormalizedFacetConfig => {
     switch (action.type) {
         case 'ADD_FACET_CONFIG_ITEM':
             return {
                 ...action.payload.facetConfig,
                 referencePaths: references(action.payload),
-                id: lastId(items) + 1,
+                id: lastId(items) + 1
             };
         case 'MODIFY_FACET_CONFIG_ITEM':
             return {

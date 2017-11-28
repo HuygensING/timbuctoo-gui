@@ -11,64 +11,64 @@ const initialState: ViewConfigReducer = [];
 // action definitions
 
 type AddViewConfigNodeAction = {
-    type: 'ADD_VIEW_CONFIG_NODE',
+    type: 'ADD_VIEW_CONFIG_NODE';
     payload: {
-        component: ComponentConfig,
-        collectionId: string
-    }
+        component: ComponentConfig;
+        collectionId: string;
+    };
 };
 
 type ModifyViewConfigNodeAction = {
-    type: 'MODIFY_VIEW_CONFIG_NODE',
+    type: 'MODIFY_VIEW_CONFIG_NODE';
     payload: {
-        nodeId: number,
-        component: NormalizedComponentConfig
-    }
+        nodeId: number;
+        component: NormalizedComponentConfig;
+    };
 };
 
 type SwitchViewConfigNodeAction = {
-    type: 'SWITCH_VIEW_CONFIG_NODE',
+    type: 'SWITCH_VIEW_CONFIG_NODE';
     payload: {
-        nodeId: number,
-        collectionId: string,
-        component: NormalizedComponentConfig
-    }
+        nodeId: number;
+        collectionId: string;
+        component: NormalizedComponentConfig;
+    };
 };
 
 type ViewConfigChildAction = {
-    type: 'ADD_VIEW_CONFIG_CHILD' | 'DELETE_VIEW_CONFIG_CHILD',
+    type: 'ADD_VIEW_CONFIG_CHILD' | 'DELETE_VIEW_CONFIG_CHILD';
     payload: {
-        nodeId: number,
-        childId: number
-    }
+        nodeId: number;
+        childId: number;
+    };
 };
 
 type SortViewConfigChildAction = {
-    type: 'SORT_VIEW_CONFIG_CHILD',
+    type: 'SORT_VIEW_CONFIG_CHILD';
     payload: {
-        nodeId: number,
-        oldIndex: number,
-        newIndex: number
-    }
+        nodeId: number;
+        oldIndex: number;
+        newIndex: number;
+    };
 };
 
 type DeleteViewConfigItemAction = {
-    type: 'DELETE_VIEW_CONFIG_NODE',
+    type: 'DELETE_VIEW_CONFIG_NODE';
     payload: {
-        nodeId: number
-    }
+        nodeId: number;
+    };
 };
 
 type SetTreeAction = {
-    type: 'SET_VIEW_CONFIG_TREE',
+    type: 'SET_VIEW_CONFIG_TREE';
     payload: {
-        components: ComponentConfig[],
-        collectionId: string
-    }
+        components: ComponentConfig[];
+        collectionId: string;
+    };
 };
 
 type Action =
-    AddViewConfigNodeAction
+    | AddViewConfigNodeAction
     | DeleteViewConfigItemAction
     | ViewConfigChildAction
     | ModifyViewConfigNodeAction
@@ -78,19 +78,14 @@ type Action =
 
 // selectors
 
-export const createName = (typename: string, idx: number, field?: string): string => (
-    `${idx}_${typename}${field ? '_' + field : ''}`
-);
+export const createName = (typename: string, idx: number, field?: string): string =>
+    `${idx}_${typename}${field ? '_' + field : ''}`;
 
 const normalizeTree = (tree: ComponentConfig[], collectionId: string, startIndex: number = -1): ViewConfigReducer => {
     // Flatten a tree of Components into an array of NormalizedComponents with a root branch (index 0)
 
     let idx = startIndex;
     let flatTree: NormalizedComponentConfig[] = [];
-
-    console.group('normalizing tree');
-    console.log('initial for:');
-    console.log(tree);
 
     const normalizeBranch = (branch: ComponentConfig) => {
         idx++;
@@ -120,10 +115,7 @@ const normalizeTree = (tree: ComponentConfig[], collectionId: string, startIndex
             delete normalizedComponent.subComponents;
         }
 
-        flatTree = [
-            ...flatTree,
-            normalizedComponent
-        ];
+        flatTree = [...flatTree, normalizedComponent];
     };
 
     normalizeBranch({
@@ -138,13 +130,16 @@ const normalizeTree = (tree: ComponentConfig[], collectionId: string, startIndex
 export const getNodeById = (id: number, state: ViewConfigReducer): NormalizedComponentConfig | undefined =>
     state.find(item => item.id === id);
 
-export const lastId = (state: ViewConfigReducer): number => state
-    .map(item => item.id)
-    .reduce(((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue)), -1);
+export const lastId = (state: ViewConfigReducer): number =>
+    state
+        .map(item => item.id)
+        .reduce((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue), -1);
 
-const getAllDescendantIds = (state: ViewConfigReducer, nodeId: number) => (
-    getNodeById(nodeId, state)!.childIds.reduce((acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)], [])
-);
+const getAllDescendantIds = (state: ViewConfigReducer, nodeId: number) =>
+    getNodeById(nodeId, state)!.childIds.reduce(
+        (acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)],
+        []
+    );
 
 const deleteMany = (state: ViewConfigReducer, ids: number[]): ViewConfigReducer => {
     state = [...state];
@@ -178,7 +173,12 @@ const childIds = (state: number[], action: Action) => {
     }
 };
 
-const node = (state: NormalizedComponentConfig | ComponentConfig | null, action: Action, items: NormalizedComponentConfig[], childNodes: NormalizedComponentConfig[] = []): NormalizedComponentConfig => {
+const node = (
+    state: NormalizedComponentConfig | ComponentConfig | null,
+    action: Action,
+    items: NormalizedComponentConfig[],
+    childNodes: NormalizedComponentConfig[] = []
+): NormalizedComponentConfig => {
     switch (action.type) {
         case 'ADD_VIEW_CONFIG_NODE': {
             const id = lastId(items) + 1;
@@ -210,7 +210,7 @@ const node = (state: NormalizedComponentConfig | ComponentConfig | null, action:
         case 'DELETE_VIEW_CONFIG_CHILD':
         case 'SORT_VIEW_CONFIG_CHILD':
             return {
-                ...state as NormalizedComponentConfig,
+                ...(state as NormalizedComponentConfig),
                 childIds: childIds((state as NormalizedComponentConfig).childIds, action)
             };
         default:
@@ -244,14 +244,11 @@ export default (state = initialState, action: Action): ViewConfigReducer => {
             const nextState = [...state];
             nextState[nodeIndex] = nextNode;
 
-            return [ ...nextState, ...newChildNodes];
+            return [...nextState, ...newChildNodes];
         }
 
         case 'ADD_VIEW_CONFIG_NODE': {
-            return [
-                ...state,
-                ...normalizeTree([action.payload.component], action.payload.collectionId, lastId(state))
-            ];
+            return [...state, ...normalizeTree([action.payload.component], action.payload.collectionId, lastId(state))];
         }
         case 'DELETE_VIEW_CONFIG_NODE': {
             const nodeId = action.payload.nodeId;
@@ -274,7 +271,10 @@ export const addViewConfigNode = (component: ComponentConfig, collectionId: stri
     }
 });
 
-export const modifyViewConfigNode = (nodeId: number, component: NormalizedComponentConfig): ModifyViewConfigNodeAction => ({
+export const modifyViewConfigNode = (
+    nodeId: number,
+    component: NormalizedComponentConfig
+): ModifyViewConfigNodeAction => ({
     type: 'MODIFY_VIEW_CONFIG_NODE',
     payload: {
         nodeId,
@@ -282,7 +282,11 @@ export const modifyViewConfigNode = (nodeId: number, component: NormalizedCompon
     }
 });
 
-export const switchViewConfigNode = (nodeId: number, component: NormalizedComponentConfig, collectionId: string): SwitchViewConfigNodeAction => ({
+export const switchViewConfigNode = (
+    nodeId: number,
+    component: NormalizedComponentConfig,
+    collectionId: string
+): SwitchViewConfigNodeAction => ({
     type: 'SWITCH_VIEW_CONFIG_NODE',
     payload: {
         nodeId,

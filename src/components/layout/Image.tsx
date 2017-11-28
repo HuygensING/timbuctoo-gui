@@ -14,8 +14,8 @@ const ImageWrapper = styled.figure`
     left: 0;
     margin: 0;
     width: 100%;
-    height: ${(props: ImageProps) => props.fillOut ? '100%' : 'initial'};
-    
+    height: ${(props: ImageProps) => (props.fillOut ? '100%' : 'initial')};
+
     &:before {
         content: '';
         display: block;

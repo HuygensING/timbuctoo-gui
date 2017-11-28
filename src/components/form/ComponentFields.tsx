@@ -9,7 +9,11 @@ import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect } from 'react-redux';
 import {
     deleteViewConfigChild,
-    deleteViewConfigNode, denormalizeComponent, lastId, modifyViewConfigNode, switchViewConfigNode,
+    deleteViewConfigNode,
+    denormalizeComponent,
+    lastId,
+    modifyViewConfigNode,
+    switchViewConfigNode,
     ViewConfigReducer
 } from '../../reducers/viewconfig';
 import { ComponentConfig } from '../../typings/schema';
@@ -22,9 +26,9 @@ import { COMPONENTS } from '../../constants/global';
 
 const StyledInput = styled(InputField)`
     display: inline-block;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
     width: auto;
-    margin-right: .5rem;
+    margin-right: 0.5rem;
     max-width: 10rem;
 `;
 
@@ -53,7 +57,6 @@ interface StateProps {
 type Props = StateProps & DispatchProps & OwnProps & RouteComponentProps<any>;
 
 const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeChild }) => {
-
     const setMaxItems = (): number => {
         switch (item.type) {
             case COMPONENTS.title:
@@ -82,9 +85,7 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeChild
         return modifyNode(newFieldset);
     };
 
-    const onSelectChangeHandler = (newPath: ReferencePath) => (
-        modifyNode({ ...item, referencePath: newPath })
-    );
+    const onSelectChangeHandler = (newPath: ReferencePath) => modifyNode({ ...item, referencePath: newPath });
 
     const onChangeHeadHandler = (option: OptionProps) => {
         const componentKey = option.value;
@@ -97,7 +98,9 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeChild
 
         const newFieldset: NormalizedComponentConfig = {
             ...EMPTY_COMPONENT[componentKey],
-            id, childIds, name
+            id,
+            childIds,
+            name
         };
 
         if (item.childIds) {
@@ -117,7 +120,7 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeChild
                     <Select
                         name={'Component'}
                         options={SELECT_COMPONENT_TYPES}
-                        selected={SELECT_COMPONENT_TYPES.find((valueType) => valueType.value === item.type)}
+                        selected={SELECT_COMPONENT_TYPES.find(valueType => valueType.value === item.type)}
                         onChange={onChangeHeadHandler}
                     />
                 </FieldValue>
@@ -127,37 +130,28 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeChild
                 {typeof item.value === 'string' && <FieldLabel htmlFor={name}>{item.type}</FieldLabel>}
                 {typeof item.value === 'string' && (
                     <FieldValue>
-                        {(
-                            item.type === 'PATH'
-                                ? (
-                                    <ReferencePathSelector
-                                        onChange={onSelectChangeHandler}
-                                        paths={item.referencePath as ReferencePath}
-                                    />
-                                )
-                                : (
-                                    <StyledInputWrapper>
-                                        <StyledInput
-                                            type={'text'}
-                                            title={name}
-                                            name={name}
-                                            defaultValue={item.value}
-                                            onBlur={onChangeHandler}
-                                        />
-                                    </StyledInputWrapper>
-                                )
+                        {item.type === 'PATH' ? (
+                            <ReferencePathSelector
+                                onChange={onSelectChangeHandler}
+                                paths={item.referencePath as ReferencePath}
+                            />
+                        ) : (
+                            <StyledInputWrapper>
+                                <StyledInput
+                                    type={'text'}
+                                    title={name}
+                                    name={name}
+                                    defaultValue={item.value}
+                                    onBlur={onChangeHandler}
+                                />
+                            </StyledInputWrapper>
                         )}
                     </FieldValue>
                 )}
             </Field>
 
             {item.childIds.length > 0 && (
-                <DraggableForm
-                    maxItems={setMaxItems()}
-                    configType={'view'}
-                    id={item.id}
-                    noForm={true}
-                />
+                <DraggableForm maxItems={setMaxItems()} configType={'view'} id={item.id} noForm={true} />
             )}
         </FieldContainer>
     );
@@ -171,11 +165,9 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch, { item: { id }, match }: Props) => ({
     removeChild: (childId: number) => dispatch(deleteViewConfigChild(id, childId)),
     removeNode: (nodeId: number) => dispatch(deleteViewConfigNode(nodeId)),
-    switchNode: (component: NormalizedComponentConfig) => dispatch(switchViewConfigNode(id, component, match.params.collection)),
-    modifyNode: (component: NormalizedComponentConfig) => dispatch(modifyViewConfigNode(id, component)),
+    switchNode: (component: NormalizedComponentConfig) =>
+        dispatch(switchViewConfigNode(id, component, match.params.collection)),
+    modifyNode: (component: NormalizedComponentConfig) => dispatch(modifyViewConfigNode(id, component))
 });
 
-export default compose<SFC<OwnProps>>(
-    withRouter,
-    connect(mapStateToProps, mapDispatchToProps)
-)(ComponentFields);
+export default compose<SFC<OwnProps>>(withRouter, connect(mapStateToProps, mapDispatchToProps))(ComponentFields);

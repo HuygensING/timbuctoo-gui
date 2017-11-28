@@ -11,35 +11,23 @@ export type pathResult = uriOrString[] | uriOrString | null;
 
 // TODO: Need to refactor this to make sure it uses the JSON.parse instead of iterating on string
 
-export const mendPath = (pathArray: ReferencePath): string => (
-    pathArray.map(path => path.join(':')).join('.')
-);
+export const mendPath = (pathArray: ReferencePath): string => pathArray.map(path => path.join(':')).join('.');
 
-export const splitPath = (pathStr: string, onlyKey: boolean = false): (string | string[])[] => (
-    pathStr
-        .split('.')
-        .map(segment => onlyKey
-            ? segment.split(':')[1]
-            : segment.split(':')
-        )
-);
+export const splitPath = (pathStr: string, onlyKey: boolean = false): (string | string[])[] =>
+    pathStr.split('.').map(segment => (onlyKey ? segment.split(':')[1] : segment.split(':')));
 
-export const walkPath = (pathStr: string | undefined, formatters: FormatterConfig, entity: Entity): pathResult => (
-    pathStr
-        ? walkPathStep(splitPath(pathStr, true) as string[], formatters, entity)
-        : null
-);
+export const walkPath = (pathStr: string | undefined, formatters: FormatterConfig, entity: Entity): pathResult =>
+    pathStr ? walkPathStep(splitPath(pathStr, true) as string[], formatters, entity) : null;
 
-export const createReferencePath = (path: string, collectionId: string): ReferencePath => (
-    path.length > 0
-        ? [[collectionId], ...(splitPath(path) as ReferencePath)]
-        : [[collectionId]]
-);
+export const createReferencePath = (path: string, collectionId: string): ReferencePath =>
+    path.length > 0 ? [[collectionId], ...(splitPath(path) as ReferencePath)] : [[collectionId]];
 
-export const DEFAULT_FORMATTERS: FormatterConfig = [{
-    type: 'http://timbuctoo.huygens.knaw.nl/datatypes/person-name',
-    name: 'PERSON_NAMES'
-}];
+export const DEFAULT_FORMATTERS: FormatterConfig = [
+    {
+        type: 'http://timbuctoo.huygens.knaw.nl/datatypes/person-name',
+        name: 'PERSON_NAMES'
+    }
+];
 
 function isValue(obj: Value | Entity): obj is Value {
     return obj.hasOwnProperty('value');

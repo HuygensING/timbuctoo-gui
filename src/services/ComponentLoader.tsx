@@ -120,7 +120,6 @@ export class ComponentLoader extends React.Component<
                 const retVal: JSX.Element[] = [];
                 tos.forEach((to, i) => {
                     if (typeof to !== 'string') {
-                        console.log(this.props.idPerUri, to.type, this.props.idPerUri[to.type]);
                         retVal.push(
                             <ContentLink
                                 key={i}
