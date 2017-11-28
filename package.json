@@ -9,8 +9,8 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "faker": "graphql-faker --extend http://localhost:8080/v5/graphql \\  -H 'Accept:application/json' -H 'Content-Type:application/json'",
-    "prettify": "./node_modules/.bin/prettier --write './src/**/*.{tsx,ts}'",
-    "precommit": "check-dependencies && ./node_modules/.bin/prettier -l './src/**/*.{tsx,ts}' && tslint --project . --type-check"
+    "prettify": "prettier --write './src/**/*.{tsx,ts}'",
+    "precommit": "check-dependencies && prettier -l './src/**/*.{tsx,ts}' && tslint --project . --type-check"
   },
   "prettier": {
     "printWidth": 120,
