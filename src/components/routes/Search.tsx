@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { ComponentType, PureComponent } from 'react';
 import { CollectionMetadata, DataSetMetadata } from '../../typings/schema';
 import FullHelmet from '../FullHelmet';
 import { Col, FullSection } from '../layout/Grid';
@@ -9,27 +9,29 @@ import Filters from '../Filters';
 import SearchResults from '../search/SearchResults';
 import { getValuesFromObject } from '../../services/getValue';
 import { getCollectionValues } from '../../services/GetDataSetValues';
-import MetadataResolver, { ResolvedApolloProps } from '../MetadataResolver';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
 import Pagination from '../search/Pagination';
-import Loading from '../Loading';
+import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
+import graphqlWithProps from '../../services/graphqlWithProps';
+import { compose } from 'redux';
+import { RouteComponentProps, withRouter } from 'react-router';
+import renderLoader from '../../services/renderLoader';
+import { ChildProps } from 'react-apollo';
 
-type FullProps = ResolvedApolloProps<{ dataSetMetadata: DataSetMetadata }, any, any>;
+type FullProps = ChildProps<MetaDataProps & RouteComponentProps<{ dataSet: string, collection: string }>, { dataSets: DataSetMetadata }>;
 
 class Search extends PureComponent<FullProps> {
-    render() {
-        if (!this.props.metadata || !this.props.metadata.dataSetMetadata || !this.props.data) {
-            return <Loading />;
-        }
 
-        const { collectionList, dataSetId, collection } = this.props.metadata.dataSetMetadata;
+    render () {
+        const { collectionList, dataSetId, collection } = this.props.metadata.dataSetMetadata!;
 
-        const collectionValues = getCollectionValues(this.props.data.dataSets, dataSetId, collection!.collectionListId);
+        const collectionValues = getCollectionValues(this.props.data!.dataSets, dataSetId, collection!.collectionListId);
         const fields = getValuesFromObject(collection!.summaryProperties);
 
-        const collectionItems: CollectionMetadata[] =
-            collectionList && collectionList.items ? collectionList.items : [];
+        const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
+            ? collectionList.items
+            : [];
 
         return (
             <section>
@@ -40,7 +42,7 @@ class Search extends PureComponent<FullProps> {
                     <SearchForm type={'collection'} />
                 </Col>
 
-                <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={0.5}>
+                <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={.5}>
                     <CollectionTags
                         colKeys={reorderUnknownsInList(collectionItems)}
                         dataSetId={dataSetId}
@@ -50,9 +52,10 @@ class Search extends PureComponent<FullProps> {
                 </Col>
 
                 <FullSection>
+
                     <Col sm={12} smPaddingY={1}>
                         <Filters
-                            loading={this.props.loading}
+                            loading={this.props.data!.loading}
                             currentCollectionListId={collection!.collectionListId}
                             collection={collectionValues}
                             facetConfigs={collection!.indexConfig.facet}
@@ -60,6 +63,7 @@ class Search extends PureComponent<FullProps> {
                     </Col>
 
                     <Col sm={27} smOffset={3} smPaddingY={1}>
+
                         {collectionValues && (
                             <SearchResults
                                 dataSetId={dataSetId}
@@ -75,10 +79,19 @@ class Search extends PureComponent<FullProps> {
                             prevCursor={collectionValues && collectionValues.prevCursor}
                         />
                     </Col>
+
                 </FullSection>
             </section>
         );
     }
 }
 
-export default MetadataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES, QUERY_COLLECTION_VALUES)(Search);
+const dataResolver = compose<ComponentType<{}>>(
+    withRouter,
+    metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
+    renderLoader('metadata'),
+    graphqlWithProps<FullProps>(QUERY_COLLECTION_VALUES),
+    renderLoader()
+);
+
+export default dataResolver(Search);
