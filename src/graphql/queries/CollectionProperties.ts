@@ -7,7 +7,7 @@ import {
 } from '../fragments/Metadata';
 import { RouteComponentProps } from 'react-router';
 
-type Props = RouteComponentProps<{ dataSet: string, collection: string }>;
+type Props = RouteComponentProps<{ dataSet: string; collection: string }>;
 
 const QUERY_COLLECTION_PROPERTIES = ({ match }: Props) => {
     const query = `

@@ -25,19 +25,15 @@ interface StateProps {
     loggedIn: boolean;
 }
 
-type Props =
-    MetaDataProps
-    & StateProps
-    & DataSetProps;
+type Props = MetaDataProps & StateProps & DataSetProps;
 
 class DataSet extends PureComponent<Props> {
+    render() {
+        const { dataSetId, title, description, imageUrl, collectionList, owner, contact } = this.props.metadata
+            .dataSetMetadata!;
 
-    render () {
-        const { dataSetId, title, description, imageUrl, collectionList, owner, contact } = this.props.metadata.dataSetMetadata!;
-
-        const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
-            ? collectionList.items
-            : [];
+        const collectionItems: CollectionMetadata[] =
+            collectionList && collectionList.items ? collectionList.items : [];
 
         return (
             <section>
@@ -47,34 +43,28 @@ class DataSet extends PureComponent<Props> {
                     title={getValue(title)}
                     content={getValue(description)}
                     imgUrl={getValue(imageUrl)}
-                    searchPath={collectionItems.length ? `${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionItems[0].collectionId)}` : ''}
+                    searchPath={
+                        collectionItems.length
+                            ? `${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionItems[0].collectionId)}`
+                            : ''
+                    }
                     buttonText={'Search this dataset'}
                 />
 
-                <Col sm={42} smOffset={3} smPaddingBottom={.5}>
-                    <CollectionTags
-                        colKeys={reorderUnknownsInList(collectionItems)}
-                        dataSetId={dataSetId}
-                    />
+                <Col sm={42} smOffset={3} smPaddingBottom={0.5}>
+                    <CollectionTags colKeys={reorderUnknownsInList(collectionItems)} dataSetId={dataSetId} />
                 </Col>
 
                 {this.props.loggedIn && (
-                    <Col sm={42} smOffset={3} smPaddingBottom={.5}>
+                    <Col sm={42} smOffset={3} smPaddingBottom={0.5}>
                         <section>
                             <Title>Collection</Title>
                             <ul>
-                                {collectionItems
-                                    .filter(isKnown)
-                                    .map((collection, idx) =>
-                                        <li key={idx}>
-                                            <EditCollectionBar 
-                                                key={idx} 
-                                                collection={collection}
-                                                dataSetId={dataSetId} 
-                                            />
-                                        </li>
-                                    )
-                                }
+                                {collectionItems.filter(isKnown).map((collection, idx) => (
+                                    <li key={idx}>
+                                        <EditCollectionBar key={idx} collection={collection} dataSetId={dataSetId} />
+                                    </li>
+                                ))}
                             </ul>
                         </section>
                     </Col>
@@ -92,7 +82,7 @@ class DataSet extends PureComponent<Props> {
         );
     }
 
-    private renderProvenanceInfo () {
+    private renderProvenanceInfo() {
         const { provenanceInfo } = this.props.metadata.dataSetMetadata!;
 
         if (!provenanceInfo) {
@@ -110,7 +100,7 @@ class DataSet extends PureComponent<Props> {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     loggedIn: state.user.loggedIn
 });
 

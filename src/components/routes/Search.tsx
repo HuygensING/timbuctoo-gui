@@ -19,19 +19,24 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import renderLoader from '../../services/renderLoader';
 import { ChildProps } from 'react-apollo';
 
-type FullProps = ChildProps<MetaDataProps & RouteComponentProps<{ dataSet: string, collection: string }>, { dataSets: DataSetMetadata }>;
+type FullProps = ChildProps<
+    MetaDataProps & RouteComponentProps<{ dataSet: string; collection: string }>,
+    { dataSets: DataSetMetadata }
+>;
 
 class Search extends PureComponent<FullProps> {
-
-    render () {
+    render() {
         const { collectionList, dataSetId, collection } = this.props.metadata.dataSetMetadata!;
 
-        const collectionValues = getCollectionValues(this.props.data!.dataSets, dataSetId, collection!.collectionListId);
+        const collectionValues = getCollectionValues(
+            this.props.data!.dataSets,
+            dataSetId,
+            collection!.collectionListId
+        );
         const fields = getValuesFromObject(collection!.summaryProperties);
 
-        const collectionItems: CollectionMetadata[] = collectionList && collectionList.items
-            ? collectionList.items
-            : [];
+        const collectionItems: CollectionMetadata[] =
+            collectionList && collectionList.items ? collectionList.items : [];
 
         return (
             <section>
@@ -42,7 +47,7 @@ class Search extends PureComponent<FullProps> {
                     <SearchForm type={'collection'} />
                 </Col>
 
-                <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={.5}>
+                <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={0.5}>
                     <CollectionTags
                         colKeys={reorderUnknownsInList(collectionItems)}
                         dataSetId={dataSetId}
@@ -52,7 +57,6 @@ class Search extends PureComponent<FullProps> {
                 </Col>
 
                 <FullSection>
-
                     <Col sm={12} smPaddingY={1}>
                         <Filters
                             loading={this.props.data!.loading}
@@ -63,7 +67,6 @@ class Search extends PureComponent<FullProps> {
                     </Col>
 
                     <Col sm={27} smOffset={3} smPaddingY={1}>
-
                         {collectionValues && (
                             <SearchResults
                                 dataSetId={dataSetId}
@@ -79,7 +82,6 @@ class Search extends PureComponent<FullProps> {
                             prevCursor={collectionValues && collectionValues.prevCursor}
                         />
                     </Col>
-
                 </FullSection>
             </section>
         );

@@ -4,7 +4,7 @@ import { componentsFragment, ComponentsFragment } from '../fragments/Components'
 import { checkTypes, Query } from '../../typings/schema';
 import { RouteComponentProps } from 'react-router';
 
-export type Props = RouteComponentProps<{dataSet: string, collection: string}>;
+export type Props = RouteComponentProps<{ dataSet: string; collection: string }>;
 
 export const QUERY_ENTRY_PROPERTIES = ({ match }: Props) => {
     const query = `
@@ -44,9 +44,9 @@ interface CollectionMetadataLocal extends CollectionPropertiesReference {
     collectionId: string;
     viewConfig: ComponentsFragment;
     summaryProperties: {
-        title?: { value: string }
-        description?: { value: string }
-        image?: { value: string }
+        title?: { value: string };
+        description?: { value: string };
+        image?: { value: string };
     };
 }
 
@@ -55,11 +55,11 @@ export interface QueryMetadata {
     dataSetMetadata?: {
         collectionList: {
             items: Array<{
-                itemType: string
+                itemType: string;
                 collectionId: string;
                 summaryProperties: {
-                    title?: { value: string }
-                }
+                    title?: { value: string };
+                };
             }>;
         };
         collection?: CollectionMetadataLocal;
