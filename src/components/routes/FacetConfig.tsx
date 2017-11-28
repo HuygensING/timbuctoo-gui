@@ -10,7 +10,7 @@ import { FacetConfig as IFacetConfig } from '../../typings/schema';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
+import { MetaDataProps, default as metaDataResolver } from '../../services/metaDataResolver';
 import { lifecycle } from 'recompose';
 import renderLoader from '../../services/renderLoader';
 import { composeFacets, setFacetConfigItems } from '../../reducers/facetconfig';
@@ -64,16 +64,17 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default compose<SFC<{}>>(
-    connect(mapStateToProps, mapDispatchToProps),
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
+    renderLoader('metadata'),
+    connect(mapStateToProps, mapDispatchToProps),
     lifecycle({
-        componentWillReceiveProps(nextProps: FullProps) {
-            const metadata = nextProps.metadata && nextProps.metadata.dataSetMetadata;
+        componentWillMount() {
+            console.log('mounting');
+            const metadata = this.props.metadata && this.props.metadata.dataSetMetadata;
             if (metadata && metadata.collection && metadata.collection.indexConfig.facet.length) {
                 this.props.setItems(metadata.collection.indexConfig.facet);
             }
         }
-    }),
-    renderLoader('metadata')
+    })
 )(FacetConfig);

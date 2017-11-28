@@ -6,13 +6,7 @@ import styled from '../../styled-components';
 import { COMPONENTS, DRAGGABLE_COMPONENTS, EMPTY_FACET_CONFIG } from '../../constants/global';
 import { ComponentConfig, FacetConfig } from '../../typings/schema';
 import { SubmitButton } from './fields/Buttons';
-import {
-    addViewConfigChild,
-    addViewConfigNode,
-    getNodeById,
-    lastId,
-    sortViewConfigChild
-} from '../../reducers/viewconfig';
+import { addViewConfigNode, getNodeById, lastId, sortViewConfigChild } from '../../reducers/viewconfig';
 import { connect } from 'react-redux';
 import { EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
@@ -83,6 +77,7 @@ class DraggableForm extends PureComponent<Props, State> {
     private renderContent() {
         const { openedIndex } = this.state;
         const { items, maxItems, configType } = this.props;
+        const addIsAllowed = !maxItems || items.filter(item => !!item).length < maxItems;
         const componentProps = {
             openedIndex,
             openCloseFn: this.openCloseFn
@@ -98,7 +93,7 @@ class DraggableForm extends PureComponent<Props, State> {
                     useDragHandle={true}
                     onSortEnd={this.onSortEnd}
                 />
-                {(!maxItems || items.length < maxItems) && (
+                {addIsAllowed && (
                     <AddListButton type={'button'} onClick={this.addListItem}>
                         +
                     </AddListButton>
@@ -134,8 +129,7 @@ const mapDispatchToProps = (dispatch, { id, configType, match, ...rest }: Props)
     if (configType === 'view') {
         return {
             sortItem: (oldIndex: number, newIndex: number) => dispatch(sortViewConfigChild(id, oldIndex, newIndex)),
-            addChild: childId => dispatch(addViewConfigChild(id, childId)),
-            addItem: (component: ComponentConfig) => dispatch(addViewConfigNode(component, match.params.collection))
+            addItem: (component: ComponentConfig) => dispatch(addViewConfigNode(component, match.params.collection, id))
         };
     } else {
         return {
@@ -145,22 +139,6 @@ const mapDispatchToProps = (dispatch, { id, configType, match, ...rest }: Props)
         };
     }
 };
-
-const mergeProps = (
-    stateProps: StateProps,
-    dispatchProps: DispatchProps,
-    ownProps: OwnProps & RouteComponentProps<{ collection: string }>
-): Props => ({
-    ...stateProps,
-    ...dispatchProps,
-    ...ownProps,
-    addItem: (item: ConfigurableItem) => {
-        dispatchProps.addItem(item);
-        if (ownProps.configType === 'view') {
-            dispatchProps.addChild(stateProps.lastId);
-        }
-    }
-});
 
 const mapStateToProps = (state: RootState, { id, configType }: Props) => {
     let items: ConfigurableItem[];
@@ -177,6 +155,4 @@ const mapStateToProps = (state: RootState, { id, configType }: Props) => {
     };
 };
 
-export default compose<SFC<OwnProps>>(withRouter, connect(mapStateToProps, mapDispatchToProps, mergeProps))(
-    DraggableForm
-);
+export default compose<SFC<OwnProps>>(withRouter, connect(mapStateToProps, mapDispatchToProps))(DraggableForm);

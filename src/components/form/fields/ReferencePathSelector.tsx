@@ -72,7 +72,11 @@ const ReferencePathSelector: SFC<Props> = ({ paths, onChange }) => {
                 const isMultiple = paths[childIdx - 1] && paths[childIdx - 1][1] === ITEMS;
 
                 if (value === VALUE) {
-                    return <Value shownAsMultipleItems={isMultiple}>{value}</Value>;
+                    return (
+                        <Value key={childIdx} shownAsMultipleItems={isMultiple}>
+                            {value}
+                        </Value>
+                    );
                 }
 
                 return (

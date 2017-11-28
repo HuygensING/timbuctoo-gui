@@ -8,9 +8,7 @@ import { NormalizedComponentConfig, ReferencePath } from '../../typings/index';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect } from 'react-redux';
 import {
-    deleteViewConfigChild,
     deleteViewConfigNode,
-    denormalizeComponent,
     lastId,
     modifyViewConfigNode,
     switchViewConfigNode,
@@ -43,10 +41,7 @@ interface OwnProps {
 interface DispatchProps {
     modifyNode: (component: ComponentConfig) => void;
     switchNode: (component: NormalizedComponentConfig) => void;
-    removeNode: (nodeId: number) => void;
-    removeChild: (childId: number) => void;
-    addChild: (childId: number) => void;
-    addNode: (component: ComponentConfig) => void;
+    removeNode: (childId: number) => void;
 }
 
 interface StateProps {
@@ -56,7 +51,7 @@ interface StateProps {
 
 type Props = StateProps & DispatchProps & OwnProps & RouteComponentProps<any>;
 
-const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeChild }) => {
+const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeNode }) => {
     const setMaxItems = (): number => {
         switch (item.type) {
             case COMPONENTS.title:
@@ -79,7 +74,7 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeChild
             return false;
         }
 
-        const newFieldset: ComponentConfig = denormalizeComponent({ ...item });
+        const newFieldset = { ...item };
         newFieldset.value = newValue;
 
         return modifyNode(newFieldset);
@@ -94,18 +89,20 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeChild
             return false;
         }
 
-        const { id, childIds, name } = item;
+        const { id, name } = item;
 
         const newFieldset: NormalizedComponentConfig = {
             ...EMPTY_COMPONENT[componentKey],
+            childIds: [],
             id,
-            childIds,
             name
         };
 
+        console.log(newFieldset);
+
         if (item.childIds) {
             for (const childId of item.childIds) {
-                removeChild(childId);
+                removeNode(childId);
             }
         }
 
@@ -163,8 +160,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch, { item: { id }, match }: Props) => ({
-    removeChild: (childId: number) => dispatch(deleteViewConfigChild(id, childId)),
-    removeNode: (nodeId: number) => dispatch(deleteViewConfigNode(nodeId)),
+    removeNode: (childId: number) => dispatch(deleteViewConfigNode(childId)),
     switchNode: (component: NormalizedComponentConfig) =>
         dispatch(switchViewConfigNode(id, component, match.params.collection)),
     modifyNode: (component: NormalizedComponentConfig) => dispatch(modifyViewConfigNode(id, component))

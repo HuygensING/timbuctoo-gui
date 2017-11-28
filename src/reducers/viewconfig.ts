@@ -15,6 +15,7 @@ type AddViewConfigNodeAction = {
     payload: {
         component: ComponentConfig;
         collectionId: string;
+        nodeId?: number;
     };
 };
 
@@ -32,14 +33,6 @@ type SwitchViewConfigNodeAction = {
         nodeId: number;
         collectionId: string;
         component: NormalizedComponentConfig;
-    };
-};
-
-type ViewConfigChildAction = {
-    type: 'ADD_VIEW_CONFIG_CHILD' | 'DELETE_VIEW_CONFIG_CHILD';
-    payload: {
-        nodeId: number;
-        childId: number;
     };
 };
 
@@ -70,7 +63,6 @@ type SetTreeAction = {
 type Action =
     | AddViewConfigNodeAction
     | DeleteViewConfigItemAction
-    | ViewConfigChildAction
     | ModifyViewConfigNodeAction
     | SwitchViewConfigNodeAction
     | SortViewConfigChildAction
@@ -80,6 +72,11 @@ type Action =
 
 export const createName = (typename: string, idx: number, field?: string): string =>
     `${idx}_${typename}${field ? '_' + field : ''}`;
+
+export const getNodeIndex = (id: number, state): number | undefined => state.findIndex(nodeItem => nodeItem.id === id);
+
+export const getNodeById = (id: number, state: ViewConfigReducer): NormalizedComponentConfig | undefined =>
+    state.find(item => item.id === id);
 
 const normalizeTree = (tree: ComponentConfig[], collectionId: string, startIndex: number = -1): ViewConfigReducer => {
     // Flatten a tree of Components into an array of NormalizedComponents with a root branch (index 0)
@@ -127,8 +124,46 @@ const normalizeTree = (tree: ComponentConfig[], collectionId: string, startIndex
     return flatTree;
 };
 
-export const getNodeById = (id: number, state: ViewConfigReducer): NormalizedComponentConfig | undefined =>
-    state.find(item => item.id === id);
+const composeNode = (item: NormalizedComponentConfig, state: ViewConfigReducer): ComponentConfig => {
+    item = { ...item };
+
+    if (item.childIds && !!item.childIds.length) {
+        item.subComponents = [];
+
+        for (const child of item.childIds) {
+            const childNode = getNodeById(child, state);
+
+            if (childNode) {
+                const composedChildNode = composeNode(childNode, state);
+
+                if (composedChildNode) {
+                    item.subComponents.push(composedChildNode);
+                }
+            }
+        }
+    }
+
+    delete item.id;
+    delete item.childIds;
+    delete item.name;
+    return item;
+};
+
+export const composeTree = (state: ViewConfigReducer): ComponentConfig[] | void => {
+    let composedTree: ComponentConfig[] = [];
+
+    for (const rootNodeIdx of state[0].childIds) {
+        const rootNode = getNodeById(rootNodeIdx, state);
+        if (rootNode) {
+            const composedRootNode = composeNode(rootNode, state);
+            if (composedRootNode) {
+                composedTree.push(composedRootNode);
+            }
+        }
+    }
+
+    return composedTree;
+};
 
 export const lastId = (state: ViewConfigReducer): number =>
     state
@@ -141,35 +176,46 @@ const getAllDescendantIds = (state: ViewConfigReducer, nodeId: number) =>
         []
     );
 
-const deleteMany = (state: ViewConfigReducer, ids: number[]): ViewConfigReducer => {
-    state = [...state];
-    for (const id of ids) {
-        const index = state.findIndex(item => item.id === id);
-        state.splice(index, 1);
-    }
-    return state;
-};
+const deleteAllReferences = (state: ViewConfigReducer, nodeId: number): ViewConfigReducer =>
+    state.map(stateNode => {
+        for (const [idx, childId] of stateNode.childIds.entries()) {
+            if (childId === nodeId) {
+                stateNode.childIds.splice(idx, 1);
+            }
+        }
+        return stateNode;
+    });
 
-export const denormalizeComponent = (item: NormalizedComponentConfig): ComponentConfig => {
-    item = { ...item };
-    delete item.id;
-    delete item.childIds;
-    delete item.name;
-    return item;
+const stateWithoutNodeReferences = (state: ViewConfigReducer, nodeId: number): ViewConfigReducer => {
+    const newState = [...state];
+
+    for (const id of [nodeId, ...getAllDescendantIds(state, nodeId)]) {
+        const index = getNodeIndex(id, state);
+
+        if (index) {
+            newState.splice(index, 1);
+        }
+    }
+
+    return deleteAllReferences(newState, nodeId);
 };
 
 // reducers
-
-const childIds = (state: number[], action: Action) => {
+const nodesToAdd = (state: ViewConfigReducer, action: Action): NormalizedComponentConfig[] => {
     switch (action.type) {
-        case 'ADD_VIEW_CONFIG_CHILD':
-            return [...state, action.payload.childId];
-        case 'DELETE_VIEW_CONFIG_CHILD':
-            return state.filter(id => id !== action.payload.childId);
-        case 'SORT_VIEW_CONFIG_CHILD':
-            return arrayMove(state, action.payload.oldIndex, action.payload.newIndex);
+        case 'ADD_VIEW_CONFIG_NODE':
+            return normalizeTree([action.payload.component], action.payload.collectionId, lastId(state));
+        case 'SWITCH_VIEW_CONFIG_NODE': {
+            const children = normalizeTree(
+                action.payload.component.subComponents || [],
+                action.payload.collectionId,
+                lastId(state)
+            );
+            children.pop();
+            return children;
+        }
         default:
-            return state;
+            return [];
     }
 };
 
@@ -181,12 +227,10 @@ const node = (
 ): NormalizedComponentConfig => {
     switch (action.type) {
         case 'ADD_VIEW_CONFIG_NODE': {
-            const id = lastId(items) + 1;
+            const newId = childNodes.length > 0 ? [childNodes[childNodes.length - 1].id] : [];
             return {
-                ...action.payload.component,
-                id,
-                childIds: [],
-                name: createName(action.payload.component.type, id)
+                ...(state as NormalizedComponentConfig),
+                childIds: [...(state as NormalizedComponentConfig).childIds, ...newId]
             };
         }
         case 'MODIFY_VIEW_CONFIG_NODE':
@@ -196,23 +240,25 @@ const node = (
                 childIds: (state as NormalizedComponentConfig).childIds,
                 name: createName(action.payload.component.type, (state as NormalizedComponentConfig).id)
             };
-        case 'SWITCH_VIEW_CONFIG_NODE': {
-            const newNode = { ...action.payload.component } as ComponentConfig;
-            delete newNode.subComponents;
-
-            return {
-                ...normalizeTree([newNode], action.payload.collectionId)[0],
-                id: (state as NormalizedComponentConfig).id,
-                childIds: childNodes.map(childNode => childNode.id)
-            };
-        }
-        case 'ADD_VIEW_CONFIG_CHILD':
-        case 'DELETE_VIEW_CONFIG_CHILD':
         case 'SORT_VIEW_CONFIG_CHILD':
             return {
                 ...(state as NormalizedComponentConfig),
-                childIds: childIds((state as NormalizedComponentConfig).childIds, action)
+                childIds: arrayMove(
+                    (state as NormalizedComponentConfig).childIds,
+                    action.payload.oldIndex,
+                    action.payload.newIndex
+                )
             };
+        case 'SWITCH_VIEW_CONFIG_NODE': {
+            const newNodeList = normalizeTree([action.payload.component], action.payload.collectionId);
+            const newNode = newNodeList[newNodeList.length - 2];
+            return {
+                ...newNode,
+                id: (state as NormalizedComponentConfig).id,
+                childIds: childNodes.map(childNode => childNode.id),
+                name: createName(action.payload.component.type, (state as NormalizedComponentConfig).id)
+            };
+        }
         default:
             return state as NormalizedComponentConfig; // todo don't unwrap optional???
     }
@@ -222,38 +268,20 @@ export default (state = initialState, action: Action): ViewConfigReducer => {
     switch (action.type) {
         case 'MODIFY_VIEW_CONFIG_NODE':
         case 'SORT_VIEW_CONFIG_CHILD':
-        case 'DELETE_VIEW_CONFIG_CHILD':
-        case 'ADD_VIEW_CONFIG_CHILD': {
-            const nodeId = action.payload.nodeId;
-            const nodeIndex = state.findIndex(item => item.id === nodeId);
-            const nextNode = node(state[nodeIndex], action, state);
-            const nextState = [...state];
-            nextState[nodeIndex] = nextNode;
-            return nextState;
-        }
-
+        case 'ADD_VIEW_CONFIG_NODE':
         case 'SWITCH_VIEW_CONFIG_NODE': {
-            const { nodeId, component, collectionId } = action.payload;
-
-            const newChildNodes = normalizeTree(component.subComponents || [], collectionId, lastId(state));
-            newChildNodes.pop();
-            const nodeIndex = state.findIndex(item => item.id === nodeId);
-
-            const nextNode = node(state[nodeIndex], action, state, newChildNodes);
+            const newNodes = nodesToAdd(state, action);
+            const nodeIndex = getNodeIndex(action.payload.nodeId!, state);
+            const nextNode = node(state[nodeIndex!], action, state, newNodes);
 
             const nextState = [...state];
-            nextState[nodeIndex] = nextNode;
+            nextState[nodeIndex!] = nextNode;
 
-            return [...nextState, ...newChildNodes];
-        }
-
-        case 'ADD_VIEW_CONFIG_NODE': {
-            return [...state, ...normalizeTree([action.payload.component], action.payload.collectionId, lastId(state))];
+            return [...nextState, ...newNodes];
         }
         case 'DELETE_VIEW_CONFIG_NODE': {
-            const nodeId = action.payload.nodeId;
-            const descendantIds = getAllDescendantIds(state, nodeId);
-            return deleteMany(state, [nodeId, ...descendantIds]);
+            const { nodeId } = action.payload;
+            return stateWithoutNodeReferences(state, nodeId);
         }
         case 'SET_VIEW_CONFIG_TREE': {
             return normalizeTree(action.payload.components, action.payload.collectionId);
@@ -263,11 +291,16 @@ export default (state = initialState, action: Action): ViewConfigReducer => {
     }
 };
 
-export const addViewConfigNode = (component: ComponentConfig, collectionId: string): AddViewConfigNodeAction => ({
+export const addViewConfigNode = (
+    component: ComponentConfig,
+    collectionId: string,
+    nodeId?: number
+): AddViewConfigNodeAction => ({
     type: 'ADD_VIEW_CONFIG_NODE',
     payload: {
         component,
-        collectionId
+        collectionId,
+        nodeId
     }
 });
 
@@ -299,22 +332,6 @@ export const deleteViewConfigNode = (nodeId: number): DeleteViewConfigItemAction
     type: 'DELETE_VIEW_CONFIG_NODE',
     payload: {
         nodeId
-    }
-});
-
-export const addViewConfigChild = (nodeId: number, childId: number): ViewConfigChildAction => ({
-    type: 'ADD_VIEW_CONFIG_CHILD',
-    payload: {
-        nodeId,
-        childId
-    }
-});
-
-export const deleteViewConfigChild = (nodeId: number, childId: number): ViewConfigChildAction => ({
-    type: 'DELETE_VIEW_CONFIG_CHILD',
-    payload: {
-        nodeId,
-        childId
     }
 });
 
