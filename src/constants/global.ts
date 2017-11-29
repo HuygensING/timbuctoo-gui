@@ -12,6 +12,8 @@ export const HSID: string = 'hsid';
 
 export const CONTAINER_PADDING = 1.5;
 
+export const RDF_TYPE = 'rdf_type';
+
 export const DRAGGABLE_COMPONENTS = {
     accordeon: 'accordeon'
 };
@@ -68,6 +70,6 @@ export const MENU_ITEMS: MenuItemProp[] = [
 
 export const EMPTY_FACET_CONFIG: FacetConfig = {
     type: 'MultiSelect',
-    paths: [],
-    caption: null
+    paths: [] as string[],
+    caption: 'new multiselect'
 };

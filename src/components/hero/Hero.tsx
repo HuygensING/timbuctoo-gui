@@ -51,7 +51,7 @@ const Hero = ({ title, content, searchPath, buttonText, imgUrl = defaultImgUrl }
     return (
         <Col>
             <HeroImageWrapper>
-                <Image src={imgUrl} fill={true} defaultSrc={defaultImgUrl} />
+                <Image src={imgUrl} fillOut={true} defaultSrc={defaultImgUrl} />
                 <DarkenImage />
             </HeroImageWrapper>
             <CenteredContent>
