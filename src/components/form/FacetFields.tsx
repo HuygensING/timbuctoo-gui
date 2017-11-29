@@ -75,7 +75,9 @@ const FacetFields: SFC<Props> = ({ item, modify, match }) => {
                             key={pathIdx}
                         />
                     ))}
-                    <ButtonAdd onClick={addPathHandler}>Add a path</ButtonAdd>
+                    <ButtonAdd type={'button'} onClick={addPathHandler}>
+                        Add a path
+                    </ButtonAdd>
                 </FieldValue>
             </FacetField>
         </FieldContainer>

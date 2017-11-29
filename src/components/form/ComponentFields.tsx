@@ -8,10 +8,9 @@ import { NormalizedComponentConfig, ReferencePath } from '../../typings/index';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect } from 'react-redux';
 import {
+    changeViewConfigNodeType,
     deleteViewConfigNode,
-    lastId,
     modifyViewConfigNode,
-    switchViewConfigNode,
     ViewConfigReducer
 } from '../../reducers/viewconfig';
 import { ComponentConfig } from '../../typings/schema';
@@ -40,18 +39,17 @@ interface OwnProps {
 
 interface DispatchProps {
     modifyNode: (component: ComponentConfig) => void;
-    switchNode: (component: NormalizedComponentConfig) => void;
+    changeNodeType: (component: NormalizedComponentConfig) => void;
     removeNode: (childId: number) => void;
 }
 
 interface StateProps {
     items: ViewConfigReducer;
-    lastIdofViewComponents: number;
 }
 
 type Props = StateProps & DispatchProps & OwnProps & RouteComponentProps<any>;
 
-const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeNode }) => {
+const ComponentFields: SFC<Props> = ({ item, modifyNode, changeNodeType, removeNode }) => {
     const setMaxItems = (): number => {
         switch (item.type) {
             case COMPONENTS.title:
@@ -104,7 +102,7 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeNode 
             }
         }
 
-        return switchNode(newFieldset);
+        return changeNodeType(newFieldset);
     };
 
     return (
@@ -145,22 +143,23 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeNode 
                 )}
             </Field>
 
-            {item.childIds.length > 0 && (
-                <DraggableForm maxItems={setMaxItems()} configType={'view'} id={item.id} noForm={true} />
-            )}
+            {item.type !== COMPONENTS.literal &&
+                item.type !== COMPONENTS.path &&
+                item.childIds && (
+                    <DraggableForm maxItems={setMaxItems()} configType={'view'} id={item.id} noForm={true} />
+                )}
         </FieldContainer>
     );
 };
 
 const mapStateToProps = (state: RootState) => ({
-    items: state.viewconfig,
-    lastIdofViewComponents: lastId(state.viewconfig)
+    items: state.viewconfig
 });
 
 const mapDispatchToProps = (dispatch, { item: { id }, match }: Props) => ({
     removeNode: (childId: number) => dispatch(deleteViewConfigNode(childId)),
-    switchNode: (component: NormalizedComponentConfig) =>
-        dispatch(switchViewConfigNode(id, component, match.params.collection)),
+    changeNodeType: (component: NormalizedComponentConfig) =>
+        dispatch(changeViewConfigNodeType(id, component, match.params.collection)),
     modifyNode: (component: NormalizedComponentConfig) => dispatch(modifyViewConfigNode(id, component))
 });
 

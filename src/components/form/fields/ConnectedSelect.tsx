@@ -7,6 +7,7 @@ import Select, { OptionProps, SelectProps } from './Select';
 import { CollectionMetadata, Property } from '../../../typings/schema';
 import { compose } from 'redux';
 import { default as metaDataResolver, MetaDataProps } from '../../../services/metaDataResolver';
+import { RDF_TYPE } from '../../../constants/global';
 
 interface OwnProps extends SelectProps, CollectionEditViewProps {
     onChange: (value: string, property: Property) => void;
@@ -21,13 +22,9 @@ const SelectField: SFC<Props> = ({ name, selected, metadata, onChange, shownAsMu
             ? metadata.dataSetMetadata.collection
             : null;
 
-    const hiddenOptions = ['rdf_type'];
-
-    const filterOptions = (property: Property) => hiddenOptions.find(optionName => optionName !== property.name);
-
     const options: OptionProps[] = collection
         ? collection.properties.items
-              .filter(filterOptions)
+              .filter(property => property.name !== RDF_TYPE)
               .map(property => ({ key: property.name, value: property.name }))
         : [];
 

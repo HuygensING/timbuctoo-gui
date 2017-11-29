@@ -13,7 +13,7 @@ import { compose } from 'redux';
 import { MetaDataProps, default as metaDataResolver } from '../../services/metaDataResolver';
 import { lifecycle } from 'recompose';
 import renderLoader from '../../services/renderLoader';
-import { composeFacets, setFacetConfigItems } from '../../reducers/facetconfig';
+import { denormalizeFacets, setFacetConfigItems } from '../../reducers/facetconfig';
 import { RootState } from '../../reducers/rootReducer';
 import { NormalizedFacetConfig } from '../../typings/index';
 
@@ -38,7 +38,7 @@ const Section = styled.div`
 
 const FacetConfig: SFC<FullProps> = props => {
     const onSubmit = () => {
-        const facetconfig = composeFacets(props.normalizedFacets);
+        const facetconfig = denormalizeFacets(props.normalizedFacets);
         console.groupCollapsed('sending facet config:');
         console.log(facetconfig);
         console.groupEnd();
@@ -47,8 +47,8 @@ const FacetConfig: SFC<FullProps> = props => {
     return (
         <Grid smOffset={3} sm={42} xs={46} xsOffset={1}>
             <Section>
-                <FullHelmet pageName="View screen" />
-                <Title>View screen</Title>
+                <FullHelmet pageName="Facet config" />
+                <Title>Facet configuration screen</Title>
                 <DraggableForm configType="facet" id={0} onSend={onSubmit} />
             </Section>
         </Grid>
@@ -71,9 +71,11 @@ export default compose<SFC<{}>>(
     lifecycle({
         componentWillMount() {
             const metadata = this.props.metadata && this.props.metadata.dataSetMetadata;
-            if (metadata && metadata.collection && metadata.collection.indexConfig.facet.length) {
-                this.props.setItems(metadata.collection.indexConfig.facet);
-            }
+            const facets =
+                metadata.collection && metadata.collection.indexConfig.facet.length
+                    ? metadata.collection.indexConfig.facet
+                    : [];
+            this.props.setItems(facets);
         }
     })
 )(FacetConfig);

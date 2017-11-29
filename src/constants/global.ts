@@ -12,6 +12,8 @@ export const HSID: string = 'hsid';
 
 export const CONTAINER_PADDING = 1.5;
 
+export const RDF_TYPE = 'rdf_type';
+
 export const DRAGGABLE_COMPONENTS = {
     accordeon: 'accordeon'
 };

@@ -8,7 +8,7 @@ import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
 import { ComponentConfig } from '../../typings/schema';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
-import { composeTree, setTree } from '../../reducers/viewconfig';
+import { denormalizeTree, setTree } from '../../reducers/viewconfig';
 import { connect } from 'react-redux';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import { lifecycle } from 'recompose';
@@ -17,7 +17,7 @@ import renderLoader from '../../services/renderLoader';
 import { RootState } from '../../reducers/rootReducer';
 
 interface StateProps {
-    composeTree: () => ComponentConfig[];
+    denormalizeTree: () => ComponentConfig[];
 }
 
 interface DispatchProps {
@@ -35,7 +35,7 @@ const exampleData: ComponentConfig[] = [];
 
 const ViewConfig: SFC<FullProps> = props => {
     const onSubmit = () => {
-        const tree = props.composeTree();
+        const tree = props.denormalizeTree();
         console.log(tree);
     };
 
@@ -51,7 +51,7 @@ const ViewConfig: SFC<FullProps> = props => {
 };
 
 const mapStateToProps = (state: RootState) => ({
-    composeTree: () => composeTree(state.viewconfig)
+    denormalizeTree: () => denormalizeTree(state.viewconfig)
 });
 
 const mapDispatchToProps = (dispatch, { match }: RouteComponentProps<{ collection: string }>) => ({

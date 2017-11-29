@@ -75,7 +75,7 @@ export const denormalizeFacetConfig = (config: NormalizedFacetConfig): FacetConf
     return config;
 };
 
-export const composeFacets = (facetConfigs: NormalizedFacetConfig[]): FacetConfig[] =>
+export const denormalizeFacets = (facetConfigs: NormalizedFacetConfig[]): FacetConfig[] =>
     facetConfigs.map(denormalizeFacetConfig); // TODO: make sure it returns a message or something in case of error
 
 // reducer
@@ -139,6 +139,10 @@ export default (state: FacetConfigReducer = defaultState, action: Action) => {
             nextState[index] = item(state[index], action, state);
             return nextState;
         }
+        case 'DELETE_FACET_CONFIG_ITEM':
+            const newState = [...state];
+            newState.splice(state.findIndex(config => config.id === action.payload.id), 1);
+            return newState;
         case 'SORT_FACET_CONFIG_ITEM':
             return arrayMove(state, action.payload.oldIndex, action.payload.newIndex);
         default:
