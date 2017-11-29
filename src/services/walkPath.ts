@@ -13,11 +13,21 @@ export type pathResult = uriOrString[] | uriOrString | null;
 
 export const mendPath = (pathArray: ReferencePath): string => pathArray.map(path => path.join(':')).join('.');
 
-export const splitPath = (pathStr: string, onlyKey: boolean = false): (string | string[])[] =>
-    pathStr.split('.').map(segment => (onlyKey ? segment.split(':')[1] : segment.split(':')));
+export const splitPath = (pathStr: string, onlyKey: boolean = false): (string | string[])[] => {
+    return pathStr
+        .split('.')
+        .filter(segment => segment.indexOf(':') > -1)
+        .map(segment => (onlyKey ? segment.split(':')[1] : segment.split(':')));
+};
 
-export const walkPath = (pathStr: string | undefined, formatters: FormatterConfig, entity: Entity): pathResult =>
-    pathStr ? walkPathStep(splitPath(pathStr, true) as string[], formatters, entity) : null;
+export const walkPath = (pathStr: string | undefined, formatters: FormatterConfig, entity: Entity): pathResult => {
+    if (!pathStr) {
+        return null;
+    }
+
+    const splittedPath = splitPath(pathStr, true).slice() as string[];
+    return walkPathStep(splittedPath, formatters, entity);
+};
 
 export const createReferencePath = (path: string, collectionId: string): ReferencePath =>
     path.length > 0 ? [[collectionId], ...(splitPath(path) as ReferencePath)] : [[collectionId]];
@@ -43,6 +53,7 @@ export function walkPathStep(path: string[], formatters: FormatterConfig, entity
                 type: entity.__typename
             };
         }
+
         let result = entity[path[0]];
 
         if (!result) {

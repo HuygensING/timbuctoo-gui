@@ -238,21 +238,27 @@ const stateWithoutNodeReferences = (state: ViewConfigReducer, nodeId: number): V
 
 // reducers
 const nodesToAdd = (state: ViewConfigReducer, action: Action): NormalizedComponentConfig[] => {
-    switch (action.type) {
-        case 'ADD_VIEW_CONFIG_NODE':
-            return normalizeTree([action.payload.component], action.payload.collectionId, lastId(state));
-        case 'SWITCH_VIEW_CONFIG_NODE': {
-            const children = normalizeTree(
-                action.payload.component.subComponents || [],
-                action.payload.collectionId,
-                lastId(state)
-            );
-            children.pop();
-            return children;
+    const children: NormalizedComponentConfig[] = (() => {
+        switch (action.type) {
+            case 'ADD_VIEW_CONFIG_NODE':
+                return normalizeTree([action.payload.component], action.payload.collectionId, lastId(state));
+            case 'SWITCH_VIEW_CONFIG_NODE': {
+                return normalizeTree(
+                    action.payload.component.subComponents || [],
+                    action.payload.collectionId,
+                    lastId(state)
+                );
+            }
+            default:
+                return [];
         }
-        default:
-            return [];
+    })();
+
+    if (children.length > 1) {
+        children.pop();
     }
+
+    return children;
 };
 
 const node = (

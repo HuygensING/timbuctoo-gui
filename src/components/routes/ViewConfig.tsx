@@ -35,7 +35,6 @@ const Section = styled.div`
 `;
 
 const ViewConfig: SFC<GraphProps> = props => {
-    console.log(props);
     const onSubmit = () => {
         if (
             !props.mutate ||

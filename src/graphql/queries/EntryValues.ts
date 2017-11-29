@@ -100,6 +100,10 @@ function componentPathsToMap(paths: string[]): {} {
         while (segments.length > 1) {
             const segment = segments.shift()!.split(':')[1];
 
+            if (!segment) {
+                continue;
+            }
+
             if (!cur.hasOwnProperty(segment)) {
                 cur[segment] = segments.length > 1 ? {} : true;
             }
