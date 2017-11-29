@@ -1,13 +1,18 @@
-import { DataSetMetadata, FacetConfig } from '../typings/schema';
+import { FacetConfig } from '../typings/schema';
 import { NormalizedFacetConfig } from '../typings/index';
 import { arrayMove } from 'react-sortable-hoc';
-import { GraphToStateAction } from './rootReducer';
+import { MetaDataProps } from '../services/metaDataResolver';
 
 // state def
 export type FacetConfigReducer = NormalizedFacetConfig[];
 const defaultState: FacetConfigReducer = [];
 
 // actions
+export type GraphToFacetConfigAction = {
+    type: 'GRAPH_TO_FACETCONFIG';
+    payload: MetaDataProps['metadata'];
+};
+
 type AddFacetConfigItemAction = {
     type: 'ADD_FACET_CONFIG_ITEM';
     payload: {
@@ -43,7 +48,7 @@ type Action =
     | DeleteFacetConfigItemAction
     | ModifyFacetConfigItemAction
     | SortFacetConfigItemAction
-    | GraphToStateAction;
+    | GraphToFacetConfigAction;
 
 // selectors
 
@@ -90,11 +95,8 @@ export default (state: FacetConfigReducer = defaultState, action: Action) => {
     switch (action.type) {
         case 'ADD_FACET_CONFIG_ITEM':
             return [...state, item(null, action, state)];
-        case 'GRAPH_TO_STATE':
-            if (action.key !== 'facetconfig') {
-                return state;
-            }
-            const metadata = action.payload.dataSetMetadata as DataSetMetadata;
+        case 'GRAPH_TO_FACETCONFIG':
+            const metadata = action.payload.dataSetMetadata;
             if (metadata && metadata.collection && metadata.collection.indexConfig.facet.length) {
                 return [...multipleItems(metadata.collection.indexConfig.facet)];
             } else {

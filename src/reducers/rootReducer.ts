@@ -1,21 +1,14 @@
 import { combineReducers } from 'redux';
-
 import user, { UserReducer } from './user';
 import search, { SearchReducer } from './search';
 import viewconfig, { ViewConfigReducer } from './viewconfig';
-import facetconfig, { FacetConfigReducer } from './facetconfig';
-
+import facetconfig, { FacetConfigReducer, GraphToFacetConfigAction } from './facetconfig';
 import Client from '../services/ApolloClient';
 
-export type GraphToStateAction = {
-    type: 'GRAPH_TO_STATE';
-    key: string;
-    payload: any;
-};
+export type GraphToStateAction = GraphToFacetConfigAction;
 
-export const graphToState = (key: string, payload: any): GraphToStateAction => ({
-    type: 'GRAPH_TO_STATE',
-    key,
+export const graphToState = (action: GraphToFacetConfigAction['type'], payload: any): GraphToStateAction => ({
+    type: action,
     payload
 });
 

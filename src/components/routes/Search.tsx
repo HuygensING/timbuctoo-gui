@@ -1,4 +1,4 @@
-import React, { ComponentType, PureComponent } from 'react';
+import React, { ComponentType, SFC } from 'react';
 import { CollectionMetadata, DataSetMetadata } from '../../typings/schema';
 import FullHelmet from '../FullHelmet';
 import { Col, FullSection } from '../layout/Grid';
@@ -24,76 +24,69 @@ type FullProps = ChildProps<
     { dataSets: DataSetMetadata }
 >;
 
-class Search extends PureComponent<FullProps> {
-    render() {
-        const { collectionList, dataSetId, collection } = this.props.metadata.dataSetMetadata!;
+const Search: SFC<FullProps> = ({ metadata, data }) => {
+    const { collectionList, dataSetId, collection } = metadata.dataSetMetadata!;
 
-        const collectionValues = getCollectionValues(
-            this.props.data!.dataSets,
-            dataSetId,
-            collection!.collectionListId
-        );
-        const fields = getValuesFromObject(collection!.summaryProperties);
+    const collectionValues = getCollectionValues(data!.dataSets, dataSetId, collection!.collectionListId);
+    const fields = getValuesFromObject(collection!.summaryProperties);
 
-        const collectionItems: CollectionMetadata[] =
-            collectionList && collectionList.items ? collectionList.items : [];
+    const collectionItems: CollectionMetadata[] = collectionList && collectionList.items ? collectionList.items : [];
 
-        return (
-            <section>
-                <FullHelmet pageName={`search: dataSetId`} />
+    return (
+        <section>
+            <FullHelmet pageName={`search: dataSetId`} />
 
-                <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={1}>
-                    {/* TODO: Connect the fulltext search as well */}
-                    <SearchForm type={'collection'} />
-                </Col>
+            <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={1}>
+                {/* TODO: Connect the fulltext search as well */}
+                <SearchForm type={'collection'} />
+            </Col>
 
-                <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={0.5}>
-                    <CollectionTags
-                        colKeys={reorderUnknownsInList(collectionItems)}
-                        dataSetId={dataSetId}
+            <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={0.5}>
+                <CollectionTags
+                    colKeys={reorderUnknownsInList(collectionItems)}
+                    dataSetId={dataSetId}
+                    currentCollectionListId={collection!.collectionListId}
+                    replace={true}
+                />
+            </Col>
+
+            <FullSection>
+                <Col sm={12} smPaddingY={1}>
+                    <Filters
+                        loading={data!.loading}
                         currentCollectionListId={collection!.collectionListId}
-                        replace={true}
+                        collection={collectionValues}
+                        facetConfigs={collection!.indexConfig.facet}
                     />
                 </Col>
 
-                <FullSection>
-                    <Col sm={12} smPaddingY={1}>
-                        <Filters
-                            loading={this.props.data!.loading}
-                            currentCollectionListId={collection!.collectionListId}
-                            collection={collectionValues}
-                            facetConfigs={collection!.indexConfig.facet}
+                <Col sm={27} smOffset={3} smPaddingY={1}>
+                    {collectionValues && (
+                        <SearchResults
+                            dataSetId={dataSetId}
+                            collectionId={collection!.collectionId}
+                            properties={collection!.summaryProperties}
+                            results={collectionValues.items}
+                            fields={fields}
                         />
-                    </Col>
+                    )}
 
-                    <Col sm={27} smOffset={3} smPaddingY={1}>
-                        {collectionValues && (
-                            <SearchResults
-                                dataSetId={dataSetId}
-                                collectionId={collection!.collectionId}
-                                properties={collection!.summaryProperties}
-                                results={collectionValues.items}
-                                fields={fields}
-                            />
-                        )}
-
-                        <Pagination
-                            nextCursor={collectionValues && collectionValues.nextCursor}
-                            prevCursor={collectionValues && collectionValues.prevCursor}
-                        />
-                    </Col>
-                </FullSection>
-            </section>
-        );
-    }
-}
+                    <Pagination
+                        nextCursor={collectionValues && collectionValues.nextCursor}
+                        prevCursor={collectionValues && collectionValues.prevCursor}
+                    />
+                </Col>
+            </FullSection>
+        </section>
+    );
+};
 
 const dataResolver = compose<ComponentType<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
-    graphqlWithProps<FullProps>(QUERY_COLLECTION_VALUES),
-    renderLoader()
+    graphqlWithProps<FullProps>(QUERY_COLLECTION_VALUES)
+    // renderLoader()
 );
 
 export default dataResolver(Search);

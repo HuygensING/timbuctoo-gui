@@ -35,6 +35,6 @@ const FacetConfig: SFC<FullProps> = (props: FullProps) => {
 export default compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
-    graphToState('facetconfig', 'metadata'),
+    graphToState<FullProps>('GRAPH_TO_FACETCONFIG', 'metadata'),
     renderLoader('metadata')
 )(FacetConfig);
