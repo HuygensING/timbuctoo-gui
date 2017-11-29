@@ -96,14 +96,17 @@ function componentPathsToMap(paths: string[]): {} {
     for (const path of paths) {
         let cur = result;
         let segments = path.split('.');
-        while (segments.length > 0) {
-            const segment = segments.shift()!;
+
+        while (segments.length > 1) {
+            const segment = segments.shift()!.split(':')[1];
+
             if (!cur.hasOwnProperty(segment)) {
-                cur[segment] = segments.length > 0 ? {} : true;
+                cur[segment] = segments.length > 1 ? {} : true;
             }
             cur = cur[segment];
         }
     }
+
     return result;
 }
 
