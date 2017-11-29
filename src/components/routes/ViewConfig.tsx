@@ -8,7 +8,7 @@ import styled from '../../styled-components';
 import DraggableForm from '../form/DraggableForm';
 import { ComponentConfig } from '../../typings/schema';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
-import { composeTree, setTree } from '../../reducers/viewconfig';
+import { denormalizeTree, setTree } from '../../reducers/viewconfig';
 import { connect } from 'react-redux';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import { lifecycle } from 'recompose';
@@ -18,7 +18,7 @@ import { RootState } from '../../reducers/rootReducer';
 import graphql from 'react-apollo/graphql';
 
 interface StateProps {
-    composeTree: () => ComponentConfig[];
+    denormalizeTree: () => ComponentConfig[];
 }
 
 interface DispatchProps {
@@ -46,7 +46,7 @@ const ViewConfig: SFC<GraphProps> = props => {
         }
 
         const { dataSetId, collection } = props.metadata.dataSetMetadata;
-        const viewConfig = props.composeTree();
+        const viewConfig = props.denormalizeTree();
 
         if (typeof viewConfig === 'string') {
             return alert(viewConfig); // TODO: Make this fancy, I'd suggest to maybe at an optional error to NormalizedComponentConfig, add a scrollTo and style the selectBox accordingly
@@ -78,7 +78,7 @@ const submitViewConfig = gql`
 `;
 
 const mapStateToProps = (state: RootState) => ({
-    composeTree: () => composeTree(state.viewconfig)
+    denormalizeTree: () => denormalizeTree(state.viewconfig)
 });
 
 const mapDispatchToProps = (dispatch, { match }: RouteComponentProps<{ collection: string }>) => ({
@@ -90,6 +90,7 @@ export default compose<SFC<{}>>(
     metaDataResolver(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
     connect(mapStateToProps, mapDispatchToProps),
+    graphql(submitViewConfig),
     lifecycle({
         componentWillMount() {
             const metadata = this.props.metadata && this.props.metadata.dataSetMetadata;
@@ -97,6 +98,5 @@ export default compose<SFC<{}>>(
                 metadata && metadata.collection && metadata.collection.viewConfig ? metadata.collection.viewConfig : [];
             this.props.setTree(config);
         }
-    }),
-    graphql(submitViewConfig)
+    })
 )(ViewConfig);

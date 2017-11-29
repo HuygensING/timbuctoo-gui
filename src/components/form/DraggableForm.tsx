@@ -111,9 +111,8 @@ class DraggableForm extends PureComponent<Props, State> {
     };
 
     private addListItem = () => {
-        this.props.addItem(
-            this.props.configType === 'view' ? EMPTY_LEAF_COMPONENT[COMPONENTS.path] : EMPTY_FACET_CONFIG
-        );
+        const newItem = this.props.configType === 'view' ? EMPTY_LEAF_COMPONENT[COMPONENTS.path] : EMPTY_FACET_CONFIG;
+        this.props.addItem(newItem);
     };
 
     private onSubmit = (e: any) => {
@@ -125,7 +124,7 @@ class DraggableForm extends PureComponent<Props, State> {
     };
 }
 
-const mapDispatchToProps = (dispatch, { id, configType, match, ...rest }: Props) => {
+const mapDispatchToProps = (dispatch, { id, configType, match }: Props) => {
     if (configType === 'view') {
         return {
             sortItem: (oldIndex: number, newIndex: number) => dispatch(sortViewConfigChild(id, oldIndex, newIndex)),
