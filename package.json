@@ -10,7 +10,14 @@
     "eject": "react-scripts-ts eject",
     "faker": "graphql-faker --extend http://localhost:8080/v5/graphql \\  -H 'Accept:application/json' -H 'Content-Type:application/json'",
     "prettify": "prettier --write './src/**/*.{tsx,ts}'",
-    "precommit": "check-dependencies && prettier -l './src/**/*.{tsx,ts}' && tslint --project . --type-check"
+    "precommit": "check-dependencies && lint-staged"
+  },
+  "lint-staged": {
+    "*.ts?(x)": [
+      "prettier --write",
+      "tslint --type-check --project .",
+      "git add"
+    ]
   },
   "prettier": {
     "printWidth": 120,
@@ -49,6 +56,7 @@
     "@types/react-router-dom": "^4.0.7",
     "@types/webpack-env": "^1.13.2",
     "check-dependencies": "^1.1.0",
+    "lint-staged": "^5.0.0",
     "graphql-to-typescript": "^0.1.2",
     "husky": "^0.14.3",
     "prettier": "1.8.2",
