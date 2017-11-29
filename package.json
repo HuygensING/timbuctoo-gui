@@ -10,11 +10,12 @@
     "eject": "react-scripts-ts eject",
     "faker": "graphql-faker --extend http://localhost:8080/v5/graphql \\  -H 'Accept:application/json' -H 'Content-Type:application/json'",
     "prettify": "prettier --write './src/**/*.{tsx,ts}'",
-    "precommit": "check-dependencies && lint-staged && tslint --project . --type-check"
+    "precommit": "check-dependencies && lint-staged"
   },
   "lint-staged": {
-    "*.js": [
+    "*.ts?(x)": [
       "prettier --write",
+      "tslint --type-check",
       "git add"
     ]
   },
