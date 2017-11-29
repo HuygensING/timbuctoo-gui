@@ -98,8 +98,6 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, switchNode, removeNode 
             name
         };
 
-        console.log(newFieldset);
-
         if (item.childIds) {
             for (const childId of item.childIds) {
                 removeNode(childId);

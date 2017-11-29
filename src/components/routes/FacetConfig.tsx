@@ -70,7 +70,6 @@ export default compose<SFC<{}>>(
     connect(mapStateToProps, mapDispatchToProps),
     lifecycle({
         componentWillMount() {
-            console.log('mounting');
             const metadata = this.props.metadata && this.props.metadata.dataSetMetadata;
             if (metadata && metadata.collection && metadata.collection.indexConfig.facet.length) {
                 this.props.setItems(metadata.collection.indexConfig.facet);
