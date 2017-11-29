@@ -57,8 +57,7 @@ export const lastId = (state: FacetConfigReducer): number =>
         .map(config => config.id)
         .reduce((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue), -1);
 
-export const getById = (id: number, state: FacetConfigReducer): NormalizedFacetConfig | undefined =>
-    state.find(config => config.id === id);
+export const getById = (id: number, state: FacetConfigReducer): NormalizedFacetConfig | undefined => state.find(config => config.id === id);
 
 // reducer
 
