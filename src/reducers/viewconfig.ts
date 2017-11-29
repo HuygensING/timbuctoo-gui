@@ -2,7 +2,8 @@ import { ComponentConfig } from '../typings/schema';
 import { arrayMove } from 'react-sortable-hoc';
 import { NormalizedComponentConfig } from '../typings/index';
 import { LEAF_COMPONENTS } from '../constants/global';
-import { createReferencePath } from '../services/walkPath';
+import { createReferencePath, mendPath } from '../services/walkPath';
+import { componentErrors } from '../services/ErrorHandling';
 
 export type ViewConfigReducer = NormalizedComponentConfig[];
 
@@ -124,23 +125,42 @@ const normalizeTree = (tree: ComponentConfig[], collectionId: string, startIndex
     return flatTree;
 };
 
-const composeNode = (item: NormalizedComponentConfig, state: ViewConfigReducer): ComponentConfig => {
-    item = { ...item };
+const composePath = (childNode: NormalizedComponentConfig): NormalizedComponentConfig => {
+    childNode = { ...childNode };
+
+    if (childNode.referencePath) {
+        childNode.value = mendPath(childNode.referencePath);
+        delete childNode.referencePath;
+    }
+
+    return childNode;
+};
+
+const composeNode = (item: NormalizedComponentConfig, state: ViewConfigReducer): ComponentConfig | string => {
+    item = composePath(item);
+    item.subComponents = [];
 
     if (item.childIds && !!item.childIds.length) {
-        item.subComponents = [];
-
         for (const child of item.childIds) {
             const childNode = getNodeById(child, state);
 
             if (childNode) {
+                const error = componentErrors(childNode);
+                if (error) {
+                    return error;
+                }
+
                 const composedChildNode = composeNode(childNode, state);
 
-                if (composedChildNode) {
+                if (composedChildNode && typeof composedChildNode !== 'string') {
                     item.subComponents.push(composedChildNode);
                 }
             }
         }
+    }
+
+    if (item.__typename) {
+        delete item.__typename;
     }
 
     delete item.id;
@@ -149,14 +169,30 @@ const composeNode = (item: NormalizedComponentConfig, state: ViewConfigReducer):
     return item;
 };
 
-export const composeTree = (state: ViewConfigReducer): ComponentConfig[] | void => {
+export const composeTree = (state: ViewConfigReducer): ComponentConfig[] | string => {
     let composedTree: ComponentConfig[] = [];
 
-    for (const rootNodeIdx of state[0].childIds) {
+    const parentNode = getNodeById(0, state);
+
+    if (!parentNode || !parentNode.childIds) {
+        return 'no parentnode!!';
+    }
+
+    for (const rootNodeIdx of parentNode.childIds) {
         const rootNode = getNodeById(rootNodeIdx, state);
         if (rootNode) {
+            const error = componentErrors(rootNode);
+            if (error) {
+                return error;
+            }
+
             const composedRootNode = composeNode(rootNode, state);
+
             if (composedRootNode) {
+                if (typeof composedRootNode === 'string') {
+                    return composedRootNode;
+                }
+
                 composedTree.push(composedRootNode);
             }
         }

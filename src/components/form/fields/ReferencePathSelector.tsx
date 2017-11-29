@@ -39,6 +39,10 @@ const VALUE: string = 'value';
 const ITEMS: string = 'items';
 
 const ReferencePathSelector: SFC<Props> = ({ paths, onChange }) => {
+    if (!paths) {
+        return null;
+    }
+
     const onChangeHandler = (
         val: string,
         { isList, isValueType, referencedCollections }: Property,

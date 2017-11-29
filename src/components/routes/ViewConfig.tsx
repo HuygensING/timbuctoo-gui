@@ -1,10 +1,10 @@
 import React, { SFC } from 'react';
+import { ChildProps, gql } from 'react-apollo';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { Grid } from '../layout/Grid';
 import FullHelmet from '../FullHelmet';
 import { Title } from '../layout/StyledCopy';
 import styled from '../../styled-components';
-import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
 import { ComponentConfig } from '../../typings/schema';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
@@ -15,6 +15,7 @@ import { lifecycle } from 'recompose';
 import { compose } from 'redux';
 import renderLoader from '../../services/renderLoader';
 import { RootState } from '../../reducers/rootReducer';
+import graphql from 'react-apollo/graphql';
 
 interface StateProps {
     composeTree: () => ComponentConfig[];
@@ -24,19 +25,38 @@ interface DispatchProps {
     setTree: (components: ComponentConfig[]) => void;
 }
 
-type FullProps = MetaDataProps & StateProps & DispatchProps & RouteComponentProps<any> & FormWrapperProps;
+type FullProps = MetaDataProps & StateProps & DispatchProps & RouteComponentProps<any>;
+
+type GraphProps = ChildProps<FullProps, { dataSet: string; collectionUrl: string; viewConfig: ComponentConfig[] }>;
 
 const Section = styled.div`
     width: 100%;
     padding-bottom: 3rem;
 `;
 
-const exampleData: ComponentConfig[] = [];
-
-const ViewConfig: SFC<FullProps> = props => {
+const ViewConfig: SFC<GraphProps> = props => {
+    console.log(props);
     const onSubmit = () => {
-        const tree = props.composeTree();
-        console.log(tree);
+        if (
+            !props.mutate ||
+            !props.metadata ||
+            !props.metadata.dataSetMetadata ||
+            !props.metadata.dataSetMetadata.collection
+        ) {
+            return false;
+        }
+
+        const { dataSetId, collection } = props.metadata.dataSetMetadata;
+        const viewConfig = props.composeTree();
+
+        if (typeof viewConfig === 'string') {
+            return alert(viewConfig); // TODO: Make this fancy, I'd suggest to maybe at an optional error to NormalizedComponentConfig, add a scrollTo and style the selectBox accordingly
+        }
+
+        return props
+            .mutate({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, viewConfig } })
+            .then(data => alert(`The collection ${collection!.collectionId} has been updated`))
+            .catch(err => console.error('there was an error sending the query', err));
     };
 
     return (
@@ -49,6 +69,14 @@ const ViewConfig: SFC<FullProps> = props => {
         </Grid>
     );
 };
+
+const submitViewConfig = gql`
+    mutation submitViewConfig($dataSet: String!, $collectionUri: String!, $viewConfig: [ComponentInput!]!) {
+        setViewConfig(dataSet: $dataSet, collectionUri: $collectionUri, viewConfig: $viewConfig) {
+            type
+        }
+    }
+`;
 
 const mapStateToProps = (state: RootState) => ({
     composeTree: () => composeTree(state.viewconfig)
@@ -65,7 +93,11 @@ export default compose<SFC<{}>>(
     connect(mapStateToProps, mapDispatchToProps),
     lifecycle({
         componentWillMount() {
-            this.props.setTree(exampleData);
+            const metadata = this.props.metadata && this.props.metadata.dataSetMetadata;
+            const config =
+                metadata && metadata.collection && metadata.collection.viewConfig ? metadata.collection.viewConfig : [];
+            this.props.setTree(config);
         }
-    })
+    }),
+    graphql(submitViewConfig)
 )(ViewConfig);
