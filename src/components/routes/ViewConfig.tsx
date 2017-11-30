@@ -36,24 +36,14 @@ const Section = styled.div`
 
 const ViewConfig: SFC<GraphProps> = props => {
     const onSubmit = () => {
-        if (
-            !props.mutate ||
-            !props.metadata ||
-            !props.metadata.dataSetMetadata ||
-            !props.metadata.dataSetMetadata.collection
-        ) {
-            return false;
-        }
-
-        const { dataSetId, collection } = props.metadata.dataSetMetadata;
+        const { dataSetId, collection } = props.metadata.dataSetMetadata!;
         const viewConfig = props.denormalizeTree();
 
         if (typeof viewConfig === 'string') {
             return alert(viewConfig); // TODO: Make this fancy, I'd suggest to maybe at an optional error to NormalizedComponentConfig, add a scrollTo and style the selectBox accordingly
         }
 
-        return props
-            .mutate({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, viewConfig } })
+        return props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, viewConfig } })
             .then(data => alert(`The collection ${collection!.collectionId} has been updated`)) // TODO: This also should be something fancy
             .catch(err => console.error('there was an error sending the query', err));
     };
@@ -88,7 +78,7 @@ const mapDispatchToProps = (dispatch, { match }: RouteComponentProps<{ collectio
 export default compose<SFC<{}>>(
     withRouter,
     metaDataResolver(QUERY_COLLECTION_PROPERTIES),
-    renderLoader('metadata'),
+    renderLoader('metadata'), // TODO: Add a notFound beneath here
     connect(mapStateToProps, mapDispatchToProps),
     graphql(submitViewConfig),
     lifecycle({

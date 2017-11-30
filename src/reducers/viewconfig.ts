@@ -172,11 +172,7 @@ const denormalizeNode = (item: NormalizedComponentConfig, state: ViewConfigReduc
 export const denormalizeTree = (state: ViewConfigReducer): ComponentConfig[] | string => {
     let denormalizedTree: ComponentConfig[] = [];
 
-    const parentNode = getNodeById(0, state);
-
-    if (!parentNode || !parentNode.childIds) {
-        return 'no parentnode!!';
-    }
+    const parentNode = getNodeById(0, state)!;
 
     for (const rootNodeIdx of parentNode.childIds) {
         const rootNode = getNodeById(rootNodeIdx, state);
