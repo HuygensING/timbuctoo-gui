@@ -3,7 +3,7 @@ import { arrayMove } from 'react-sortable-hoc';
 import { NormalizedComponentConfig } from '../typings/index';
 import { LEAF_COMPONENTS } from '../constants/global';
 import { createReferencePath, mendPath } from '../services/walkPath';
-import { componentErrors } from '../services/ErrorHandling';
+import { componentErrors } from '../services/Validation';
 
 export type ViewConfigReducer = NormalizedComponentConfig[];
 

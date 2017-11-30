@@ -11,6 +11,7 @@ import { componentsFragment } from '../fragments/Components';
 type Props = RouteComponentProps<{ dataSet: string; collection: string }>;
 
 const QUERY_COLLECTION_PROPERTIES = ({ match }: Props) => {
+    // TODO: Might be smart to split this up in multiple queries. When all calls are here, let's check
     const query = `
         query CollectionProperties {
             dataSetMetadata(dataSetId: "${match.params.dataSet}") {
