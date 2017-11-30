@@ -40,7 +40,7 @@ const ViewConfig: SFC<GraphProps> = props => {
         const viewConfig = props.denormalizeTree();
 
         if (typeof viewConfig === 'string') {
-            return alert(viewConfig); // TODO: Make this fancy, I'd suggest to maybe at an optional error to NormalizedComponentConfig, add a scrollTo and style the selectBox accordingly
+            return alert(viewConfig); // TODO: Make this fancy, I'd suggest to maybe add an optional error to NormalizedComponentConfig, add a scrollTo and style the selectBox accordingly
         }
 
         return props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, viewConfig } })
