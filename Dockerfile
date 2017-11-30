@@ -15,7 +15,6 @@ COPY ./tsconfig.json .
 COPY ./tslint.json .
 COPY ./.env .
 
-ARG REACT_APP_API_URL
 RUN npm run build --production
 
 # ============================================================
@@ -29,8 +28,11 @@ COPY --from=0 /build-app/build .
 # Build for production.
 RUN npm install -g serve
 
+ENV REACT_APP_API_URL=http://data.anansi.clariah.nl/v5/graphql
+ENV REACT_APP_LOGIN_URL=https://secure.huygens.knaw.nl/saml2/login
+
 # Set the command to start the node server.
-CMD serve -s -p 80
+CMD sh -c 'echo "window.dynamicEnv = {REACT_APP_API_URL: '"'"'$REACT_APP_API_URL'"'"', REACT_APP_LOGIN_URL='"'"'$REACT_APP_LOGIN_URL'"'"'};" > dynamic_env.js && serve -s -p 80'
 
 # Tell Docker about the port we'll run on.
 EXPOSE 80

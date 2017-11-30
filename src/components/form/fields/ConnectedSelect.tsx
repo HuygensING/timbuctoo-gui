@@ -7,21 +7,25 @@ import Select, { OptionProps, SelectProps } from './Select';
 import { CollectionMetadata, Property } from '../../../typings/schema';
 import { compose } from 'redux';
 import { default as metaDataResolver, MetaDataProps } from '../../../services/metaDataResolver';
+import { RDF_TYPE } from '../../../constants/global';
 
 interface OwnProps extends SelectProps, CollectionEditViewProps {
     onChange: (value: string, property: Property) => void;
+    shownAsMultipleItems?: boolean;
 }
 
-export type FullProps = OwnProps & RouteComponentProps<{ dataSet: string }> & MetaDataProps;
+export type Props = OwnProps & RouteComponentProps<{ dataSet: string }> & MetaDataProps;
 
-const SelectField: SFC<FullProps> = ({ name, selected, metadata, onChange }) => {
+const SelectField: SFC<Props> = ({ name, selected, metadata, onChange, shownAsMultipleItems = false }) => {
     const collection: CollectionMetadata | null =
         metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection
             ? metadata.dataSetMetadata.collection
             : null;
 
     const options: OptionProps[] = collection
-        ? collection.properties.items.map(property => ({ key: property.name, value: property.name }))
+        ? collection.properties.items
+              .filter(property => property.name !== RDF_TYPE)
+              .map(property => ({ key: property.name, value: property.name }))
         : [];
 
     const onChangeHandler = (option: OptionProps) => {
@@ -32,11 +36,16 @@ const SelectField: SFC<FullProps> = ({ name, selected, metadata, onChange }) => 
         }
     };
 
-    if (!options.length) {
-        return null;
-    }
-
-    return <Select name={name} options={options} selected={selected} onChange={onChangeHandler} />;
+    return (
+        <Select
+            name={name}
+            options={options}
+            selected={selected}
+            shownAsMultipleItems={shownAsMultipleItems}
+            onChange={onChangeHandler}
+            disabled={!options.length}
+        />
+    );
 };
 
-export default compose<SFC<OwnProps>>(withRouter, metaDataResolver<FullProps>(QUERY_COLLECTION_EDIT_VIEW))(SelectField);
+export default compose<SFC<OwnProps>>(withRouter, metaDataResolver<Props>(QUERY_COLLECTION_EDIT_VIEW))(SelectField);

@@ -18,7 +18,6 @@ export const EMPTY_LEAF_COMPONENT: EmptyLeafComponentsMap = {
     [COMPONENTS.path]: {
         type: 'PATH',
         value: '',
-        valueList: [],
         formatter: [],
         subComponents: []
     }
@@ -29,29 +28,29 @@ export const EMPTY_NODE_COMPONENT: EmptyNodeComponentsMap = {
     [COMPONENTS.title]: {
         type: 'TITLE',
         formatter: [],
-        subComponents: [{ ...EMPTY_LEAF_COMPONENT[COMPONENTS.LITERAL] }]
+        subComponents: [{ ...EMPTY_LEAF_COMPONENT[COMPONENTS.literal] }]
     },
     [COMPONENTS.image]: {
         type: 'IMAGE',
         formatter: [],
-        subComponents: [{ ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }, { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }]
+        subComponents: [{ ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] }, { ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] }]
     },
     [COMPONENTS.link]: {
         type: 'LINK',
         formatter: [],
-        subComponents: [{ ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }, { ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }]
+        subComponents: [{ ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] }, { ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] }]
     },
     [COMPONENTS.keyValue]: {
         type: 'KEYVALUE',
         formatter: [],
         value: '',
-        subComponents: [{ ...EMPTY_LEAF_COMPONENT[COMPONENTS.PATH] }]
+        subComponents: [{ ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] }]
     },
 
     [COMPONENTS.divider]: {
         type: 'DIVIDER',
         formatter: [],
-        subComponents: [{ ...EMPTY_LEAF_COMPONENT[COMPONENTS.LITERAL] }]
+        subComponents: [{ ...EMPTY_LEAF_COMPONENT[COMPONENTS.literal] }]
     }
 };
 

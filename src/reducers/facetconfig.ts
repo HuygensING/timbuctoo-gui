@@ -1,6 +1,7 @@
 import { FacetConfig } from '../typings/schema';
-import { NormalizedFacetConfig } from '../typings/index';
+import { NormalizedFacetConfig, ReferencePath } from '../typings/index';
 import { arrayMove } from 'react-sortable-hoc';
+import { createReferencePath, mendPath } from '../services/walkPath';
 import { MetaDataProps } from '../services/metaDataResolver';
 
 // state def
@@ -17,6 +18,7 @@ type AddFacetConfigItemAction = {
     type: 'ADD_FACET_CONFIG_ITEM';
     payload: {
         facetConfig: FacetConfig;
+        collectionId: string;
     };
 };
 
@@ -31,7 +33,7 @@ type ModifyFacetConfigItemAction = {
     type: 'MODIFY_FACET_CONFIG_ITEM';
     payload: {
         id: number;
-        facetConfig: FacetConfig;
+        facetConfig: NormalizedFacetConfig;
     };
 };
 
@@ -60,7 +62,35 @@ export const lastId = (state: FacetConfigReducer): number =>
 export const getById = (id: number, state: FacetConfigReducer): NormalizedFacetConfig | undefined =>
     state.find(config => config.id === id);
 
+export const denormalizeFacetConfig = (config: NormalizedFacetConfig): FacetConfig => {
+    config = { ...config };
+
+    for (const [idx, referencePath] of config.referencePaths.entries()) {
+        config.paths[idx] = mendPath(referencePath);
+    }
+
+    delete config.referencePaths;
+    delete config.id;
+    return config;
+};
+
+export const denormalizeFacets = (facetConfigs: NormalizedFacetConfig[]): FacetConfig[] =>
+    facetConfigs.map(denormalizeFacetConfig); // TODO: make sure it returns a message or something in case of error
+
 // reducer
+const references = (payload: { facetConfig: { paths: string[] }; collectionId: string }): ReferencePath[] => {
+    let referencePaths: (string[])[][] = [];
+
+    for (const path of payload.facetConfig.paths) {
+        referencePaths = [...referencePaths, createReferencePath(path, payload.collectionId)];
+    }
+
+    if (!referencePaths.length) {
+        referencePaths = [[[payload.collectionId]]];
+    }
+
+    return referencePaths;
+};
 
 const item = (
     state: NormalizedFacetConfig | null,
@@ -71,6 +101,7 @@ const item = (
         case 'ADD_FACET_CONFIG_ITEM':
             return {
                 ...action.payload.facetConfig,
+                referencePaths: references(action.payload),
                 id: lastId(items) + 1
             };
         case 'MODIFY_FACET_CONFIG_ITEM':
@@ -83,10 +114,14 @@ const item = (
     }
 };
 
-const multipleItems = (facetConfigs: FacetConfig[]): NormalizedFacetConfig[] => {
+const multipleItems = (facetConfigs: FacetConfig[], collectionId: string): NormalizedFacetConfig[] => {
     let items: NormalizedFacetConfig[] = [];
+
     for (const facetConfig of facetConfigs) {
-        items = [...items, item(null, { type: 'ADD_FACET_CONFIG_ITEM', payload: { facetConfig } }, items)];
+        items = [
+            ...items,
+            item(null, { type: 'ADD_FACET_CONFIG_ITEM', payload: { facetConfig, collectionId } }, items)
+        ];
     }
     return items;
 };
@@ -98,7 +133,7 @@ export default (state: FacetConfigReducer = defaultState, action: Action) => {
         case 'GRAPH_TO_FACETCONFIG':
             const metadata = action.payload.dataSetMetadata;
             if (metadata && metadata.collection && metadata.collection.indexConfig.facet.length) {
-                return [...multipleItems(metadata.collection.indexConfig.facet)];
+                return multipleItems(metadata.collection.indexConfig.facet, metadata.collection.collectionId);
             } else {
                 return state;
             }
@@ -108,6 +143,10 @@ export default (state: FacetConfigReducer = defaultState, action: Action) => {
             nextState[index] = item(state[index], action, state);
             return nextState;
         }
+        case 'DELETE_FACET_CONFIG_ITEM':
+            const newState = [...state];
+            newState.splice(state.findIndex(config => config.id === action.payload.id), 1);
+            return newState;
         case 'SORT_FACET_CONFIG_ITEM':
             return arrayMove(state, action.payload.oldIndex, action.payload.newIndex);
         default:
@@ -116,9 +155,10 @@ export default (state: FacetConfigReducer = defaultState, action: Action) => {
 };
 
 // action creators
-export const addFacetConfigItem = (facetConfig: FacetConfig): AddFacetConfigItemAction => ({
+export const addFacetConfigItem = (facetConfig: FacetConfig, collectionId: string): AddFacetConfigItemAction => ({
     type: 'ADD_FACET_CONFIG_ITEM',
     payload: {
+        collectionId,
         facetConfig
     }
 });
@@ -130,7 +170,7 @@ export const deleteFacetConfigItem = (id: number): DeleteFacetConfigItemAction =
     }
 });
 
-export const modifyFacetConfig = (id: number, facetConfig: FacetConfig): ModifyFacetConfigItemAction => ({
+export const modifyFacetConfig = (id: number, facetConfig: NormalizedFacetConfig): ModifyFacetConfigItemAction => ({
     type: 'MODIFY_FACET_CONFIG_ITEM',
     payload: {
         id,

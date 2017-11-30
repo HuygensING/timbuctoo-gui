@@ -51,6 +51,34 @@ const SmallButtonStyling = css`
     border-radius: 0.15rem;
 `;
 
+export const ButtonAdd = withProps<ButtonProps, HTMLButtonElement>(styled.button)`
+    cursor: pointer;
+    text-align: right;
+    float: right;
+    padding-right: .25rem;
+    font: ${props => props.theme.fonts.body};
+    
+    &:after {
+        content: '+';
+        position: relative;
+        left: .25rem;
+        top: .15rem;
+        transition: left .2s ease;
+        font ${props => props.theme.fonts.title};
+    }
+    
+    &:hover {
+        color: ${props => props.theme.colors.primary.medium};
+        
+        &:after {
+            left: .5rem;
+        }
+    }
+    &:focus {
+        outline: 0;
+    }
+`;
+
 export const ButtonLink = withProps<LinkProps & ButtonProps>(styled(Link))`
     ${BaseButtonStyling};
     color: ${props => setColor(props, props['data-variant'])};

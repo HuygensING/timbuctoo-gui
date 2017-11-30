@@ -1,11 +1,15 @@
 import React, { SFC } from 'react';
+import { connect } from 'react-redux';
 import styled from '../styled-components';
 import Cross from './icons/Cross';
-import VariableFormFieldRenderer from './form/VariableFieldRenderer';
 import { CONTAINER_PADDING } from '../constants/global';
-import { ConfigurableItem } from '../typings/index';
+import { ConfigurableItem, NormalizedComponentConfig, NormalizedFacetConfig } from '../typings/index';
+import ComponentFields from './form/ComponentFields';
+import FacetFields from './form/FacetFields';
+import { deleteViewConfigNode } from '../reducers/viewconfig';
+import { deleteFacetConfigItem } from '../reducers/facetconfig';
 
-interface Props {
+interface OwnProps {
     item: ConfigurableItem;
     configType: 'view' | 'facet';
     idx: number;
@@ -14,6 +18,12 @@ interface Props {
     onDeleteFn?: Function;
     openCloseFn: Function;
 }
+
+interface DispatchProps {
+    deleteNode: () => void;
+}
+
+type Props = DispatchProps & OwnProps;
 
 const FieldContainer = styled.section`
     display: flex;
@@ -38,6 +48,7 @@ const StyledTitle = styled.button`
     padding: 0 ${CONTAINER_PADDING * 3 - 1}rem;
     width: 100%;
     font: ${props => props.theme.fonts.subTitle};
+    text-align: left;
 
     &:focus {
         outline: none;
@@ -50,39 +61,30 @@ const CloseIcon = styled.button`
     top: ${CONTAINER_PADDING}rem;
 `;
 
-const Accordeon: SFC<Props> = ({
-    openCloseFn,
-    item,
-    openedIndex,
-    resolveChange,
-    onDeleteFn,
-    idx,
-    children,
-    configType
-}) => {
+const Accordeon: SFC<Props> = ({ openCloseFn, item, openedIndex, deleteNode, idx, children, configType }) => {
     const isOpen = openedIndex === idx;
     const openClose = () => openCloseFn(isOpen ? null : idx);
-    const resolve = (val: ConfigurableItem) => {
-        resolveChange(val, idx);
-    };
+
+    if (!item) {
+        return null;
+    }
 
     return (
         <AccordeonBox>
             <StyledTitle type="button" onClick={openClose}>
-                {item.type}
+                {configType === 'view' ? item.type : (item as NormalizedFacetConfig).caption}
             </StyledTitle>
 
             {isOpen && (
                 <FieldContainer>
-                    {configType === 'view' ? (
-                        <VariableFormFieldRenderer item={item} resolveChange={resolve} configType={configType} />
-                    ) : null}
+                    {configType === 'view' && <ComponentFields item={item as NormalizedComponentConfig} />}
+                    {configType === 'facet' && <FacetFields item={item as NormalizedFacetConfig} />}
                 </FieldContainer>
             )}
             {children}
 
-            {onDeleteFn && (
-                <CloseIcon onClick={() => onDeleteFn(idx)}>
+            {deleteNode && (
+                <CloseIcon type={'button'} onClick={deleteNode}>
                     <Cross />
                 </CloseIcon>
             )}
@@ -90,4 +92,20 @@ const Accordeon: SFC<Props> = ({
     );
 };
 
-export default Accordeon;
+const mapDispatchToProps = (dispatch, { configType, item }: OwnProps) => {
+    if (configType === 'view') {
+        return {
+            deleteNode: () => dispatch(deleteViewConfigNode(item.id))
+        };
+    }
+
+    if (configType === 'facet') {
+        return {
+            deleteNode: () => dispatch(deleteFacetConfigItem(item.id))
+        };
+    }
+
+    return {};
+};
+
+export default connect(null, mapDispatchToProps)(Accordeon);
