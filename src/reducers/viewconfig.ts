@@ -206,11 +206,15 @@ export const lastId = (state: ViewConfigReducer): number =>
         .map(item => item.id)
         .reduce((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue), -1);
 
-const getAllDescendantIds = (state: ViewConfigReducer, nodeId: number) =>
-    getNodeById(nodeId, state)!.childIds.reduce(
-        (acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)],
-        []
-    );
+const getAllDescendantIds = (state: ViewConfigReducer, nodeId: number): number[] => {
+    const curNode = getNodeById(nodeId, state);
+
+    if (!curNode) {
+        return [] as number[];
+    }
+
+    return curNode.childIds.reduce((acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)], []);
+};
 
 const deleteAllReferences = (state: ViewConfigReducer, nodeId: number): ViewConfigReducer =>
     state.map(stateNode => {
