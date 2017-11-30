@@ -7,8 +7,8 @@ import Client from '../services/ApolloClient';
 
 export type GraphToStateAction = GraphToFacetConfigAction;
 
-export const graphToState = (action: GraphToFacetConfigAction['type'], payload: any): GraphToStateAction => ({
-    type: action,
+export const graphToState = (actionType: GraphToFacetConfigAction['type'], payload: any): GraphToStateAction => ({
+    type: actionType,
     payload
 });
 

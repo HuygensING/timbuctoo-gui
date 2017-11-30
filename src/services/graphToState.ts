@@ -18,6 +18,9 @@ export default <Props>(action: GraphToStateAction['type'], dataProp: keyof Props
                 if (dataProp in nextProps && !shallowEqual(nextProps[dataProp], this.props[dataProp])) {
                     this.props.graphToState(nextProps[dataProp]);
                 }
+            },
+            componentWillMount() {
+                this.props.graphToState(this.props[dataProp]);
             }
         })
     );
