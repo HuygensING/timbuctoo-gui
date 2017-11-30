@@ -2,7 +2,8 @@ import { ComponentConfig } from '../typings/schema';
 import { arrayMove } from 'react-sortable-hoc';
 import { NormalizedComponentConfig } from '../typings/index';
 import { LEAF_COMPONENTS } from '../constants/global';
-import { createReferencePath } from '../services/walkPath';
+import { createReferencePath, mendPath } from '../services/walkPath';
+import { componentErrors } from '../services/Validation';
 
 export type ViewConfigReducer = NormalizedComponentConfig[];
 
@@ -124,23 +125,42 @@ const normalizeTree = (tree: ComponentConfig[], collectionId: string, startIndex
     return flatTree;
 };
 
-const denormalizeNode = (item: NormalizedComponentConfig, state: ViewConfigReducer): ComponentConfig => {
-    item = { ...item };
+const denormalizePath = (childNode: NormalizedComponentConfig): NormalizedComponentConfig => {
+    childNode = { ...childNode };
+
+    if (childNode.referencePath) {
+        childNode.value = mendPath(childNode.referencePath);
+        delete childNode.referencePath;
+    }
+
+    return childNode;
+};
+
+const denormalizeNode = (item: NormalizedComponentConfig, state: ViewConfigReducer): ComponentConfig | string => {
+    item = denormalizePath(item);
+    item.subComponents = [];
 
     if (item.childIds && !!item.childIds.length) {
-        item.subComponents = [];
-
         for (const child of item.childIds) {
             const childNode = getNodeById(child, state);
 
             if (childNode) {
+                const error = componentErrors(childNode);
+                if (error) {
+                    return error;
+                }
+
                 const denormalizedChildNode = denormalizeNode(childNode, state);
 
-                if (denormalizedChildNode) {
+                if (denormalizedChildNode && typeof denormalizedChildNode !== 'string') {
                     item.subComponents.push(denormalizedChildNode);
                 }
             }
         }
+    }
+
+    if (item.__typename) {
+        delete item.__typename;
     }
 
     delete item.id;
@@ -149,14 +169,26 @@ const denormalizeNode = (item: NormalizedComponentConfig, state: ViewConfigReduc
     return item;
 };
 
-export const denormalizeTree = (state: ViewConfigReducer): ComponentConfig[] | void => {
+export const denormalizeTree = (state: ViewConfigReducer): ComponentConfig[] | string => {
     let denormalizedTree: ComponentConfig[] = [];
 
-    for (const rootNodeIdx of state[0].childIds) {
+    const parentNode = getNodeById(0, state)!;
+
+    for (const rootNodeIdx of parentNode.childIds) {
         const rootNode = getNodeById(rootNodeIdx, state);
         if (rootNode) {
+            const error = componentErrors(rootNode);
+            if (error) {
+                return error;
+            }
+
             const denormalizedRootNode = denormalizeNode(rootNode, state);
+
             if (denormalizedRootNode) {
+                if (typeof denormalizedRootNode === 'string') {
+                    return denormalizedRootNode;
+                }
+
                 denormalizedTree.push(denormalizedRootNode);
             }
         }
@@ -170,11 +202,15 @@ export const lastId = (state: ViewConfigReducer): number =>
         .map(item => item.id)
         .reduce((previousValue: number, currentValue: number) => Math.max(previousValue, currentValue), -1);
 
-const getAllDescendantIds = (state: ViewConfigReducer, nodeId: number) =>
-    getNodeById(nodeId, state)!.childIds.reduce(
-        (acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)],
-        []
-    );
+const getAllDescendantIds = (state: ViewConfigReducer, nodeId: number): number[] => {
+    const curNode = getNodeById(nodeId, state);
+
+    if (!curNode) {
+        return [] as number[];
+    }
+
+    return curNode.childIds.reduce((acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)], []);
+};
 
 const deleteAllReferences = (state: ViewConfigReducer, nodeId: number): ViewConfigReducer =>
     state.map(stateNode => {
@@ -203,8 +239,11 @@ const stateWithoutNodeReferences = (state: ViewConfigReducer, nodeId: number): V
 // reducers
 const nodesToAdd = (state: ViewConfigReducer, action: Action): NormalizedComponentConfig[] => {
     switch (action.type) {
-        case 'ADD_VIEW_CONFIG_NODE':
-            return normalizeTree([action.payload.component], action.payload.collectionId, lastId(state));
+        case 'ADD_VIEW_CONFIG_NODE': {
+            const child = normalizeTree([action.payload.component], action.payload.collectionId, lastId(state));
+            child.pop(); // remove normalizing head
+            return child;
+        }
         case 'CHANGE_VIEW_CONFIG_NODE_TYPE': {
             const children = normalizeTree(
                 action.payload.component.subComponents || [],

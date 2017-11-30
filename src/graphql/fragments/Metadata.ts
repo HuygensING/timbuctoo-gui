@@ -1,5 +1,4 @@
 import { gql } from 'react-apollo';
-
 const contactFragment = gql`
     fragment ContactFragment on ContactInfo {
         name {

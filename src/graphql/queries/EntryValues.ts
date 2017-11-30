@@ -1,8 +1,23 @@
 import { gql } from 'react-apollo';
 import { decode } from '../../services/UrlStringCreator';
-import { checkTypes, ComponentConfig, DataSetMetadata, Entity, EntityList, Query } from '../../typings/schema';
+import {
+    checkTypes,
+    CollectionMetadata,
+    ComponentConfig,
+    DataSetMetadata,
+    Entity,
+    EntityList,
+    LinkComponentConfig,
+    Property,
+    Query,
+    SummaryProperties,
+    TitleComponentConfig
+} from '../../typings/schema';
 import { RouteComponentProps } from 'react-router';
 import { MetaDataProps } from '../../services/metaDataResolver';
+import { PATH_SEGMENT_SPLIT, PATH_SPLIT, splitPath } from '../../services/walkPath';
+import { COMPONENTS, ITEMS, URI, VALUE } from '../../constants/global';
+import { EMPTY_COMPONENT } from '../../constants/emptyViewComponents';
 
 // `type: never` makes the type checker report an error if the case switch does not handle all types
 function checkUnknownComponent(type: never) {
@@ -13,97 +28,102 @@ function getTitleProp(
     typeId: string,
     otherCollections: Array<{ collectionId: string; summaryProperties: { title?: { value: string } } }>
 ): string {
-    for (let i = 0; i < otherCollections.length; i++) {
-        if (otherCollections[i].collectionId === typeId) {
-            const title = otherCollections[i].summaryProperties.title;
+    for (const collection of otherCollections) {
+        if (collection.collectionId === typeId) {
+            const title = collection.summaryProperties.title;
+
             if (title) {
-                return '.' + title.value;
-            } else {
-                return '.uri';
+                return PATH_SPLIT + title.value;
             }
+
+            return PATH_SPLIT + URI;
         }
     }
-    return '.uri';
+
+    return PATH_SPLIT + URI;
 }
 
+const createPropertyConfig = (
+    { name, isList, isValueType, referencedCollections, isInverse, shortenedUri }: Property,
+    otherCollections: Array<CollectionMetadata>
+): ComponentConfig => {
+    const uriSegment = PATH_SPLIT + PATH_SEGMENT_SPLIT + URI;
+
+    const path = PATH_SEGMENT_SPLIT + name + (isList ? PATH_SPLIT + PATH_SEGMENT_SPLIT + ITEMS : '');
+
+    let value: ComponentConfig;
+
+    if (isValueType) {
+        value = { ...EMPTY_COMPONENT[COMPONENTS.path], value: path };
+    } else {
+        value = {
+            ...EMPTY_COMPONENT[COMPONENTS.link],
+            subComponents: [
+                { ...EMPTY_COMPONENT[COMPONENTS.path], value: path + uriSegment },
+                {
+                    ...EMPTY_COMPONENT[COMPONENTS.path],
+                    value:
+                        path +
+                        (referencedCollections.items.length === 1
+                            ? getTitleProp(referencedCollections.items[0], otherCollections)
+                            : uriSegment)
+                }
+            ]
+        } as LinkComponentConfig;
+    }
+
+    return {
+        ...EMPTY_COMPONENT[COMPONENTS.keyValue],
+        value: (isInverse ? '®' : '') + shortenedUri,
+        subComponents: [value]
+    } as ComponentConfig;
+};
+
 export function makeDefaultViewConfig(
-    properties: Array<{
-        isList: boolean;
-        shortenedUri: string;
-        isInverse: boolean;
-        isValueType: boolean;
-        name: string;
-        referencedCollections: { items: string[] };
-    }>,
-    summaryProperties: { title?: { value: string } },
-    otherCollections: Array<{ collectionId: string; summaryProperties: { title?: { value: string } } }>
+    properties: Array<Property>,
+    summaryProperties: SummaryProperties,
+    otherCollections: Array<CollectionMetadata>
 ): Array<ComponentConfig> {
     const title: ComponentConfig[] = summaryProperties.title
         ? [
               {
-                  type: 'TITLE',
-                  formatter: [],
-                  subComponents: [{ type: 'PATH', formatter: [], value: summaryProperties.title.value }]
-              }
+                  ...EMPTY_COMPONENT[COMPONENTS.title],
+                  subComponents: [{ ...EMPTY_COMPONENT[COMPONENTS.path], value: summaryProperties.title.value }]
+              } as TitleComponentConfig
           ]
         : [];
-    return title.concat(
-        properties
-            .filter(x => !x.isList) // FIXME: support union types
-            .map(x => {
-                const path = x.name + (x.isList ? '.items' : '');
-                let value: ComponentConfig;
-                if (x.isValueType) {
-                    value = {
-                        type: 'PATH',
-                        value: path,
-                        formatter: []
-                    };
-                } else {
-                    value = {
-                        type: 'LINK',
-                        formatter: [],
-                        subComponents: [
-                            {
-                                type: 'PATH',
-                                formatter: [],
-                                value: path + '.uri'
-                            },
-                            {
-                                type: 'PATH',
-                                formatter: [],
-                                value:
-                                    path +
-                                    (x.referencedCollections.items.length === 1
-                                        ? getTitleProp(x.referencedCollections.items[0], otherCollections)
-                                        : '.uri')
-                            }
-                        ]
-                    };
-                }
-                return {
-                    type: 'KEYVALUE',
-                    value: (x.isInverse ? '®' : '') + x.shortenedUri,
-                    formatter: [],
-                    subComponents: [value]
-                } as ComponentConfig;
-            })
-    );
+
+    const defaultConfig: ComponentConfig[] = properties
+        .filter(property => !property.isList)
+        .map(property => createPropertyConfig(property, otherCollections));
+
+    return [...title, ...defaultConfig];
 }
 
-function componentPathsToMap(paths: string[]): {} {
+function componentPathsToMap(paths: string[]): { [key: string]: {} | boolean } {
     const result = {};
     for (const path of paths) {
         let cur = result;
-        let segments = path.split('.');
-        while (segments.length > 0) {
-            const segment = segments.shift()!;
+
+        const segments = splitPath(path, true) as string[];
+
+        // remove value prop if has one
+        if (segments[segments.length - 1] === VALUE) {
+            segments.pop();
+        }
+
+        for (const [idx, segment] of segments.entries()) {
+            if (!segment) {
+                continue;
+            }
+
             if (!cur.hasOwnProperty(segment)) {
-                cur[segment] = segments.length > 0 ? {} : true;
+                cur[segment] = idx + 1 === segments.length ? true : {};
             }
             cur = cur[segment];
         }
     }
+
     return result;
 }
 
@@ -150,10 +170,10 @@ function mapToQuery(map: {}, prefix: string): string {
     const result: string[] = [];
     for (const key in map) {
         if (typeof map[key] === 'boolean') {
-            if (key === 'uri') {
+            if (key === URI) {
                 result.push(key);
             } else {
-                result.push(key + ' { value type }');
+                result.push(key + ` { ${VALUE} type }`);
             }
         } else {
             const subQuery = mapToQuery(map[key], prefix + '  ') + '\n';

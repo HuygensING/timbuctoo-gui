@@ -18,6 +18,7 @@ export type NormalizedComponentConfig = NormalizedItem &
         childIds: number[];
         name: string;
         referencePath?: ReferencePath;
+        __typename?: string;
     };
 
 export type NormalizedFacetConfig = NormalizedItem &

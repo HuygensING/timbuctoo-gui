@@ -1,6 +1,7 @@
 import { Entity, FormatterConfig, Value } from '../typings/schema';
 import { valueToString } from './getValue';
 import { ReferencePath } from '../typings/index';
+import { URI, VALUE } from '../constants/global';
 
 export interface TypedUri {
     uri: string;
@@ -9,18 +10,8 @@ export interface TypedUri {
 export type uriOrString = string | TypedUri;
 export type pathResult = uriOrString[] | uriOrString | null;
 
-// TODO: Need to refactor this to make sure it uses the JSON.parse instead of iterating on string
-
-export const mendPath = (pathArray: ReferencePath): string => pathArray.map(path => path.join(':')).join('.');
-
-export const splitPath = (pathStr: string, onlyKey: boolean = false): (string | string[])[] =>
-    pathStr.split('.').map(segment => (onlyKey ? segment.split(':')[1] : segment.split(':')));
-
-export const walkPath = (pathStr: string | undefined, formatters: FormatterConfig, entity: Entity): pathResult =>
-    pathStr ? walkPathStep(splitPath(pathStr, true) as string[], formatters, entity) : null;
-
-export const createReferencePath = (path: string, collectionId: string): ReferencePath =>
-    path.length > 0 ? [[collectionId], ...(splitPath(path) as ReferencePath)] : [[collectionId]];
+export const PATH_SPLIT = '.';
+export const PATH_SEGMENT_SPLIT = '||';
 
 export const DEFAULT_FORMATTERS: FormatterConfig = [
     {
@@ -29,8 +20,30 @@ export const DEFAULT_FORMATTERS: FormatterConfig = [
     }
 ];
 
+export const mendPath = (pathArray: ReferencePath): string =>
+    pathArray.map(path => path.join(PATH_SEGMENT_SPLIT)).join(PATH_SPLIT);
+
+export const splitPath = (pathStr: string, onlyKey: boolean = false): (string | string[])[] => {
+    return pathStr
+        .split(PATH_SPLIT)
+        .filter(segment => segment.indexOf(PATH_SEGMENT_SPLIT) > -1)
+        .map(segment => (onlyKey ? segment.split(PATH_SEGMENT_SPLIT)[1] : segment.split(PATH_SEGMENT_SPLIT)));
+};
+
+export const walkPath = (pathStr: string | undefined, formatters: FormatterConfig, entity: Entity): pathResult => {
+    if (!pathStr) {
+        return null;
+    }
+
+    const splittedPath = splitPath(pathStr, true) as string[];
+    return walkPathStep(splittedPath, formatters, entity);
+};
+
+export const createReferencePath = (path: string, collectionId: string): ReferencePath =>
+    path.length > 0 ? [[collectionId], ...(splitPath(path) as ReferencePath)] : [[collectionId]];
+
 function isValue(obj: Value | Entity): obj is Value {
-    return obj.hasOwnProperty('value');
+    return obj.hasOwnProperty(VALUE);
 }
 
 export function walkPathStep(path: string[], formatters: FormatterConfig, entity: Value | Entity): pathResult {
@@ -43,6 +56,7 @@ export function walkPathStep(path: string[], formatters: FormatterConfig, entity
                 type: entity.__typename
             };
         }
+
         let result = entity[path[0]];
 
         if (!result) {
@@ -61,7 +75,7 @@ export function walkPathStep(path: string[], formatters: FormatterConfig, entity
             }
             return retVal;
         } else if (typeof result === 'string') {
-            if (path[0] === 'uri') {
+            if (path[0] === URI) {
                 return {
                     uri: result,
                     type: entity.__typename
