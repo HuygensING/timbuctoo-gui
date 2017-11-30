@@ -3,6 +3,8 @@ import { decode } from '../../services/UrlStringCreator';
 import { checkTypes, ComponentConfig, DataSetMetadata, Entity, EntityList, Query } from '../../typings/schema';
 import { RouteComponentProps } from 'react-router';
 import { MetaDataProps } from '../../services/metaDataResolver';
+import { splitPath } from '../../services/walkPath';
+import { VALUE } from '../../constants/global';
 
 // `type: never` makes the type checker report an error if the case switch does not handle all types
 function checkUnknownComponent(type: never) {
@@ -51,7 +53,7 @@ export function makeDefaultViewConfig(
         properties
             .filter(x => !x.isList) // FIXME: support union types
             .map(x => {
-                const path = x.name + (x.isList ? '.items' : '');
+                const path = ':' + x.name + (x.isList ? '.:items' : '');
                 let value: ComponentConfig;
                 if (x.isValueType) {
                     value = {
@@ -67,7 +69,7 @@ export function makeDefaultViewConfig(
                             {
                                 type: 'PATH',
                                 formatter: [],
-                                value: path + '.uri'
+                                value: path + '.:uri'
                             },
                             {
                                 type: 'PATH',
@@ -91,21 +93,25 @@ export function makeDefaultViewConfig(
     );
 }
 
-function componentPathsToMap(paths: string[]): {} {
+function componentPathsToMap(paths: string[]): { [key: string]: {} | boolean } {
     const result = {};
     for (const path of paths) {
         let cur = result;
-        let segments = path.split('.');
 
-        while (segments.length > 1) {
-            const segment = segments.shift()!.split(':')[1];
+        const segments = splitPath(path, true) as string[];
 
+        // remove value prop if has one
+        if (segments[segments.length - 1] === VALUE) {
+            segments.pop();
+        }
+
+        for (const [idx, segment] of segments.entries()) {
             if (!segment) {
                 continue;
             }
 
             if (!cur.hasOwnProperty(segment)) {
-                cur[segment] = segments.length > 1 ? {} : true;
+                cur[segment] = idx + 1 === segments.length ? true : {};
             }
             cur = cur[segment];
         }
