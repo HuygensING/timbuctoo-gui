@@ -7,15 +7,17 @@ import { Title } from '../layout/StyledCopy';
 import styled from '../../styled-components';
 import DraggableForm from '../form/DraggableForm';
 import { ComponentConfig } from '../../typings/schema';
-import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
+import QUERY_COLLECTION_PROPERTIES, {
+    Props as CollectionPropertiesProps
+} from '../../graphql/queries/CollectionProperties';
 import { denormalizeTree, setTree } from '../../reducers/viewconfig';
 import { connect } from 'react-redux';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
-import { lifecycle } from 'recompose';
 import { compose } from 'redux';
 import renderLoader from '../../services/renderLoader';
 import { RootState } from '../../reducers/rootReducer';
 import graphql from 'react-apollo/graphql';
+import graphToState from '../../services/graphToState';
 
 interface StateProps {
     denormalizeTree: () => ComponentConfig[];
@@ -25,7 +27,7 @@ interface DispatchProps {
     setTree: (components: ComponentConfig[]) => void;
 }
 
-type FullProps = MetaDataProps & StateProps & DispatchProps & RouteComponentProps<any>;
+type FullProps = MetaDataProps & StateProps & DispatchProps & CollectionPropertiesProps;
 
 type GraphProps = ChildProps<FullProps, { dataSet: string; collectionUrl: string; viewConfig: ComponentConfig[] }>;
 
@@ -77,17 +79,9 @@ const mapDispatchToProps = (dispatch, { match }: RouteComponentProps<{ collectio
 
 export default compose<SFC<{}>>(
     withRouter,
-    metaDataResolver(QUERY_COLLECTION_PROPERTIES),
+    metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'), // TODO: Add a notFound beneath here
     connect(mapStateToProps, mapDispatchToProps),
     graphql(submitViewConfig),
-    lifecycle({
-        // todo remove this & add graphToState here once real data is returned by graph
-        componentWillMount() {
-            const metadata = this.props.metadata && this.props.metadata.dataSetMetadata;
-            const config =
-                metadata && metadata.collection && metadata.collection.viewConfig ? metadata.collection.viewConfig : [];
-            this.props.setTree(config);
-        }
-    })
+    graphToState<FullProps>('GRAPH_TO_VIEWCONFIG', 'metadata')
 )(ViewConfig);
