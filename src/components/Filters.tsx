@@ -53,25 +53,22 @@ class Filters extends PureComponent<FullProps, {}> {
     }
 
     componentWillReceiveProps(nextProps: FullProps) {
-        // // already has a filter, but needs to merge it with the new intel
-        // if (!nextProps.loading && this.onlyFilterChanged) {
-        //     this.onlyFilterChanged = false;
-        //     Filters.mergeFilter(nextProps);
-        //
-        //     // in case of route change save id for next rerender
-        // } else if (this.props.currentCollectionListId !== nextProps.currentCollectionListId) {
-        //     this.id = this.props.currentCollectionListId;
-        //
-        //     // merge the old with the new
-        // } else if (this.id && this.id !== nextProps.currentCollectionListId) {
-        //     this.id = null;
-        //     Filters.mergeFilter(nextProps);
-        //
-        //     // need a new call with new intel after changing the form
-        // } else if (nextProps.callRequested && !this.props.callRequested) {
-        //     this.pushQueryString(nextProps);
-        // }
-        if (nextProps.callRequested && !this.props.callRequested) {
+        // already has a filter, but needs to merge it with the new intel
+        if (!nextProps.loading && this.onlyFilterChanged) {
+            this.onlyFilterChanged = false;
+            Filters.mergeFilter(nextProps);
+
+            // in case of route change save id for next rerender
+        } else if (this.props.currentCollectionListId !== nextProps.currentCollectionListId) {
+            this.id = this.props.currentCollectionListId;
+
+            // merge the old with the new
+        } else if (this.id && this.id !== nextProps.currentCollectionListId) {
+            this.id = null;
+            Filters.mergeFilter(nextProps);
+
+            // need a new call with new intel after changing the form
+        } else if (nextProps.callRequested && !this.props.callRequested) {
             this.pushQueryString(nextProps);
         }
     }
