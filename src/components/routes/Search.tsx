@@ -85,8 +85,8 @@ const dataResolver = compose<ComponentType<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
-    graphqlWithProps<FullProps>(QUERY_COLLECTION_VALUES)
-    // renderLoader()
+    graphqlWithProps<FullProps>(QUERY_COLLECTION_VALUES),
+    renderLoader()
 );
 
 export default dataResolver(Search);
