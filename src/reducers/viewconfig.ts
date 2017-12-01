@@ -136,7 +136,7 @@ const denormalizePath = (childNode: NormalizedComponentConfig): NormalizedCompon
     return childNode;
 };
 
-const denormalizeNode = (item: NormalizedComponentConfig, state: ViewConfigReducer): ComponentConfig | string => {
+const denormalizeNode = (item: NormalizedComponentConfig, state: ViewConfigReducer): ComponentConfig => {
     item = denormalizePath(item);
     item.subComponents = [];
 
@@ -147,12 +147,12 @@ const denormalizeNode = (item: NormalizedComponentConfig, state: ViewConfigReduc
             if (childNode) {
                 const error = componentErrors(childNode);
                 if (error) {
-                    return error;
+                    throw error;
                 }
 
                 const denormalizedChildNode = denormalizeNode(childNode, state);
 
-                if (denormalizedChildNode && typeof denormalizedChildNode !== 'string') {
+                if (denormalizedChildNode) {
                     item.subComponents.push(denormalizedChildNode);
                 }
             }
@@ -169,7 +169,7 @@ const denormalizeNode = (item: NormalizedComponentConfig, state: ViewConfigReduc
     return item;
 };
 
-export const denormalizeTree = (state: ViewConfigReducer): ComponentConfig[] | string => {
+export const denormalizeTree = (state: ViewConfigReducer): ComponentConfig[] => {
     let denormalizedTree: ComponentConfig[] = [];
 
     const parentNode = getNodeById(0, state)!;
@@ -179,16 +179,12 @@ export const denormalizeTree = (state: ViewConfigReducer): ComponentConfig[] | s
         if (rootNode) {
             const error = componentErrors(rootNode);
             if (error) {
-                return error;
+                throw error;
             }
 
             const denormalizedRootNode = denormalizeNode(rootNode, state);
 
             if (denormalizedRootNode) {
-                if (typeof denormalizedRootNode === 'string') {
-                    return denormalizedRootNode;
-                }
-
                 denormalizedTree.push(denormalizedRootNode);
             }
         }

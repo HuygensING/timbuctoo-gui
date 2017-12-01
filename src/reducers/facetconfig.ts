@@ -2,6 +2,7 @@ import { FacetConfig } from '../typings/schema';
 import { NormalizedFacetConfig, ReferencePath } from '../typings/index';
 import { arrayMove } from 'react-sortable-hoc';
 import { createReferencePath, mendPath } from '../services/walkPath';
+import { facetErrors } from '../services/Validation';
 
 // state def
 export type FacetConfigReducer = NormalizedFacetConfig[];
@@ -67,6 +68,12 @@ export const denormalizeFacetConfig = (config: NormalizedFacetConfig): FacetConf
     config = { ...config };
 
     for (const [idx, referencePath] of config.referencePaths.entries()) {
+        const error = facetErrors(referencePath, config);
+
+        if (error) {
+            throw error;
+        }
+
         config.paths[idx] = mendPath(referencePath);
     }
 
