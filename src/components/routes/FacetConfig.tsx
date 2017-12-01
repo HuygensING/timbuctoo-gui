@@ -33,7 +33,15 @@ type FullProps = MetaDataProps &
     RouteComponentProps<{ dataSet: string; collection: string }> &
     FormWrapperProps;
 
-type GraphProps = ChildProps<FullProps, { dataSet: string; collectionUrl: string; facetConfig: FacetConfig[] }>;
+interface GraphIndexConfig {
+    facet: FacetConfig[];
+    fullText?: {
+        caption: '';
+        fields: { path: string }[];
+    };
+}
+
+type GraphProps = ChildProps<FullProps, { dataSet: string; collectionUrl: string; indexConfig: GraphIndexConfig }>;
 
 const Section = styled.div`
     width: 100%;
@@ -45,9 +53,16 @@ const FacetConfig: SFC<GraphProps> = props => {
         const { dataSetId, collection } = props.metadata.dataSetMetadata!;
 
         try {
-            const facetConfig = denormalizeFacets(props.normalizedFacets);
+            const facet = denormalizeFacets(props.normalizedFacets);
+            const indexConfig: GraphIndexConfig = {
+                facet,
+                fullText: {
+                    caption: '',
+                    fields: [{ path: '*' }]
+                }
+            };
 
-            props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, facetConfig } }).then(
+            props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, indexConfig } }).then(
                 data => alert(`The facet configuration for collection ${collection!.collectionId} has been updated`)
             ); // TODO: This also should be something fancy
         } catch (e) {
@@ -67,9 +82,9 @@ const FacetConfig: SFC<GraphProps> = props => {
 };
 
 const submitFacetConfig = gql`
-    mutation submitViewConfig($dataSet: String!, $collectionUri: String!, $facetConfig: [FacetConfig!]!) {
-        setFacetConfig(dataSet: $dataSet, collectionUri: $collectionUri, facetConfig: $facetConfig) {
-            type
+    mutation submitFacetConfig($dataSet: ID!, $collectionUri: String!, $indexConfig: IndexConfigInput!) {
+        setIndexConfig(dataSet: $dataSet, collectionUri: $collectionUri, indexConfig: $indexConfig) {
+            __typename
         }
     }
 `;
