@@ -2,6 +2,7 @@ import React, { SFC } from 'react';
 import { Property } from '../../../typings/schema';
 import ConnectedSelect from './ConnectedSelect';
 import styled, { withProps } from '../../../styled-components';
+import { ITEMS, VALUE } from '../../../constants/global';
 
 interface Props {
     onChange: (newPaths: (string[])[]) => void;
@@ -35,16 +36,17 @@ const Value = withProps<{ shownAsMultipleItems: boolean }>(styled.div)`
             : ''}
 `;
 
-const VALUE: string = 'value';
-const ITEMS: string = 'items';
-
 const ReferencePathSelector: SFC<Props> = ({ paths, onChange }) => {
+    if (!paths) {
+        return null;
+    }
+
     const onChangeHandler = (
         val: string,
         { isList, isValueType, referencedCollections }: Property,
         childIdx: number
     ) => {
-        const newPath = paths.slice(0, childIdx + 1);
+        const newPath = paths.slice(0, childIdx + 1); // TODO: In case of union types, how do I know which ones to expect? <= created ticket for this
 
         // update the previous selected value
         newPath[childIdx][1] = val;
