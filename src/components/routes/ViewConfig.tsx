@@ -1,6 +1,6 @@
 import React, { SFC } from 'react';
 import { ChildProps, gql } from 'react-apollo';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import { Grid } from '../layout/Grid';
 import FullHelmet from '../FullHelmet';
 import { Title } from '../layout/StyledCopy';
@@ -10,7 +10,7 @@ import { ComponentConfig } from '../../typings/schema';
 import QUERY_COLLECTION_PROPERTIES, {
     Props as CollectionPropertiesProps
 } from '../../graphql/queries/CollectionProperties';
-import { denormalizeTree, setTree } from '../../reducers/viewconfig';
+import { denormalizeTree } from '../../reducers/viewconfig';
 import { connect } from 'react-redux';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import { compose } from 'redux';
@@ -23,11 +23,7 @@ interface StateProps {
     denormalizeTree: () => ComponentConfig[];
 }
 
-interface DispatchProps {
-    setTree: (components: ComponentConfig[]) => void;
-}
-
-type FullProps = MetaDataProps & StateProps & DispatchProps & CollectionPropertiesProps;
+type FullProps = MetaDataProps & StateProps & CollectionPropertiesProps;
 
 type GraphProps = ChildProps<FullProps, { dataSet: string; collectionUrl: string; viewConfig: ComponentConfig[] }>;
 
@@ -73,15 +69,11 @@ const mapStateToProps = (state: RootState) => ({
     denormalizeTree: () => denormalizeTree(state.viewconfig)
 });
 
-const mapDispatchToProps = (dispatch, { match }: RouteComponentProps<{ collection: string }>) => ({
-    setTree: (components: ComponentConfig[]) => dispatch(setTree(components, match.params.collection))
-});
-
 export default compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'), // TODO: Add a notFound beneath here
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(mapStateToProps),
     graphql(submitViewConfig),
     graphToState<FullProps>('GRAPH_TO_VIEWCONFIG', 'metadata')
 )(ViewConfig);
