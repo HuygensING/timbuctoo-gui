@@ -1,9 +1,9 @@
 import React, { SFC } from 'react';
-import FullHelmet from '../FullHelmet';
-import { Title } from '../layout/StyledCopy';
-import { ErrorReducer } from '../../reducers/error';
-import { Col, Grid } from '../layout/Grid';
-import translate from '../../services/translate';
+import FullHelmet from './FullHelmet';
+import { Title } from './layout/StyledCopy';
+import { ErrorReducer } from '../reducers/error';
+import { Col, Grid } from './layout/Grid';
+import translate from '../services/translate';
 
 type Props = ErrorReducer;
 

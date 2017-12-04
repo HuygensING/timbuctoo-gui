@@ -16,7 +16,7 @@ import { History, Location } from 'history';
 import { compose } from 'redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { RootState } from '../reducers/rootReducer';
-import Error from './routes/Error';
+import Error from './Error';
 import { ErrorReducer } from '../reducers/error';
 
 const headerHeight: string = '4rem';
