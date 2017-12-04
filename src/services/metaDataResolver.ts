@@ -1,5 +1,5 @@
 import { compose } from 'redux';
-import { mapProps } from 'recompose';
+import { renameProp } from 'recompose';
 import graphqlWithProps from './graphqlWithProps';
 import { DataSetMetadata } from '../typings/schema';
 import { QueryProps } from 'react-apollo';
@@ -12,13 +12,6 @@ export type MetaDataProps = {
 
 /**
  * Basically a copy of graphqlWithProps. however,
- * returned data gets remapped to the 'metadata' prop.
+ * returned data gets mapped to the 'metadata' prop.
  */
-export default <T>(query: (props: T) => any) =>
-    compose<T>(
-        graphqlWithProps(query),
-        mapProps(({ data, ...rest }) => ({
-            ...rest,
-            metadata: data
-        }))
-    );
+export default <T>(query: (props: T) => any) => compose<T>(graphqlWithProps(query), renameProp('data', 'metadata'));
