@@ -100,30 +100,43 @@ export function makeDefaultViewConfig(
     return [...title, ...defaultConfig];
 }
 
-function componentPathsToMap(paths: string[]): { [key: string]: {} | boolean } {
+function componentPathsToMap(paths: string[], dataSetId: string): { [key: string]: {} | boolean } {
     const result = {};
     for (const path of paths) {
         let cur = result;
 
-        const segments = splitPath(path, true) as string[];
+        const segments = splitPath(path) as string[][];
 
         // remove value prop if has one
-        if (segments[segments.length - 1] === VALUE) {
+        if (segments[segments.length - 1][1] === VALUE) {
             segments.pop();
         }
 
-        for (const [idx, segment] of segments.entries()) {
+        for (const [idx, [collection, segment]] of segments.entries()) {
             if (!segment) {
                 continue;
             }
 
-            if (!cur.hasOwnProperty(segment)) {
-                cur[segment] = idx + 1 === segments.length ? true : {};
+            const curSegment = idx + 1 === segments.length ? true : {};
+
+            if (!collection || segment === ITEMS) {
+                if (!cur.hasOwnProperty(segment)) {
+                    cur[segment] = curSegment;
+                }
+
+                cur = cur[segment];
+            } else {
+                const collectionFragment = `...on ${dataSetId}_${collection}`;
+
+                cur[collectionFragment] = {
+                    ...cur[collectionFragment],
+                    [segment]: curSegment
+                };
+
+                cur = cur[collectionFragment][segment];
             }
-            cur = cur[segment];
         }
     }
-
     return result;
 }
 
@@ -209,7 +222,7 @@ export const QUERY_ENTRY_VALUES = ({ match, metadata }: Props) => {
                 ${match.params.dataSet} {
                     ${match.params.collection.replace(match.params.dataSet, '')}(uri: "${decode(match.params.entry)}") {
                         __typename # Needs atleast one value to return
-${mapToQuery(componentPathsToMap(getPaths(values, [])), '                        ')}
+${mapToQuery(componentPathsToMap(getPaths(values, []), match.params.dataSet), '                        ')}
                     }
                 }
             }

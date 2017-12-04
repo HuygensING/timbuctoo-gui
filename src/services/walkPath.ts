@@ -24,6 +24,8 @@ export const mendPath = (pathArray: ReferencePath): string =>
     pathArray.map(path => path.join(PATH_SEGMENT_SPLIT)).join(PATH_SPLIT);
 
 export const splitPath = (pathStr: string, onlyKey: boolean = false): (string | string[])[] => {
+    // TODO: path needs to become a string which can include multiple collections
+    // something like: [[collection, collection], value]
     return pathStr
         .split(PATH_SPLIT)
         .filter(segment => segment.indexOf(PATH_SEGMENT_SPLIT) > -1)

@@ -3,22 +3,27 @@ import { gql } from 'react-apollo';
 import { RouteComponentProps } from 'react-router';
 
 export interface Props {
-    collectionId: string;
+    collectionIds: string[];
 }
 
 type FullProps = Props & RouteComponentProps<{ dataSet: string }>;
 
-const QUERY_COLLECTION_EDIT_VIEW = ({ match, collectionId }: FullProps) => {
+const QUERY_COLLECTION_EDIT_VIEW = ({ match, collectionIds }: FullProps) => {
     const { dataSet } = match.params;
-    const query = `
-        query QUERY_COLLECTION_EDIT_VIEW {
+
+    let query = '';
+
+    for (const collectionId of collectionIds) {
+        query += `
+        query QUERY_COLLECTION_EDIT_VIEW_${collectionId} {
             dataSetMetadata(dataSetId:"${dataSet}") {
                 collection(collectionId:"${collectionId}") {
                     ...CollectionPropertiesReference
                 }
             }
         }
-    `;
+        `;
+    }
 
     return gql`${query}${collectionPropertiesReference}`;
 };
