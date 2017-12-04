@@ -47,7 +47,7 @@ interface StateProps {
     items: ViewConfigReducer;
 }
 
-type Props = StateProps & DispatchProps & OwnProps & RouteComponentProps<any>;
+type Props = StateProps & DispatchProps & OwnProps & RouteComponentProps<{ dataSet: string; collection: string }>;
 
 const ComponentFields: SFC<Props> = ({ item, modifyNode, changeNodeType, removeNode }) => {
     const setMaxItems = (): number => {
@@ -160,7 +160,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (
-    dispatch: Dispatch<OwnProps & RouteComponentProps<any>>,
+    dispatch: Dispatch<OwnProps & RouteComponentProps<{ dataSet: string; collection: string }>>,
     { item: { id }, match }: Props
 ) => ({
     removeNode: (childId: number) => dispatch(deleteViewConfigNode(childId)),

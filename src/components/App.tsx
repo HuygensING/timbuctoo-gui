@@ -92,6 +92,15 @@ export default compose<SFC<{}>>(
     connect(mapStateToProps, mapDispatchToProps),
     lifecycle<FullProps, {}>({
         componentWillMount() {
+            if (
+                !this.props.user.loggedIn &&
+                this.props.data.aboutMe &&
+                this.props.data.aboutMe.id &&
+                this.props.user.hsid.length > 0
+            ) {
+                this.props.logInUser(this.props.user.hsid);
+            }
+
             history.listen((location: Location) => {
                 const { state } = location;
                 if ((state && !state.keepPosition) || !state) {
@@ -111,12 +120,7 @@ export default compose<SFC<{}>>(
             }
 
             if ((user.hsid || user.loggedIn) && (data.error || data.aboutMe === null)) {
-                // todo: remove this check once there's a real authentication system
-                if (process.env.NODE_ENV !== 'development') {
-                    this.props.logOutUser();
-                } else {
-                    this.props.logInUser(user.hsid);
-                }
+                this.props.logOutUser();
             }
         }
     })
