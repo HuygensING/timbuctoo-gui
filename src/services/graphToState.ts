@@ -9,18 +9,23 @@ import { graphToState, GraphToStateAction } from '../reducers/rootReducer';
  * It also sets a global uniform way to move data from the graph to the state.
  * @param {string} action Action that will be dispatched whenever the data prop changes.
  * @param {string} dataProp Prop that will be dispatched to reducer. By default it's data, but this option can be used in case it got remapped to something else (e.g. 'metadata')
+ * @param {boolean} dispatchOnUpdate Dispatch action also when the data in the graph changes (defaults to false)
  */
-export default <Props>(action: GraphToStateAction['type'], dataProp: keyof Props) =>
+export default <Props>(action: GraphToStateAction['type'], dataProp: keyof Props, dispatchOnUpdate: boolean = false) =>
     compose(
         connect(null, dispatch => ({ graphToState: (payload: any) => dispatch(graphToState(action, payload)) })),
         lifecycle({
-            componentWillReceiveProps(nextProps: Props) {
-                if (dataProp in nextProps && !shallowEqual(nextProps[dataProp], this.props[dataProp])) {
-                    this.props.graphToState(nextProps[dataProp]);
-                }
-            },
             componentWillMount() {
                 this.props.graphToState(this.props[dataProp]);
-            }
+            },
+            ...dispatchOnUpdate
+                ? {
+                      componentWillReceiveProps(nextProps: Props) {
+                          if (dataProp in nextProps && !shallowEqual(nextProps[dataProp], this.props[dataProp])) {
+                              this.props.graphToState(nextProps[dataProp]);
+                          }
+                      }
+                  }
+                : null
         })
     );

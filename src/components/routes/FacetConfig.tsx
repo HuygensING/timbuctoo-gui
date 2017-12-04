@@ -58,5 +58,5 @@ export default compose<SFC<{}>>(
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
     connect(mapStateToProps),
-    graphToState<FullProps>('GRAPH_TO_FACETCONFIG', 'metadata')
+    graphToState<FullProps>('GRAPH_TO_FACETCONFIG', 'metadata', false)
 )(FacetConfig);

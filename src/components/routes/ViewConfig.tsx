@@ -75,5 +75,5 @@ export default compose<SFC<{}>>(
     renderLoader('metadata'), // TODO: Add a notFound beneath here
     connect(mapStateToProps),
     graphql(submitViewConfig),
-    graphToState<FullProps>('GRAPH_TO_VIEWCONFIG', 'metadata')
+    graphToState<FullProps>('GRAPH_TO_VIEWCONFIG', 'metadata', false)
 )(ViewConfig);
