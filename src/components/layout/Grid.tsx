@@ -26,7 +26,7 @@ const getProp = (props: GridProps, queries: string[] = BREAKPOINT_KEYS.DESKTOP, 
     for (let key of queries) {
         const actualKey = `${key}${prop}` as keyof GridProps;
 
-        if (props[actualKey] && typeof props[actualKey] === 'number') {
+        if (props[actualKey]) {
             _prop = props[actualKey] as number;
         }
         if ((props[actualKey] as boolean) === false) {
