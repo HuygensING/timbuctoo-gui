@@ -1,4 +1,4 @@
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { createQueryFromValue } from '../../services/getValue';
 import setCollectionArguments from '../../services/CollectionArgumentsCreator';
 import { RouteComponentProps } from 'react-router';

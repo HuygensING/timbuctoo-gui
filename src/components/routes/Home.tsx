@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import FullHelmet from '../FullHelmet';
-
-import { graphql, gql } from 'react-apollo';
-
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { Col, Grid } from '../layout/Grid';
-
 import Hero from '../hero/Hero';
 import ListContent from '../lists/ListContent';
 import GridSection from '../layout/GridSection';
@@ -14,7 +12,6 @@ import FeaturedContentBlock from '../featured/FeaturedContentBlock';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import About from '../About';
 import { AboutMe, DataSetMetadata } from '../../typings/schema';
-
 import translate from '../../services/translate';
 import { getValue } from '../../services/getValue';
 import { UserReducer } from '../../reducers/user';

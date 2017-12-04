@@ -1,5 +1,6 @@
 import React, { SFC } from 'react';
-import { ChildProps, gql } from 'react-apollo';
+import { ChildProps } from 'react-apollo';
+import gql from 'graphql-tag';
 import { withRouter } from 'react-router';
 import { Grid } from '../layout/Grid';
 import FullHelmet from '../FullHelmet';

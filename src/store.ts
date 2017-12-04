@@ -1,6 +1,7 @@
 import { applyMiddleware, compose, createStore, Store } from 'redux';
 import reducers, { RootState } from './reducers/rootReducer';
-import Client from './services/ApolloClient';
+import { routerMiddleware } from 'react-router-redux';
+import { History } from 'history';
 
 declare var window: {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: any;
@@ -14,6 +15,10 @@ const composeEnhancers =
  * This function should be called only once.
  * @returns {object} Store
  */
-export function configureStore(initialState?: RootState): Store<RootState> {
-    return createStore<RootState>(reducers, initialState!, composeEnhancers(applyMiddleware(Client.middleware())));
+export function configureStore(history: History, initialState?: RootState): Store<RootState> {
+    return createStore<RootState>(
+        reducers,
+        initialState!,
+        composeEnhancers(applyMiddleware(routerMiddleware(history)))
+    );
 }

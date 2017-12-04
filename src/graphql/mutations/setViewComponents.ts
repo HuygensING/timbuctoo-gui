@@ -1,4 +1,4 @@
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 const MUTATION_VIEW_COMPONENTS = () => {
     const mutation = `
