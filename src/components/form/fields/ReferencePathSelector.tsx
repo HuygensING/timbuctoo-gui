@@ -87,7 +87,7 @@ const ReferencePathSelector: SFC<Props> = ({ paths, onChange }) => {
                         shownAsMultipleItems={isMultiple}
                         selected={{ key: value, value: value }}
                         name={`select`}
-                        collectionId={collectionKey}
+                        collectionIds={[collectionKey]}
                         onChange={(val, property) => onChangeHandler(val, property, childIdx)}
                     />
                 );
