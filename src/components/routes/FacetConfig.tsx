@@ -8,7 +8,7 @@ import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
 import { FacetConfig as IFacetConfig } from '../../typings/schema';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { compose } from 'redux';
 import { MetaDataProps, default as metaDataResolver } from '../../services/metaDataResolver';
 import { lifecycle } from 'recompose';
@@ -59,7 +59,7 @@ const mapStateToProps = (state: RootState) => ({
     normalizedFacets: state.facetconfig
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: Dispatch<FullProps>) => ({
     setItems: (configs: IFacetConfig[], collectionId: string) => dispatch(setFacetConfigItems(configs, collectionId))
 });
 
@@ -68,9 +68,9 @@ export default compose<SFC<{}>>(
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
     connect(mapStateToProps, mapDispatchToProps),
-    lifecycle({
+    lifecycle<FullProps, {}>({
         componentWillMount() {
-            const metadata = this.props.metadata && this.props.metadata.dataSetMetadata;
+            const metadata = this.props.metadata! && this.props.metadata.dataSetMetadata!;
             const facets =
                 metadata.collection && metadata.collection.indexConfig.facet.length
                     ? metadata.collection.indexConfig.facet

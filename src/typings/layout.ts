@@ -1,17 +1,15 @@
 export interface Colors {
-    readonly primary: {
-        light: string;
-        medium: string;
-        dark: string;
-    };
-    readonly shade: {
-        light: string;
-        medium: string;
-        dark: string;
-    };
+    readonly primary: ColorShades;
+    readonly shade: ColorShades;
     readonly error: string;
     readonly white: string;
     readonly black: string;
+}
+
+export interface ColorShades {
+    light: string;
+    medium: string;
+    dark: string;
 }
 
 export interface Fonts {
@@ -29,7 +27,6 @@ export interface ThemeProps {
 }
 
 export interface ElementProps {
-    theme: ThemeProps;
     tag?: string;
     isCaps?: boolean;
     color?: Color;
@@ -46,14 +43,18 @@ export type ButtonVariant = 'normal' | 'inverted' | 'dark' | 'disabled';
 
 export interface GridProps {
     innerRef?: Function;
-    tag?: string;
-    xs?: number;
-    sm?: number;
-    md?: number;
+    tag?: string | null;
+    xs?: number | boolean;
+    sm?: number | boolean;
+    md?: number | boolean;
 
-    xsOffset?: number;
-    smOffset?: number;
-    mdOffset?: number;
+    xsHidden?: boolean;
+    smHidden?: boolean;
+    mdHidden?: boolean;
+
+    xsOffset?: number | boolean;
+    smOffset?: number | boolean;
+    mdOffset?: number | boolean;
 }
 
 export interface ColProps {

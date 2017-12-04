@@ -9,7 +9,7 @@ import DraggableForm from '../form/DraggableForm';
 import { ComponentConfig } from '../../typings/schema';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import { denormalizeTree, setTree } from '../../reducers/viewconfig';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import { lifecycle } from 'recompose';
 import { compose } from 'redux';
@@ -71,7 +71,7 @@ const mapStateToProps = (state: RootState) => ({
     denormalizeTree: () => denormalizeTree(state.viewconfig)
 });
 
-const mapDispatchToProps = (dispatch, { match }: RouteComponentProps<{ collection: string }>) => ({
+const mapDispatchToProps = (dispatch: Dispatch<FullProps>, { match }: RouteComponentProps<{ collection: string }>) => ({
     setTree: (components: ComponentConfig[]) => dispatch(setTree(components, match.params.collection))
 });
 
@@ -81,7 +81,7 @@ export default compose<SFC<{}>>(
     renderLoader('metadata'), // TODO: Add a notFound beneath here
     connect(mapStateToProps, mapDispatchToProps),
     graphql(submitViewConfig),
-    lifecycle({
+    lifecycle<FullProps, {}>({
         componentWillMount() {
             const metadata = this.props.metadata && this.props.metadata.dataSetMetadata;
             const config =

@@ -115,7 +115,9 @@ const item = (
     }
 };
 
-const multipleItems = ({ facetConfigs, collectionId }): NormalizedFacetConfig[] => {
+const multipleItems = ({
+    payload: { facetConfigs, collectionId }
+}: SetFacetConfigItemsAction): NormalizedFacetConfig[] => {
     let items: NormalizedFacetConfig[] = [];
 
     for (const facetConfig of facetConfigs) {
@@ -132,7 +134,7 @@ export default (state: FacetConfigReducer = defaultState, action: Action) => {
         case 'ADD_FACET_CONFIG_ITEM':
             return [...state, item(null, action, state)];
         case 'SET_FACET_CONFIG_ITEMS':
-            return multipleItems(action.payload);
+            return multipleItems(action);
         case 'MODIFY_FACET_CONFIG_ITEM': {
             const index = state.findIndex(config => config.id === action.payload.id);
             const nextState = [...state];

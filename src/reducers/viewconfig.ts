@@ -74,7 +74,8 @@ type Action =
 export const createName = (typename: string, idx: number, field?: string): string =>
     `${idx}_${typename}${field ? '_' + field : ''}`;
 
-export const getNodeIndex = (id: number, state): number | undefined => state.findIndex(nodeItem => nodeItem.id === id);
+export const getNodeIndex = (id: number, state: ViewConfigReducer): number | undefined =>
+    state.findIndex(nodeItem => nodeItem.id === id);
 
 export const getNodeById = (id: number, state: ViewConfigReducer): NormalizedComponentConfig | undefined =>
     state.find(item => item.id === id);

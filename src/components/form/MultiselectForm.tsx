@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, SFC } from 'react';
 
 import { sortBy, partition } from 'lodash';
 
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 
 import { Subtitle } from '../layout/StyledCopy';
 import styled from '../../styled-components';
@@ -12,6 +12,7 @@ import MultiselectFormOption from './MultiselectFormOption';
 import { EsFilter, EsValue, toggleFilter } from '../../reducers/search';
 import { RootState } from '../../reducers/rootReducer';
 import { Button as ButtonBase } from '../layout/Button';
+import { compose } from 'redux';
 
 interface Props {
     filter: EsFilter;
@@ -116,8 +117,8 @@ const mapStateToProps = (state: RootState) => ({
     filters: state.search.filters
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: Dispatch<Props>) => ({
     updateField: (index: number, value: string, filters: EsFilter[]) => dispatch(toggleFilter(index, value, filters))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MultiSelectForm);
+export default compose<SFC<Props>>(connect(mapStateToProps, mapDispatchToProps))(MultiSelectForm);

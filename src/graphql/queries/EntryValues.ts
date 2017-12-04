@@ -100,8 +100,12 @@ export function makeDefaultViewConfig(
     return [...title, ...defaultConfig];
 }
 
-function componentPathsToMap(paths: string[]): { [key: string]: {} | boolean } {
-    const result = {};
+interface KeyValueRecursive {
+    [key: string]: KeyValueRecursive | {} | boolean;
+}
+
+function componentPathsToMap(paths: string[]): KeyValueRecursive {
+    const result: any = {};
     for (const path of paths) {
         let cur = result;
 
@@ -166,7 +170,11 @@ function getPaths(components: ComponentConfig[], result: string[]): string[] {
     return result;
 }
 
-function mapToQuery(map: {}, prefix: string): string {
+interface RecursiveType {
+    [name: string]: RecursiveType | boolean | string;
+}
+
+function mapToQuery(map: RecursiveType, prefix: string): string {
     const result: string[] = [];
     for (const key in map) {
         if (typeof map[key] === 'boolean') {
@@ -176,7 +184,7 @@ function mapToQuery(map: {}, prefix: string): string {
                 result.push(key + ` { ${VALUE} type }`);
             }
         } else {
-            const subQuery = mapToQuery(map[key], prefix + '  ') + '\n';
+            const subQuery = mapToQuery(map[key] as RecursiveType, prefix + '  ') + '\n';
             result.push(key + ' {\n' + subQuery + prefix + '}');
         }
     }

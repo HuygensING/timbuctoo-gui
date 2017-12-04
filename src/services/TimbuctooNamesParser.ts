@@ -26,7 +26,7 @@ export interface Name {
 }
 
 const mapNames = (names: NameObjectProps[]): Name => {
-    let name = {
+    let name: { firstName: null | string; middleName: null | string; lastName: null | string } = {
         firstName: null,
         middleName: null,
         lastName: null

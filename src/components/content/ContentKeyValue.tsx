@@ -16,7 +16,7 @@ const KeyValueWrapper = styled.div`
     padding-bottom: 1rem;
 `;
 
-const Key = styled(Content)`
+const Key = Content.withComponent('h2').extend`
     display: inline-block;
     width: 20%;
     margin: 0;
@@ -46,7 +46,7 @@ const ContentKeyValue = (props: Props) => {
 
     return (
         <KeyValueWrapper>
-            <Key tag="h2">
+            <Key>
                 <span title={label}>{label}</span>:
             </Key>
             <Values>{children}</Values>

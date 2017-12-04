@@ -42,7 +42,7 @@ interface HeroProps {
     title: string | null;
     content: string | null;
     searchPath: string | null;
-    buttonText?: string;
+    buttonText?: string | null;
     imgUrl: string | null;
 }
 

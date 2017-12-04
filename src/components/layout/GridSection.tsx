@@ -4,8 +4,8 @@ import { Col, Grid } from './Grid';
 import { Title } from './StyledCopy';
 
 interface Props {
-    tag?: string;
-    title?: string;
+    tag?: string | null;
+    title?: string | null;
     gridSize?: number;
     gridOffset?: number;
     colSizeOffset?: number;
@@ -39,7 +39,7 @@ const GridSection: SFC<Props> = ({
 
     const colSize = calcColSize();
 
-    const offset = idx => {
+    const offset = (idx: number) => {
         if (cols <= 1 || idx === 0 || idx % cols === 0) {
             return 0;
         }

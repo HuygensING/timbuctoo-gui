@@ -7,7 +7,7 @@ import { COMPONENTS, DRAGGABLE_COMPONENTS, EMPTY_FACET_CONFIG } from '../../cons
 import { ComponentConfig, FacetConfig } from '../../typings/schema';
 import { SubmitButton } from './fields/Buttons';
 import { addViewConfigNode, getNodeById, lastId, sortViewConfigChild } from '../../reducers/viewconfig';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { EMPTY_LEAF_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
 import { addFacetConfigItem, sortFacetConfigItem } from '../../reducers/facetconfig';
@@ -86,7 +86,7 @@ class DraggableForm extends PureComponent<Props, State> {
         return (
             <div>
                 <DraggableList
-                    componentType={DRAGGABLE_COMPONENTS.accordeon}
+                    componentType={DRAGGABLE_COMPONENTS.accordeon as 'accordeon'}
                     componentProps={componentProps}
                     listItems={items}
                     configType={configType}
@@ -124,7 +124,10 @@ class DraggableForm extends PureComponent<Props, State> {
     };
 }
 
-const mapDispatchToProps = (dispatch, { id, configType, match }: Props) => {
+const mapDispatchToProps = (
+    dispatch: Dispatch<OwnProps & RouteComponentProps<{ collection: string }>>,
+    { id, configType, match }: Props
+) => {
     if (configType === 'view') {
         return {
             sortItem: (oldIndex: number, newIndex: number) => dispatch(sortViewConfigChild(id, oldIndex, newIndex)),

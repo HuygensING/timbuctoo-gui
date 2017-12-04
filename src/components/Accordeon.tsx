@@ -1,5 +1,5 @@
 import React, { SFC } from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import styled from '../styled-components';
 import Cross from './icons/Cross';
 import { CONTAINER_PADDING } from '../constants/global';
@@ -92,7 +92,7 @@ const Accordeon: SFC<Props> = ({ openCloseFn, item, openedIndex, deleteNode, idx
     );
 };
 
-const mapDispatchToProps = (dispatch, { configType, item }: OwnProps) => {
+const mapDispatchToProps = (dispatch: Dispatch<OwnProps>, { configType, item }: OwnProps) => {
     if (configType === 'view') {
         return {
             deleteNode: () => dispatch(deleteViewConfigNode(item.id))

@@ -1,6 +1,6 @@
 import { gql } from 'react-apollo';
 
-function generateComponentsNest(depth: number, maxDepth?: number) {
+function generateComponentsNest(depth: number, maxDepth?: number): string {
     if (maxDepth === undefined) {
         maxDepth = depth;
     }

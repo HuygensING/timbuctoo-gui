@@ -6,7 +6,7 @@ import { default as Select, OptionProps } from './fields/Select';
 import InputField from './fields/Input';
 import { NormalizedComponentConfig, ReferencePath } from '../../typings/index';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import {
     changeViewConfigNodeType,
     deleteViewConfigNode,
@@ -113,7 +113,10 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, changeNodeType, removeN
                     <Select
                         name={'Component'}
                         options={SELECT_COMPONENT_TYPES}
-                        selected={SELECT_COMPONENT_TYPES.find(valueType => valueType.value === item.type)}
+                        selected={
+                            SELECT_COMPONENT_TYPES.find(valueType => valueType.value === item.type) ||
+                            SELECT_COMPONENT_TYPES[0]
+                        }
                         onChange={onChangeHeadHandler}
                     />
                 </FieldValue>
@@ -156,7 +159,10 @@ const mapStateToProps = (state: RootState) => ({
     items: state.viewconfig
 });
 
-const mapDispatchToProps = (dispatch, { item: { id }, match }: Props) => ({
+const mapDispatchToProps = (
+    dispatch: Dispatch<OwnProps & RouteComponentProps<any>>,
+    { item: { id }, match }: Props
+) => ({
     removeNode: (childId: number) => dispatch(deleteViewConfigNode(childId)),
     changeNodeType: (component: NormalizedComponentConfig) =>
         dispatch(changeViewConfigNodeType(id, component, match.params.collection)),
