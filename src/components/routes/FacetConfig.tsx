@@ -15,6 +15,7 @@ import renderLoader from '../../services/renderLoader';
 import graphToState from '../../services/graphToState';
 import { RootState } from '../../reducers/rootReducer';
 import { NormalizedFacetConfig } from '../../typings/index';
+import handleError from '../../services/handleError';
 
 interface StateProps {
     normalizedFacets: NormalizedFacetConfig[];
@@ -57,6 +58,7 @@ export default compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
+    handleError('metadata'),
     connect(mapStateToProps),
     graphToState<FullProps>('GRAPH_TO_FACETCONFIG', 'metadata', false)
 )(FacetConfig);

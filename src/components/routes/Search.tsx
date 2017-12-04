@@ -18,6 +18,7 @@ import { compose } from 'redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import renderLoader from '../../services/renderLoader';
 import { ChildProps } from 'react-apollo';
+import handleError from '../../services/handleError';
 
 type FullProps = ChildProps<
     MetaDataProps & RouteComponentProps<{ dataSet: string; collection: string }>,
@@ -85,8 +86,10 @@ const dataResolver = compose<ComponentType<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
+    handleError('metadata'),
     graphqlWithProps<FullProps>(QUERY_COLLECTION_VALUES),
-    renderLoader()
+    renderLoader(),
+    handleError()
 );
 
 export default dataResolver(Search);

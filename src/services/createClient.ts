@@ -14,7 +14,7 @@ const createClient = (store: Store<RootState>) => {
         onError(({ graphQLErrors, networkError }: ErrorResponse) => {
             graphQLErrors = graphQLErrors || [];
             const errors: Errors = networkError ? [...graphQLErrors, networkError] : graphQLErrors;
-            store.dispatch(setError(errors));
+            store.dispatch(setError(errors, networkError ? 0 : 500));
         }),
         setContext(() => {
             const state: RootState = store.getState();

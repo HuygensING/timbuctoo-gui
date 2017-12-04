@@ -18,6 +18,7 @@ import graphqlWithProps from '../../services/graphqlWithProps';
 import { withRouter } from 'react-router';
 import renderLoader from '../../services/renderLoader';
 import { ChildProps } from 'react-apollo';
+import handleError from '../../services/handleError';
 
 type FullProps = ChildProps<EntryPropertiesProps & EntryValuesProps, { dataSets: DataSetMetadata }>;
 
@@ -66,8 +67,10 @@ const dataResolver = compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_ENTRY_PROPERTIES),
     renderLoader('metadata'),
+    handleError('metadata'),
     graphqlWithProps<FullProps>(QUERY_ENTRY_VALUES),
-    renderLoader()
+    renderLoader(),
+    handleError()
 );
 
 export default dataResolver(Entry);

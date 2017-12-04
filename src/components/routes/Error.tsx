@@ -1,24 +1,35 @@
 import React, { SFC } from 'react';
 import FullHelmet from '../FullHelmet';
 import { Title } from '../layout/StyledCopy';
-import { Errors } from '../../reducers/error';
+import { ErrorReducer } from '../../reducers/error';
 import { Col, Grid } from '../layout/Grid';
+import translate from '../../services/translate';
 
-interface Props {
-    errors: Errors;
-}
+type Props = ErrorReducer;
 
-const Error: SFC<Props> = ({ errors }) => (
+const Error: SFC<Props> = ({ errors, status }) => (
     <Grid xs={36} sm={24} xsOffset={6} smOffset={12}>
         <Col xs={36} sm={24}>
             <FullHelmet pageName="Error" />
-            {process.env.NODE_ENV !== 'production' &&
+            {process.env.NODE_ENV !== 'production' ? (
                 errors.map((error, index) => (
                     <div key={index}>
-                        <Title align="center">{error.message}</Title>
+                        <Title align="center">
+                            {status !== 0 && status} {error.message}
+                        </Title>
                         <pre>{error.stack}</pre>
                     </div>
-                ))}
+                ))
+            ) : (
+                <div>
+                    <Title align="center">{translate('error')}</Title>
+                    {status === 500 || status === 404 ? (
+                        <p>{translate(`error.${status}`)}</p>
+                    ) : (
+                        <p>{translate(`network_error`)}</p>
+                    )}
+                </div>
+            )}
         </Col>
     </Grid>
 );

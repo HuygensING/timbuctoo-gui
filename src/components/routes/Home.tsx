@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { RouteComponentProps } from 'react-router';
+import React, { Component, ComponentType } from 'react';
 import { connect } from 'react-redux';
 import FullHelmet from '../FullHelmet';
 import { graphql } from 'react-apollo';
@@ -15,6 +14,9 @@ import { AboutMe, DataSetMetadata } from '../../typings/schema';
 import translate from '../../services/translate';
 import { getValue } from '../../services/getValue';
 import { UserReducer } from '../../reducers/user';
+import { compose } from 'redux';
+import renderLoader from '../../services/renderLoader';
+import handleError from '../../services/handleError';
 
 interface ApolloProps {
     data: {
@@ -23,25 +25,15 @@ interface ApolloProps {
     };
 }
 
-interface Props {
+interface StateProps {
     user: UserReducer;
 }
 
 interface State {}
 
-type FullProps = Props & ApolloProps & RouteComponentProps<any>;
+type FullProps = StateProps & ApolloProps;
 
 class Home extends Component<FullProps, State> {
-    static defaultProps = {
-        data: {
-            promotedDataSets: [],
-            aboutMe: {
-                name: null,
-                personalInfo: null
-            }
-        }
-    };
-
     renderFeatured(promoted: DataSetMetadata[]) {
         return (
             <GridSection title={translate('home.featured.title')} cols={5} colSizeOffset={2}>
@@ -143,4 +135,6 @@ const mapStateToProps = state => ({
     user: state.user
 });
 
-export default graphql(query)(connect(mapStateToProps)(Home));
+export default compose<ComponentType<{}>>(graphql(query), renderLoader(), handleError(), connect(mapStateToProps))(
+    Home
+);

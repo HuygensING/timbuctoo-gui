@@ -20,6 +20,7 @@ import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver
 import { withRouter } from 'react-router';
 import { compose } from 'redux';
 import renderLoader from '../../services/renderLoader';
+import handleError from '../../services/handleError';
 
 interface StateProps {
     loggedIn: boolean;
@@ -108,5 +109,6 @@ export default compose<ComponentType<{}>>(
     withRouter,
     metaDataResolver(QUERY_DATASET),
     renderLoader('metadata'),
+    handleError('metadata'),
     connect(mapStateToProps)
 )(DataSet);

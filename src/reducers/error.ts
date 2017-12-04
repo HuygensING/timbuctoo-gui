@@ -2,9 +2,15 @@ import { GraphQLError } from 'graphql';
 import { LOCATION_CHANGE, LocationChangeAction } from 'react-router-redux';
 
 export type Errors = Array<Error | GraphQLError>;
-export type ErrorReducer = Readonly<Errors>;
+export type ErrorReducer = {
+    errors: Readonly<Errors>;
+    status: number;
+};
 
-const defaultState: ErrorReducer = [];
+const defaultState: ErrorReducer = {
+    errors: [],
+    status: 0
+};
 
 interface SetErrorAction {
     type: 'SET_ERROR';
@@ -24,7 +30,10 @@ export default (state = defaultState, action: Action): ErrorReducer => {
     }
 };
 
-export const setError = (errors: Errors) => ({
+export const setError = (errors: Errors, status: number) => ({
     type: 'SET_ERROR',
-    payload: errors
+    payload: {
+        errors,
+        status
+    }
 });

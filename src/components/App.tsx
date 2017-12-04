@@ -41,9 +41,8 @@ interface DispatchProps {
     logOutUser: () => void;
 }
 
-interface StateProps {
+interface StateProps extends ErrorReducer {
     user: UserReducer;
-    errors: ErrorReducer;
 }
 
 type FullProps = ChildProps<OwnProps & DispatchProps & StateProps, { aboutMe: AboutMe }>;
@@ -91,20 +90,23 @@ class App extends PureComponent<FullProps> {
     }
 
     render() {
-        // TODO: switch <Loading/> for an <Authenticating /> component
-        console.log(this.props.errors);
-
+        const hasError = this.props.errors.length > 0 || this.props.data!.error;
         return (
             <ThemeProvider theme={theme}>
                 {this.renderLoad ? (
+                    // TODO: switch <Loading/> for an <Authenticating /> component
                     <Loading />
                 ) : (
                     <ConnectedRouter history={this.props.history}>
                         <GridWithMargin>
                             <Header height={headerHeight} />
                             <Main>
-                                {this.props.errors.length > 0 ? (
-                                    <Error errors={Array.from(this.props.errors)} />
+                                {hasError ? (
+                                    this.props.errors.length > 0 ? (
+                                        <Error errors={this.props.errors} status={this.props.status} />
+                                    ) : (
+                                        <Error errors={[this.props.data!.error as Error]} status={500} />
+                                    )
                                 ) : (
                                     <Routes />
                                 )}
@@ -127,7 +129,7 @@ class App extends PureComponent<FullProps> {
 
 const mapStateToProps = (state: RootState) => ({
     user: state.user,
-    errors: state.error
+    ...state.error
 });
 
 const mapDispatchToProps = dispatch => ({
