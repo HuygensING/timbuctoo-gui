@@ -1,6 +1,7 @@
 import queryString from 'querystring';
 import { FacetConfig, IndexConfig } from '../typings/schema';
 import { EsMatches, EsQuery, setFirstPathAsString } from './EsQueryStringCreator';
+import { Location } from 'history';
 
 interface Aggs {
     [name: string]: Agg;
@@ -110,10 +111,10 @@ const setElasticSearchParams = (indexConfig: IndexConfig, search: string): strin
  * @param location
  * @returns {string}
  */
-const setCollectionArguments = (indexConfig, location): string => {
+const setCollectionArguments = (indexConfig: IndexConfig, location: Location): string => {
     const { cursor, search } = queryString.parse(location.search.substring(1));
 
-    const elasticsearch = `elasticsearch: ${setElasticSearchParams(indexConfig, search)}`;
+    const elasticsearch = `elasticsearch: ${setElasticSearchParams(indexConfig, search as string)}`;
     const cursorString = cursor ? `, cursor: ${doubleStringify(cursor)}` : '';
 
     return `(${elasticsearch}${cursorString})`;

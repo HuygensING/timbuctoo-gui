@@ -15,19 +15,11 @@ interface State {
 }
 
 class CollectionTags extends PureComponent<Props, State> {
-    constructor() {
-        super();
+    state = { isOpen: null };
 
-        this.state = {
-            isOpen: null
-        };
-
-        this.toggleOpen = this.toggleOpen.bind(this);
-    }
-
-    toggleOpen(idx: number | null) {
+    toggleOpen = (idx: number | null) => {
         this.setState({ isOpen: idx });
-    }
+    };
 
     renderButton(collection: CollectionMetadata, idx: number) {
         const { currentCollectionListId, dataSetId, replace } = this.props;

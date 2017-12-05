@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-function generateComponentsNest(depth: number, maxDepth?: number) {
+function generateComponentsNest(depth: number, maxDepth?: number): string {
     if (maxDepth === undefined) {
         maxDepth = depth;
     }

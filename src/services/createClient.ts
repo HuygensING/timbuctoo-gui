@@ -25,7 +25,10 @@ const createClient = (store: Store<RootState>) => {
             };
         }),
         new HttpLink({
-            uri: GRAPH_URI
+            uri: GRAPH_URI,
+            headers: {
+                accept: 'application/json'
+            }
         })
     ];
 

@@ -1,7 +1,8 @@
-import React, { ComponentType, PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { ChildProps, graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import React, { SFC } from 'react';
+import { connect, Dispatch } from 'react-redux';
+
+import { graphql, ChildProps } from 'react-apollo';
+
 import Routes from './Routes';
 import { default as styled, ThemeProvider } from 'styled-components';
 import theme from '../theme';
@@ -11,18 +12,19 @@ import PoweredBy from './PoweredBy';
 import { Grid } from './layout/Grid';
 import { AboutMe } from '../typings/schema';
 import { LogInUser, LogOutUser, UserReducer } from '../reducers/user';
-import Loading from './Loading';
 import { History, Location } from 'history';
 import { compose } from 'redux';
-import { ConnectedRouter } from 'react-router-redux';
 import { RootState } from '../reducers/rootReducer';
 import Error from './Error';
+import { HEADER_HEIGHT } from '../constants/global';
 import { ErrorReducer } from '../reducers/error';
-
-const headerHeight: string = '4rem';
+import renderLoader from '../services/renderLoader';
+import { lifecycle } from 'recompose';
+import gql from 'graphql-tag';
+import { ConnectedRouter } from 'react-router-redux';
 
 const GridWithMargin = styled(Grid)`
-    padding-top: ${headerHeight};
+    padding-top: ${HEADER_HEIGHT};
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -47,93 +49,36 @@ interface StateProps extends ErrorReducer {
 
 type FullProps = ChildProps<OwnProps & DispatchProps & StateProps, { aboutMe: AboutMe }>;
 
-class App extends PureComponent<FullProps> {
-    renderLoad: boolean = true;
-
-    componentWillMount() {
-        this.checkRenderLoad(this.props.user);
-
-        this.props.history.listen((location: Location) => {
-            const { state } = location;
-            if ((state && !state.keepPosition) || !state) {
-                window.scrollTo(0, 0);
-            }
-        });
-    }
-
-    componentWillReceiveProps({ data, user }: FullProps) {
-        if (
-            !user.loggedIn &&
-            data &&
-            data.aboutMe &&
-            data.aboutMe.id &&
-            (this.props.data && this.props.data.aboutMe !== data.aboutMe) &&
-            user.hsid.length > 0
-        ) {
-            this.props.logInUser(user.hsid);
-        }
-
-        if (this.renderLoad && (data && (data.error || data.aboutMe === null))) {
-            this.renderLoad = false;
-
-            // todo: remove this check once there's a real authentication system
-            if (process.env.NODE_ENV !== 'development') {
-                this.props.logOutUser();
-            } else {
-                this.props.logInUser(user.hsid);
-            }
-        }
-    }
-
-    componentWillUpdate(nextProps: FullProps) {
-        this.checkRenderLoad(nextProps.user);
-    }
-
-    render() {
-        const hasError = this.props.errors.length > 0 || this.props.data!.error;
-        return (
-            <ThemeProvider theme={theme}>
-                {this.renderLoad ? (
-                    // TODO: switch <Loading/> for an <Authenticating /> component
-                    <Loading />
-                ) : (
-                    <ConnectedRouter history={this.props.history}>
-                        <GridWithMargin>
-                            <Header height={headerHeight} />
-                            <Main>
-                                {hasError ? (
-                                    this.props.errors.length > 0 ? (
-                                        <Error errors={this.props.errors} status={this.props.status} />
-                                    ) : (
-                                        <Error errors={[this.props.data!.error as Error]} status={500} />
-                                    )
-                                ) : (
-                                    <Routes />
-                                )}
-                            </Main>
-                            <Footer />
-                            <PoweredBy />
-                        </GridWithMargin>
-                    </ConnectedRouter>
-                )}
-            </ThemeProvider>
-        );
-    }
-
-    private checkRenderLoad(user: UserReducer) {
-        if (!user.hsid || user.loggedIn) {
-            this.renderLoad = false;
-        }
-    }
-}
+const App: SFC<FullProps> = ({ errors, status, data, history }) => (
+    <ThemeProvider theme={theme}>
+        <ConnectedRouter history={history}>
+            <GridWithMargin>
+                <Header />
+                <Main>
+                    {errors.length > 0 || data!.error ? (
+                        errors.length > 0 ? (
+                            <Error errors={errors} status={status} />
+                        ) : (
+                            <Error errors={[data!.error as Error]} status={500} />
+                        )
+                    ) : (
+                        <Routes />
+                    )}
+                </Main>
+                <Footer />
+                <PoweredBy />
+            </GridWithMargin>
+        </ConnectedRouter>
+    </ThemeProvider>
+);
 
 const mapStateToProps = (state: RootState) => ({
     user: state.user,
     ...state.error
 });
 
-const mapDispatchToProps = dispatch => ({
-    logInUser: val => dispatch(LogInUser(val)),
+const mapDispatchToProps = (dispatch: Dispatch<{}>) => ({
+    logInUser: (val: string) => dispatch(LogInUser(val)),
     logOutUser: () => dispatch(LogOutUser())
 });
 
@@ -145,4 +90,42 @@ const query = gql`
     }
 `;
 
-export default compose<ComponentType<OwnProps>>(graphql(query), connect(mapStateToProps, mapDispatchToProps))(App);
+export default compose<SFC<OwnProps>>(
+    graphql(query),
+    renderLoader(),
+    connect(mapStateToProps, mapDispatchToProps),
+    lifecycle<FullProps, {}>({
+        componentWillMount() {
+            if (
+                !this.props.user.loggedIn &&
+                this.props.data!.aboutMe &&
+                this.props.data!.aboutMe!.id &&
+                this.props.user.hsid.length > 0
+            ) {
+                this.props.logInUser(this.props.user.hsid);
+            }
+
+            this.props.history.listen((location: Location) => {
+                const { state } = location;
+                if ((state && !state.keepPosition) || !state) {
+                    window.scrollTo(0, 0);
+                }
+            });
+        },
+        componentWillReceiveProps({ data, user }: FullProps) {
+            if (
+                !user.loggedIn &&
+                data!.aboutMe &&
+                data!.aboutMe!.id &&
+                this.props.data!.aboutMe !== data!.aboutMe &&
+                user.hsid.length > 0
+            ) {
+                this.props.logInUser(user.hsid);
+            }
+
+            if ((user.hsid || user.loggedIn) && (data!.error || data!.aboutMe === null)) {
+                this.props.logOutUser();
+            }
+        }
+    })
+)(App);

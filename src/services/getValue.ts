@@ -29,7 +29,7 @@ export function valueToString(value: Value, formatters: FormatterConfig): string
         case 'PERSON_NAMES':
             try {
                 return JSON.parse(value.value)
-                    .components.map(x => x.value)
+                    .components.map((x: { value: string }) => x.value)
                     .join(' ');
             } catch (e) {
                 console.error(e);

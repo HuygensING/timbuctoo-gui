@@ -35,7 +35,7 @@ const MaxWidth = css`
     padding-right: 1rem;
 `;
 
-const SearchTitle = styled(Subtitle)`
+const SearchTitle = Subtitle.withComponent('h1').extend`
     margin: 0;
     ${MaxWidth};
 `;
@@ -50,7 +50,7 @@ const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataSet
 
     return (
         <SearchItem>
-            <SearchTitle tag="h1">{title}</SearchTitle>
+            <SearchTitle>{title}</SearchTitle>
             <SearchDescription>{description}</SearchDescription>
             <ButtonLink to={url} data-small={true}>
                 {translate('search.view_entry')}

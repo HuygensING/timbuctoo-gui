@@ -5,8 +5,8 @@ import { Provider } from 'react-redux';
 import App from './components/App';
 import { configureStore } from './store';
 import globalStyling from './theme/globalStyling';
-import { createBrowserHistory } from 'history';
 import createClient from './services/createClient';
+import createBrowserHistory from 'history/createBrowserHistory';
 
 const history = createBrowserHistory();
 export const store = configureStore(history);

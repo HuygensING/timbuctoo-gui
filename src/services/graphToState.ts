@@ -1,5 +1,5 @@
 import { compose } from 'redux';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { lifecycle, shallowEqual } from 'recompose';
 import { graphToState, GraphToStateAction } from '../reducers/rootReducer';
 
@@ -17,7 +17,7 @@ type DispatchProps = {
  */
 export default <Props>(action: GraphToStateAction['type'], dataProp: keyof Props, dispatchOnUpdate: boolean = false) =>
     compose(
-        connect(null, dispatch => ({
+        connect(null, (dispatch: Dispatch<Props>) => ({
             graphToState: (payload: GraphToStateAction['payload']) => dispatch(graphToState(action, payload))
         })),
         lifecycle<Props & DispatchProps, {}>({

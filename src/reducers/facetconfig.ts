@@ -1,4 +1,4 @@
-import { FacetConfig } from '../typings/schema';
+import { CollectionMetadata, FacetConfig } from '../typings/schema';
 import { NormalizedFacetConfig, ReferencePath } from '../typings/index';
 import { arrayMove } from 'react-sortable-hoc';
 import { createReferencePath, mendPath } from '../services/walkPath';
@@ -114,10 +114,10 @@ const item = (
     }
 };
 
-const multipleItems = (facetConfigs: FacetConfig[], collectionId: string): NormalizedFacetConfig[] => {
+const multipleItems = ({ collectionId, indexConfig }: CollectionMetadata): NormalizedFacetConfig[] => {
     let items: NormalizedFacetConfig[] = [];
 
-    for (const facetConfig of facetConfigs) {
+    for (const facetConfig of indexConfig.facet) {
         items = [
             ...items,
             item(null, { type: 'ADD_FACET_CONFIG_ITEM', payload: { facetConfig, collectionId } }, items)
@@ -133,7 +133,7 @@ export default (state: FacetConfigReducer = defaultState, action: Action) => {
         case 'GRAPH_TO_FACETCONFIG':
             const metadata = action.payload.dataSetMetadata;
             if (metadata && metadata.collection && metadata.collection.indexConfig.facet.length) {
-                return multipleItems(metadata.collection.indexConfig.facet, metadata.collection.collectionId);
+                return multipleItems(metadata.collection);
             } else {
                 return state;
             }

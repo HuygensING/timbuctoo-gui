@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, SyntheticEvent } from 'react';
 import styled, { withProps } from '../../../styled-components';
-import onClickOutside from 'react-onclickoutside';
+
+import onClickOutside, { InjectedOnClickOutProps, OnClickOutProps } from 'react-onclickoutside';
 import { StandardStyledFormElements } from './Input';
 
 export interface OptionProps {
@@ -16,6 +17,8 @@ export interface SelectProps {
     disabled?: boolean;
     shownAsMultipleItems?: boolean;
 }
+
+export type FullProps = SelectProps & InjectedOnClickOutProps & OnClickOutProps;
 
 interface State {
     isOpen: boolean;
@@ -44,7 +47,7 @@ const SelectHiddenFieldInput = styled.select`
     }
 `;
 
-const Arrow = styled.figure`
+const Arrow = withProps<{ disabled?: boolean }>(styled.figure)`
     position: absolute;
     display: block;
     top: 50%;
@@ -127,8 +130,8 @@ const StyledOption = withProps<StyledOptionProps>(styled.button)`
     }
 `;
 
-class SelectField extends Component<SelectProps, State> {
-    constructor(props: SelectProps) {
+class SelectField extends Component<FullProps, State> {
+    constructor(props: FullProps) {
         super(props);
 
         this.state = {
@@ -199,12 +202,12 @@ class SelectField extends Component<SelectProps, State> {
         this.setNewOption(option);
     }
 
-    private onOptionChange = e => {
+    private onOptionChange = (e: SyntheticEvent<{ value: string }>) => {
         e.preventDefault();
 
         const option = {
-            key: e.target.value,
-            value: e.target.value
+            key: e.currentTarget.value,
+            value: e.currentTarget.value
         };
 
         this.setNewOption(option);
@@ -221,4 +224,4 @@ class SelectField extends Component<SelectProps, State> {
     }
 }
 
-export default onClickOutside(SelectField);
+export default onClickOutside<SelectProps>(SelectField);
