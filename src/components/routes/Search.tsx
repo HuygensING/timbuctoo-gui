@@ -19,6 +19,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import renderLoader from '../../services/renderLoader';
 import { ChildProps } from 'react-apollo';
 import handleError from '../../services/handleError';
+import ensureExistence from '../../services/ensureExistence';
 
 type FullProps = ChildProps<
     MetaDataProps & RouteComponentProps<{ dataSet: string; collection: string }>,
@@ -87,8 +88,13 @@ const dataResolver = compose<ComponentType<{}>>(
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
     handleError('metadata'),
+    ensureExistence('dataSetMetadata.collection', 'metadata'),
     graphqlWithProps<FullProps>(QUERY_COLLECTION_VALUES),
     renderLoader(),
+    ensureExistence<FullProps>(
+        props =>
+            `dataSets.${props.match.params.dataSet}.${props.metadata.dataSetMetadata!.collection!.collectionListId}`
+    ),
     handleError()
 );
 

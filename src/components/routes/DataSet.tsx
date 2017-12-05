@@ -21,6 +21,7 @@ import { withRouter } from 'react-router';
 import { compose } from 'redux';
 import renderLoader from '../../services/renderLoader';
 import handleError from '../../services/handleError';
+import ensureExistence from '../../services/ensureExistence';
 
 interface StateProps {
     loggedIn: boolean;
@@ -110,5 +111,6 @@ export default compose<ComponentType<{}>>(
     metaDataResolver(QUERY_DATASET),
     renderLoader('metadata'),
     handleError('metadata'),
+    ensureExistence('dataSetMetadata', 'metadata'),
     connect(mapStateToProps)
 )(DataSet);

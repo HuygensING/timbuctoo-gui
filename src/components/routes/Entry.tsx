@@ -10,7 +10,6 @@ import {
     Props as EntryValuesProps,
     QUERY_ENTRY_VALUES
 } from '../../graphql/queries/EntryValues';
-import NotFound from './NotFound';
 import { safeGet } from '../../services/GetDataSetValues';
 import metaDataResolver from '../../services/metaDataResolver';
 import { compose } from 'redux';
@@ -19,29 +18,21 @@ import { withRouter } from 'react-router';
 import renderLoader from '../../services/renderLoader';
 import { ChildProps } from 'react-apollo';
 import handleError from '../../services/handleError';
+import ensureExistence from '../../services/ensureExistence';
 
 type FullProps = ChildProps<EntryPropertiesProps & EntryValuesProps, { dataSets: DataSetMetadata }>;
 
 const Entry: SFC<FullProps> = (props: FullProps) => {
-    if (!props.metadata.dataSetMetadata) {
-        return <NotFound />;
-    }
-    const { collection, collectionList } = props.metadata.dataSetMetadata;
-    if (!collection) {
-        return <NotFound />;
-    }
+    const { collection, collectionList } = props.metadata.dataSetMetadata!;
 
     const idPerUri: { [key: string]: string | undefined } = {};
     collectionList.items.map(coll => (idPerUri[coll.itemType] = coll.collectionId));
     const componentConfigs =
-        collection.viewConfig.length > 0
-            ? collection.viewConfig
-            : makeDefaultViewConfig(collection.properties.items, collection.summaryProperties, collectionList.items);
+        collection!.viewConfig.length > 0
+            ? collection!.viewConfig
+            : makeDefaultViewConfig(collection!.properties.items, collection!.summaryProperties, collectionList.items);
 
     const entry = safeGet(safeGet(props.data!.dataSets, props.match.params.dataSet), props.match.params.collection);
-    if (!entry) {
-        return <NotFound />;
-    }
 
     return (
         <section>
@@ -68,9 +59,11 @@ const dataResolver = compose<SFC<{}>>(
     metaDataResolver<FullProps>(QUERY_ENTRY_PROPERTIES),
     renderLoader('metadata'),
     handleError('metadata'),
+    ensureExistence('dataSetMetadata', 'metadata'),
     graphqlWithProps<FullProps>(QUERY_ENTRY_VALUES),
     renderLoader(),
-    handleError()
+    handleError(),
+    ensureExistence('dataSetMetadata.collection', 'metadata')
 );
 
 export default dataResolver(Entry);
