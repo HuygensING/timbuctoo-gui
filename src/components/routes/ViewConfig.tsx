@@ -46,7 +46,7 @@ const ViewConfig: SFC<GraphProps> = props => {
 
         return props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, viewConfig } })
             .then(data => alert(`The collection ${collection!.collectionId} has been updated`)) // TODO: This also should be something fancy
-            .catch(err => console.error('there was an error sending the query', err));
+            .catch((err: Error) => console.error('there was an error sending the query', err));
     };
 
     return (
@@ -76,7 +76,7 @@ export default compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
-    ensureExistence('dataSetMetadata.collection', 'metadata'),
+    ensureExistence<FullProps>('dataSetMetadata.collection', 'metadata'),
     handleError('metadata'),
     connect(mapStateToProps),
     graphql(submitViewConfig),

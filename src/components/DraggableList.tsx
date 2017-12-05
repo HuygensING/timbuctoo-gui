@@ -27,13 +27,7 @@ const DragHandle = SortableHandle(DraggableIcon);
 const DraggableElement = SortableElement(Accordeon);
 
 class DraggableList extends PureComponent<Props> {
-    constructor() {
-        super();
-
-        this.renderListItem = this.renderListItem.bind(this);
-    }
-
-    renderListItem(listItem: any, idx: number) {
+    renderListItem = (listItem: any, idx: number) => {
         const { componentType, componentProps, configType } = this.props;
 
         if (componentType === DRAGGABLE_COMPONENTS.accordeon) {
@@ -52,7 +46,7 @@ class DraggableList extends PureComponent<Props> {
         }
 
         return null;
-    }
+    };
 
     render() {
         const { listItems } = this.props;

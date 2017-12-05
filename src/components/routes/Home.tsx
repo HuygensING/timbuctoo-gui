@@ -1,4 +1,5 @@
-import React, { Component, ComponentType } from 'react';
+import React, { SFC } from 'react';
+import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import FullHelmet from '../FullHelmet';
 import { graphql } from 'react-apollo';
@@ -14,9 +15,11 @@ import { AboutMe, DataSetMetadata } from '../../typings/schema';
 import translate from '../../services/translate';
 import { getValue } from '../../services/getValue';
 import { UserReducer } from '../../reducers/user';
-import { compose } from 'redux';
-import renderLoader from '../../services/renderLoader';
 import handleError from '../../services/handleError';
+import { compose } from 'redux';
+import { RootState } from '../../reducers/rootReducer';
+import { withProps } from 'recompose';
+import renderLoader from '../../services/renderLoader';
 
 interface ApolloProps {
     data: {
@@ -29,85 +32,54 @@ interface StateProps {
     user: UserReducer;
 }
 
-interface State {}
+type FullProps = StateProps & ApolloProps & { firstSet: string | null } & RouteComponentProps<any>;
 
-type FullProps = StateProps & ApolloProps;
+const Home: SFC<FullProps> = ({ data: { promotedDataSets, aboutMe }, user, firstSet }) => {
+    return (
+        <Grid>
+            <FullHelmet pageName="home" />
+            <Hero
+                title={translate('home.hero.title')}
+                content={translate('home.hero.content')}
+                searchPath={firstSet}
+                buttonText={translate('home.hero.button')}
+                imgUrl={null}
+            />
 
-class Home extends Component<FullProps, State> {
-    renderFeatured(promoted: DataSetMetadata[]) {
-        return (
-            <GridSection title={translate('home.featured.title')} cols={5} colSizeOffset={2}>
-                {this.renderFeaturedItems(promoted)}
-            </GridSection>
-        );
-    }
+            {promotedDataSets && (
+                <GridSection title={translate('home.featured.title')} cols={5} colSizeOffset={2}>
+                    {promotedDataSets.map((props, idx: number) => (
+                        <FeaturedContentBlock key={idx} {...props} {...user} />
+                    ))}
+                </GridSection>
+            )}
 
-    renderFeaturedItems(promoted: DataSetMetadata[]) {
-        if (!promoted.length) {
-            return <div>Loading</div>;
-        }
-        return promoted.map((props, idx: number) => <FeaturedContentBlock key={idx} {...props} {...this.props.user} />);
-    }
+            <ListContent
+                smOffset={3}
+                sm={20}
+                smPaddingY={1}
+                title={translate('home.recently_modified.title')}
+                data={promotedDataSets}
+            />
+            <ListContent
+                smOffset={2}
+                sm={20}
+                smPaddingY={1}
+                title={translate('home.most_popular.title')}
+                data={promotedDataSets}
+            />
 
-    render() {
-        const { promotedDataSets, aboutMe } = this.props.data;
-
-        const heroDataSetPath: string | null = this.selectFirstSet();
-        return (
-            <Grid>
-                <FullHelmet pageName="home" />
-                <Hero
-                    title={translate('home.hero.title')}
-                    content={translate('home.hero.content')}
-                    searchPath={heroDataSetPath}
-                    buttonText={translate('home.hero.button')}
-                    imgUrl={null}
-                />
-
-                {promotedDataSets && this.renderFeatured(promotedDataSets)}
-
-                <ListContent
-                    smOffset={3}
-                    sm={20}
-                    smPaddingY={1}
-                    title={translate('home.recently_modified.title')}
-                    data={promotedDataSets}
-                />
-                <ListContent
-                    smOffset={2}
-                    sm={20}
-                    smPaddingY={1}
-                    title={translate('home.most_popular.title')}
-                    data={promotedDataSets}
-                />
-
-                <Col sm={48}>
-                    {aboutMe && (
-                        <About
-                            title={aboutMe ? getValue(aboutMe.name) : null}
-                            body={aboutMe ? getValue(aboutMe.personalInfo) : null}
-                        />
-                    )}
-                </Col>
-            </Grid>
-        );
-    }
-
-    private selectFirstSet() {
-        const { promotedDataSets } = this.props.data;
-
-        if (promotedDataSets && promotedDataSets.length > 0) {
-            const set = promotedDataSets[0];
-
-            if (set.collectionList && set.collectionList.items.length > 0) {
-                const collection = set.collectionList.items[0];
-                return `${ROUTE_PATHS.search}/${set.dataSetId}/${collection.collectionId}`;
-            }
-        }
-
-        return null;
-    }
-}
+            <Col sm={48}>
+                {aboutMe && (
+                    <About
+                        title={aboutMe ? getValue(aboutMe.name) : null}
+                        body={aboutMe ? getValue(aboutMe.personalInfo) : null}
+                    />
+                )}
+            </Col>
+        </Grid>
+    );
+};
 
 const query = gql`
     query Home {
@@ -131,10 +103,30 @@ const query = gql`
     }
 `;
 
-const mapStateToProps = state => ({
+const selectFirstSet = ({ data: { promotedDataSets } }: FullProps) => {
+    let firstSet: string | null = null;
+
+    if (promotedDataSets && promotedDataSets.length > 0) {
+        const set = promotedDataSets[0];
+
+        if (set.collectionList && set.collectionList.items.length > 0) {
+            firstSet = `${ROUTE_PATHS.search}/${set.dataSetId}/${set.collectionList.items[0].collectionId}`;
+        }
+    }
+
+    return {
+        firstSet: firstSet || null
+    };
+};
+
+const mapStateToProps = (state: RootState) => ({
     user: state.user
 });
 
-export default compose<ComponentType<{}>>(graphql(query), renderLoader(), handleError(), connect(mapStateToProps))(
-    Home
-);
+export default compose<SFC<{}>>(
+    graphql(query),
+    renderLoader(),
+    handleError(),
+    withProps(selectFirstSet),
+    connect(mapStateToProps)
+)(Home);

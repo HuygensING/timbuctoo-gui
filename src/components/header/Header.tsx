@@ -1,15 +1,17 @@
 import React, { SFC } from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import styled from '../../styled-components';
+import styled, { withProps } from '../../styled-components';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import { LogOutUser, UserReducer } from '../../reducers/user';
-import CreateElementWithTag from '../../services/CreateElementWithTag';
 import AccountMenu from './AccountMenu';
+import { RootState } from '../../reducers/rootReducer';
+import { compose } from 'redux';
+import { HEADER_HEIGHT } from '../../constants/global';
 
 const logo = require('../../assets/logo-timbuctoo.svg');
 
-const StyledHeader = styled((props: { height: string }) => CreateElementWithTag(props, 'header'))`
+const StyledHeader = withProps<{ height: string }>(styled.header)`
     border-top: 0.5rem solid ${props => props.theme.colors.primary.medium};
     width: 100vw;
     padding: 0.5rem;
@@ -32,14 +34,13 @@ const StyledImg = styled.img`
 `;
 
 interface Props {
-    height: string;
     user: UserReducer;
     onLogOut: () => void;
 }
 
-const Header: SFC<Props> = ({ user, onLogOut, height }) => {
+const Header: SFC<Props> = ({ user, onLogOut }) => {
     return (
-        <StyledHeader height={height}>
+        <StyledHeader height={HEADER_HEIGHT}>
             <StyledLink to={ROUTE_PATHS.root}>
                 <StyledImg src={logo} alt="timbuctoo" />
             </StyledLink>
@@ -48,11 +49,12 @@ const Header: SFC<Props> = ({ user, onLogOut, height }) => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
     user: state.user
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: Dispatch<Props>) => ({
     onLogOut: () => dispatch(LogOutUser())
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+
+export default compose<SFC<{}>>(connect(mapStateToProps, mapDispatchToProps))(Header);

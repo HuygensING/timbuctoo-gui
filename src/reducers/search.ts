@@ -72,7 +72,7 @@ const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] =>
         };
     });
 
-const setNewSelected = (newFilters: EsFilter[], key: string, valueName: string) => {
+const setNewSelected = (newFilters: EsFilter[], key: string, valueName: string): void => {
     newFilters.forEach((newFilter, filterIdx) => {
         newFilter.paths.forEach(path => {
             if (path === key) {
@@ -89,24 +89,26 @@ const setNewSelected = (newFilters: EsFilter[], key: string, valueName: string) 
     });
 };
 
-export const mergeOldSelected = (newFilters: EsFilter[], location: Location) => {
+export const mergeOldSelected = (newFilters: EsFilter[], location: Location): void => {
     const { search } = queryString.parse(location.search.substring(1));
 
     if (search) {
-        const searchObj = JSON.parse(search);
+        const searchObj = JSON.parse(search as string);
 
         if (searchObj.bool.must.length > 0) {
-            searchObj.bool.must.forEach(matches => {
-                if (!matches.bool || !matches.bool.should) {
-                    return;
-                }
+            searchObj.bool.must.forEach(
+                (matches: { bool: { should: [{ match: { [key: string]: string } }] } | undefined }) => {
+                    if (!matches.bool || !matches.bool.should) {
+                        return;
+                    }
 
-                matches.bool.should.forEach(obj => {
-                    const key = Object.keys(obj.match)[0];
-                    const value = obj.match[key];
-                    return setNewSelected(newFilters, key.slice(0, -4), value);
-                });
-            });
+                    matches.bool.should.forEach(obj => {
+                        const key = Object.keys(obj.match)[0];
+                        const value = obj.match[key];
+                        return setNewSelected(newFilters, key.slice(0, -4), value);
+                    });
+                }
+            );
         }
     }
 };
@@ -182,7 +184,7 @@ export const mergeFilters = (facetConfigs: FacetConfig[], facetValues: Facet[], 
     };
 };
 
-export const toggleFilter = (index, value: string, oldFilters: EsFilter[]) => {
+export const toggleFilter = (index: number, value: string, oldFilters: EsFilter[]) => {
     const toggledFilter = toggleFilterItem(index, value, oldFilters);
 
     const filters = oldFilters.slice();

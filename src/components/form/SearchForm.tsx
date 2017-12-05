@@ -1,18 +1,12 @@
 import React, { SFC } from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import translate from '../../services/translate';
 import { Col, Grid } from '../layout/Grid';
 import { requestCall, SearchReducer, submitSearch } from '../../reducers/search';
 import InputField from './fields/Input';
 import { ResetButton, SubmitButton } from './fields/Buttons';
-
-const mapStateToProps = state => ({
-    defaultValues: state.search
-});
-const mapDispatchToProps = dispatch => ({
-    handleChange: (key, value) => dispatch(submitSearch(key, value)),
-    requestSearch: () => dispatch(requestCall())
-});
+import { compose } from 'redux';
+import { RootState } from '../../reducers/rootReducer';
 
 interface Props {
     type: 'dataset' | 'collection' | 'filter';
@@ -54,7 +48,7 @@ const SearchForm: SFC<Props & StoreProps> = ({ defaultValues, type, handleChange
                         type={'text'}
                         value={defaultValues.fullText[type]}
                         onChange={onChange}
-                        placeholder={translate('search.placeholder')}
+                        placeholder={translate('search.placeholder') || undefined}
                     />
                     {!pristine && (
                         <ResetButton type={'button'} onClick={onReset}>
@@ -70,4 +64,12 @@ const SearchForm: SFC<Props & StoreProps> = ({ defaultValues, type, handleChange
     );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchForm);
+const mapStateToProps = (state: RootState) => ({
+    defaultValues: state.search
+});
+const mapDispatchToProps = (dispatch: Dispatch<Props>) => ({
+    handleChange: (key: 'fullText' | 'filters' | 'callRequested', value: string) => dispatch(submitSearch(key, value)),
+    requestSearch: () => dispatch(requestCall())
+});
+
+export default compose<SFC<Props>>(connect(mapStateToProps, mapDispatchToProps))(SearchForm);

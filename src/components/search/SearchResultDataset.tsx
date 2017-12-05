@@ -16,6 +16,8 @@ export interface ResultDataSetMetadata {
     collections: CollectionMetadataList;
 }
 
+const Sub = Subtitle.withComponent('h1');
+
 const SearchItem = styled.section``;
 
 const CollectionList = styled.ul`
@@ -47,7 +49,7 @@ const SearchResulDataset = (props: ResultDataSetMetadata) => {
     return (
         <SearchItem>
             <Image src={imageSrc} ratio={4 / 2} />
-            <Subtitle tag="h1">{title}</Subtitle>
+            <Sub>{title}</Sub>
             <CollectionList>{renderCollections()}</CollectionList>
             <Content>{description}</Content>
             <ButtonLink to="/" data-small={true}>

@@ -10,7 +10,8 @@ import { FacetConfig } from '../typings/schema';
 
 export const HSID: string = 'hsid';
 
-export const CONTAINER_PADDING = 1.5;
+export const CONTAINER_PADDING: number = 1.5;
+export const HEADER_HEIGHT: string = '4rem';
 
 export const RDF_TYPE: string = 'rdf_type';
 export const VALUE: string = 'value';

@@ -16,7 +16,7 @@ const ProgressLabel = styled(Label)`
     margin-right: 1rem;
 `;
 
-const Bar = styled.figure`
+const Bar = withProps<{ width?: string }>(styled.figure)`
     position: relative;
     display: inline-block;
     overflow: hidden;
@@ -44,7 +44,7 @@ const Progress = withProps<Props>(styled.figure)`
 
 interface Props {
     label?: string;
-    width?: number | string;
+    width?: string;
     progress?: number;
     filter?: string[];
 }

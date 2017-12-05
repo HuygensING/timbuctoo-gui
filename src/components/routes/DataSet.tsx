@@ -21,6 +21,7 @@ import { withRouter } from 'react-router';
 import { compose } from 'redux';
 import renderLoader from '../../services/renderLoader';
 import handleError from '../../services/handleError';
+import { RootState } from '../../reducers/rootReducer';
 import ensureExistence from '../../services/ensureExistence';
 
 interface StateProps {
@@ -102,7 +103,7 @@ class DataSet extends PureComponent<Props> {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
     loggedIn: state.user.loggedIn
 });
 
@@ -111,6 +112,6 @@ export default compose<ComponentType<{}>>(
     metaDataResolver(QUERY_DATASET),
     renderLoader('metadata'),
     handleError('metadata'),
-    ensureExistence('dataSetMetadata', 'metadata'),
+    ensureExistence<Props>('dataSetMetadata', 'metadata'),
     connect(mapStateToProps)
 )(DataSet);

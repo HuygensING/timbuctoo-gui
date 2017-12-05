@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { Location } from 'history';
 import { Facet, FacetConfig } from '../typings/schema';
 import { EsFilter, FullTextSearch, mergeFilters } from '../reducers/search';
@@ -12,6 +12,7 @@ import { Title } from './layout/StyledCopy';
 import MultiSelectForm from './form/MultiselectForm';
 import translate from '../services/translate';
 import { Dummy } from './Dummy';
+import { compose } from 'redux';
 
 // TODO: this is just a simple loading effect, should be way cooler
 const StyledForm = withProps<{ loading: boolean }>(styled.form)`
@@ -103,9 +104,9 @@ const mapStateToProps = (state: RootState) => ({
     callRequested: state.search.callRequested
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: Dispatch<FullProps>) => ({
     mergeFilter: (config: FacetConfig[], options: Facet[], location: Location) =>
         dispatch(mergeFilters(config, options, location))
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Filters));
+export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(Filters);
