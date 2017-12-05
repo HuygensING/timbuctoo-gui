@@ -91,11 +91,11 @@ const dataResolver = compose<ComponentType<{}>>(
     ensureExistence<FullProps>('dataSetMetadata.collection', 'metadata'),
     graphqlWithProps<FullProps>(QUERY_COLLECTION_VALUES),
     renderLoader(),
+    handleError(),
     ensureExistence<FullProps>(
         props =>
             `dataSets.${props.match.params.dataSet}.${props.metadata.dataSetMetadata!.collection!.collectionListId}`
-    ),
-    handleError()
+    )
 );
 
 export default dataResolver(Search);

@@ -76,8 +76,8 @@ export default compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
-    ensureExistence<FullProps>('dataSetMetadata.collection', 'metadata'),
     handleError('metadata'),
+    ensureExistence<FullProps>('dataSetMetadata.collection', 'metadata'),
     connect(mapStateToProps),
     graphql(submitViewConfig),
     graphToState<FullProps>('GRAPH_TO_VIEWCONFIG', 'metadata', false)
