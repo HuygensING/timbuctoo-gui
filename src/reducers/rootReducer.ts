@@ -1,9 +1,10 @@
-import { combineReducers } from 'redux';
+import { combineReducers, Reducer } from 'redux';
 import user, { UserReducer } from './user';
 import search, { SearchReducer } from './search';
 import viewconfig, { GraphToViewConfigAction, ViewConfigReducer } from './viewconfig';
 import facetconfig, { FacetConfigReducer, GraphToFacetConfigAction } from './facetconfig';
 import error, { ErrorReducer } from './error';
+import { routerReducer, RouterState } from 'react-router-redux';
 
 export type GraphToStateAction = GraphToFacetConfigAction | GraphToViewConfigAction;
 
@@ -18,6 +19,7 @@ export interface RootState {
     viewconfig: ViewConfigReducer;
     facetconfig: FacetConfigReducer;
     error: ErrorReducer;
+    routing: Reducer<RouterState>;
 }
 
 export default combineReducers<RootState>({
@@ -25,5 +27,6 @@ export default combineReducers<RootState>({
     search,
     viewconfig,
     facetconfig,
-    error
+    error,
+    routing: routerReducer
 });

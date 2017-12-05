@@ -1,5 +1,4 @@
 import React, { SFC } from 'react';
-import { Router } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
 
 import { graphql, ChildProps } from 'react-apollo';
@@ -22,6 +21,7 @@ import { ErrorReducer } from '../reducers/error';
 import renderLoader from '../services/renderLoader';
 import { lifecycle } from 'recompose';
 import gql from 'graphql-tag';
+import { ConnectedRouter } from 'react-router-redux';
 
 const GridWithMargin = styled(Grid)`
     padding-top: ${HEADER_HEIGHT};
@@ -51,7 +51,7 @@ type FullProps = ChildProps<OwnProps & DispatchProps & StateProps, { aboutMe: Ab
 
 const App: SFC<FullProps> = ({ errors, status, data, history }) => (
     <ThemeProvider theme={theme}>
-        <Router history={history}>
+        <ConnectedRouter history={history}>
             <GridWithMargin>
                 <Header />
                 <Main>
@@ -68,7 +68,7 @@ const App: SFC<FullProps> = ({ errors, status, data, history }) => (
                 <Footer />
                 <PoweredBy />
             </GridWithMargin>
-        </Router>
+        </ConnectedRouter>
     </ThemeProvider>
 );
 
