@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import { lifecycle, shallowEqual } from 'recompose';
 import { graphToState, GraphToStateAction } from '../reducers/rootReducer';
 
+type DispatchProps = {
+    graphToState: (payload: any) => void;
+};
+
 /**
  * A simple HoC that can be bound around a component that's wrapped with `react-apollo`'s `graphql`.
  * This will a) allow us to keep using functional components and b) cut down on boilerplate code like connecting the reducer, and dispatching data to the state once it's ready.
@@ -13,15 +17,20 @@ import { graphToState, GraphToStateAction } from '../reducers/rootReducer';
  */
 export default <Props>(action: GraphToStateAction['type'], dataProp: keyof Props, dispatchOnUpdate: boolean = false) =>
     compose(
-        connect(null, dispatch => ({ graphToState: (payload: any) => dispatch(graphToState(action, payload)) })),
-        lifecycle({
+        connect(null, dispatch => ({
+            graphToState: (payload: GraphToStateAction['payload']) => dispatch(graphToState(action, payload))
+        })),
+        lifecycle<Props & DispatchProps, {}>({
             componentWillMount() {
                 this.props.graphToState(this.props[dataProp]);
             },
             ...dispatchOnUpdate
                 ? {
                       componentWillReceiveProps(nextProps: Props) {
-                          if (dataProp in nextProps && !shallowEqual(nextProps[dataProp], this.props[dataProp])) {
+                          if (
+                              dataProp in nextProps &&
+                              !shallowEqual(nextProps[dataProp] as any, this.props[dataProp])
+                          ) {
                               this.props.graphToState(nextProps[dataProp]);
                           }
                       }

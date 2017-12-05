@@ -3,7 +3,7 @@ import user, { UserReducer } from './user';
 import search, { SearchReducer } from './search';
 import viewconfig, { GraphToViewConfigAction, ViewConfigReducer } from './viewconfig';
 import facetconfig, { FacetConfigReducer, GraphToFacetConfigAction } from './facetconfig';
-import Client from '../services/ApolloClient';
+import error, { ErrorReducer } from './error';
 
 export type GraphToStateAction = GraphToFacetConfigAction | GraphToViewConfigAction;
 
@@ -17,6 +17,7 @@ export interface RootState {
     search: SearchReducer;
     viewconfig: ViewConfigReducer;
     facetconfig: FacetConfigReducer;
+    error: ErrorReducer;
 }
 
 export default combineReducers<RootState>({
@@ -24,5 +25,5 @@ export default combineReducers<RootState>({
     search,
     viewconfig,
     facetconfig,
-    apollo: Client.reducer()
+    error
 });

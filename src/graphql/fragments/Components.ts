@@ -1,4 +1,4 @@
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 function generateComponentsNest(depth: number, maxDepth?: number) {
     if (maxDepth === undefined) {

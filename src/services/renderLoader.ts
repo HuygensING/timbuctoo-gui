@@ -1,4 +1,4 @@
 import Loading from '../components/Loading';
 import { branch, renderComponent } from 'recompose';
 
-export default (dataProp: string = 'data') => branch(props => props[dataProp].loading, renderComponent(Loading));
+export default <T>(dataProp: string = 'data') => branch<T>(props => props[dataProp].loading, renderComponent(Loading));

@@ -1,4 +1,4 @@
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { collectionPropertiesReference, CollectionPropertiesReference } from '../fragments/Metadata';
 import { componentsFragment, ComponentsFragment } from '../fragments/Components';
 import { checkTypes, Query } from '../../typings/schema';
