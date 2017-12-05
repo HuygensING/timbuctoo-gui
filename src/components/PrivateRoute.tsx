@@ -1,4 +1,4 @@
-import React, { SFC } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import { ROUTE_PATHS } from '../constants/routeNaming';
@@ -15,19 +15,17 @@ interface StateProps {
 
 type FullProps = StateProps & RouteProps;
 
-const PrivateRoute: SFC<FullProps> = props => {
-    const { component, loggedIn, ...rest } = props;
+const PrivateRoute = ({ component, loggedIn, ...rest }: FullProps) => {
     const Comp = component!;
 
-    return (
-        <Route>
-            {loggedIn ? (
-                <Comp {...rest} />
-            ) : (
-                <Redirect to={{ pathname: ROUTE_PATHS.root, state: { from: props.location } }} />
-            )}
-        </Route>
-    );
+    const renderRoute = (props: RouteProps) =>
+        loggedIn ? (
+            <Comp {...props} />
+        ) : (
+            <Redirect to={{ pathname: ROUTE_PATHS.root, state: { from: props.location } }} />
+        );
+
+    return <Route render={renderRoute} {...rest} />;
 };
 
 export default connect(mapStateToProps)(PrivateRoute);
