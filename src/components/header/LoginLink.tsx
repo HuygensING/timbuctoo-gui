@@ -9,7 +9,7 @@ const Button = styled.button`
     ${MenuButtonStyle};
 `;
 
-const value: string = window.location.href + window.location.pathname.substr(1);
+const value: string = window.location.href;
 
 const LoginLink = () => (
     <form action={LOGIN_URL} method="POST">
