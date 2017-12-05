@@ -69,7 +69,6 @@
     "@types/recompose": "^0.24.3",
     "@types/webpack-env": "^1.13.2",
     "check-dependencies": "^1.1.0",
-    "graphql-to-typescript": "^0.1.2",
     "husky": "^0.14.3",
     "lint-staged": "^5.0.0",
     "prettier": "1.8.2",

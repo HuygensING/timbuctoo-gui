@@ -109,8 +109,6 @@ function componentPathsToMap(paths: string[], dataSetId: string): KeyValueRecurs
 
         const segments = splitPath(path) as string[][];
 
-        console.log(segments);
-
         if (!segments.length) {
             return result;
         }
