@@ -20,6 +20,6 @@ const LoadingView = styled(Logo)`
     margin-left: -2.5rem;
 `;
 
-const Loading: SFC<Props> = () => <LoadingView color={theme.colors.shade.dark} width={'80px'} height={'8px'} />;
+const Loading: SFC<Props> = () => <LoadingView color={theme.colors.shade.dark} width={'80px'} height={'80px'} />;
 
 export default Loading;
