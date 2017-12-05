@@ -110,7 +110,7 @@ const selectFirstSet = ({ data: { promotedDataSets } }: FullProps) => {
         const set = promotedDataSets[0];
 
         if (set.collectionList && set.collectionList.items.length > 0) {
-            firstSet = `${ROUTE_PATHS.search}/${set.dataSetId}/${set.collectionList.items[0].collectionId}`;
+            firstSet = `/${ROUTE_PATHS.search}/${set.dataSetId}/${set.collectionList.items[0].collectionId}`;
         }
     }
 

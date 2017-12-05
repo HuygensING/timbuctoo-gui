@@ -18,7 +18,7 @@ const FeaturedContentBlock = ({ imageUrl, title, description, dataSetId }: DataS
 
     return (
         <section>
-            <Link to={`${ROUTE_PATHS.details}/${dataSetId}`}>
+            <Link to={`/${ROUTE_PATHS.details}/${dataSetId}`}>
                 {imageUrlField && <Image src={imageUrlField} ratio={1} />}
                 {titleField && <Subtitle>{titleField}</Subtitle>}
                 {descrField && <Content>{descrField.substr(0, 100)}...</Content>}

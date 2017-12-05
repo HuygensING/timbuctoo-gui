@@ -2,10 +2,10 @@ import { KeyValueObject } from '../typings';
 
 const ROUTE_PATHS: KeyValueObject = {
     root: '/',
-    search: '/search',
-    details: '/details',
-    account: '/account',
-    edit: '/edit'
+    search: 'search',
+    details: 'details',
+    account: 'account',
+    edit: 'edit'
 };
 
 const SUB_ROUTES = {
