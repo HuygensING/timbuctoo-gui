@@ -88,7 +88,7 @@ const dataResolver = compose<ComponentType<{}>>(
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
     handleError('metadata'),
-    ensureExistence('dataSetMetadata.collection', 'metadata'),
+    ensureExistence<FullProps>('dataSetMetadata.collection', 'metadata'),
     graphqlWithProps<FullProps>(QUERY_COLLECTION_VALUES),
     renderLoader(),
     ensureExistence<FullProps>(

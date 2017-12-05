@@ -11,7 +11,10 @@ interface SinkProps {
     notFound: () => void;
 }
 
-export default <TProps>(path: string | ((props: TProps) => string), dataProp: string = 'data') => {
+export default <TProps>(
+    path: string | ((props: TProps) => string),
+    dataProp: keyof TProps = 'data' as keyof TProps
+) => {
     const getPath = (props: TProps) => (typeof path === 'string' ? path : path(props));
 
     const enhance = compose<TProps, TProps & SinkProps>(
@@ -27,5 +30,5 @@ export default <TProps>(path: string | ((props: TProps) => string), dataProp: st
 
     const sink = enhance(createSink(({ notFound }: SinkProps) => notFound()));
 
-    return branch<TProps>(props => !get(props[dataProp], getPath(props)), renderComponent(sink));
+    return branch<TProps>((props: TProps) => !get(props[dataProp], getPath(props)), renderComponent(sink));
 };

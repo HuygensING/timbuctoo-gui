@@ -60,7 +60,7 @@ export default compose<SFC<{}>>(
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
     handleError('metadata'),
-    ensureExistence('dataSetMetadata.collection', 'metadata'),
+    ensureExistence<FullProps>('dataSetMetadata.collection', 'metadata'),
     connect(mapStateToProps),
     graphToState<FullProps>('GRAPH_TO_FACETCONFIG', 'metadata', false)
 )(FacetConfig);

@@ -59,11 +59,11 @@ const dataResolver = compose<SFC<{}>>(
     metaDataResolver<FullProps>(QUERY_ENTRY_PROPERTIES),
     renderLoader('metadata'),
     handleError('metadata'),
-    ensureExistence('dataSetMetadata', 'metadata'),
+    ensureExistence<FullProps>('dataSetMetadata', 'metadata'),
     graphqlWithProps<FullProps>(QUERY_ENTRY_VALUES),
     renderLoader(),
     handleError(),
-    ensureExistence('dataSetMetadata.collection', 'metadata')
+    ensureExistence<FullProps>('dataSetMetadata.collection', 'metadata')
 );
 
 export default dataResolver(Entry);
