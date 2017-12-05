@@ -93,7 +93,7 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location): vo
     const { search } = queryString.parse(location.search.substring(1));
 
     if (search) {
-        const searchObj = JSON.parse(search);
+        const searchObj = JSON.parse(search as string);
 
         if (searchObj.bool.must.length > 0) {
             searchObj.bool.must.forEach(

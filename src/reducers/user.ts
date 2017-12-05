@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import retrieveId from '../services/RetrieveId';
 import { HSID } from '../constants/global';
-import Client from '../services/ApolloClient';
+import { client } from '../index';
 
 export interface UserReducer {
     hsid: Readonly<string>;
@@ -75,7 +75,7 @@ export const LogInUser = (auth: string): LoginAction => {
 
 export const LogOutUser = (): LogoutAction => {
     Cookies.remove(HSID);
-    Client.resetStore();
+    client.resetStore();
 
     return {
         type: 'LOG_OUT'

@@ -2,11 +2,9 @@ import React, { SFC } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import FullHelmet from '../FullHelmet';
-
-import { graphql, gql } from 'react-apollo';
-
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { Col, Grid } from '../layout/Grid';
-
 import Hero from '../hero/Hero';
 import ListContent from '../lists/ListContent';
 import GridSection from '../layout/GridSection';
@@ -14,10 +12,10 @@ import FeaturedContentBlock from '../featured/FeaturedContentBlock';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import About from '../About';
 import { AboutMe, DataSetMetadata } from '../../typings/schema';
-
 import translate from '../../services/translate';
 import { getValue } from '../../services/getValue';
 import { UserReducer } from '../../reducers/user';
+import handleError from '../../services/handleError';
 import { compose } from 'redux';
 import { RootState } from '../../reducers/rootReducer';
 import { withProps } from 'recompose';
@@ -30,11 +28,11 @@ interface ApolloProps {
     };
 }
 
-interface Props {
+interface StateProps {
     user: UserReducer;
 }
 
-type FullProps = Props & ApolloProps & { firstSet: string | null } & RouteComponentProps<any>;
+type FullProps = StateProps & ApolloProps & { firstSet: string | null } & RouteComponentProps<any>;
 
 const Home: SFC<FullProps> = ({ data: { promotedDataSets, aboutMe }, user, firstSet }) => {
     return (
@@ -125,6 +123,10 @@ const mapStateToProps = (state: RootState) => ({
     user: state.user
 });
 
-export default compose<SFC<{}>>(graphql(query), renderLoader(), withProps(selectFirstSet), connect(mapStateToProps))(
-    Home
-);
+export default compose<SFC<{}>>(
+    graphql(query),
+    renderLoader(),
+    handleError(),
+    withProps(selectFirstSet),
+    connect(mapStateToProps)
+)(Home);

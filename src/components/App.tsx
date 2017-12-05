@@ -2,25 +2,26 @@ import React, { SFC } from 'react';
 import { Router } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
 
-import { graphql, gql } from 'react-apollo';
+import { graphql, ChildProps } from 'react-apollo';
 
 import Routes from './Routes';
 import { default as styled, ThemeProvider } from 'styled-components';
 import theme from '../theme';
-
 import Header from './header/Header';
 import Footer from './footer/Footer';
 import PoweredBy from './PoweredBy';
 import { Grid } from './layout/Grid';
 import { AboutMe } from '../typings/schema';
 import { LogInUser, LogOutUser, UserReducer } from '../reducers/user';
-import createBrowserHistory from 'history/createBrowserHistory';
 import { History, Location } from 'history';
-import { RootState } from '../reducers/rootReducer';
 import { compose } from 'redux';
-import { lifecycle } from 'recompose';
+import { RootState } from '../reducers/rootReducer';
+import Error from './Error';
 import { HEADER_HEIGHT } from '../constants/global';
+import { ErrorReducer } from '../reducers/error';
 import renderLoader from '../services/renderLoader';
+import { lifecycle } from 'recompose';
+import gql from 'graphql-tag';
 
 const GridWithMargin = styled(Grid)`
     padding-top: ${HEADER_HEIGHT};
@@ -33,18 +34,8 @@ const Main = styled.div`
     flex: 1;
 `;
 
-const history: History = createBrowserHistory();
-
-interface ApolloProps {
-    data: {
-        error: boolean;
-        loading: boolean;
-        aboutMe: AboutMe;
-    };
-}
-
-interface StateProps {
-    user: UserReducer;
+interface OwnProps {
+    history: History;
 }
 
 interface DispatchProps {
@@ -52,15 +43,27 @@ interface DispatchProps {
     logOutUser: () => void;
 }
 
-type FullProps = ApolloProps & StateProps & DispatchProps;
+interface StateProps extends ErrorReducer {
+    user: UserReducer;
+}
 
-const App: SFC<FullProps> = () => (
+type FullProps = ChildProps<OwnProps & DispatchProps & StateProps, { aboutMe: AboutMe }>;
+
+const App: SFC<FullProps> = ({ errors, status, data, history }) => (
     <ThemeProvider theme={theme}>
         <Router history={history}>
             <GridWithMargin>
                 <Header />
                 <Main>
-                    <Routes />
+                    {errors.length > 0 || data!.error ? (
+                        errors.length > 0 ? (
+                            <Error errors={errors} status={status} />
+                        ) : (
+                            <Error errors={[data!.error as Error]} status={500} />
+                        )
+                    ) : (
+                        <Routes />
+                    )}
                 </Main>
                 <Footer />
                 <PoweredBy />
@@ -70,10 +73,11 @@ const App: SFC<FullProps> = () => (
 );
 
 const mapStateToProps = (state: RootState) => ({
-    user: state.user
+    user: state.user,
+    ...state.error
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<ApolloProps>) => ({
+const mapDispatchToProps = (dispatch: Dispatch<{}>) => ({
     logInUser: (val: string) => dispatch(LogInUser(val)),
     logOutUser: () => dispatch(LogOutUser())
 });
@@ -86,7 +90,7 @@ const query = gql`
     }
 `;
 
-export default compose<SFC<{}>>(
+export default compose<SFC<OwnProps>>(
     graphql(query),
     renderLoader(),
     connect(mapStateToProps, mapDispatchToProps),
@@ -94,14 +98,14 @@ export default compose<SFC<{}>>(
         componentWillMount() {
             if (
                 !this.props.user.loggedIn &&
-                this.props.data.aboutMe &&
-                this.props.data.aboutMe.id &&
+                this.props.data!.aboutMe &&
+                this.props.data!.aboutMe!.id &&
                 this.props.user.hsid.length > 0
             ) {
                 this.props.logInUser(this.props.user.hsid);
             }
 
-            history.listen((location: Location) => {
+            this.props.history.listen((location: Location) => {
                 const { state } = location;
                 if ((state && !state.keepPosition) || !state) {
                     window.scrollTo(0, 0);
@@ -111,15 +115,15 @@ export default compose<SFC<{}>>(
         componentWillReceiveProps({ data, user }: FullProps) {
             if (
                 !user.loggedIn &&
-                data.aboutMe &&
-                data.aboutMe.id &&
-                this.props.data.aboutMe !== data.aboutMe &&
+                data!.aboutMe &&
+                data!.aboutMe!.id &&
+                this.props.data!.aboutMe !== data!.aboutMe &&
                 user.hsid.length > 0
             ) {
                 this.props.logInUser(user.hsid);
             }
 
-            if ((user.hsid || user.loggedIn) && (data.error || data.aboutMe === null)) {
+            if ((user.hsid || user.loggedIn) && (data!.error || data!.aboutMe === null)) {
                 this.props.logOutUser();
             }
         }

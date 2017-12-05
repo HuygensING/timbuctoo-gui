@@ -34,7 +34,6 @@ const StyledImg = styled.img`
 `;
 
 interface Props {
-    height: string;
     user: UserReducer;
     onLogOut: () => void;
 }

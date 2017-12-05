@@ -1,4 +1,4 @@
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { dataSetMetadataFragment } from '../fragments/Metadata';
 import { RouteComponentProps } from 'react-router';
 

@@ -22,19 +22,13 @@ const Toggle = Button.extend`
 `;
 
 class About extends PureComponent<Props, State> {
-    constructor() {
-        super();
+    state = {
+        isOpen: false
+    };
 
-        this.state = {
-            isOpen: false
-        };
-
-        this.toggleState = this.toggleState.bind(this);
-    }
-
-    toggleState() {
+    toggleState = () => {
         this.setState({ isOpen: !this.state.isOpen });
-    }
+    };
 
     render() {
         const { body, title } = this.props;

@@ -27,7 +27,7 @@ const Button = ButtonLinkBase.extend`
 
 const Pagination: SFC<Props & RouteComponentProps<any>> = ({ nextCursor, prevCursor, location: { pathname } }) => {
     const { search } = queryString.parse(location.search.substring(1));
-    const searchParam = search ? `search=${encode(search)}&` : '';
+    const searchParam = search ? `search=${encode(search as string)}&` : '';
 
     return (
         <Container>

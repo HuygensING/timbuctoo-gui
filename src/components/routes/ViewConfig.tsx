@@ -1,5 +1,6 @@
 import React, { SFC } from 'react';
-import { ChildProps, gql } from 'react-apollo';
+import { ChildProps } from 'react-apollo';
+import gql from 'graphql-tag';
 import { withRouter } from 'react-router';
 import { Grid } from '../layout/Grid';
 import FullHelmet from '../FullHelmet';
@@ -18,6 +19,7 @@ import renderLoader from '../../services/renderLoader';
 import { RootState } from '../../reducers/rootReducer';
 import graphql from 'react-apollo/graphql';
 import graphToState from '../../services/graphToState';
+import handleError from '../../services/handleError';
 
 interface StateProps {
     denormalizeTree: () => ComponentConfig[];
@@ -73,6 +75,7 @@ export default compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'), // TODO: Add a notFound beneath here
+    handleError('metadata'),
     connect(mapStateToProps),
     graphql(submitViewConfig),
     graphToState<FullProps>('GRAPH_TO_VIEWCONFIG', 'metadata', false)

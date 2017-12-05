@@ -1,5 +1,5 @@
 import { collectionPropertiesReference } from '../fragments/Metadata';
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { RouteComponentProps } from 'react-router';
 
 export interface Props {

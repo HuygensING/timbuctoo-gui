@@ -1,5 +1,6 @@
 import React, { Component, SyntheticEvent } from 'react';
 import styled, { withProps } from '../../../styled-components';
+
 import onClickOutside, { InjectedOnClickOutProps, OnClickOutProps } from 'react-onclickoutside';
 import { StandardStyledFormElements } from './Input';
 
@@ -46,7 +47,7 @@ const SelectHiddenFieldInput = styled.select`
     }
 `;
 
-const Arrow = styled.figure`
+const Arrow = withProps<{ disabled?: boolean }>(styled.figure)`
     position: absolute;
     display: block;
     top: 50%;

@@ -114,7 +114,7 @@ const setElasticSearchParams = (indexConfig: IndexConfig, search: string): strin
 const setCollectionArguments = (indexConfig: IndexConfig, location: Location): string => {
     const { cursor, search } = queryString.parse(location.search.substring(1));
 
-    const elasticsearch = `elasticsearch: ${setElasticSearchParams(indexConfig, search)}`;
+    const elasticsearch = `elasticsearch: ${setElasticSearchParams(indexConfig, search as string)}`;
     const cursorString = cursor ? `, cursor: ${doubleStringify(cursor)}` : '';
 
     return `(${elasticsearch}${cursorString})`;

@@ -25,5 +25,8 @@
     "footer.address": "Adres",
     "footer.phone": "Telefoon nummer",
     "footer.opening_hours": "Openingstijden",
-    "404.not_found": "Ik kan de pagina niet vinden, sorry!"
+    "error": "Er is iets misgegaan.",
+    "error.404": "Pagina kon niet gevonden worden, sorry!",
+    "error.500": "Er is een interne fout opgetreden, probeer het later opnieuw.",
+    "network_error": "Er is een netwerk fout opgetreden, controleer of je verbinding hebt met het internet, of probeer het later opnieuw."
 }
