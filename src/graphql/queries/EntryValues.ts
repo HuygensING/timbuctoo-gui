@@ -109,6 +109,12 @@ function componentPathsToMap(paths: string[], dataSetId: string): KeyValueRecurs
 
         const segments = splitPath(path) as string[][];
 
+        console.log(segments);
+
+        if (!segments.length) {
+            return result;
+        }
+
         // remove value prop if has one
         if (segments[segments.length - 1][1] === VALUE) {
             segments.pop();
