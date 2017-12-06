@@ -2,12 +2,12 @@ import * as React from 'react';
 import styled from '../../styled-components';
 
 import { ROUTE_PATHS } from '../../constants/routeNaming';
-import { DataSetProps } from '../../typings';
 import { calcColWidth } from '../layout/Grid';
 import { Subtitle, Content, Link, Label } from '../layout/StyledCopy';
 
 import translate from '../../services/translate';
 import { getValue } from '../../services/getValue';
+import { DataSetMetadata } from '../../typings/schema';
 
 const Datasets = ['World Leaders', 'German Royalty', '18th century literature'];
 
@@ -31,7 +31,7 @@ const DateLabel = styled(Label)`
     margin: auto;
 `;
 
-const ListContentItem = ({ title, description, dataSetId }: DataSetProps) => {
+const ListContentItem = ({ title, description, dataSetId }: DataSetMetadata) => {
     const titleField = getValue(title);
     const descrField = getValue(description);
 
@@ -45,7 +45,7 @@ const ListContentItem = ({ title, description, dataSetId }: DataSetProps) => {
             {descrField && (
                 <Content>
                     {descrField} in
-                    <StyledLink to={`${ROUTE_PATHS.details}/userId/${dataSetId}`}>
+                    <StyledLink to={`/${ROUTE_PATHS.details}/userId/${dataSetId}`}>
                         {Datasets[Math.floor(Math.random() * Datasets.length)]}
                     </StyledLink>
                 </Content>

@@ -21,7 +21,7 @@ export interface RouteObject {
 
 export const routes: RouteObject[] = [
     {
-        key: ROUTE_PATHS.search,
+        key: `/${ROUTE_PATHS.search}`,
         routes: [
             {
                 path: `/:${ROUTE_KEYS.dataSet}`,
@@ -33,7 +33,7 @@ export const routes: RouteObject[] = [
         ]
     },
     {
-        key: ROUTE_PATHS.details,
+        key: `/${ROUTE_PATHS.details}`,
         routes: [
             {
                 path: `/:${ROUTE_KEYS.dataSet}/:${ROUTE_KEYS.collection}/:${ROUTE_KEYS.entry}`,
@@ -50,7 +50,7 @@ export const routes: RouteObject[] = [
         ]
     },
     {
-        key: ROUTE_PATHS.account,
+        key: `/${ROUTE_PATHS.account}`,
         isPrivate: true,
         routes: [
             {
@@ -71,7 +71,7 @@ export const routes: RouteObject[] = [
         ]
     },
     {
-        key: `${ROUTE_PATHS.edit}/:${ROUTE_KEYS.dataSet}`,
+        key: `/${ROUTE_PATHS.edit}/:${ROUTE_KEYS.dataSet}`,
         isPrivate: true,
         routes: [
             {

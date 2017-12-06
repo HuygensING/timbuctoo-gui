@@ -6,29 +6,26 @@ import { Title } from '../layout/StyledCopy';
 import styled from '../../styled-components';
 import { FormWrapperProps } from '../../typings/Forms';
 import DraggableForm from '../form/DraggableForm';
-import { FacetConfig, FacetConfig as IFacetConfig } from '../../typings/schema';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import { connect } from 'react-redux';
+import { denormalizeFacets } from '../../reducers/facetconfig';
 import { compose } from 'redux';
-import { MetaDataProps, default as metaDataResolver } from '../../services/metaDataResolver';
-import { lifecycle } from 'recompose';
+import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import renderLoader from '../../services/renderLoader';
-import { denormalizeFacets, setFacetConfigItems } from '../../reducers/facetconfig';
+import graphToState from '../../services/graphToState';
 import { RootState } from '../../reducers/rootReducer';
 import { NormalizedFacetConfig } from '../../typings/index';
-import { ChildProps, gql } from 'react-apollo';
+import handleError from '../../services/handleError';
+import { ChildProps } from 'react-apollo';
 import graphql from 'react-apollo/graphql';
-
-interface DispatchProps {
-    setItems: (configs: IFacetConfig[]) => void;
-}
+import { FacetConfig } from '../../typings/schema';
+import gql from 'graphql-tag';
 
 interface StateProps {
     normalizedFacets: NormalizedFacetConfig[];
 }
 
 type FullProps = MetaDataProps &
-    DispatchProps &
     StateProps &
     RouteComponentProps<{ dataSet: string; collection: string }> &
     FormWrapperProps;
@@ -93,24 +90,12 @@ const mapStateToProps = (state: RootState) => ({
     normalizedFacets: state.facetconfig
 });
 
-const mapDispatchToProps = dispatch => ({
-    setItems: (configs: IFacetConfig[], collectionId: string) => dispatch(setFacetConfigItems(configs, collectionId))
-});
-
 export default compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
-    connect(mapStateToProps, mapDispatchToProps),
+    handleError('metadata'),
     graphql(submitFacetConfig),
-    lifecycle({
-        componentWillMount() {
-            const metadata = this.props.metadata && this.props.metadata.dataSetMetadata;
-            const facets =
-                metadata.collection && metadata.collection.indexConfig.facet.length
-                    ? metadata.collection.indexConfig.facet
-                    : [];
-            this.props.setItems(facets);
-        }
-    })
+    connect(mapStateToProps),
+    graphToState<FullProps>('GRAPH_TO_FACETCONFIG', 'metadata', false)
 )(FacetConfig);

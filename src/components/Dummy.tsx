@@ -1,20 +1,19 @@
 import React from 'react';
-import styled from '../styled-components';
-import CreateElementWithTag from '../services/CreateElementWithTag';
+import styled, { withProps } from '../styled-components';
 import { Subtitle } from './layout/StyledCopy';
 import { calcColWidth } from './layout/Grid';
 import { lighten } from 'polished/lib';
 import theme from '../theme/index';
 
-const DummyContainer = styled(
-    (props: {
-        mvp: boolean;
-        height: string | number;
-        width: string | number;
-        marginY: string | number;
-        absolute: boolean;
-    }) => CreateElementWithTag(props, 'div')
-)`
+interface DummyContainerProps {
+    mvp: boolean;
+    height: string | number;
+    width: string | number;
+    marginY: string | number;
+    absolute: boolean;
+}
+
+const DummyContainer = withProps<DummyContainerProps>(styled.div)`
     display: block;
     ${props => (props.absolute ? 'position: absolute; top: 0; right: 0;' : 'position: relative;')} float:right;
     height: ${props => (typeof props.height === 'number' ? calcColWidth(props.height) : props.height)};

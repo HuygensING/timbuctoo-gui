@@ -1,10 +1,10 @@
 import { lighten } from 'polished/lib';
 import styled, { css, withProps } from '../../styled-components';
-import { ButtonProps, ButtonVariant, ElementProps } from '../../typings/layout';
+import { ButtonProps, ButtonVariant, ElementProps, ThemeProps } from '../../typings/layout';
 import { BUTTON_VARIANT } from '../../constants/global';
 import { LinkProps, Link } from 'react-router-dom';
 
-export const setColor = (props: ElementProps, type?: ButtonVariant) => {
+export const setColor = (props: ElementProps & { theme: ThemeProps }, type?: ButtonVariant) => {
     switch (type) {
         case BUTTON_VARIANT.normal:
             return props.theme.colors.white;
@@ -16,7 +16,7 @@ export const setColor = (props: ElementProps, type?: ButtonVariant) => {
     }
 };
 
-export const setBackgroundColor = (props: ElementProps, type?: ButtonVariant) => {
+export const setBackgroundColor = (props: ElementProps & { theme: ThemeProps }, type?: ButtonVariant) => {
     switch (type) {
         case BUTTON_VARIANT.normal:
             return props.theme.colors.shade.medium;

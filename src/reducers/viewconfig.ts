@@ -4,6 +4,7 @@ import { NormalizedComponentConfig } from '../typings/index';
 import { LEAF_COMPONENTS } from '../constants/global';
 import { createReferencePath, mendPath } from '../services/walkPath';
 import { componentErrors } from '../services/Validation';
+import { MetaDataProps } from '../services/metaDataResolver';
 
 export type ViewConfigReducer = NormalizedComponentConfig[];
 
@@ -53,12 +54,9 @@ type DeleteViewConfigItemAction = {
     };
 };
 
-type SetTreeAction = {
-    type: 'SET_VIEW_CONFIG_TREE';
-    payload: {
-        components: ComponentConfig[];
-        collectionId: string;
-    };
+export type GraphToViewConfigAction = {
+    type: 'GRAPH_TO_VIEWCONFIG';
+    payload: MetaDataProps['metadata'];
 };
 
 type Action =
@@ -67,14 +65,15 @@ type Action =
     | ModifyViewConfigNodeAction
     | ChangeViewConfigNodeTypeAction
     | SortViewConfigChildAction
-    | SetTreeAction;
+    | GraphToViewConfigAction;
 
 // selectors
 
 export const createName = (typename: string, idx: number, field?: string): string =>
     `${idx}_${typename}${field ? '_' + field : ''}`;
 
-export const getNodeIndex = (id: number, state): number | undefined => state.findIndex(nodeItem => nodeItem.id === id);
+export const getNodeIndex = (id: number, state: ViewConfigReducer): number | undefined =>
+    state.findIndex(nodeItem => nodeItem.id === id);
 
 export const getNodeById = (id: number, state: ViewConfigReducer): NormalizedComponentConfig | undefined =>
     state.find(item => item.id === id);
@@ -314,8 +313,13 @@ export default (state = initialState, action: Action): ViewConfigReducer => {
             const { nodeId } = action.payload;
             return stateWithoutNodeReferences(state, nodeId);
         }
-        case 'SET_VIEW_CONFIG_TREE': {
-            return normalizeTree(action.payload.components, action.payload.collectionId);
+        case 'GRAPH_TO_VIEWCONFIG': {
+            const metadata = action.payload && action.payload.dataSetMetadata;
+            const config =
+                metadata && metadata.collection && metadata.collection.viewConfig ? metadata.collection.viewConfig : [];
+            const collectionId = (metadata && metadata.collection && metadata.collection.collectionId) || '';
+
+            return normalizeTree(config, collectionId);
         }
         default:
             return state;

@@ -1,4 +1,4 @@
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { decode } from '../../services/UrlStringCreator';
 import {
     checkTypes,
@@ -100,12 +100,18 @@ export function makeDefaultViewConfig(
     return [...title, ...defaultConfig];
 }
 
-function componentPathsToMap(paths: string[], dataSetId: string): { [key: string]: {} | boolean } {
-    const result = {};
+type KeyValueRecursive = { [key: string]: KeyValueRecursive | {} | boolean };
+
+function componentPathsToMap(paths: string[], dataSetId: string): KeyValueRecursive {
+    const result: KeyValueRecursive = {};
     for (const path of paths) {
-        let cur = result;
+        let cur: KeyValueRecursive = result;
 
         const segments = splitPath(path) as string[][];
+
+        if (!segments.length) {
+            return result;
+        }
 
         // remove value prop if has one
         if (segments[segments.length - 1][1] === VALUE) {
@@ -121,19 +127,19 @@ function componentPathsToMap(paths: string[], dataSetId: string): { [key: string
 
             if (!collection || segment === ITEMS) {
                 if (!cur.hasOwnProperty(segment)) {
-                    cur[segment] = curSegment;
+                    cur[segment] = curSegment as KeyValueRecursive;
                 }
 
-                cur = cur[segment];
+                cur = cur[segment] as KeyValueRecursive;
             } else {
                 const collectionFragment = `...on ${dataSetId}_${collection}`;
 
                 cur[collectionFragment] = {
-                    ...cur[collectionFragment],
+                    ...(cur[collectionFragment] as KeyValueRecursive),
                     [segment]: curSegment
                 };
 
-                cur = cur[collectionFragment][segment];
+                cur = (cur[collectionFragment] as KeyValueRecursive)[segment] as KeyValueRecursive;
             }
         }
     }
@@ -179,7 +185,11 @@ function getPaths(components: ComponentConfig[], result: string[]): string[] {
     return result;
 }
 
-function mapToQuery(map: {}, prefix: string): string {
+interface RecursiveType {
+    [name: string]: RecursiveType | boolean | string;
+}
+
+function mapToQuery(map: RecursiveType, prefix: string): string {
     const result: string[] = [];
     for (const key in map) {
         if (typeof map[key] === 'boolean') {
@@ -189,7 +199,7 @@ function mapToQuery(map: {}, prefix: string): string {
                 result.push(key + ` { ${VALUE} type }`);
             }
         } else {
-            const subQuery = mapToQuery(map[key], prefix + '  ') + '\n';
+            const subQuery = mapToQuery(map[key] as RecursiveType, prefix + '  ') + '\n';
             result.push(key + ' {\n' + subQuery + prefix + '}');
         }
     }

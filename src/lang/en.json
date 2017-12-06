@@ -26,5 +26,8 @@
     "footer.address": "Address",
     "footer.phone": "Phone Number",
     "footer.opening_hours": "Opening hours",
-    "404.not_found": "Couldn't find your page, sorry!"
+    "error": "Something went wrong.",
+    "error.404": "Couldn't find your page, sorry!",
+    "error.500": "A internal server error has occurred, try again later.",
+    "network_error": "A network error occurred. Your network connection might not be available, or the server is offline. Try again later."
 }

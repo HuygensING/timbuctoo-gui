@@ -95,7 +95,7 @@ const CollectionTag: SFC<Props> = ({
             <ButtonLink
                 data-variant={buttonVariant}
                 to={{
-                    pathname: `${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`,
+                    pathname: `/${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionListId)}`,
                     state: replace && { keepPosition: true }
                 }}
                 replace={!!replace}

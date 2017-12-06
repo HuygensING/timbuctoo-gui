@@ -1,23 +1,28 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
-
+import { Provider } from 'react-redux';
 import App from './components/App';
-import Client from './services/ApolloClient';
 import { configureStore } from './store';
 import globalStyling from './theme/globalStyling';
+import createClient from './services/createClient';
+import createBrowserHistory from 'history/createBrowserHistory';
 
-export const store = configureStore();
+const history = createBrowserHistory();
+export const store = configureStore(history);
+export const client = createClient(store);
 
 // set global body styling in the head
 globalStyling();
 
 const renderApp = () =>
     ReactDOM.render(
-        <ApolloProvider client={Client} store={store}>
-            <App />
+        <ApolloProvider client={client}>
+            <Provider store={store}>
+                <App history={history} />
+            </Provider>
         </ApolloProvider>,
-        document.getElementById('root') as HTMLElement
+        document.getElementById('root')
     );
 
 if (module.hot) {

@@ -1,40 +1,30 @@
-import React, { PureComponent } from 'react';
-import { Router } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React, { SFC } from 'react';
+import { connect, Dispatch } from 'react-redux';
 
-import { graphql, gql, ChildProps } from 'react-apollo';
+import { graphql, ChildProps } from 'react-apollo';
 
 import Routes from './Routes';
 import { default as styled, ThemeProvider } from 'styled-components';
 import theme from '../theme';
-
 import Header from './header/Header';
 import Footer from './footer/Footer';
 import PoweredBy from './PoweredBy';
 import { Grid } from './layout/Grid';
 import { AboutMe } from '../typings/schema';
 import { LogInUser, LogOutUser, UserReducer } from '../reducers/user';
-import Loading from './Loading';
-import createBrowserHistory from 'history/createBrowserHistory';
-import { Location } from 'history';
-
-if (process.env.NODE_ENV !== 'production') {
-    // /* eslint-disable-next-line no-unused-vars,react/no-deprecated */
-    // let createClass = React.createClass;
-    // Object.defineProperty(React, 'createClass', {
-    //     set: (nextCreateClass) => {
-    //         createClass = nextCreateClass;
-    //     }
-    // });
-    // /* eslint-disable-next-line global-require */
-    // const { whyDidYouUpdate } = require('why-did-you-update');
-    // whyDidYouUpdate(React);
-}
-
-const headerHeight: string = '4rem';
+import { History, Location } from 'history';
+import { compose } from 'redux';
+import { RootState } from '../reducers/rootReducer';
+import Error from './Error';
+import { HEADER_HEIGHT } from '../constants/global';
+import { ErrorReducer } from '../reducers/error';
+import renderLoader from '../services/renderLoader';
+import { lifecycle } from 'recompose';
+import gql from 'graphql-tag';
+import { ConnectedRouter } from 'react-router-redux';
 
 const GridWithMargin = styled(Grid)`
-    padding-top: ${headerHeight};
+    padding-top: ${HEADER_HEIGHT};
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -44,96 +34,51 @@ const Main = styled.div`
     flex: 1;
 `;
 
-interface Props {
-    data: {
-        error: boolean;
-        loading: boolean;
-        aboutMe: AboutMe;
-    };
-    user: UserReducer;
+interface OwnProps {
+    history: History;
+}
+
+interface DispatchProps {
     logInUser: (hsid: string) => void;
     logOutUser: () => void;
 }
 
-interface State {}
-
-class App extends PureComponent<ChildProps<Props, Response>, State> {
-    renderLoad: boolean = true;
-    history = createBrowserHistory();
-
-    componentWillMount() {
-        this.checkRenderLoad(this.props.user);
-
-        this.history.listen((location: Location) => {
-            const { state } = location;
-            if ((state && !state.keepPosition) || !state) {
-                window.scrollTo(0, 0);
-            }
-        });
-    }
-
-    componentWillReceiveProps({ data, user }: Props) {
-        if (
-            !user.loggedIn &&
-            data.aboutMe &&
-            data.aboutMe.id &&
-            this.props.data.aboutMe !== data.aboutMe &&
-            user.hsid.length > 0
-        ) {
-            this.props.logInUser(user.hsid);
-        }
-
-        if (this.renderLoad && (data.error || data.aboutMe === null)) {
-            this.renderLoad = false;
-
-            // todo: remove this check once there's a real authentication system
-            if (process.env.NODE_ENV !== 'development') {
-                this.props.logOutUser();
-            } else {
-                this.props.logInUser(user.hsid);
-            }
-        }
-    }
-
-    componentWillUpdate(nextProps: Props) {
-        this.checkRenderLoad(nextProps.user);
-    }
-
-    render() {
-        // TODO: switch <Loading/> for an <Authenticating /> component
-        return (
-            <ThemeProvider theme={theme}>
-                {this.renderLoad ? (
-                    <Loading />
-                ) : (
-                    <Router history={this.history}>
-                        <GridWithMargin>
-                            <Header height={headerHeight} />
-                            <Main>
-                                <Routes />
-                            </Main>
-                            <Footer />
-                            <PoweredBy />
-                        </GridWithMargin>
-                    </Router>
-                )}
-            </ThemeProvider>
-        );
-    }
-
-    private checkRenderLoad(user: UserReducer) {
-        if (!user.hsid || user.loggedIn) {
-            this.renderLoad = false;
-        }
-    }
+interface StateProps extends ErrorReducer {
+    user: UserReducer;
 }
 
-const mapStateToProps = state => ({
-    user: state.user
+type FullProps = ChildProps<OwnProps & DispatchProps & StateProps, { aboutMe: AboutMe }>;
+
+const App: SFC<FullProps> = ({ errors, status, data, history }) => (
+    <ThemeProvider theme={theme}>
+        <ConnectedRouter history={history}>
+            <GridWithMargin>
+                <Header />
+                <Main>
+                    {errors.length > 0 || data!.error ? (
+                        errors.length > 0 ? (
+                            <Error errors={errors} status={status} />
+                        ) : (
+                            <Error errors={[data!.error as Error]} status={500} />
+                        )
+                    ) : (
+                        <Routes />
+                    )}
+                </Main>
+                <Footer />
+                <PoweredBy />
+            </GridWithMargin>
+        </ConnectedRouter>
+    </ThemeProvider>
+);
+
+const mapStateToProps = (state: RootState) => ({
+    user: state.user,
+    ...state.error
 });
 
-const mapDispatchToProps = dispatch => ({
-    logInUser: val => dispatch(LogInUser(val)),
+const mapDispatchToProps = (dispatch: Dispatch<{}>) => ({
+    logInUser: (val: string) => dispatch(LogInUser(val)),
     logOutUser: () => dispatch(LogOutUser())
 });
 
@@ -145,4 +90,42 @@ const query = gql`
     }
 `;
 
-export default graphql(query)(connect(mapStateToProps, mapDispatchToProps)(App));
+export default compose<SFC<OwnProps>>(
+    graphql(query),
+    renderLoader(),
+    connect(mapStateToProps, mapDispatchToProps),
+    lifecycle<FullProps, {}>({
+        componentWillMount() {
+            if (
+                !this.props.user.loggedIn &&
+                this.props.data!.aboutMe &&
+                this.props.data!.aboutMe!.id &&
+                this.props.user.hsid.length > 0
+            ) {
+                this.props.logInUser(this.props.user.hsid);
+            }
+
+            this.props.history.listen((location: Location) => {
+                const { state } = location;
+                if ((state && !state.keepPosition) || !state) {
+                    window.scrollTo(0, 0);
+                }
+            });
+        },
+        componentWillReceiveProps({ data, user }: FullProps) {
+            if (
+                !user.loggedIn &&
+                data!.aboutMe &&
+                data!.aboutMe!.id &&
+                this.props.data!.aboutMe !== data!.aboutMe &&
+                user.hsid.length > 0
+            ) {
+                this.props.logInUser(user.hsid);
+            }
+
+            if ((user.hsid || user.loggedIn) && (data!.error || data!.aboutMe === null)) {
+                this.props.logOutUser();
+            }
+        }
+    })
+)(App);

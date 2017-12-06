@@ -3,7 +3,7 @@ import { NormalizedFacetConfig } from '../../typings/index';
 import InputField from './fields/Input';
 import { FacetConfig, FacetConfigType } from '../../typings/schema';
 import { modifyFacetConfig } from '../../reducers/facetconfig';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import Select, { OptionProps } from './fields/Select';
 import { SELECT_FACET_TYPES } from '../../constants/forms';
 import ReferencePathSelector from './fields/ReferencePathSelector';
@@ -47,7 +47,7 @@ const FacetFields: SFC<Props> = ({ item, modify, match }) => {
                 <FieldValue>
                     <Select
                         name={`${item.id}_type`}
-                        selected={SELECT_FACET_TYPES.find(({ value }) => value === item.type)}
+                        selected={SELECT_FACET_TYPES.find(({ value }) => value === item.type) || SELECT_FACET_TYPES[0]}
                         options={SELECT_FACET_TYPES}
                         onChange={({ value }: OptionProps) => modify({ ...item, type: value as FacetConfigType })}
                     />
@@ -84,7 +84,10 @@ const FacetFields: SFC<Props> = ({ item, modify, match }) => {
     );
 };
 
-const mapDispatchToProps = (dispatch, { item: { id } }: Props) => ({
+const mapDispatchToProps = (
+    dispatch: Dispatch<OwnProps & RouteComponentProps<{ collection: string }>>,
+    { item: { id } }: Props
+) => ({
     modify: (modifiedItem: NormalizedFacetConfig) => dispatch(modifyFacetConfig(id, modifiedItem))
 });
 

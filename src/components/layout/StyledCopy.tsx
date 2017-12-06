@@ -1,17 +1,18 @@
-import styled, { css } from '../../styled-components';
-import CreateElementWithTag from '../../services/CreateElementWithTag';
-import { Color, ElementProps } from '../../typings/layout';
+import styled, { css, withProps } from '../../styled-components';
+import { Color, Colors, ElementProps, ThemeProps } from '../../typings/layout';
 import { keyframes } from '../../styled-components';
 import { lighten } from 'polished';
-import { LinkProps } from 'react-router-dom';
+import { Link as ReactRouterLink, LinkProps } from 'react-router-dom';
 
-const setColor = props =>
-    (props.theme.colors[props.color] && props.theme.colors[props.color].medium) ||
+const setColor = (props: ElementProps & { theme: ThemeProps }) =>
+    (props.color &&
+        props.theme.colors[props.color as keyof Colors] &&
+        props.theme.colors[props.color as 'primary' | 'shade'].medium) ||
     props.color ||
     props.theme.colors.black;
-const setCaps = props => (props.isCaps ? 'uppercase' : 'initial');
-const setLetterSpacing = props => (props.isCaps ? '0.13em' : '0');
-const setAlignment = props => (props.align ? props.align : 'left');
+const setCaps = (props: ElementProps) => (props.isCaps ? 'uppercase' : 'initial');
+const setLetterSpacing = (props: ElementProps) => (props.isCaps ? '0.13em' : '0');
+const setAlignment = (props: ElementProps) => (props.align ? props.align : 'left');
 
 export interface StyledCopyLinkProps {
     children?: any;
@@ -63,9 +64,9 @@ const EmptyStyle = css`
  * Available props: TextProps
  *
  * Usage:
- * <Title tag='h1' size='xxl' weight='bold' color='quarts' isCaps={false}>This is a title</Title>
+ * <Title size='xxl' weight='bold' color='quarts' isCaps={false}>This is a title</Title>
  */
-export const Heading = styled((props: ElementProps) => CreateElementWithTag(props, 'h1'))`
+export const Heading = withProps<ElementProps>(styled.h1)`
     margin: 1.1vw 0;
     font: ${props => props.theme.fonts.heading};
     text-transform: ${setCaps};
@@ -79,9 +80,9 @@ export const Heading = styled((props: ElementProps) => CreateElementWithTag(prop
  * Available props: TextProps
  *
  * Usage:
- * <Title tag='h1' size='xxl' weight='bold' color='quarts' isCaps={false}>This is a title</Title>
+ * <Title size='xxl' weight='bold' color='quarts' isCaps={false}>This is a title</Title>
  */
-export const Title = styled((props: ElementProps) => CreateElementWithTag(props, 'h1'))`
+export const Title = withProps<ElementProps>(styled.h1)`
     margin: 1.1vw 0;
     font: ${props => props.theme.fonts.title};
     text-transform: ${setCaps};
@@ -97,9 +98,9 @@ export const Title = styled((props: ElementProps) => CreateElementWithTag(props,
 * Available props: TextProps
 *
 * Usage:
-* <Subtitle tag='h2' size='m' weight='light' color='quarts' isCaps={true}>This is a subtitle</Subtitle>
+* <Subtitle size='m' weight='light' color='quarts' isCaps={true}>This is a subtitle</Subtitle>
 */
-export const Subtitle = styled((props: ElementProps) => CreateElementWithTag(props, 'h2'))`
+export const Subtitle = withProps<ElementProps>(styled.h2)`
     margin: 1.1vw 0;
     font: ${props => props.theme.fonts.subTitle};
     text-transform: ${setCaps};
@@ -115,7 +116,7 @@ export const Subtitle = styled((props: ElementProps) => CreateElementWithTag(pro
 * Usage:
 * <Content tag='p' size='m' weight='medium' color='quarts' isCaps={false}>This is some content</Content>
 */
-export const Content = styled((props: ElementProps) => CreateElementWithTag(props, 'p'))`
+export const Content = withProps<ElementProps>(styled.p)`
     margin: 0;
     font: ${props => props.theme.fonts.body};
     text-transform: ${setCaps};
@@ -131,7 +132,7 @@ export const Content = styled((props: ElementProps) => CreateElementWithTag(prop
  * Usage:
  * <Label tag='span' size='xl' weight='semibold' color='quarts' isCaps={false}>This is a label</Label>
  */
-export const Label = styled((props: ElementProps) => CreateElementWithTag(props, 'span'))`
+export const Label = withProps<ElementProps>(styled.span)`
     margin: 0;
     font: ${props => props.theme.fonts.body};
     text-transform: ${setCaps};
@@ -148,9 +149,7 @@ export const Label = styled((props: ElementProps) => CreateElementWithTag(props,
  * <Link to="/route" >
  */
 
-export const Link = styled((props: ElementProps & StyledCopyLinkProps & LinkProps) =>
-    CreateElementWithTag(props, 'Link')
-)`
+export const Link = withProps<ElementProps & StyledCopyLinkProps & LinkProps>(styled(ReactRouterLink))`
     margin: 0;
     font: ${props => props.theme.fonts.body};
     text-transform: ${setCaps};
@@ -162,7 +161,9 @@ export const Link = styled((props: ElementProps & StyledCopyLinkProps & LinkProp
 
     &:hover {
         color: ${props =>
-            (props.hoverColor && props.theme.colors[props.hoverColor] && props.theme.colors[props.hoverColor].medium) ||
+            (props.hoverColor &&
+                props.theme.colors[props.hoverColor as keyof Colors] &&
+                props.theme.colors[props.hoverColor as 'primary' | 'shade'].medium) ||
             props.hoverColor ||
             props.theme.colors.shade.dark};
     }

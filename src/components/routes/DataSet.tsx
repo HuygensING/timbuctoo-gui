@@ -20,6 +20,8 @@ import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver
 import { withRouter } from 'react-router';
 import { compose } from 'redux';
 import renderLoader from '../../services/renderLoader';
+import handleError from '../../services/handleError';
+import { RootState } from '../../reducers/rootReducer';
 
 interface StateProps {
     loggedIn: boolean;
@@ -45,7 +47,7 @@ class DataSet extends PureComponent<Props> {
                     imgUrl={getValue(imageUrl)}
                     searchPath={
                         collectionItems.length
-                            ? `${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionItems[0].collectionId)}`
+                            ? `/${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionItems[0].collectionId)}`
                             : ''
                     }
                     buttonText={'Search this dataset'}
@@ -100,7 +102,7 @@ class DataSet extends PureComponent<Props> {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
     loggedIn: state.user.loggedIn
 });
 
@@ -108,5 +110,6 @@ export default compose<ComponentType<{}>>(
     withRouter,
     metaDataResolver(QUERY_DATASET),
     renderLoader('metadata'),
+    handleError('metadata'),
     connect(mapStateToProps)
 )(DataSet);

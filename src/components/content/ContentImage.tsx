@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from '../../styled-components';
+import styled, { withProps } from '../../styled-components';
 
 import Image from '../layout/Image';
 
@@ -14,7 +14,7 @@ const IMAGE_RATIO = {
     square: 1
 };
 
-const ImageWrapper = styled.figure`
+const ImageWrapper = withProps<{ width?: string; type?: string }>(styled.figure)`
     position: relative;
     overflow: hidden;
     width: ${props => props.width || '100%'};
