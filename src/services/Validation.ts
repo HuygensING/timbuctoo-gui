@@ -1,4 +1,4 @@
-import { NormalizedComponentConfig, ReferencePath } from '../typings/index';
+import { NormalizedComponentConfig, NormalizedFacetConfig, ReferencePath } from '../typings/index';
 import { COMPONENTS, VALUE } from '../constants/global';
 
 const referenceIncomplete = (path: string[][] | undefined) => path && path[path.length - 1][1] !== VALUE;
@@ -20,9 +20,9 @@ export const componentErrors = (childNode: NormalizedComponentConfig): string | 
     return null;
 };
 
-export const facetErrors = (referencePath: ReferencePath, config): string | null => {
+export const facetErrors = (referencePath: ReferencePath, config: NormalizedFacetConfig): string | null => {
     if (referenceIncomplete(referencePath)) {
-        return `You forgot to finish the path ${config.name}: ${referencePath}`;
+        return `You forgot to finish the path ${config.caption}: ${referencePath}`;
     }
 
     return null;
