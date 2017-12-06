@@ -37,6 +37,14 @@ const FacetFields: SFC<Props> = ({ item, modify, match }) => {
         modify(modifiedItem);
     };
 
+    const switchTypeHandler = ({ key, value }: OptionProps) => {
+        modify({
+            ...item,
+            type: value as FacetConfigType,
+            caption: `new ${key}`
+        });
+    };
+
     const addPathHandler = () =>
         modify({ ...item, referencePaths: [...item.referencePaths, [[match.params.collection]]] });
 
@@ -49,7 +57,7 @@ const FacetFields: SFC<Props> = ({ item, modify, match }) => {
                         name={`${item.id}_type`}
                         selected={SELECT_FACET_TYPES.find(({ value }) => value === item.type) || SELECT_FACET_TYPES[0]}
                         options={SELECT_FACET_TYPES}
-                        onChange={({ value }: OptionProps) => modify({ ...item, type: value as FacetConfigType })}
+                        onChange={switchTypeHandler}
                     />
                 </FieldValue>
             </Field>
