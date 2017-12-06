@@ -47,7 +47,7 @@ class DataSet extends PureComponent<Props> {
                     imgUrl={getValue(imageUrl)}
                     searchPath={
                         collectionItems.length
-                            ? `${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionItems[0].collectionId)}`
+                            ? `/${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionItems[0].collectionId)}`
                             : ''
                     }
                     buttonText={'Search this dataset'}

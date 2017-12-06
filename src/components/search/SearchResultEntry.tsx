@@ -46,7 +46,7 @@ const SearchDescription = styled(Content)`
 `;
 
 const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataSetId, uri }: ResultDataSetMetadata) => {
-    const url = `${ROUTE_PATHS.details}/${dataSetId}/${collectionId}/${encode(uri)}`;
+    const url = `/${ROUTE_PATHS.details}/${dataSetId}/${collectionId}/${encode(uri)}`;
 
     return (
         <SearchItem>
