@@ -16,7 +16,7 @@ import { History, Location } from 'history';
 import { compose } from 'redux';
 import { RootState } from '../reducers/rootReducer';
 import Error from './Error';
-import { HEADER_HEIGHT } from '../constants/global';
+import { HEADER_HEIGHT, HISTORY_REPLACE } from '../constants/global';
 import { ErrorReducer } from '../reducers/error';
 import renderLoader from '../services/renderLoader';
 import { lifecycle } from 'recompose';
@@ -105,9 +105,10 @@ export default compose<SFC<OwnProps>>(
                 this.props.logInUser(this.props.user.hsid);
             }
 
-            this.props.history.listen((location: Location) => {
+            this.props.history.listen((location: Location, action: string) => {
                 const { state } = location;
-                if ((state && !state.keepPosition) || !state) {
+
+                if (action !== HISTORY_REPLACE && ((state && !state.keepPosition) || !state)) {
                     window.scrollTo(0, 0);
                 }
             });

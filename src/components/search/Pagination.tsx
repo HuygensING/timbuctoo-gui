@@ -8,8 +8,8 @@ import * as queryString from 'querystring';
 import { encode } from '../../services/UrlStringCreator';
 
 interface Props {
-    nextCursor?: string;
-    prevCursor?: string;
+    nextCursor?: string | null;
+    prevCursor?: string | null;
 }
 
 const Container = styled.div`
