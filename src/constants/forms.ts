@@ -32,17 +32,23 @@ export const SELECT_COMPONENT_TYPES: { key: string; value: ComponentType }[] = [
     }
 ];
 
+export const FACET_TYPE = {
+    multiSelect: 'MultiSelect' as FacetConfigType,
+    dateRange: 'DateRange' as FacetConfigType,
+    hierarchical: 'Hierarchical' as FacetConfigType
+};
+
 export const SELECT_FACET_TYPES: { key: string; value: FacetConfigType }[] = [
     {
         key: 'Multi-select',
-        value: 'MultiSelect'
+        value: FACET_TYPE.multiSelect
     },
     {
         key: 'Date range',
-        value: 'DateRange'
+        value: FACET_TYPE.dateRange
     },
     {
         key: 'Hierarchical',
-        value: 'Hierarchical'
+        value: FACET_TYPE.hierarchical
     }
 ];
