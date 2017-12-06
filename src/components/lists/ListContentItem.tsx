@@ -45,7 +45,7 @@ const ListContentItem = ({ title, description, dataSetId }: DataSetMetadata) => 
             {descrField && (
                 <Content>
                     {descrField} in
-                    <StyledLink to={`${ROUTE_PATHS.details}/userId/${dataSetId}`}>
+                    <StyledLink to={`/${ROUTE_PATHS.details}/userId/${dataSetId}`}>
                         {Datasets[Math.floor(Math.random() * Datasets.length)]}
                     </StyledLink>
                 </Content>
