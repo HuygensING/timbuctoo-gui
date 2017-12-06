@@ -1,27 +1,23 @@
 import React, { ComponentType, SFC } from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { compose } from 'redux';
-import { ChildProps } from 'react-apollo';
+import verifyResponse from '../../services/verifyResponse';
+import { ChildProps } from '../../typings';
 import { lifecycle, withProps } from 'recompose';
 import { RouteComponentProps, withRouter } from 'react-router';
-
 import { Location } from 'history';
 import { CollectionMetadata, DataSetMetadata, Facet, FacetConfig } from '../../typings/schema';
-
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import renderLoader from '../../services/renderLoader';
 import graphqlWithProps from '../../services/graphqlWithProps';
-import handleError from '../../services/handleError';
 import { reorderUnknownsInList } from '../../services/HandleUnknowns';
 import { getValuesFromObject } from '../../services/getValue';
 import { getCollectionValues } from '../../services/GetDataSetValues';
 import translate from '../../services/translate';
 import { createEsQueryString } from '../../services/EsQueryStringCreator';
 import { encode } from '../../services/UrlStringCreator';
-
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
-
 import FullHelmet from '../FullHelmet';
 import { Col, FullSection } from '../layout/Grid';
 import SearchForm from '../form/SearchForm';
@@ -139,9 +135,13 @@ const dataResolver = compose<ComponentType<{}>>(
     withRouter,
     metaDataResolver<ApolloProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
-    handleError('metadata'),
+    verifyResponse<FullProps, 'metadata'>('metadata', 'dataSetMetadata.collection'),
     graphqlWithProps<ApolloProps>(QUERY_COLLECTION_VALUES),
-    handleError(),
+    verifyResponse<FullProps, 'data'>(
+        'data',
+        props =>
+            `dataSets.${props.match.params.dataSet}.${props.metadata.dataSetMetadata!.collection!.collectionListId}`
+    ),
     connect(mapStateToProps, mapDispatchToProps),
     withProps(({ data, metadata }: FullProps): ExtraProps => ({
         collectionValues: getCollectionValues(data, metadata)
