@@ -80,7 +80,7 @@ const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) =
 
             <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={1}>
                 {/* TODO: Connect the fulltext search as well */}
-                <SearchForm type={'collection'} />
+                <SearchForm type={'collection'} loading={data!.loading} />
             </Col>
 
             <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={0.5}>
