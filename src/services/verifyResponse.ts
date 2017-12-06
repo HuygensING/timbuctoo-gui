@@ -47,7 +47,6 @@ const ensureExistence = <TProps>(path: string | ((props: TProps) => string), dat
 const verifyResponse = <TProps extends DataProps<TProps, K>, K extends keyof TProps>(
     dataProp: K,
     path: string | ((props: TProps) => string)
-): ComponentEnhancer<TProps, TProps> =>
-    compose<TProps, TProps>(handleError<TProps>(dataProp), ensureExistence<TProps>(path, dataProp));
+): ComponentEnhancer<TProps, TProps> => compose<TProps, TProps>(handleError(dataProp), ensureExistence(path, dataProp));
 
 export default verifyResponse;

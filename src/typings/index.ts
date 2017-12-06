@@ -47,7 +47,7 @@ export interface DataSetProps {
 // variation of react-apollo's ChildProps, with the props not marked as optional
 export type ChildProps<P, R> = P & {
     data: QueryProps & Partial<R>;
-    mutate: MutationFunc<R>;
+    mutate?: MutationFunc<R>;
 };
 
 export interface IconProps {
