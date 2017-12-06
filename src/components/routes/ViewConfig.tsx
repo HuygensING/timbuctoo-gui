@@ -19,8 +19,7 @@ import renderLoader from '../../services/renderLoader';
 import { RootState } from '../../reducers/rootReducer';
 import graphql from 'react-apollo/graphql';
 import graphToState from '../../services/graphToState';
-import handleError from '../../services/handleError';
-import ensureExistence from '../../services/ensureExistence';
+import verifyResponse from '../../services/verifyResponse';
 
 interface StateProps {
     denormalizeTree: () => ComponentConfig[];
@@ -76,8 +75,7 @@ export default compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
-    handleError('metadata'),
-    ensureExistence<FullProps>('dataSetMetadata.collection', 'metadata'),
+    verifyResponse<FullProps, 'metadata'>('metadata', 'dataSetMetadata.collection'),
     connect(mapStateToProps),
     graphql(submitViewConfig),
     graphToState<FullProps>('GRAPH_TO_VIEWCONFIG', 'metadata', false)

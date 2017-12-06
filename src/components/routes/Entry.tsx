@@ -16,9 +16,8 @@ import { compose } from 'redux';
 import graphqlWithProps from '../../services/graphqlWithProps';
 import { withRouter } from 'react-router';
 import renderLoader from '../../services/renderLoader';
-import { ChildProps } from 'react-apollo';
-import handleError from '../../services/handleError';
-import ensureExistence from '../../services/ensureExistence';
+import verifyResponse from '../../services/verifyResponse';
+import { ChildProps } from '../../typings';
 
 type FullProps = ChildProps<EntryPropertiesProps & EntryValuesProps, { dataSets: DataSetMetadata }>;
 
@@ -58,12 +57,10 @@ const dataResolver = compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_ENTRY_PROPERTIES),
     renderLoader('metadata'),
-    handleError('metadata'),
-    ensureExistence<FullProps>('dataSetMetadata', 'metadata'),
+    verifyResponse<FullProps, 'metadata'>('metadata', 'dataSetMetadata'),
     graphqlWithProps<FullProps>(QUERY_ENTRY_VALUES),
     renderLoader(),
-    handleError(),
-    ensureExistence<FullProps>('dataSetMetadata.collection', 'metadata')
+    verifyResponse<FullProps, 'data'>('data', 'dataSetMetadata.collection')
 );
 
 export default dataResolver(Entry);

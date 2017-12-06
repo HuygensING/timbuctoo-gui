@@ -15,26 +15,26 @@ import { AboutMe, DataSetMetadata } from '../../typings/schema';
 import translate from '../../services/translate';
 import { getValue } from '../../services/getValue';
 import { UserReducer } from '../../reducers/user';
-import handleError from '../../services/handleError';
 import { compose } from 'redux';
 import { RootState } from '../../reducers/rootReducer';
 import { withProps } from 'recompose';
 import renderLoader from '../../services/renderLoader';
+import verifyResponse from '../../services/verifyResponse';
+import { ChildProps } from '../../typings';
 
-interface ApolloProps {
-    data: {
-        promotedDataSets: DataSetMetadata[];
-        aboutMe: AboutMe;
-    };
+interface Data {
+    promotedDataSets: DataSetMetadata[];
+    aboutMe: AboutMe;
 }
 
 interface StateProps {
     user: UserReducer;
 }
 
-type FullProps = StateProps & ApolloProps & { firstSet: string | null } & RouteComponentProps<any>;
+type FullProps = ChildProps<StateProps & { firstSet: string | null } & RouteComponentProps<any>, Data>;
 
-const Home: SFC<FullProps> = ({ data: { promotedDataSets, aboutMe }, user, firstSet }) => {
+const Home: SFC<FullProps> = ({ data, user, firstSet }) => {
+    const { promotedDataSets, aboutMe } = data!;
     return (
         <Grid>
             <FullHelmet pageName="home" />
@@ -59,14 +59,14 @@ const Home: SFC<FullProps> = ({ data: { promotedDataSets, aboutMe }, user, first
                 sm={20}
                 smPaddingY={1}
                 title={translate('home.recently_modified.title')}
-                data={promotedDataSets}
+                data={promotedDataSets!}
             />
             <ListContent
                 smOffset={2}
                 sm={20}
                 smPaddingY={1}
                 title={translate('home.most_popular.title')}
-                data={promotedDataSets}
+                data={promotedDataSets!}
             />
 
             <Col sm={48}>
@@ -126,7 +126,7 @@ const mapStateToProps = (state: RootState) => ({
 export default compose<SFC<{}>>(
     graphql(query),
     renderLoader(),
-    handleError(),
+    verifyResponse<FullProps, 'data'>('data', 'promotedDataSets'),
     withProps(selectFirstSet),
     connect(mapStateToProps)
 )(Home);

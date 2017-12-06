@@ -17,9 +17,8 @@ import graphqlWithProps from '../../services/graphqlWithProps';
 import { compose } from 'redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import renderLoader from '../../services/renderLoader';
-import { ChildProps } from 'react-apollo';
-import handleError from '../../services/handleError';
-import ensureExistence from '../../services/ensureExistence';
+import verifyResponse from '../../services/verifyResponse';
+import { ChildProps } from '../../typings';
 
 type FullProps = ChildProps<
     MetaDataProps & RouteComponentProps<{ dataSet: string; collection: string }>,
@@ -87,12 +86,11 @@ const dataResolver = compose<ComponentType<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
-    handleError('metadata'),
-    ensureExistence<FullProps>('dataSetMetadata.collection', 'metadata'),
+    verifyResponse<FullProps, 'metadata'>('metadata', 'dataSetMetadata.collection'),
     graphqlWithProps<FullProps>(QUERY_COLLECTION_VALUES),
     renderLoader(),
-    handleError(),
-    ensureExistence<FullProps>(
+    verifyResponse<FullProps, 'data'>(
+        'data',
         props =>
             `dataSets.${props.match.params.dataSet}.${props.metadata.dataSetMetadata!.collection!.collectionListId}`
     )
