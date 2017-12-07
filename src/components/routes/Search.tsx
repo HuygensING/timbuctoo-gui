@@ -2,7 +2,6 @@ import React, { ComponentType, SFC } from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { compose } from 'redux';
 import verifyResponse, { handleError } from '../../services/verifyResponse';
-import { ChildProps } from '../../typings';
 import { lifecycle, withProps } from 'recompose';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { Location } from 'history';
@@ -31,6 +30,7 @@ import MultiSelectForm from '../form/MultiselectForm';
 
 import { EsFilter, mergeFilters } from '../../reducers/search';
 import { RootState } from '../../reducers/rootReducer';
+import { ChildProps } from '../../typings/index';
 
 interface StateProps {
     filters: EsFilter[];

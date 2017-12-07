@@ -21,8 +21,13 @@ interface Aggs {
 interface Agg {
     filter: EsQuery | {};
     aggs: {
-        name: {
-            terms: {
+        range?: {
+            date_range: {
+                field: string;
+            };
+        };
+        name?: {
+            terms?: {
                 field: string;
             };
         };
@@ -89,22 +94,32 @@ const setFilteredSearchObj = (searchObj: EsQuery, field: string): EsQuery => {
 const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Aggs => {
     const aggregations: Aggs = {};
 
-    const entries = facets.entries();
-    for (const [idx, { paths, caption, type }] of entries) {
-        if (type === FACET_TYPE.multiSelect && (caption || type) && paths) {
-            const field = convertToEsPath(paths[0]); // TODO: EsValuePath?
+    for (const [idx, { paths, caption, type }] of facets.entries()) {
+        if ((caption || type) && paths) {
+            const field = convertToEsPath(paths[0]);
             const filter = searchObj ? setFilteredSearchObj(searchObj, field) : {};
 
-            aggregations[caption || `${type}_${idx}`] = {
-                filter,
-                aggs: {
-                    name: {
-                        terms: {
-                            field
+            switch (type) {
+                case FACET_TYPE.multiSelect:
+                    aggregations[caption || `${type}_${idx}`] = {
+                        filter,
+                        aggs: { name: { terms: { field } } }
+                    };
+                    break;
+                case FACET_TYPE.dateRange:
+                    aggregations[caption || `${type}_${idx}`] = {
+                        filter,
+                        aggs: {
+                            range: {
+                                date_range: { field }
+                            }
                         }
-                    }
-                }
-            };
+                    };
+
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

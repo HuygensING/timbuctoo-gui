@@ -20,6 +20,7 @@ import { RootState } from '../../reducers/rootReducer';
 import graphql from 'react-apollo/graphql';
 import graphToState from '../../services/graphToState';
 import verifyResponse from '../../services/verifyResponse';
+import { componentsFragment } from '../../graphql/fragments/Components';
 
 interface StateProps {
     denormalizeTree: () => ComponentConfig[];
@@ -61,10 +62,10 @@ const ViewConfig: SFC<GraphProps> = props => {
 const submitViewConfig = gql`
     mutation submitViewConfig($dataSet: String!, $collectionUri: String!, $viewConfig: [ComponentInput!]!) {
         setViewConfig(dataSet: $dataSet, collectionUri: $collectionUri, viewConfig: $viewConfig) {
-            type
+            ...ComponentsFragment
         }
     }
-`;
+${componentsFragment}`;
 
 const mapStateToProps = (state: RootState) => ({
     denormalizeTree: () => denormalizeTree(state.viewconfig)
