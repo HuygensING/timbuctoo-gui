@@ -98,8 +98,6 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location): vo
     if (search) {
         const searchObj = JSON.parse(search as string);
 
-        console.log(searchObj);
-
         if (searchObj.bool.must.length > 0) {
             searchObj.bool.must.forEach(
                 (matches: { bool: { should: [{ match: { [key: string]: string } }] } | undefined }) => {
@@ -109,10 +107,7 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location): vo
 
                     matches.bool.should.forEach(obj => {
                         const key = Object.keys(obj.match)[0];
-                        console.log(key);
-                        const value = obj.match[key];
-                        console.log(value);
-                        return setNewSelected(newFilters, key.slice(0, -4), value);
+                        return setNewSelected(newFilters, key, obj.match[key]);
                     });
                 }
             );
