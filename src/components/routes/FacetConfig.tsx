@@ -59,11 +59,8 @@ const FacetConfig: SFC<GraphProps> = props => {
                 } // TODO: Implement a full text configurable option for the facets
             };
 
-            await props.mutate!({
-                variables: { dataSet: dataSetId, collectionUri: collection!.uri, indexConfig }
-            }).then(data =>
-                alert(`The facet configuration for collection ${collection!.collectionId} has been updated`)
-            ); // TODO: This also should be something fancy
+            await props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, indexConfig } });
+            alert(`The facet configuration for collection ${collection!.collectionId} has been updated`);
         } catch (e) {
             alert(e); // TODO: Make this fancy, I'd suggest to maybe add an optional error to NormalizedFacetConfig, add a scrollTo and style the selectBox accordingly
         }
