@@ -35,12 +35,12 @@ const Section = styled.div`
 `;
 
 const ViewConfig: SFC<GraphProps> = props => {
-    const onSubmit = () => {
+    const onSubmit = async () => {
         const { dataSetId, collection } = props.metadata.dataSetMetadata!;
 
         try {
             const viewConfig = props.denormalizeTree();
-            props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, viewConfig } }).then(
+            await props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, viewConfig } }).then(
                 data => alert(`The collection ${collection!.collectionId} has been updated`)
             ); // TODO: This also should be something fancy
         } catch (e) {
