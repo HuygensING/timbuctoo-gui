@@ -13,6 +13,8 @@ export const HSID: string = 'hsid';
 export const CONTAINER_PADDING: number = 1.5;
 export const HEADER_HEIGHT: string = '4rem';
 
+export const HISTORY_REPLACE = 'REPLACE';
+
 export const RDF_TYPE: string = 'rdf_type';
 export const VALUE: string = 'value';
 export const ITEMS: string = 'items';

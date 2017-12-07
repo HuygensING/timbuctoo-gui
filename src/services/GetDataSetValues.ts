@@ -1,6 +1,6 @@
 // TODO: Rename this file!
 
-const noContent = null;
+import { DataSetMetadata } from '../typings/schema';
 
 export function safeGet<T, U extends keyof T>(arr: T | undefined | null, index: U): T[U] | null {
     if (arr) {
@@ -10,22 +10,17 @@ export function safeGet<T, U extends keyof T>(arr: T | undefined | null, index: 
     }
 }
 
-const getDataSetValues = (dataSets: any, dataSetId: string) => {
-    if (!dataSets || !dataSetId) {
-        return noContent;
+// Casting dataSets as any, for the fields inside are not known to us
+const getCollectionValues = (
+    data: { dataSets?: any } | undefined,
+    metadata: { dataSetMetadata?: DataSetMetadata }
+): null => {
+    if (!data || !data.dataSets || !metadata.dataSetMetadata) {
+        return null;
     }
 
-    return dataSets[dataSetId];
+    const { dataSetId, collection } = metadata.dataSetMetadata;
+    return safeGet(safeGet(data.dataSets, dataSetId), collection!.collectionListId);
 };
 
-const getCollectionValues = (dataSets: any, dataSetId: string, collectionId: string | null) => {
-    const dataSetValues = getDataSetValues(dataSets, dataSetId);
-
-    if (!dataSetValues || !collectionId) {
-        return noContent;
-    }
-
-    return dataSetValues[collectionId];
-};
-
-export { getDataSetValues, getCollectionValues };
+export { getCollectionValues };

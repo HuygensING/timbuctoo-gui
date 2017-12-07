@@ -7,9 +7,11 @@ import InputField from './fields/Input';
 import { ResetButton, SubmitButton } from './fields/Buttons';
 import { compose } from 'redux';
 import { RootState } from '../../reducers/rootReducer';
+import styled, { withProps } from '../../styled-components';
 
 interface Props {
     type: 'dataset' | 'collection' | 'filter';
+    loading: boolean;
 }
 
 interface StoreProps {
@@ -18,7 +20,11 @@ interface StoreProps {
     requestSearch: () => void;
 }
 
-const SearchForm: SFC<Props & StoreProps> = ({ defaultValues, type, handleChange, requestSearch }) => {
+const Form = withProps<{ loading: boolean }>(styled.form)`
+      opacity: ${props => (props.loading ? 0.5 : 1)};
+`;
+
+const SearchForm: SFC<Props & StoreProps> = ({ defaultValues, type, handleChange, requestSearch, loading }) => {
     const onChange = (e: any) => {
         e.preventDefault();
         const val = e.target.value;
@@ -40,7 +46,7 @@ const SearchForm: SFC<Props & StoreProps> = ({ defaultValues, type, handleChange
     const pristine = value.length === 0;
 
     return (
-        <form onSubmit={onSubmit}>
+        <Form onSubmit={onSubmit} loading={loading}>
             <Grid>
                 <Col sm={38.5}>
                     <InputField
@@ -60,7 +66,7 @@ const SearchForm: SFC<Props & StoreProps> = ({ defaultValues, type, handleChange
                     <SubmitButton type={'submit'}>{translate('search.search')}</SubmitButton>
                 </Col>
             </Grid>
-        </form>
+        </Form>
     );
 };
 
