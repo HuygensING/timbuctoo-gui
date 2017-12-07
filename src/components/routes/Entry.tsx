@@ -60,7 +60,7 @@ const dataResolver = compose<SFC<{}>>(
     verifyResponse<FullProps, 'metadata'>('metadata', 'dataSetMetadata'),
     graphqlWithProps<FullProps>(QUERY_ENTRY_VALUES),
     renderLoader(),
-    verifyResponse<FullProps, 'data'>('data', 'dataSetMetadata.collection')
+    verifyResponse<FullProps, 'data'>('data', 'dataSets')
 );
 
 export default dataResolver(Entry);

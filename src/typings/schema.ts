@@ -253,6 +253,7 @@ export interface FacetConfig {
     paths: string[];
     type: FacetConfigType;
     caption: string | null;
+    __typename?: string;
 }
 
 export type FacetConfigType = 'MultiSelect' | 'DateRange' | 'Hierarchical';

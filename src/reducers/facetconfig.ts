@@ -2,6 +2,7 @@ import { CollectionMetadata, FacetConfig } from '../typings/schema';
 import { NormalizedFacetConfig, ReferencePath } from '../typings/index';
 import { arrayMove } from 'react-sortable-hoc';
 import { createReferencePath, mendPath } from '../services/walkPath';
+import { facetErrors } from '../services/Validation';
 import { MetaDataProps } from '../services/metaDataResolver';
 
 // state def
@@ -63,19 +64,27 @@ export const getById = (id: number, state: FacetConfigReducer): NormalizedFacetC
     state.find(config => config.id === id);
 
 export const denormalizeFacetConfig = (config: NormalizedFacetConfig): FacetConfig => {
-    config = { ...config };
+    const denormalizedConfig = { ...config, paths: [] as string[] };
 
-    for (const [idx, referencePath] of config.referencePaths.entries()) {
-        config.paths[idx] = mendPath(referencePath);
+    for (const referencePath of config.referencePaths) {
+        const error = facetErrors(referencePath, config);
+
+        if (error) {
+            throw error;
+        }
+        denormalizedConfig.paths.push(mendPath(referencePath));
     }
 
-    delete config.referencePaths;
-    delete config.id;
-    return config;
+    delete denormalizedConfig.referencePaths;
+    delete denormalizedConfig.id;
+    if (denormalizedConfig.__typename) {
+        delete denormalizedConfig.__typename;
+    }
+    return denormalizedConfig;
 };
 
 export const denormalizeFacets = (facetConfigs: NormalizedFacetConfig[]): FacetConfig[] =>
-    facetConfigs.map(denormalizeFacetConfig); // TODO: make sure it returns a message or something in case of error
+    facetConfigs.map(denormalizeFacetConfig);
 
 // reducer
 const references = (payload: { facetConfig: { paths: string[] }; collectionId: string }): ReferencePath[] => {

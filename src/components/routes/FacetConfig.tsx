@@ -16,6 +16,10 @@ import graphToState from '../../services/graphToState';
 import { RootState } from '../../reducers/rootReducer';
 import { NormalizedFacetConfig } from '../../typings';
 import verifyResponse from '../../services/verifyResponse';
+import { ChildProps } from 'react-apollo';
+import graphql from 'react-apollo/graphql';
+import { FacetConfig } from '../../typings/schema';
+import gql from 'graphql-tag';
 
 interface StateProps {
     normalizedFacets: NormalizedFacetConfig[];
@@ -26,17 +30,40 @@ type FullProps = MetaDataProps &
     RouteComponentProps<{ dataSet: string; collection: string }> &
     FormWrapperProps;
 
+interface GraphIndexConfig {
+    facet: FacetConfig[];
+    fullText?: {
+        caption: '';
+        fields: { path: string }[];
+    };
+}
+
+type GraphProps = ChildProps<FullProps, { dataSet: string; collectionUrl: string; indexConfig: GraphIndexConfig }>;
+
 const Section = styled.div`
     width: 100%;
     padding-bottom: 3rem;
 `;
 
-const FacetConfig: SFC<FullProps> = props => {
-    const onSubmit = () => {
-        const facetconfig = denormalizeFacets(props.normalizedFacets);
-        console.groupCollapsed('sending facet config:');
-        console.log(facetconfig);
-        console.groupEnd();
+const FacetConfig: SFC<GraphProps> = props => {
+    const onSubmit = async () => {
+        const { dataSetId, collection } = props.metadata.dataSetMetadata!;
+
+        try {
+            const facet = denormalizeFacets(props.normalizedFacets);
+            const indexConfig: GraphIndexConfig = {
+                facet,
+                fullText: {
+                    caption: '',
+                    fields: []
+                } // TODO: Implement a full text configurable option for the facets
+            };
+
+            await props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, indexConfig } });
+            alert(`The facet configuration for collection ${collection!.collectionId} has been updated`);
+        } catch (e) {
+            alert(e); // TODO: Make this fancy, I'd suggest to maybe add an optional error to NormalizedFacetConfig, add a scrollTo and style the selectBox accordingly
+        }
     };
 
     return (
@@ -50,6 +77,14 @@ const FacetConfig: SFC<FullProps> = props => {
     );
 };
 
+const submitFacetConfig = gql`
+    mutation submitFacetConfig($dataSet: ID!, $collectionUri: String!, $indexConfig: IndexConfigInput!) {
+        setIndexConfig(dataSet: $dataSet, collectionUri: $collectionUri, indexConfig: $indexConfig) {
+            __typename
+        }
+    }
+`;
+
 const mapStateToProps = (state: RootState) => ({
     normalizedFacets: state.facetconfig
 });
@@ -59,6 +94,7 @@ export default compose<SFC<{}>>(
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
     verifyResponse<FullProps, 'metadata'>('metadata', 'dataSetMetadata.collection'),
+    graphql(submitFacetConfig),
     connect(mapStateToProps),
     graphToState<FullProps>('GRAPH_TO_FACETCONFIG', 'metadata', false)
 )(FacetConfig);

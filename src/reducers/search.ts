@@ -1,6 +1,7 @@
 import { Facet, FacetConfig, FacetOption } from '../typings/schema';
 import { Location } from 'history';
 import * as queryString from 'querystring';
+import { EsValuePath } from '../services/EsQueryStringCreator';
 
 export interface FullTextSearch {
     dataset: Readonly<string>;
@@ -75,7 +76,9 @@ const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] =>
 const setNewSelected = (newFilters: EsFilter[], key: string, valueName: string): void => {
     newFilters.forEach((newFilter, filterIdx) => {
         newFilter.paths.forEach(path => {
-            if (path === key) {
+            const trimmedPath = EsValuePath(path);
+
+            if (trimmedPath === key) {
                 newFilter.values.forEach((newValue, valueIdx) => {
                     if (newValue.name === valueName) {
                         const value = { ...newValue, selected: true };
@@ -104,8 +107,7 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location): vo
 
                     matches.bool.should.forEach(obj => {
                         const key = Object.keys(obj.match)[0];
-                        const value = obj.match[key];
-                        return setNewSelected(newFilters, key.slice(0, -4), value);
+                        return setNewSelected(newFilters, key, obj.match[key]);
                     });
                 }
             );

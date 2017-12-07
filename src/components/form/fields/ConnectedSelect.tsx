@@ -9,6 +9,7 @@ import { compose } from 'redux';
 import { default as metaDataResolver, MetaDataProps } from '../../../services/metaDataResolver';
 import { RDF_TYPE } from '../../../constants/global';
 import verifyResponse from '../../../services/verifyResponse';
+import { branch, renderNothing } from 'recompose';
 
 interface OwnProps extends SelectProps, CollectionEditViewProps {
     onChange: (value: string, property: Property) => void;
@@ -52,5 +53,6 @@ const SelectField: SFC<Props> = ({ name, selected, metadata, onChange, shownAsMu
 export default compose<SFC<OwnProps>>(
     withRouter,
     metaDataResolver<Props>(QUERY_COLLECTION_EDIT_VIEW),
+    branch((props: Props) => props.metadata.loading, renderNothing),
     verifyResponse<Props, 'metadata'>('metadata', 'dataSetMetadata')
 )(SelectField);

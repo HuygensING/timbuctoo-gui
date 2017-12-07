@@ -1,7 +1,7 @@
 import React, { ComponentType, SFC } from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { compose } from 'redux';
-import verifyResponse from '../../services/verifyResponse';
+import verifyResponse, { handleError } from '../../services/verifyResponse';
 import { ChildProps } from '../../typings';
 import { lifecycle, withProps } from 'recompose';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -133,15 +133,11 @@ const mapDispatchToProps = (dispatch: Dispatch<FullProps>) => ({
 
 const dataResolver = compose<ComponentType<{}>>(
     withRouter,
-    metaDataResolver<ApolloProps>(QUERY_COLLECTION_PROPERTIES),
+    metaDataResolver<ApolloProps>(QUERY_COLLECTION_PROPERTIES), // TODO: Need to think about a refetch option, it now caches configuration for facets
     renderLoader('metadata'),
     verifyResponse<FullProps, 'metadata'>('metadata', 'dataSetMetadata.collection'),
     graphqlWithProps<ApolloProps>(QUERY_COLLECTION_VALUES),
-    verifyResponse<FullProps, 'data'>(
-        'data',
-        props =>
-            `dataSets.${props.match.params.dataSet}.${props.metadata.dataSetMetadata!.collection!.collectionListId}`
-    ),
+    handleError('data'),
     connect(mapStateToProps, mapDispatchToProps),
     withProps(({ data, metadata }: FullProps): ExtraProps => ({
         collectionValues: getCollectionValues(data, metadata)

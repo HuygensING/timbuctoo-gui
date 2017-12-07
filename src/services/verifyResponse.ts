@@ -22,7 +22,7 @@ interface SinkProps {
 
 type DataProps<TProps, K extends keyof TProps> = { [P in K]: QueryProps };
 
-const handleError = <TProps extends DataProps<TProps, K>, K = keyof TProps>(dataProp: K) =>
+export const handleError = <TProps extends DataProps<TProps, K>, K = keyof TProps>(dataProp: K) =>
     branch<TProps>((props: any) => !!props[dataProp].error, renderNothing);
 
 const ensureExistence = <TProps>(path: string | ((props: TProps) => string), dataProp: keyof TProps) => {
