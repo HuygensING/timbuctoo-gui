@@ -14,8 +14,8 @@ import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver
 import renderLoader from '../../services/renderLoader';
 import graphToState from '../../services/graphToState';
 import { RootState } from '../../reducers/rootReducer';
-import { NormalizedFacetConfig } from '../../typings/index';
-import handleError from '../../services/handleError';
+import { NormalizedFacetConfig } from '../../typings';
+import verifyResponse from '../../services/verifyResponse';
 import { ChildProps } from 'react-apollo';
 import graphql from 'react-apollo/graphql';
 import { FacetConfig } from '../../typings/schema';
@@ -94,7 +94,7 @@ export default compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
-    handleError('metadata'),
+    verifyResponse<FullProps, 'metadata'>('metadata', 'dataSetMetadata.collection'),
     graphql(submitFacetConfig),
     connect(mapStateToProps),
     graphToState<FullProps>('GRAPH_TO_FACETCONFIG', 'metadata', false)
