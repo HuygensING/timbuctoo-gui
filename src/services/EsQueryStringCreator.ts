@@ -1,4 +1,5 @@
 import { EsFilter, FullTextSearch } from '../reducers/search';
+import { PATH_SPLIT, splitPath } from './walkPath';
 
 export interface EsQuery {
     bool: EsBool;
@@ -28,12 +29,12 @@ export interface EsMatch {
     };
 }
 
-/** create a string from the first path and append it with the for ES needed value
+/** Create path that only holds values for elasticsearch querying
  *
- * @param {string[]} paths
- * @returns {string}
+ * @param {string} path
+ * @constructor
  */
-export const setFirstPathAsString = (paths: string[]): string => `${paths[0]}.raw`;
+export const EsValuePath = (path: string) => `${splitPath(path, true).join(PATH_SPLIT)}.raw`;
 
 /** retrieve all selected values, create a new 'match' for each of them and add them to the query
  *
@@ -48,7 +49,7 @@ const addMatchQueries = (filters: Readonly<EsFilter[]>, query: EsQuery): void =>
         filter.values.forEach(value => {
             if (value.selected) {
                 hasValues = true;
-                const newMatch: EsMatch = { match: { [setFirstPathAsString(filter.paths)]: value.name } };
+                const newMatch: EsMatch = { match: { [EsValuePath(filter.paths[0])]: value.name } };
                 matches.bool.should.push(newMatch);
             }
         });

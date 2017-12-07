@@ -55,8 +55,8 @@ const FacetConfig: SFC<GraphProps> = props => {
                 facet,
                 fullText: {
                     caption: '',
-                    fields: [{ path: '*' }]
-                }
+                    fields: []
+                } // TODO: Implement a full text configurable option for the facets
             };
 
             props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, indexConfig } }).then(
