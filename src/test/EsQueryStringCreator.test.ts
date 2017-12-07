@@ -2,16 +2,16 @@ import { EsFilter, FullTextSearch } from '../reducers/search';
 import { createEsQueryString } from '../services/EsQueryStringCreator';
 import { FACET_TYPE } from '../constants/forms';
 
-describe('Elastic search string creators', () => {
+describe('Elasticsearch string creator', () => {
+    const FullText: FullTextSearch = {
+        collection: '',
+        dataset: '',
+        filter: ''
+    };
+
     it('handles null', () => {
         const filters: Readonly<EsFilter[]> = [];
-        const expectation = null;
-        const FullText: FullTextSearch = {
-            collection: '',
-            dataset: '',
-            filter: ''
-        };
-        expect(createEsQueryString(filters, FullText)).toBe(expectation);
+        expect(createEsQueryString(filters, FullText)).toBe(null);
     });
 
     it('creates the string accordingly', () => {
@@ -19,15 +19,18 @@ describe('Elastic search string creators', () => {
             {
                 type: FACET_TYPE.multiSelect,
                 caption: 'example multiselect',
-                paths: ['path1', 'path2'],
+                paths: [
+                    'collectionList||firstValue.otherCollection||secondValue.Value||value',
+                    'collectionList||thirdValue.ITEMS||items.otherCollection||fourthValue.VALUE||value'
+                ],
                 values: [
                     {
-                        name: 'path1',
+                        name: 'value 1',
                         count: 4,
                         selected: true
                     },
                     {
-                        name: 'path2',
+                        name: 'value 2',
                         count: 2
                     }
                 ]
@@ -35,7 +38,10 @@ describe('Elastic search string creators', () => {
             {
                 type: FACET_TYPE.dateRange,
                 caption: 'example dateRange',
-                paths: ['path2', 'path3'],
+                paths: [
+                    'collectionList||firstValue.otherCollection||secondValue.VALUE||value',
+                    'collectionList||sixthValue.VALUE||value'
+                ],
                 values: [
                     {
                         name: 'bucket 1',
@@ -56,12 +62,8 @@ describe('Elastic search string creators', () => {
             }
         ];
         const expectation =
-            '{"bool":{"must":[{"bool":{"should":[{"match":{"path1.raw":"path1"}},{"match":{"path2.raw":"path1"}}]}},{"bool":{"should":[{"range":{"path2.raw":{"gt":"0","lt":"2"},"path3.raw":{"gt":"0","lt":"2"}}}]}}]}}';
-        const FullText: FullTextSearch = {
-            collection: '',
-            dataset: '',
-            filter: ''
-        };
+            '{"bool":{"must":[{"bool":{"should":[{"match":{"firstValue.secondValue.value.raw":"value 1"}},{"match":{"thirdValue.items.fourthValue.value.raw":"value 1"}}]}},{"bool":{"should":[{"range":{"firstValue.secondValue.value.raw":{"gt":"0","lt":"2"},"sixthValue.value.raw":{"gt":"0","lt":"2"}}}]}}]}}';
+
         expect(createEsQueryString(filters, FullText)).toBe(expectation);
     });
 });

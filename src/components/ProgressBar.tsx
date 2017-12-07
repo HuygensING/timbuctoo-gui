@@ -11,6 +11,8 @@ const ProgressWrapper = styled.div`
 
 const ProgressLabel = styled(Label)`
     display: inline-block;
+    text-overflow: ellipsis;
+    direction: rtl;
     overflow: hidden;
     width: 10rem;
     margin-right: 1rem;

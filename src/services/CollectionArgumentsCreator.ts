@@ -92,7 +92,7 @@ const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Agg
     const entries = facets.entries();
     for (const [idx, { paths, caption, type }] of entries) {
         if (type === FACET_TYPE.multiSelect && (caption || type) && paths) {
-            const field = convertToEsPath(paths[0]);
+            const field = convertToEsPath(paths[0]); // TODO: EsValuePath?
             const filter = searchObj ? setFilteredSearchObj(searchObj, field) : {};
 
             aggregations[caption || `${type}_${idx}`] = {

@@ -1,4 +1,5 @@
 import { EsFilter, FullTextSearch } from '../reducers/search';
+import { PATH_SPLIT, splitPath } from './walkPath';
 import { FACET_TYPE } from '../constants/forms';
 
 export interface EsQuery {
@@ -43,7 +44,12 @@ export interface EsRange {
 }
 
 const RAW = 'raw';
-export const convertToEsPath = (path: string): string => `${path}.${RAW}`;
+/** Create path that only holds values for elasticsearch querying
+ *
+ * @param {string} path
+ * @constructor
+ */
+export const convertToEsPath = (path: string): string => `${splitPath(path, true).join(PATH_SPLIT)}.${RAW}`;
 
 const createMatchQueries = (filter: EsFilter): EsMatch[] => {
     const queries: EsMatch[] = [];

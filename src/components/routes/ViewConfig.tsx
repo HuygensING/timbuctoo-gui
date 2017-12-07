@@ -19,7 +19,7 @@ import renderLoader from '../../services/renderLoader';
 import { RootState } from '../../reducers/rootReducer';
 import graphql from 'react-apollo/graphql';
 import graphToState from '../../services/graphToState';
-import handleError from '../../services/handleError';
+import verifyResponse from '../../services/verifyResponse';
 
 interface StateProps {
     denormalizeTree: () => ComponentConfig[];
@@ -35,17 +35,16 @@ const Section = styled.div`
 `;
 
 const ViewConfig: SFC<GraphProps> = props => {
-    const onSubmit = () => {
+    const onSubmit = async () => {
         const { dataSetId, collection } = props.metadata.dataSetMetadata!;
-        const viewConfig = props.denormalizeTree();
 
-        if (typeof viewConfig === 'string') {
-            return alert(viewConfig); // TODO: Make this fancy, I'd suggest to maybe add an optional error to NormalizedComponentConfig, add a scrollTo and style the selectBox accordingly
+        try {
+            const viewConfig = props.denormalizeTree();
+            await props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, viewConfig } });
+            alert(`The collection ${collection!.collectionId} has been updated`);
+        } catch (e) {
+            alert(e); // TODO: Make this fancy, I'd suggest to maybe add an optional error to NormalizedComponentConfig, add a scrollTo and style the selectBox accordingly
         }
-
-        return props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, viewConfig } })
-            .then(data => alert(`The collection ${collection!.collectionId} has been updated`)) // TODO: This also should be something fancy
-            .catch((err: Error) => console.error('there was an error sending the query', err));
     };
 
     return (
@@ -74,8 +73,8 @@ const mapStateToProps = (state: RootState) => ({
 export default compose<SFC<{}>>(
     withRouter,
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
-    renderLoader('metadata'), // TODO: Add a notFound beneath here
-    handleError('metadata'),
+    renderLoader('metadata'),
+    verifyResponse<FullProps, 'metadata'>('metadata', 'dataSetMetadata.collection'),
     connect(mapStateToProps),
     graphql(submitViewConfig),
     graphToState<FullProps>('GRAPH_TO_VIEWCONFIG', 'metadata', false)

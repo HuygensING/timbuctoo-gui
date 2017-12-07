@@ -42,7 +42,7 @@ export const walkPath = (pathStr: string | undefined, formatters: FormatterConfi
 };
 
 export const createReferencePath = (path: string, collectionId: string): ReferencePath =>
-    path.length > 0 ? [[collectionId], ...(splitPath(path) as ReferencePath)] : [[collectionId]];
+    path.length > 0 ? (splitPath(path) as ReferencePath) : [[collectionId]];
 
 function isValue(obj: Value | Entity): obj is Value {
     return obj.hasOwnProperty(VALUE);
