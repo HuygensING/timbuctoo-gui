@@ -1,8 +1,9 @@
 import { lighten, darken } from 'polished/lib';
 import { ThemeProps } from '../typings/layout';
+import getEnvVar from '../services/getEnvVar';
 
 const COLORS = {
-    timbuctooGreen: '#269075' /* Viridian */,
+    theme: getEnvVar('REACT_APP_PRIMARY_COLOR'),
     white: '#FFFFFF' /* white */,
     lightGrey: '#EBEBEB' /* Ash grey */,
     grey: '#888888' /* Taupe gray */,
@@ -14,9 +15,9 @@ const COLORS = {
 const theme: ThemeProps = {
     colors: {
         primary: {
-            light: lighten(0.1, COLORS.timbuctooGreen),
-            medium: COLORS.timbuctooGreen,
-            dark: darken(0.1, COLORS.timbuctooGreen)
+            light: lighten(0.1, COLORS.theme),
+            medium: COLORS.theme,
+            dark: darken(0.1, COLORS.theme)
         },
         shade: {
             light: COLORS.lightGrey,

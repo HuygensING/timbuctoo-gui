@@ -7,6 +7,7 @@ import { Col } from '../layout/Grid';
 import Image from '../layout/Image';
 import { Content, Title } from '../layout/StyledCopy';
 import { ButtonLink } from '../layout/Button';
+import getEnvVar from '../../services/getEnvVar';
 
 const HeroImageWrapper = styled.div`
     position: relative;
@@ -45,9 +46,8 @@ interface HeroProps {
     buttonText?: string | null;
     imgUrl: string | null;
 }
-
-const defaultImgUrl = '/assets/_tmp/header--library.jpg';
-const Hero = ({ title, content, searchPath, buttonText, imgUrl = defaultImgUrl }: HeroProps) => {
+const defaultImgUrl = getEnvVar('REACT_APP_DEFAULT_HERO_IMAGE');
+const Hero = ({ title, content, searchPath, buttonText, imgUrl }: HeroProps) => {
     return (
         <Col>
             <HeroImageWrapper>

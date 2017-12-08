@@ -1,5 +1,5 @@
-const en = require('./en.json');
-const nl = require('./nl.json');
+import en from './en';
+import nl from './nl';
+const languages = { en, nl };
 
-const Languages: any = { en, nl };
-export default Languages;
+export default languages;

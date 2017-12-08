@@ -5,7 +5,7 @@ import { client } from '../index';
 
 export interface UserReducer {
     hsid: Readonly<string>;
-    language: Readonly<string>;
+    language: Readonly<'en' | 'nl'>;
     loggedIn: Readonly<boolean>;
     avatar: Readonly<string>;
     name: Readonly<string>;
