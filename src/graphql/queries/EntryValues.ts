@@ -113,11 +113,6 @@ function componentPathsToMap(paths: string[], dataSetId: string): KeyValueRecurs
             return result;
         }
 
-        // remove value prop if has one
-        if (segments[segments.length - 1][1] === VALUE) {
-            segments.pop();
-        }
-
         for (const [idx, [collection, segment]] of segments.entries()) {
             if (!segment) {
                 continue;
@@ -132,7 +127,7 @@ function componentPathsToMap(paths: string[], dataSetId: string): KeyValueRecurs
 
                 cur = cur[segment] as KeyValueRecursive;
             } else {
-                const collectionFragment = `...on ${dataSetId}_${collection}`;
+                const collectionFragment = segment === VALUE ? `...on Value` : `...on ${dataSetId}_${collection}`;
 
                 cur[collectionFragment] = {
                     ...(cur[collectionFragment] as KeyValueRecursive),
@@ -196,7 +191,7 @@ function mapToQuery(map: RecursiveType, prefix: string): string {
             if (key === URI) {
                 result.push(key);
             } else {
-                result.push(key + ` { ${VALUE} type }`);
+                result.push(key + ` ${VALUE} type `);
             }
         } else {
             const subQuery = mapToQuery(map[key] as RecursiveType, prefix + '  ') + '\n';
