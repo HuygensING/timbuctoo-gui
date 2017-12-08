@@ -95,12 +95,16 @@ const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Agg
  * @param {string} search
  * @returns {string}
  */
-const setElasticSearchParams = (indexConfig: IndexConfig, search: string): string => {
+const setElasticSearchParams = (indexConfig: IndexConfig, search: string): string | null => {
     const searchObj: EsQuery | null = search ? JSON.parse(search) : null;
     const aggs: Aggs = createAggsString(indexConfig.facet, searchObj);
 
     const elasticSearchParams: ElasticSearchParams =
         !search || !searchObj ? { aggs } : { aggs, post_filter: searchObj };
+
+    if (!searchObj && !aggs.length) {
+        return null;
+    }
 
     return doubleStringify(elasticSearchParams);
 };
@@ -113,11 +117,16 @@ const setElasticSearchParams = (indexConfig: IndexConfig, search: string): strin
  */
 const setCollectionArguments = (indexConfig: IndexConfig, location: Location): string => {
     const { cursor, search } = queryString.parse(location.search.substring(1));
+    const searchQuery = setElasticSearchParams(indexConfig, search as string);
 
-    const elasticsearch = `elasticsearch: ${setElasticSearchParams(indexConfig, search as string)}`;
-    const cursorString = cursor ? `, cursor: ${doubleStringify(cursor)}` : '';
+    const elasticsearch = searchQuery ? `elasticsearch: ${searchQuery}` : '';
+    const cursorString = cursor ? `cursor: ${doubleStringify(cursor)}` : '';
 
-    return `(${elasticsearch}${cursorString})`;
+    if (!searchQuery && !cursor) {
+        return '';
+    }
+
+    return `(${elasticsearch}${elasticsearch && cursorString ? ', ' : ''}${cursorString})`;
 };
 
 export default setCollectionArguments;

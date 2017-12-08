@@ -12,7 +12,7 @@ import getEnvVar from '../../services/getEnvVar';
 const HeroImageWrapper = styled.div`
     position: relative;
     width: 100%;
-    height: 80vh;
+    height: 40vh;
 `;
 
 const DarkenImage = styled.figure`
