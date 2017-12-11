@@ -3,8 +3,6 @@ import styled, { withProps, keyframes } from '../styled-components';
 
 import { Label } from './layout/StyledCopy';
 
-const FILTERED_LABELS = ['_inverse'];
-
 const ProgressWrapper = styled.div`
     white-space: nowrap;
 `;
@@ -45,31 +43,21 @@ const Progress = withProps<Props>(styled.figure)`
 `;
 
 interface Props {
-    label?: string;
     width?: string;
     progress?: number;
     filter?: string[];
+    children?: any;
 }
 
-const ProgressBar: SFC<Props> = ({ label, width, progress, filter = FILTERED_LABELS }) => {
+const ProgressBar: SFC<Props> = ({ width, progress, children }) => {
     // Check if label exists, if not don't render component
-    if (!label) {
+    if (!children) {
         return null;
-    }
-
-    // If filter exists check if label contains any of the filters
-    // If so then don't render component
-    if (filter) {
-        for (let i = 0, limit = filter.length; i < limit; i++) {
-            if (!label || label.indexOf(filter[i]) !== -1) {
-                return null;
-            }
-        }
     }
 
     return (
         <ProgressWrapper>
-            <ProgressLabel>{label}</ProgressLabel>
+            <ProgressLabel>{children}</ProgressLabel>
             <Bar width={width}>
                 <Progress progress={progress} />
             </Bar>

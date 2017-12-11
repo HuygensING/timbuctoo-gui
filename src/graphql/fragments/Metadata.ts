@@ -41,6 +41,8 @@ const collectionPropertiesDensity = gql`
                 name
                 density
                 isList
+                shortenedUri
+                isInverse
                 isValueType
                 referencedCollections {
                     items
