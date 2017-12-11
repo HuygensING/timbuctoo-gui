@@ -74,7 +74,7 @@ const createPropertyConfig = (
 
     return {
         ...EMPTY_COMPONENT[COMPONENTS.keyValue],
-        value: (isInverse ? '®' : '') + shortenedUri,
+        value: (isInverse ? '⬅︎ ' : '') + shortenedUri,
         subComponents: [value]
     } as ComponentConfig;
 };
