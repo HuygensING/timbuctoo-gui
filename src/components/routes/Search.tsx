@@ -31,6 +31,8 @@ import MultiSelectForm from '../form/MultiselectForm';
 import { EsFilter, mergeFilters } from '../../reducers/search';
 import { RootState } from '../../reducers/rootReducer';
 import { ChildProps } from '../../typings/index';
+import { FACET_TYPE } from '../../constants/forms';
+import DateRange from '../form/DateRange';
 
 interface StateProps {
     filters: EsFilter[];
@@ -94,7 +96,16 @@ const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) =
                         <Title>{translate('globals.filters')}</Title>
                         <Dummy text={'search-filter'} height={1} marginY={0.5} />
                         {filters.length > 0 &&
-                            filters.map((filter, idx) => <MultiSelectForm key={idx} filter={filter} index={idx} />)}
+                            filters.map((filter, idx) => {
+                                switch (filter.type) {
+                                    case FACET_TYPE.multiSelect:
+                                        return <MultiSelectForm key={idx} filter={filter} index={idx} />;
+                                    case FACET_TYPE.dateRange:
+                                        return <DateRange key={idx} filter={filter} index={idx} />;
+                                    default:
+                                        return null;
+                                }
+                            })}
                     </StyledForm>
                 </Col>
 

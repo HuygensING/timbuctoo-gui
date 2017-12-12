@@ -115,6 +115,19 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location): vo
     }
 };
 
+const toggleRangeItem = (index: number, [min, max]: [number, number], filters: EsFilter[]): EsFilter => {
+    const filterItem = filters[index];
+
+    const values = filterItem.values.map((val, itemIdx: number) => ({
+        ...val,
+        selected: itemIdx >= min && itemIdx <= max
+    }));
+
+    console.log(values);
+
+    return { ...filterItem, values };
+};
+
 const toggleFilterItem = (index: number, value: string, filters: EsFilter[]): EsFilter => {
     const filterItem = filters[index];
 
@@ -182,6 +195,18 @@ export const mergeFilters = (facetConfigs: FacetConfig[], facetValues: Facet[], 
 
     return {
         type: 'ES_MERGE_FILTERS',
+        payload: { filters }
+    };
+};
+
+export const toggleRange = (index: number, values: [number, number], oldFilters: EsFilter[]) => {
+    const toggledFilter = toggleRangeItem(index, values, oldFilters);
+
+    const filters = oldFilters.slice();
+    filters[index] = toggledFilter;
+
+    return {
+        type: 'ES_TOGGLE_FILTER',
         payload: { filters }
     };
 };
