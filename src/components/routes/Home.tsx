@@ -74,6 +74,7 @@ const Home: SFC<FullProps> = ({ data, user, firstSet }) => {
                     <About
                         title={aboutMe ? getValue(aboutMe.name) : null}
                         body={aboutMe ? getValue(aboutMe.personalInfo) : null}
+                        isMarkDown={false}
                     />
                 )}
             </Col>
