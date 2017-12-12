@@ -21,7 +21,9 @@ const QUERY_COLLECTION_PROPERTIES = ({ match }: Props) => {
                     ...CollectionBase
                     ...CollectionPropertiesDensity
                     ...CollectionSummaryProperties
-                    ...CollectionIndexConfig
+                    indexConfig {
+                        ...CollectionIndexConfig
+                    }
                     viewConfig {
                         ...ComponentsFragment
                     }
