@@ -17,9 +17,9 @@ import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver
 import { compose } from 'redux';
 import renderLoader from '../../services/renderLoader';
 import { RootState } from '../../reducers/rootReducer';
-import graphql from 'react-apollo/graphql';
 import graphToState from '../../services/graphToState';
 import verifyResponse from '../../services/verifyResponse';
+import graphqlWithProps from '../../services/graphqlWithProps';
 import { componentsFragment } from '../../graphql/fragments/Components';
 
 interface StateProps {
@@ -59,7 +59,7 @@ const ViewConfig: SFC<GraphProps> = props => {
     );
 };
 
-const submitViewConfig = gql`
+const submitViewConfig = () => gql`
     mutation submitViewConfig($dataSet: String!, $collectionUri: String!, $viewConfig: [ComponentInput!]!) {
         setViewConfig(dataSet: $dataSet, collectionUri: $collectionUri, viewConfig: $viewConfig) {
             ...ComponentsFragment
@@ -76,7 +76,11 @@ export default compose<SFC<{}>>(
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
     verifyResponse<FullProps, 'metadata'>('metadata', 'dataSetMetadata.collection'),
-    connect(mapStateToProps),
-    graphql(submitViewConfig),
-    graphToState<FullProps>('GRAPH_TO_VIEWCONFIG', 'metadata', false)
+    graphqlWithProps(submitViewConfig, {
+        queryName: 'EntryProperties',
+        path: 'dataSetMetadata.collection.viewConfig',
+        mutationName: 'setViewConfig'
+    }),
+    graphToState<FullProps>('GRAPH_TO_VIEWCONFIG', 'metadata', false),
+    connect(mapStateToProps)
 )(ViewConfig);

@@ -1,21 +1,22 @@
-import Languages from '../lang';
+import languages from '../lang';
 import { store } from '../index';
+import validKeys from '../lang/languageType';
 
-const DEFAULT_LANGUAGE_KEY = 'en';
+export default function translate(translationKey: keyof validKeys): string {
+    const languageKey = store.getState().user.language;
+    const language = languages[languageKey];
 
-export default (translationKey: string): string | null => {
-    const languageKey: string = store.getState().user.language;
-
-    if (!Languages.hasOwnProperty(languageKey)) {
-        return null;
+    if (process.env.NODE_ENV === 'development') {
+        for (const lang in languages) {
+            if (!languages[lang as 'en' | 'nl'][translationKey]) {
+                throw new Error(`Key '${translationKey}' is missing in ${lang}`); // should never happen because of type checker
+            }
+        }
+        return `{{TRANSLATED ${translationKey}}}`; // make sure that hardcoded string stand out
     }
-
-    const language: { [key: string]: string } = Languages[languageKey];
-    const defaultLanguage = Languages[DEFAULT_LANGUAGE_KEY];
-
-    if (language && !(translationKey in language) && process.env.NODE_ENV === 'development') {
-        console.error(`Translation key '${translationKey}' does not exist in language '${languageKey}'!`);
+    if (!language || !language[translationKey]) {
+        return '';
+    } else {
+        return language[translationKey];
     }
-
-    return (language && language[translationKey]) || defaultLanguage[translationKey] || null;
-};
+}

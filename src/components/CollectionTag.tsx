@@ -16,6 +16,8 @@ import Tooltip from './Tooltip';
 import { isKnown } from '../services/HandleUnknowns';
 import { ButtonVariant } from '../typings/layout';
 
+import { PredicateLabel } from './PredicateLabel';
+
 interface Props {
     isOpen: boolean;
     index: number;
@@ -76,9 +78,17 @@ const CollectionTag: SFC<Props> = ({
                     <PropertyLabel>{translate('details.collection.property')}</PropertyLabel>
                     <DensityLabel>{translate('details.collection.density')}</DensityLabel>
                 </PropertiesHeader>
-                {properties.items.map((property: Property, idx: number) => (
-                    <ProgressBar key={idx} label={property.name} width={'100px'} progress={property.density} />
-                ))}
+                {properties.items
+                    .slice()
+                    .filter(p => !p.isInverse)
+                    .sort((a, b) => (a.shortenedUri < b.shortenedUri ? -1 : 1))
+                    .map((property: Property, idx: number) => (
+                        <ProgressBar key={idx} width={'100px'} progress={property.density}>
+                            <PredicateLabel
+                                predicate={property.isList ? property.shortenedUri + '(s)' : property.shortenedUri}
+                            />
+                        </ProgressBar>
+                    ))}
             </Tooltip>
         );
     };

@@ -17,9 +17,10 @@ import { RootState } from '../../reducers/rootReducer';
 import { NormalizedFacetConfig } from '../../typings';
 import verifyResponse from '../../services/verifyResponse';
 import { ChildProps } from 'react-apollo';
-import graphql from 'react-apollo/graphql';
 import { FacetConfig } from '../../typings/schema';
 import gql from 'graphql-tag';
+import { collectionIndexConfig } from '../../graphql/fragments/Metadata';
+import graphqlWithProps from '../../services/graphqlWithProps';
 
 interface StateProps {
     normalizedFacets: NormalizedFacetConfig[];
@@ -77,13 +78,13 @@ const FacetConfig: SFC<GraphProps> = props => {
     );
 };
 
-const submitFacetConfig = gql`
+const submitFacetConfig = () => gql`
     mutation submitFacetConfig($dataSet: ID!, $collectionUri: String!, $indexConfig: IndexConfigInput!) {
         setIndexConfig(dataSet: $dataSet, collectionUri: $collectionUri, indexConfig: $indexConfig) {
-            __typename
+            ...CollectionIndexConfig
         }
     }
-`;
+${collectionIndexConfig}`;
 
 const mapStateToProps = (state: RootState) => ({
     normalizedFacets: state.facetconfig
@@ -94,7 +95,11 @@ export default compose<SFC<{}>>(
     metaDataResolver<FullProps>(QUERY_COLLECTION_PROPERTIES),
     renderLoader('metadata'),
     verifyResponse<FullProps, 'metadata'>('metadata', 'dataSetMetadata.collection'),
-    graphql(submitFacetConfig),
+    graphqlWithProps(submitFacetConfig, {
+        queryName: 'CollectionProperties',
+        path: 'dataSetMetadata.collection.indexConfig',
+        mutationName: 'setIndexConfig'
+    }),
     connect(mapStateToProps),
     graphToState<FullProps>('GRAPH_TO_FACETCONFIG', 'metadata', false)
 )(FacetConfig);

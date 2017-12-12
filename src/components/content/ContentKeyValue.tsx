@@ -4,6 +4,7 @@ import styled from '../../styled-components';
 import { BREAKPOINT } from '../layout/Grid';
 import { Content } from '../layout/StyledCopy';
 import { Entity } from '../../typings/schema';
+import { PredicateLabel } from '../PredicateLabel';
 
 interface Props {
     label: string | undefined;
@@ -18,11 +19,15 @@ const KeyValueWrapper = styled.div`
 
 const Key = Content.withComponent('h2').extend`
     display: inline-block;
-    width: 20%;
+    width: 30%;
     margin: 0;
     vertical-align: top;
+    display: inline-block;
     text-overflow: ellipsis;
     overflow: hidden;
+    white-space: nowrap;
+    direction: rtl;
+    text-align: right;
 
     @media (max-width: ${BREAKPOINT.MOBILE}) {
         width: 100%;
@@ -31,7 +36,7 @@ const Key = Content.withComponent('h2').extend`
 
 const Values = styled.div`
     display: inline-block;
-    width: 80%;
+    width: 70%;
     padding-left: 1rem;
     vertical-align: top;
 
@@ -43,11 +48,10 @@ const Values = styled.div`
 
 const ContentKeyValue = (props: Props) => {
     const { label, children } = props;
-
     return (
         <KeyValueWrapper>
             <Key>
-                <span title={label}>{label}</span>:
+                <PredicateLabel predicate={label} />
             </Key>
             <Values>{children}</Values>
         </KeyValueWrapper>

@@ -23,11 +23,11 @@ const Error: SFC<Props> = ({ errors, status }) => (
             ) : (
                 <div>
                     <Title align="center">{translate('error')}</Title>
-                    {status === 500 || status === 404 ? (
-                        <p>{translate(`error.${status}`)}</p>
-                    ) : (
-                        <p>{translate(`network_error`)}</p>
-                    )}
+                    <p>
+                        {status === 500
+                            ? translate('error.500')
+                            : status === 404 ? translate('error.404') : translate(`network_error`)}
+                    </p>
                 </div>
             )}
         </Col>

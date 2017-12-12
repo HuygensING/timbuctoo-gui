@@ -10,8 +10,8 @@ import { compose } from 'redux';
 import { HEADER_HEIGHT } from '../../constants/global';
 import { RouteComponentProps } from 'react-router';
 import { Link } from '../layout/StyledCopy';
-
-const logo = require('../../assets/logo-timbuctoo.svg');
+import translate from '../../services/translate';
+import getEnvVar from '../../services/getEnvVar';
 
 const StyledHeader = withProps<{ height: string }>(styled.header)`
     border-top: 0.5rem solid ${props => props.theme.colors.primary.medium};
@@ -89,7 +89,7 @@ const Header: SFC<FullProps> = ({ user, onLogOut, routing }) => {
     return (
         <StyledHeader height={HEADER_HEIGHT}>
             <StyledLink to={ROUTE_PATHS.root}>
-                <StyledImg src={logo} alt="timbuctoo" />
+                <StyledImg src={getEnvVar('REACT_APP_LOGO_URL')} alt={translate('globals.app_title')} />
             </StyledLink>
             {dataSetName && (
                 <DataSetLink to={`/${ROUTE_PATHS.details}/${dataSetName.value}`}>dataset {dataSetName.key}</DataSetLink>
