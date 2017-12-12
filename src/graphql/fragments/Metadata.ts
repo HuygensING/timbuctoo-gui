@@ -83,19 +83,17 @@ interface CollectionPropertiesReference {
 }
 
 const collectionIndexConfig = gql`
-    fragment CollectionIndexConfig on CollectionMetadata {
-        indexConfig {
-            facet {
-                paths
-                type
-                caption
-            }
-            fullText {
-                caption
-                fields {
-                    path
-                    boost
-                }
+    fragment CollectionIndexConfig on IndexConfig {
+        facet {
+            paths
+            type
+            caption
+        }
+        fullText {
+            caption
+            fields {
+                path
+                boost
             }
         }
     }

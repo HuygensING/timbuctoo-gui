@@ -93,8 +93,9 @@ const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Agg
  *
  * @param {IndexConfig} indexConfig
  * @param {string} search
- * @returns {string}
+ * @returns {string | null}
  */
+
 const setElasticSearchParams = (indexConfig: IndexConfig, search: string): string | null => {
     const searchObj: EsQuery | null = search ? JSON.parse(search) : null;
     const aggs: Aggs = createAggsString(indexConfig.facet, searchObj);
@@ -102,7 +103,7 @@ const setElasticSearchParams = (indexConfig: IndexConfig, search: string): strin
     const elasticSearchParams: ElasticSearchParams =
         !search || !searchObj ? { aggs } : { aggs, post_filter: searchObj };
 
-    if (!searchObj && !aggs.length) {
+    if (!searchObj && !Object.keys(aggs).length) {
         return null;
     }
 
