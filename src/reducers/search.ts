@@ -83,10 +83,10 @@ export const closestValue = (input: number, arr: Array<number | string>): number
     return value;
 };
 
-const minifyValues = (values: EsValue[]): EsValue[] => {
+export const minifyValues = (values: EsValue[]): EsValue[] => {
     const first = Number(values[0].name);
     const last = Number(values[values.length - 1].name);
-    const step = Math.floor((last - first) / MAX_AMOUNT_RANGE_BUCKETS - 2);
+    const step = Math.floor((last - first) / (MAX_AMOUNT_RANGE_BUCKETS - 2));
 
     const nArr = [...lodashRange(first, last, step), last];
     const minified = nArr.map(name => ({ name: String(name), count: 0 }));
