@@ -1,7 +1,7 @@
 import { Facet, FacetConfig, FacetOption } from '../typings/schema';
 import { Location } from 'history';
 import * as queryString from 'querystring';
-import { convertToEsPath, EsMatches, EsRange, EsRangeProps } from '../services/EsQueryStringCreator';
+import { convertToEsPath, EsMatch, EsMatches, EsRange, EsRangeProps } from '../services/EsQueryStringCreator';
 import { FACET_TYPE } from '../constants/forms';
 import { get, range as lodashRange } from 'lodash';
 import { MAX_AMOUNT_RANGE_BUCKETS } from '../constants/global';
@@ -123,17 +123,24 @@ const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] =>
                     }
                 }
             }
-            obj.range = { gt: 0, lt: obj.values.length ? obj.values.length - 1 : 0 };
+            obj.range = { gt: 0, lt: obj.values.length > 1 ? obj.values.length - 1 : 1 };
         }
         return obj;
     });
 
 const setSelectedFilter = (filter: EsFilter, name: string): EsFilter => {
-    const newFilter = { ...filter };
+    let newFilter: EsFilter = { ...filter };
 
     for (const [idx, value] of filter.values.entries()) {
         if (value.name === name) {
-            newFilter.values[idx].selected = true;
+            const newVal = { ...value, selected: true };
+            let values = newFilter.values.slice();
+            values[idx] = newVal;
+
+            newFilter = {
+                ...filter,
+                values
+            };
         }
     }
 
@@ -146,14 +153,20 @@ const findRangeIndexes = (values: EsValue[], range: EsRangeProps): EsRangeNumber
         gt: 0
     };
 
+    console.group('finding indexes');
+    console.log(range);
     for (const [idx, { name }] of values.entries()) {
+        console.log(name);
+        console.log(idx);
         if (name === range.gt) {
             obj.gt = idx;
         }
         if (name === range.lt) {
-            obj.lt = idx - 1;
+            obj.lt = idx === 0 ? 0 : idx;
         }
     }
+
+    console.groupEnd();
 
     return obj;
 };
@@ -205,7 +218,10 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location): vo
 
                             switch (option) {
                                 case 'match': {
-                                    newFilters[selectedIdx] = setSelectedFilter(newFilters[selectedIdx], keys[0]);
+                                    newFilters[selectedIdx] = setSelectedFilter(
+                                        newFilters[selectedIdx],
+                                        (obj as EsMatch)[option][keys[0]]
+                                    );
                                     break;
                                 }
                                 case 'range': {

@@ -35,7 +35,9 @@ const Section = styled.section`
     display: block;
     float: left;
     width: 100%;
-    margin-bottom: 3.75rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid ${props => props.theme.colors.shade.light};
 `;
 
 const Sub = styled(Subtitle)`

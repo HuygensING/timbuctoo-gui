@@ -34,7 +34,7 @@
     "graphql-tag": "^2.5.0",
     "js-cookie": "^2.1.4",
     "lodash": "^4.17.4",
-    "polished": "^1.7.0",
+    "polished": "^1.9.0",
     "query-string": "^5.0.0",
     "react": "^16.0.0",
     "react-apollo": "^2.0.1",

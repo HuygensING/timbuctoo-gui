@@ -11,6 +11,7 @@ import { connect, Dispatch } from 'react-redux';
 import { RootState } from '../../reducers/rootReducer';
 import { Subtitle } from '../layout/StyledCopy';
 import { withHandlers, withState } from 'recompose';
+import { lighten, darken } from 'polished';
 
 interface OwnProps {
     filter: EsFilter;
@@ -40,36 +41,52 @@ interface RangeState {
 const InputContainer = styled.div`
     position: relative;
     z-index: 2;
+    margin-top: -1.6rem;
 `;
 
 const BucketList = styled.ul`
     width: 100%;
     max-height: 10rem;
     position: relative;
-    bottom: -1.5rem;
     display: inline-flex;
     flex-direction: row;
     flex-wrap: wrap-reverse;
 `;
 
+const Fill = withStyledProps<{ selected: boolean }>(styled.div)`
+    width: 100%;
+    align-self: flex-end;
+    transition: opacity .2s ease;
+    background: ${props => props.theme.colors.shade.medium};
+    opacity: ${props => (props.selected ? 1 : 0.5)};
+`;
+
 const Bucket = withStyledProps<{ selected: boolean }>(styled.li)`
   border: 1px solid ${props => props.theme.colors.white};
+  display: flex;
   cursor: pointer;
   text-align: center;
   transition: background .2s ease;
   font: ${props => props.theme.fonts.body};
   color: ${props => props.theme.colors.white};
-  background: ${props => (props.selected ? props.theme.colors.shade.medium : props.theme.colors.shade.light)};
+  background: ${props => lighten(0.05, props.theme.colors.shade.light)};
   
   &:hover { 
       z-index: 1;   
-      background: ${props => props.theme.colors.shade.dark};
+      background: ${props => props.theme.colors.shade.light};
+      
+      > ${Fill} {
+        background: ${props => darken(0.05, props.theme.colors.shade.medium)}
+      }
    }
 `;
 
 const RangeContainer = styled.section`
     width: 100%;
     display: inline-block;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid ${props => props.theme.colors.shade.light};
 `;
 
 // Needed for styling of range slider
@@ -155,12 +172,17 @@ const DateRange: SFC<Props> = ({
                     return (
                         <Bucket
                             title={value.name}
-                            style={{ width: `${bucketWidth}%`, height: `${value.count / totalCount * 10}rem` }}
+                            style={{ width: `${bucketWidth}%`, height: '10rem' }}
                             key={idx}
                             selected={selected}
                             onClick={toggleBucketHandler(idx, selected)}
                         >
-                            {value.count}
+                            <Fill
+                                selected={selected}
+                                style={{ width: '100%', height: `${value.count / totalCount * 10}rem` }}
+                            >
+                                {value.count}
+                            </Fill>
                         </Bucket>
                     );
                 })}
@@ -190,12 +212,12 @@ const mapDispatchToProps = (dispatch: Dispatch<Props>, props: OwnProps & StatePr
 });
 
 export default compose<ComponentType<OwnProps>>(
+    connect(mapStateToProps, mapDispatchToProps),
     withState('rangeState', 'setRangeState', ({ filter: { range } }: OwnProps): RangeState => ({
         min: range!.gt,
         max: range!.lt
     })),
     withHandlers({
         changeState: ({ setRangeState }) => (newRange: EsRangeNumbers) => setRangeState(newRange)
-    }),
-    connect(mapStateToProps, mapDispatchToProps)
+    })
 )(DateRange);
