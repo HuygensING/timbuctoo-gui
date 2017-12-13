@@ -56,13 +56,7 @@ const Home: SFC<FullProps> = ({ data, user, firstSet }) => {
                 </GridSection>
             )}
 
-            {/* <ListContent
-                smOffset={3}
-                sm={20}
-                smPaddingY={1}
-                title={translate('home.recently_modified.title')}
-                data={allDataSets!}
-            /> */}
+            {/* TODO Add recently modified */}
             <ListContent
                 smOffset={2}
                 sm={20}
