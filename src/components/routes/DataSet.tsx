@@ -39,7 +39,7 @@ class DataSet extends PureComponent<Props> {
 
         return (
             <section>
-                <FullHelmet pageName={`Dataset: ${title}`} />
+                <FullHelmet pageName={getValue(title) || ''} />
 
                 <Hero
                     title={getValue(title)}
