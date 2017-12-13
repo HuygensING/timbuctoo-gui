@@ -5,7 +5,7 @@ import { ROUTE_PATHS } from '../../constants/routeNaming';
 import { calcColWidth } from '../layout/Grid';
 import { Subtitle, Content, Link } from '../layout/StyledCopy';
 
-// import translate from '../../services/translate';
+import translate from '../../services/translate';
 import { getValue } from '../../services/getValue';
 import { DataSetMetadata } from '../../typings/schema';
 import { StyledComponentClass } from 'styled-components';
@@ -28,7 +28,9 @@ const ListContentItem = ({ title, description, dataSetId }: DataSetMetadata) => 
 
     return (
         <ListItem>
-            <LinkableTitle to={`/${ROUTE_PATHS.details}/${dataSetId}`}>{titleField || '<Empty>'}</LinkableTitle>
+            <LinkableTitle to={`/${ROUTE_PATHS.details}/${dataSetId}`}>
+                {titleField || translate('globals.empty')}
+            </LinkableTitle>
             {descrField && <Content>{descrField}</Content>}
         </ListItem>
     );
