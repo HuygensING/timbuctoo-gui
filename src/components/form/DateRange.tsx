@@ -1,7 +1,7 @@
-import React, { ChangeEvent, ComponentType, PureComponent } from 'react';
+import React, { ChangeEvent, ComponentType, SFC } from 'react';
 import InputRange from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
-import { EsFilter, EsRange, EsValue, toggleRange } from '../../reducers/search';
+import { EsFilter, EsRangeNumbers, toggleRange } from '../../reducers/search';
 import styled, { withProps as withStyledProps } from '../../styled-components';
 import InputOptionField from './fields/InputOptionField';
 import { injectGlobal } from 'styled-components';
@@ -10,7 +10,7 @@ import { compose } from 'redux';
 import { connect, Dispatch } from 'react-redux';
 import { RootState } from '../../reducers/rootReducer';
 import { Subtitle } from '../layout/StyledCopy';
-import { withProps } from 'recompose';
+import { withHandlers, withState } from 'recompose';
 
 interface OwnProps {
     filter: EsFilter;
@@ -21,15 +21,21 @@ interface StateProps {
     filters: EsFilter[];
 }
 
-interface MergeProps {
-    range: [number, number];
-}
-
 interface DispatchProps {
-    updateField: (values: EsRange, filters: EsFilter[]) => void;
+    updateField: (values: EsRangeNumbers, filters: EsFilter[]) => void;
 }
 
-type Props = OwnProps & StateProps & DispatchProps & MergeProps;
+interface MergedStateProps {
+    rangeState: RangeState;
+    setRangeState: (newRange: RangeState) => void;
+}
+
+type Props = OwnProps & StateProps & DispatchProps & MergedStateProps;
+
+interface RangeState {
+    min: number;
+    max: number;
+}
 
 const InputContainer = styled.div`
     position: relative;
@@ -40,7 +46,7 @@ const BucketList = styled.ul`
     width: 100%;
     max-height: 10rem;
     position: relative;
-    bottom: -0.5rem;
+    bottom: -1.5rem;
     display: inline-flex;
     flex-direction: row;
     flex-wrap: wrap-reverse;
@@ -66,6 +72,7 @@ const RangeContainer = styled.section`
     display: inline-block;
 `;
 
+// Needed for styling of range slider
 (() => injectGlobal`  
   .input-range__track {
     background: ${theme.colors.shade.medium};
@@ -79,130 +86,116 @@ const RangeContainer = styled.section`
   }
 `)();
 
-class DateRange extends PureComponent<Props, {}> {
-    changeSingleValue = (isMin: boolean) => (e: ChangeEvent<HTMLInputElement>) => {
-        const [min, max] = this.props.range;
-        const val = this.closestValue(Number(e.currentTarget.value), this.props.filter.values.map(value => value.name));
+export const closestValue = (input: number, arr: Array<number | string>): number => {
+    let value: number = 0;
+    let lastDelta: number;
 
-        if ((isMin && val > max) || (!isMin && val < min)) {
+    arr.some((step: number | string, index: number) => {
+        const delta = Math.abs(input - Number(step));
+        if (delta >= lastDelta) {
+            return true;
+        }
+        value = index;
+        lastDelta = delta;
+        return false;
+    });
+
+    return value;
+};
+
+const DateRange: SFC<Props> = ({
+    filter: { range, values, caption },
+    filters,
+    updateField,
+    rangeState,
+    setRangeState
+}) => {
+    const { gt, lt } = range!;
+    const bucketWidth = 100 / values.length;
+    const totalCount = values.map(val => val.count).reduce((next, curr) => next + curr);
+
+    if (!values || values.length < 2) {
+        return null;
+    }
+
+    const changeSingleValueHandler = (isMin: boolean) => (e: ChangeEvent<HTMLInputElement>) => {
+        const idx = closestValue(Number(e.currentTarget.value), values.map(val => val.name));
+
+        if ((isMin && idx > lt) || (!isMin && idx < gt)) {
             return;
         }
 
-        const newRange = [...this.props.range];
-        newRange.splice(isMin ? 0 : 1, 1, val);
-
-        this.props.updateField({ gt: newRange[0], lt: newRange[1] }, this.props.filters);
+        let value = { gt, lt };
+        value[isMin ? 'gt' : 'lt'] = idx;
+        updateField(value, filters);
     };
 
-    onToggleBucket = (idx: number, selected: boolean) => () => {
-        const [min, max] = this.props.range;
+    const toggleBucketHandler = (idx: number, selected: boolean) => () => {
         let isMin: boolean = false;
-        let value = [...this.props.range];
+        let value = { gt, lt };
 
-        // select
+        // selected
         if (!selected) {
-            isMin = idx < min;
+            isMin = idx < gt;
 
-            // deselect
+            // deselected
         } else {
-            if (idx > min && idx < max) {
-                return this.props.updateField({ gt: idx, lt: idx }, this.props.filters);
+            // single out bucket
+            if (idx > gt && idx < lt) {
+                return updateField({ gt: idx, lt: idx }, filters);
             }
 
-            isMin = this.closestValue(idx, [min, max]) === min;
+            isMin = closestValue(idx, [gt, lt]) === gt;
             idx = isMin ? idx + 1 : idx - 1;
         }
 
         // fix wrong overflow
-        if ((isMin && idx > max) || (!isMin && idx < min)) {
-            value = [max, min];
+        if ((isMin && idx > lt) || (!isMin && idx < gt)) {
+            value = { gt: lt, lt: gt };
             isMin = !isMin;
         }
 
-        value.splice(isMin ? 0 : 1, 1, idx);
-
-        this.props.updateField({ gt: value[0], lt: value[1] }, this.props.filters);
+        value[isMin ? 'gt' : 'lt'] = idx;
+        updateField(value, filters);
     };
 
-    onChangeSlider = (value: { min: number; max: number }) => {
-        this.props.updateField({ gt: value.min, lt: value.max }, this.props.filters);
+    const changeSliderHandler = (value: { min: number; max: number }) => {
+        updateField({ gt: value.min, lt: value.max }, filters);
     };
 
-    render() {
-        const { values, caption } = this.props.filter;
-        const [min, max] = this.props.range;
-        const bucketWidth = 100 / values.length;
-        const totalCount = values.map(val => val.count).reduce((next, curr) => next + curr);
-
-        if (!values || values.length < 2) {
-            return null;
-        }
-
-        return (
-            <RangeContainer>
-                <Subtitle>{caption}</Subtitle>
-                <BucketList>
-                    {values.map((value, idx) => {
-                        const selected: boolean = idx <= max && idx >= min;
-                        return (
-                            <Bucket
-                                style={{ width: `${bucketWidth}%`, height: `${value.count / totalCount * 10}rem` }}
-                                key={idx}
-                                selected={selected}
-                                onClick={this.onToggleBucket(idx, selected)}
-                            >
-                                {value.count}
-                            </Bucket>
-                        );
-                    })}
-                </BucketList>
-                <InputContainer style={{ width: `${100 - bucketWidth}%`, left: `${bucketWidth / 2}%` }}>
-                    <InputRange
-                        minValue={0}
-                        maxValue={values.length - 1}
-                        value={{ min, max }}
-                        formatLabel={() => ''}
-                        onChange={this.onChangeSlider}
-                    />
-                </InputContainer>
-                <InputOptionField value={values[min].name} onChange={this.changeSingleValue(true)} />
-                <InputOptionField value={values[max].name} onChange={this.changeSingleValue(false)} />
-            </RangeContainer>
-        );
-    }
-
-    private closestValue = (input: number, arr: Array<number | string>): number => {
-        let value: number = 0;
-        let lastDelta: number;
-
-        arr.some((step: number | string, index: number) => {
-            const delta = Math.abs(input - Number(step));
-            if (delta >= lastDelta) {
-                return true;
-            }
-            value = index;
-            lastDelta = delta;
-            return false;
-        });
-
-        return value;
-    };
-}
-
-const getOutline = (arr: EsValue[]): [number, number] => {
-    let first = 0;
-    let last = arr.length - 1;
-    for (const [idx, val] of arr.entries()) {
-        if (val.selected) {
-            if (first === 0) {
-                first = idx;
-            } else {
-                last = idx;
-            }
-        }
-    }
-
-    return [first, last];
+    return (
+        <RangeContainer>
+            <Subtitle>{caption}</Subtitle>
+            <BucketList>
+                {values.map((value, idx) => {
+                    const selected: boolean = idx <= lt && idx >= gt;
+                    return (
+                        <Bucket
+                            title={value.name}
+                            style={{ width: `${bucketWidth}%`, height: `${value.count / totalCount * 10}rem` }}
+                            key={idx}
+                            selected={selected}
+                            onClick={toggleBucketHandler(idx, selected)}
+                        >
+                            {value.count}
+                        </Bucket>
+                    );
+                })}
+            </BucketList>
+            <InputContainer style={{ width: `${100 - bucketWidth}%`, left: `${bucketWidth / 2}%` }}>
+                <InputRange
+                    minValue={0}
+                    maxValue={values.length - 1}
+                    value={rangeState}
+                    formatLabel={() => ''}
+                    onChange={(newRange: RangeState) => setRangeState(newRange)}
+                    onChangeComplete={changeSliderHandler}
+                />
+            </InputContainer>
+            <InputOptionField value={values[gt].name} onChange={changeSingleValueHandler(true)} />
+            <InputOptionField value={values[lt].name} onChange={changeSingleValueHandler(false)} />
+        </RangeContainer>
+    );
 };
 
 const mapStateToProps = (state: RootState) => ({
@@ -210,12 +203,16 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Props>, props: OwnProps & StateProps) => ({
-    updateField: (values: EsRange, filters: EsFilter[]) => dispatch(toggleRange(props.index, values, filters))
+    updateField: (values: EsRangeNumbers, filters: EsFilter[]) => dispatch(toggleRange(props.index, values, filters))
 });
 
 export default compose<ComponentType<OwnProps>>(
-    withProps((props: OwnProps) => ({
-        range: getOutline(props.filter.values)
+    withState('rangeState', 'setRangeState', ({ filter: { range } }: OwnProps): RangeState => ({
+        min: range!.gt,
+        max: range!.lt
     })),
+    withHandlers({
+        changeState: ({ setRangeState }) => (newRange: EsRangeNumbers) => setRangeState(newRange)
+    }),
     connect(mapStateToProps, mapDispatchToProps)
 )(DateRange);

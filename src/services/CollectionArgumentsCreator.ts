@@ -115,8 +115,8 @@ const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Agg
                             range: {
                                 date_histogram: {
                                     field,
-                                    interval: '36500d',
-                                    format: 'yyyy-MM-dd'
+                                    interval: 'year',
+                                    format: 'yyyy'
                                 }
                             }
                         }
@@ -164,7 +164,7 @@ const setCollectionArguments = (indexConfig: IndexConfig, location: Location): s
     const searchQuery = setElasticSearchParams(indexConfig, search as string);
 
     const elasticsearch = searchQuery ? `elasticsearch: ${searchQuery}` : '';
-    const cursorString = cursor ? `cursor: ${doubleStringify(cursor)}` : '';
+    const cursorString = cursor ? `cursor: ${JSON.stringify(cursor)}` : '';
 
     if (!searchQuery && !cursor) {
         return '';

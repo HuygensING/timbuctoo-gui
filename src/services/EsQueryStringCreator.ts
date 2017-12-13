@@ -1,4 +1,4 @@
-import { EsFilter, FullTextSearch } from '../reducers/search';
+import { EsFilter, EsValue, FullTextSearch } from '../reducers/search';
 import { PATH_SPLIT, splitPath } from './walkPath';
 import { FACET_TYPE } from '../constants/forms';
 
@@ -67,17 +67,33 @@ const createMatchQueries = (filter: EsFilter): EsMatch[] => {
     return queries;
 };
 
+const setRangeAmount = (values: EsValue[], idx: number): string => {
+    if (values[idx]) {
+        return values[idx].name;
+    }
+
+    try {
+        const singleLastCount = Number(values[values.length - 2].name);
+        const lastCount = Number(values[values.length - 1].name);
+        return String(lastCount + (lastCount - singleLastCount));
+    } catch {
+        return values[values.length - 1].name;
+    }
+};
+
 const createRangeQuery = (filter: EsFilter): EsRange[] => {
     if (!filter.range) {
         return [];
     }
 
     const { lt, gt } = filter.range;
-
     const query: EsRange = { range: {} };
 
     for (const path of filter.paths) {
-        query.range[convertToEsPath(path)] = { lt: filter.values[lt].name, gt: filter.values[gt].name };
+        query.range[convertToEsPath(path)] = {
+            lt: setRangeAmount(filter.values, lt + 1),
+            gt: filter.values[gt].name
+        };
     }
 
     return [query];

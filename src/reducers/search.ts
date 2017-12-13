@@ -1,7 +1,11 @@
 import { Facet, FacetConfig, FacetOption } from '../typings/schema';
 import { Location } from 'history';
 import * as queryString from 'querystring';
-import { convertToEsPath } from '../services/EsQueryStringCreator';
+import { convertToEsPath, EsMatches, EsRange, EsRangeProps } from '../services/EsQueryStringCreator';
+import { FACET_TYPE } from '../constants/forms';
+import { get, range as lodashRange } from 'lodash';
+import { MAX_AMOUNT_RANGE_BUCKETS } from '../constants/global';
+import { closestValue } from '../components/form/DateRange';
 
 export interface FullTextSearch {
     dataset: Readonly<string>;
@@ -9,10 +13,10 @@ export interface FullTextSearch {
     filter: Readonly<string>;
 }
 
-export type EsFilter = FacetConfig & { values: EsValue[]; range?: EsRange };
+export type EsFilter = FacetConfig & { values: EsValue[]; range?: EsRangeNumbers };
 export type EsValue = FacetOption & { selected?: boolean };
 
-export interface EsRange {
+export interface EsRangeNumbers {
     lt: number;
     gt: number;
 }
@@ -62,6 +66,22 @@ interface RequestCallAction {
 
 type Action = MergeFilterAction | ToggleFilterAction | SubmitSearchAction | RequestCallAction;
 
+const minifyValues = (values: EsValue[]): EsValue[] => {
+    const first = Number(values[0].name);
+    const last = Number(values[values.length - 1].name);
+    const step = Math.floor((last - first) / MAX_AMOUNT_RANGE_BUCKETS - 2);
+
+    const nArr = [...lodashRange(first, last, step), last];
+    const minified = nArr.map(name => ({ name: String(name), count: 0 }));
+
+    for (const value of values) {
+        const closestIdx = closestValue(Number(value.name), nArr);
+        minified[closestIdx].count += value.count;
+    }
+
+    return minified;
+};
+
 // Helpers
 const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] =>
     facets.map(facet => {
@@ -70,31 +90,70 @@ const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] =>
             return Number(num) === idx || (!!configItem.caption && facet.caption === configItem.caption);
         });
 
-        return {
+        const obj: EsFilter = {
             paths: config ? config.paths : [],
-            type: config ? config.type : 'MultiSelect',
+            type: config ? config.type : FACET_TYPE.multiSelect,
             caption: facet.caption,
             values: facet.options || []
         };
+
+        if (obj.type === FACET_TYPE.dateRange) {
+            if (obj.values.length > MAX_AMOUNT_RANGE_BUCKETS) {
+                try {
+                    obj.values = minifyValues(obj.values);
+                } catch (e) {
+                    if (process.env.NODE_ENV === 'development') {
+                        console.warn(e);
+                    }
+                }
+            }
+            obj.range = { gt: 0, lt: obj.values.length ? obj.values.length - 1 : 0 };
+        }
+        return obj;
     });
 
-const setNewSelected = (newFilters: EsFilter[], key: string, valueName: string): void => {
-    newFilters.forEach((newFilter, filterIdx) => {
-        newFilter.paths.forEach(path => {
+const setSelectedFilter = (filter: EsFilter, name: string): EsFilter => {
+    const newFilter = { ...filter };
+
+    for (const [idx, value] of filter.values.entries()) {
+        if (value.name === name) {
+            newFilter.values[idx].selected = true;
+        }
+    }
+
+    return newFilter;
+};
+
+const findRangeIndexes = (values: EsValue[], range: EsRangeProps): EsRangeNumbers => {
+    const obj = {
+        lt: values.length - 1,
+        gt: 0
+    };
+
+    for (const [idx, { name }] of values.entries()) {
+        if (name === range.gt) {
+            obj.gt = idx;
+        }
+        if (name === range.lt) {
+            obj.lt = idx - 1;
+        }
+    }
+
+    return obj;
+};
+
+const findPathInFilters = (filters: EsFilter[], pathToFind: string): number | null => {
+    for (const [idx, filter] of filters.entries()) {
+        for (const path of filter.paths) {
             const trimmedPath = convertToEsPath(path);
 
-            if (trimmedPath === key) {
-                newFilter.values.forEach((newValue, valueIdx) => {
-                    if (newValue.name === valueName) {
-                        const value = { ...newValue, selected: true };
-                        let values = newFilter.values.slice();
-                        values[valueIdx] = value;
-                        newFilters[filterIdx] = { ...newFilter, values };
-                    }
-                });
+            if (trimmedPath === pathToFind) {
+                return idx;
             }
-        });
-    });
+        }
+    }
+
+    return null;
 };
 
 export const mergeOldSelected = (newFilters: EsFilter[], location: Location): void => {
@@ -104,33 +163,53 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location): vo
         const searchObj = JSON.parse(search as string);
 
         if (searchObj.bool.must.length > 0) {
-            searchObj.bool.must.forEach(
-                (matches: { bool: { should: [{ match: { [key: string]: string } }] } | undefined }) => {
-                    if (!matches.bool || !matches.bool.should) {
-                        return;
-                    }
-
-                    matches.bool.should.forEach(obj => {
-                        if (!obj.match) {
-                            return;
-                        }
-
-                        const keys = Object.keys(obj.match);
-
-                        if (!keys.length) {
-                            return;
-                        }
-
-                        const key = Object.keys(obj.match)[0];
-                        return setNewSelected(newFilters, key, obj.match[key]);
-                    });
+            searchObj.bool.must.forEach((matches: EsMatches) => {
+                if (!matches.bool || !matches.bool.should) {
+                    return;
                 }
-            );
+
+                matches.bool.should.forEach(obj => {
+                    type MatchOption = 'match' | 'range';
+                    const options: Array<MatchOption> = ['match', 'range'];
+
+                    for (const option of options) {
+                        const match = get(obj, option);
+                        if (match) {
+                            const keys = Object.keys(match);
+
+                            if (!keys) {
+                                continue;
+                            }
+
+                            const selectedIdx = findPathInFilters(newFilters, keys[0]);
+
+                            if (selectedIdx === null) {
+                                continue;
+                            }
+
+                            switch (option) {
+                                case 'match': {
+                                    newFilters[selectedIdx] = setSelectedFilter(newFilters[selectedIdx], keys[0]);
+                                    break;
+                                }
+                                case 'range': {
+                                    newFilters[selectedIdx].range = findRangeIndexes(
+                                        newFilters[selectedIdx].values,
+                                        (obj as EsRange)[option][keys[0]]
+                                    );
+                                    break;
+                                }
+                                default:
+                            }
+                        }
+                    }
+                });
+            });
         }
     }
 };
 
-const toggleRangeItem = (index: number, range: EsRange, filters: EsFilter[]): EsFilter => {
+const toggleRangeItem = (index: number, range: EsRangeNumbers, filters: EsFilter[]): EsFilter => {
     const filterItem = filters[index];
     return { ...filterItem, range };
 };
@@ -206,7 +285,7 @@ export const mergeFilters = (facetConfigs: FacetConfig[], facetValues: Facet[], 
     };
 };
 
-export const toggleRange = (index: number, range: EsRange, oldFilters: EsFilter[]) => {
+export const toggleRange = (index: number, range: EsRangeNumbers, oldFilters: EsFilter[]) => {
     const toggledFilter = toggleRangeItem(index, range, oldFilters);
 
     const filters = oldFilters.slice();
