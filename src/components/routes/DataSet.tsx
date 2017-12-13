@@ -39,7 +39,7 @@ class DataSet extends PureComponent<Props> {
 
         return (
             <section>
-                <FullHelmet pageName={`Dataset: ${title}`} />
+                <FullHelmet pageName={getValue(title) || ''} />
 
                 <Hero
                     title={getValue(title)}
@@ -93,12 +93,16 @@ class DataSet extends PureComponent<Props> {
 
         const title = getValue(provenanceInfo.title);
         const body = getValue(provenanceInfo.body);
+        const bodyType = provenanceInfo.body ? provenanceInfo.body.type : '';
 
         if (!title || !body) {
             return null;
         }
 
-        return <About title={title} body={body} />;
+        const isMarkDown =
+            bodyType.startsWith('http://spec.commonmark.org/') ||
+            bodyType === 'https://daringfireball.net/projects/markdown/syntax';
+        return <About title={title} body={body} isMarkDown={isMarkDown} />;
     }
 }
 

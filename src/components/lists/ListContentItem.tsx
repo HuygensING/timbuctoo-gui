@@ -3,13 +3,12 @@ import styled from '../../styled-components';
 
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import { calcColWidth } from '../layout/Grid';
-import { Subtitle, Content, Link, Label } from '../layout/StyledCopy';
+import { Subtitle, Content, Link } from '../layout/StyledCopy';
 
 import translate from '../../services/translate';
 import { getValue } from '../../services/getValue';
 import { DataSetMetadata } from '../../typings/schema';
-
-const Datasets = ['World Leaders', 'German Royalty', '18th century literature'];
+import { StyledComponentClass } from 'styled-components';
 
 const ListItem = styled.li`
     position: relative;
@@ -17,19 +16,7 @@ const ListItem = styled.li`
     border-top: 1px solid ${props => props.theme.colors.shade.medium};
 `;
 
-const StyledLink = styled(Link)`
-    color: ${props => props.theme.colors.primary.medium};
-`;
-
-const DateLabel = styled(Label)`
-    position: absolute;
-    display: block;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    height: 1rem;
-    margin: auto;
-`;
+const LinkableTitle = Subtitle.withComponent(Link) as StyledComponentClass<{}, {}, { to: string }>;
 
 const ListContentItem = ({ title, description, dataSetId }: DataSetMetadata) => {
     const titleField = getValue(title);
@@ -41,16 +28,10 @@ const ListContentItem = ({ title, description, dataSetId }: DataSetMetadata) => 
 
     return (
         <ListItem>
-            {titleField && <Subtitle>{titleField}</Subtitle>}
-            {descrField && (
-                <Content>
-                    {descrField} in
-                    <StyledLink to={`/${ROUTE_PATHS.details}/userId/${dataSetId}`}>
-                        {Datasets[Math.floor(Math.random() * Datasets.length)]}
-                    </StyledLink>
-                </Content>
-            )}
-            <DateLabel>{translate('globals.today')}</DateLabel>
+            <LinkableTitle to={`/${ROUTE_PATHS.details}/${dataSetId}`}>
+                {titleField || translate('globals.empty')}
+            </LinkableTitle>
+            {descrField && <Content>{descrField}</Content>}
         </ListItem>
     );
 };

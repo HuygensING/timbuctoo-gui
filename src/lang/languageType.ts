@@ -1,4 +1,5 @@
 type languageType = {
+    'globals.empty': string;
     'globals.filters': string;
     'globals.results': string;
     'globals.yesterday': string;

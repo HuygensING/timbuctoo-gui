@@ -138,7 +138,7 @@ const dataSetMetadataFragment = gql`
         }
         provenanceInfo {
             title { value }
-            body { value }
+            body { value type }
         }
     }
     ${contactFragment}

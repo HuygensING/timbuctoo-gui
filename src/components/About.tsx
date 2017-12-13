@@ -2,11 +2,20 @@ import React, { PureComponent } from 'react';
 import styled from '../styled-components';
 import { Col, Grid } from './layout/Grid';
 import { Content, Title } from './layout/StyledCopy';
-import { Button } from './layout/Button';
+// import { Button } from './layout/Button';
+import Remarkable from 'remarkable';
+import theme from '../theme';
+
+const parser = new Remarkable({
+    html: false,
+    linkify: true,
+    typographer: false
+});
 
 interface Props {
     title: string | null;
     body: string | null;
+    isMarkDown: boolean;
 }
 
 interface State {
@@ -17,8 +26,31 @@ const StyledCol = styled(Col)`
     background: ${props => props.theme.colors.shade.light};
 `;
 
-const Toggle = Button.extend`
-    margin-top: 2rem;
+const Toggle = styled.a`
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    cursor: pointer;
+    padding: 5px;
+    background: ${theme.colors.shade.light};
+`;
+
+const collapsedHeight = 150;
+const fadeOutHeight = 50;
+
+const OverflowContent = Content.extend`
+    position: relative;
+    max-height: ${(props: any) => (props.isOpen ? 'none' : collapsedHeight + 'px')};
+    overflow: hidden;
+` as any;
+
+const Overflow = styled.div`
+    position: absolute;
+    top: ${collapsedHeight - fadeOutHeight}px;
+    left: 0;
+    height: ${fadeOutHeight}px;
+    width: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), ${theme.colors.shade.light});
 `;
 
 class About extends PureComponent<Props, State> {
@@ -37,17 +69,22 @@ class About extends PureComponent<Props, State> {
             return null;
         }
 
-        const toggleActive = body.length > 300;
-        const bodyText = toggleActive && !this.state.isOpen ? body.substr(0, 300) : body;
-
         return (
             <Grid sm={48}>
                 <StyledCol sm={48} smPadding={3}>
                     <Title>{title}</Title>
-                    <Content>{bodyText}</Content>
-                    {toggleActive && (
-                        <Toggle onClick={this.toggleState}>{this.state.isOpen ? 'Show less' : 'Show more'}</Toggle>
-                    )}
+                    <OverflowContent isOpen={this.state.isOpen}>
+                        {this.props.isMarkDown ? (
+                            <span dangerouslySetInnerHTML={{ __html: parser.render(body) }} />
+                        ) : (
+                            body
+                        )}
+                        {this.state.isOpen ? null : (
+                            <Overflow>
+                                <Toggle onClick={this.toggleState}>Show more...</Toggle>
+                            </Overflow>
+                        )}
+                    </OverflowContent>
                 </StyledCol>
             </Grid>
         );
