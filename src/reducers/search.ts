@@ -153,11 +153,7 @@ const findRangeIndexes = (values: EsValue[], range: EsRangeProps): EsRangeNumber
         gt: 0
     };
 
-    console.group('finding indexes');
-    console.log(range);
     for (const [idx, { name }] of values.entries()) {
-        console.log(name);
-        console.log(idx);
         if (name === range.gt) {
             obj.gt = idx;
         }
@@ -165,9 +161,6 @@ const findRangeIndexes = (values: EsValue[], range: EsRangeProps): EsRangeNumber
             obj.lt = idx === 0 ? 0 : idx;
         }
     }
-
-    console.groupEnd();
-
     return obj;
 };
 
