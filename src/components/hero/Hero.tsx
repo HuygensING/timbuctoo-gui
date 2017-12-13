@@ -31,6 +31,7 @@ const CenteredContent = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    white-space: pre-line;
 `;
 
 const ButtonContainer = styled.div`

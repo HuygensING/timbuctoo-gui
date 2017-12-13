@@ -50,6 +50,7 @@
     "recompose": "^0.26.0",
     "redux": "^3.7.2",
     "redux-connect": "^5.1.0",
+    "remarkable": "^1.7.1",
     "styled-components": "^2.1.2"
   },
   "devDependencies": {

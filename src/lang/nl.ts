@@ -2,6 +2,7 @@ import languageType from './languageType';
 import getEnvVar from '../services/getEnvVar';
 
 const translation: languageType = {
+    'globals.empty': '<Leeg>',
     'globals.filters': 'Filters',
     'globals.results': 'Resultaten',
     'globals.yesterday': 'gisteren',
