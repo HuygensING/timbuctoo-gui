@@ -1,7 +1,7 @@
 import React, { ChangeEvent, ComponentType, PureComponent } from 'react';
 import InputRange from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
-import { EsFilter, EsValue, toggleRange } from '../../reducers/search';
+import { EsFilter, EsRange, EsValue, toggleRange } from '../../reducers/search';
 import styled, { withProps as withStyledProps } from '../../styled-components';
 import InputOptionField from './fields/InputOptionField';
 import { injectGlobal } from 'styled-components';
@@ -26,7 +26,7 @@ interface MergeProps {
 }
 
 interface DispatchProps {
-    updateField: (values: [number, number], filters: EsFilter[]) => void;
+    updateField: (values: EsRange, filters: EsFilter[]) => void;
 }
 
 type Props = OwnProps & StateProps & DispatchProps & MergeProps;
@@ -91,7 +91,7 @@ class DateRange extends PureComponent<Props, {}> {
         const newRange = [...this.props.range];
         newRange.splice(isMin ? 0 : 1, 1, val);
 
-        this.props.updateField(newRange as [number, number], this.props.filters);
+        this.props.updateField({ gt: newRange[0], lt: newRange[1] }, this.props.filters);
     };
 
     onToggleBucket = (idx: number, selected: boolean) => () => {
@@ -106,7 +106,7 @@ class DateRange extends PureComponent<Props, {}> {
             // deselect
         } else {
             if (idx > min && idx < max) {
-                return this.props.updateField([idx, idx], this.props.filters);
+                return this.props.updateField({ gt: idx, lt: idx }, this.props.filters);
             }
 
             isMin = this.closestValue(idx, [min, max]) === min;
@@ -121,11 +121,11 @@ class DateRange extends PureComponent<Props, {}> {
 
         value.splice(isMin ? 0 : 1, 1, idx);
 
-        this.props.updateField(value as [number, number], this.props.filters);
+        this.props.updateField({ gt: value[0], lt: value[1] }, this.props.filters);
     };
 
     onChangeSlider = (value: { min: number; max: number }) => {
-        this.props.updateField([value.min, value.max], this.props.filters);
+        this.props.updateField({ gt: value.min, lt: value.max }, this.props.filters);
     };
 
     render() {
@@ -137,8 +137,6 @@ class DateRange extends PureComponent<Props, {}> {
         if (!values || values.length < 2) {
             return null;
         }
-
-        console.log(this.props.range);
 
         return (
             <RangeContainer>
@@ -212,7 +210,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Props>, props: OwnProps & StateProps) => ({
-    updateField: (values: [number, number], filters: EsFilter[]) => dispatch(toggleRange(props.index, values, filters))
+    updateField: (values: EsRange, filters: EsFilter[]) => dispatch(toggleRange(props.index, values, filters))
 });
 
 export default compose<ComponentType<OwnProps>>(

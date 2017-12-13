@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import verifyResponse, { handleError } from '../../services/verifyResponse';
 import { lifecycle, withProps } from 'recompose';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { Location } from 'history';
+import { History, Location } from 'history';
 import { CollectionMetadata, DataSetMetadata, Facet, FacetConfig } from '../../typings/schema';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import renderLoader from '../../services/renderLoader';
@@ -14,7 +14,7 @@ import { getValuesFromObject } from '../../services/getValue';
 import { getCollectionValues } from '../../services/GetDataSetValues';
 import translate from '../../services/translate';
 import { createEsQueryString } from '../../services/EsQueryStringCreator';
-// import { encode } from '../../services/UrlStringCreator';
+import { encode } from '../../services/UrlStringCreator';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
 import FullHelmet from '../FullHelmet';
@@ -26,7 +26,8 @@ import Pagination from '../search/Pagination';
 import { Dummy } from '../Dummy';
 import { Title } from '../layout/StyledCopy';
 import styled, { withProps as withStyledProps } from '../../styled-components';
-// import MultiSelectForm from '../form/MultiselectForm';
+import MultiSelectForm from '../form/MultiselectForm';
+import { debounce } from 'lodash';
 
 import { EsFilter, mergeFilters } from '../../reducers/search';
 import { RootState } from '../../reducers/rootReducer';
@@ -99,26 +100,9 @@ const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) =
                             filters.map((filter, idx) => {
                                 switch (filter.type) {
                                     case FACET_TYPE.multiSelect:
-                                        return (
-                                            <DateRange
-                                                key={idx}
-                                                filter={{
-                                                    paths: ['one'],
-                                                    type: 'DateRange',
-                                                    caption: 'yoloo',
-                                                    values: [
-                                                        { name: '1993', count: 14 },
-                                                        { name: '1995', count: 18 },
-                                                        { name: '2001', count: 21 },
-                                                        { name: '2013', count: 3 }
-                                                    ]
-                                                }}
-                                                index={idx}
-                                            />
-                                        );
-                                    // return <MultiSelectForm key={idx} filter={filter} index={idx} />;
+                                        return <MultiSelectForm key={idx} filter={filter} index={idx} />;
                                     case FACET_TYPE.dateRange:
-                                        return null;
+                                        return <DateRange key={idx} filter={filter} index={idx} />;
                                     default:
                                         return null;
                                 }
@@ -148,6 +132,10 @@ const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) =
     );
 };
 
+const debounceReplace = debounce((history: History, path: string) => {
+    history.replace(path);
+}, 300);
+
 const mapStateToProps = (state: RootState) => ({
     filters: state.search.filters,
     callRequested: state.search.callRequested,
@@ -173,9 +161,9 @@ const dataResolver = compose<ComponentType<{}>>(
     lifecycle<FullProps, {}>({
         componentWillReceiveProps(nextProps: FullProps) {
             if (nextProps.callRequested && !this.props.callRequested) {
-                // const query = nextProps.createQueryString();
-                // const searchParam = query ? `?search=${encode(query)}` : '';
-                // nextProps.history.replace(location.pathname + searchParam);
+                const query = nextProps.createQueryString();
+                const searchParam = query ? `?search=${encode(query)}` : '';
+                debounceReplace(nextProps.history, location.pathname + searchParam);
             } else if (nextProps.data && this.props.data !== nextProps.data) {
                 const { collectionValues, metadata, location } = nextProps;
                 nextProps.mergeFilter(

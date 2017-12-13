@@ -9,8 +9,13 @@ export interface FullTextSearch {
     filter: Readonly<string>;
 }
 
-export type EsFilter = FacetConfig & { values: EsValue[] };
+export type EsFilter = FacetConfig & { values: EsValue[]; range?: EsRange };
 export type EsValue = FacetOption & { selected?: boolean };
+
+export interface EsRange {
+    lt: number;
+    gt: number;
+}
 
 export interface SearchReducer {
     fullText: Readonly<FullTextSearch>;
@@ -106,6 +111,16 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location): vo
                     }
 
                     matches.bool.should.forEach(obj => {
+                        if (!obj.match) {
+                            return;
+                        }
+
+                        const keys = Object.keys(obj.match);
+
+                        if (!keys.length) {
+                            return;
+                        }
+
                         const key = Object.keys(obj.match)[0];
                         return setNewSelected(newFilters, key, obj.match[key]);
                     });
@@ -115,17 +130,9 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location): vo
     }
 };
 
-const toggleRangeItem = (index: number, [min, max]: [number, number], filters: EsFilter[]): EsFilter => {
+const toggleRangeItem = (index: number, range: EsRange, filters: EsFilter[]): EsFilter => {
     const filterItem = filters[index];
-
-    const values = filterItem.values.map((val, itemIdx: number) => ({
-        ...val,
-        selected: itemIdx >= min && itemIdx <= max
-    }));
-
-    console.log(values);
-
-    return { ...filterItem, values };
+    return { ...filterItem, range };
 };
 
 const toggleFilterItem = (index: number, value: string, filters: EsFilter[]): EsFilter => {
@@ -199,8 +206,8 @@ export const mergeFilters = (facetConfigs: FacetConfig[], facetValues: Facet[], 
     };
 };
 
-export const toggleRange = (index: number, values: [number, number], oldFilters: EsFilter[]) => {
-    const toggledFilter = toggleRangeItem(index, values, oldFilters);
+export const toggleRange = (index: number, range: EsRange, oldFilters: EsFilter[]) => {
+    const toggledFilter = toggleRangeItem(index, range, oldFilters);
 
     const filters = oldFilters.slice();
     filters[index] = toggledFilter;

@@ -22,8 +22,10 @@ interface Agg {
     filter: EsQuery | {};
     aggs: {
         range?: {
-            date_range: {
+            date_histogram: {
                 field: string;
+                interval: string;
+                format: string;
             };
         };
         name?: {
@@ -111,7 +113,11 @@ const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Agg
                         filter,
                         aggs: {
                             range: {
-                                date_range: { field }
+                                date_histogram: {
+                                    field,
+                                    interval: '36500d',
+                                    format: 'yyyy-MM-dd'
+                                }
                             }
                         }
                     };

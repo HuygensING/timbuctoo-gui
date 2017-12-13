@@ -67,50 +67,17 @@ const createMatchQueries = (filter: EsFilter): EsMatch[] => {
     return queries;
 };
 
-const createRangeProps = (filter: EsFilter): EsRangeProps | null => {
-    let startIdx: number | null = null;
-    let endIdx: number | null = null;
-
-    // discover the range of values that is needed
-    for (const [idx, value] of filter.values.entries()) {
-        if (!value.selected) {
-            continue;
-        }
-
-        if (typeof startIdx !== 'number') {
-            startIdx = idx;
-        } else {
-            endIdx = idx;
-        }
-    }
-
-    // no selection
-    if (startIdx === null) {
-        return null;
-    }
-
-    const rangeProps: EsRangeProps = {};
-
-    // only start range
-    rangeProps.gt = startIdx.toString();
-
-    if (endIdx) {
-        rangeProps.lt = endIdx.toString();
-    }
-
-    return rangeProps;
-};
-
 const createRangeQuery = (filter: EsFilter): EsRange[] => {
-    const rangeProps = createRangeProps(filter);
-    if (!rangeProps) {
+    if (!filter.range) {
         return [];
     }
+
+    const { lt, gt } = filter.range;
 
     const query: EsRange = { range: {} };
 
     for (const path of filter.paths) {
-        query.range[convertToEsPath(path)] = rangeProps;
+        query.range[convertToEsPath(path)] = { lt: filter.values[lt].name, gt: filter.values[gt].name };
     }
 
     return [query];
