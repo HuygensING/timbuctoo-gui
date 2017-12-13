@@ -24,6 +24,7 @@ import { ChildProps } from '../../typings';
 
 interface Data {
     promotedDataSets: DataSetMetadata[];
+    allDataSets: DataSetMetadata[];
     aboutMe: AboutMe;
 }
 
@@ -34,7 +35,8 @@ interface StateProps {
 type FullProps = ChildProps<StateProps & { firstSet: string | null } & RouteComponentProps<any>, Data>;
 
 const Home: SFC<FullProps> = ({ data, user, firstSet }) => {
-    const { promotedDataSets, aboutMe } = data!;
+    const { promotedDataSets, aboutMe, allDataSets } = data;
+
     return (
         <Grid>
             <FullHelmet pageName="home" />
@@ -48,25 +50,25 @@ const Home: SFC<FullProps> = ({ data, user, firstSet }) => {
 
             {promotedDataSets && (
                 <GridSection title={translate('home.featured.title')} cols={5} colSizeOffset={2}>
-                    {promotedDataSets.map((props, idx: number) => (
-                        <FeaturedContentBlock key={idx} {...props} {...user} />
-                    ))}
+                    {promotedDataSets
+                        .slice(0, 5)
+                        .map((props, idx: number) => <FeaturedContentBlock key={idx} {...props} {...user} />)}
                 </GridSection>
             )}
 
-            <ListContent
+            {/* <ListContent
                 smOffset={3}
                 sm={20}
                 smPaddingY={1}
                 title={translate('home.recently_modified.title')}
-                data={promotedDataSets!}
-            />
+                data={allDataSets!}
+            /> */}
             <ListContent
                 smOffset={2}
                 sm={20}
                 smPaddingY={1}
                 title={translate('home.most_popular.title')}
-                data={promotedDataSets!}
+                data={allDataSets!}
             />
 
             <Col sm={48}>
@@ -88,6 +90,15 @@ const query = gql`
             imageUrl {
                 value
             }
+            title {
+                value
+            }
+            description {
+                value
+            }
+            dataSetId
+        }
+        allDataSets {
             title {
                 value
             }
