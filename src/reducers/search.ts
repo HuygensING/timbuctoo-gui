@@ -5,7 +5,6 @@ import { convertToEsPath, EsMatches, EsRange, EsRangeProps } from '../services/E
 import { FACET_TYPE } from '../constants/forms';
 import { get, range as lodashRange } from 'lodash';
 import { MAX_AMOUNT_RANGE_BUCKETS } from '../constants/global';
-import { closestValue } from '../components/form/DateRange';
 
 export interface FullTextSearch {
     dataset: Readonly<string>;
@@ -66,6 +65,24 @@ interface RequestCallAction {
 
 type Action = MergeFilterAction | ToggleFilterAction | SubmitSearchAction | RequestCallAction;
 
+// Helpers
+export const closestValue = (input: number, arr: Array<number | string>): number => {
+    let value: number = 0;
+    let lastDelta: number;
+
+    arr.some((step: number | string, index: number) => {
+        const delta = Math.abs(input - Number(step));
+        if (delta >= lastDelta) {
+            return true;
+        }
+        value = index;
+        lastDelta = delta;
+        return false;
+    });
+
+    return value;
+};
+
 const minifyValues = (values: EsValue[]): EsValue[] => {
     const first = Number(values[0].name);
     const last = Number(values[values.length - 1].name);
@@ -82,7 +99,6 @@ const minifyValues = (values: EsValue[]): EsValue[] => {
     return minified;
 };
 
-// Helpers
 const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] =>
     facets.map(facet => {
         const config = configs.find((configItem, idx) => {

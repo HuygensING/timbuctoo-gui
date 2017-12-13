@@ -86,6 +86,8 @@ const setFilteredSearchObj = (searchObj: EsQuery, field: string): EsQuery => {
 
     return filteredSearchObj;
 };
+const HISTOGRAM_INTERVAL = 'year';
+const HISTOGRAM_FORMAT = 'yyyy';
 
 /** create a string with aggregations. In case of a querystring add a filter for each aggregation to optimize the counts of filters to be shown
  *
@@ -115,8 +117,8 @@ const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Agg
                             range: {
                                 date_histogram: {
                                     field,
-                                    interval: 'year',
-                                    format: 'yyyy'
+                                    interval: HISTOGRAM_INTERVAL,
+                                    format: HISTOGRAM_FORMAT
                                 }
                             }
                         }

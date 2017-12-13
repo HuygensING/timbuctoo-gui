@@ -1,7 +1,7 @@
 import React, { ChangeEvent, ComponentType, SFC } from 'react';
 import InputRange from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
-import { EsFilter, EsRangeNumbers, toggleRange } from '../../reducers/search';
+import { closestValue, EsFilter, EsRangeNumbers, toggleRange } from '../../reducers/search';
 import styled, { withProps as withStyledProps } from '../../styled-components';
 import InputOptionField from './fields/InputOptionField';
 import { injectGlobal } from 'styled-components';
@@ -85,23 +85,6 @@ const RangeContainer = styled.section`
     border-color: ${theme.colors.black};
   }
 `)();
-
-export const closestValue = (input: number, arr: Array<number | string>): number => {
-    let value: number = 0;
-    let lastDelta: number;
-
-    arr.some((step: number | string, index: number) => {
-        const delta = Math.abs(input - Number(step));
-        if (delta >= lastDelta) {
-            return true;
-        }
-        value = index;
-        lastDelta = delta;
-        return false;
-    });
-
-    return value;
-};
 
 const DateRange: SFC<Props> = ({
     filter: { range, values, caption },
