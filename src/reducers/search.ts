@@ -15,9 +15,12 @@ export interface FullTextSearch {
 export type EsFilter = FacetConfig & { values: EsValue[]; range?: EsRangeIndexProps };
 export type EsValue = FacetOption & { selected?: boolean };
 
-export interface EsRangeIndexProps {
+export interface EsRangeIndex {
     lt: number;
     gt: number;
+}
+
+export interface EsRangeIndexProps extends EsRangeIndex {
     all: boolean;
 }
 
@@ -249,7 +252,7 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location): vo
     }
 };
 
-const toggleRangeItem = (index: number, { lt, gt }: { lt: number; gt: number }, filters: EsFilter[]): EsFilter => {
+const toggleRangeItem = (index: number, { lt, gt }: EsRangeIndex, filters: EsFilter[]): EsFilter => {
     const filterItem = filters[index];
     const range = {
         lt,
@@ -333,7 +336,7 @@ export const mergeFilters = (facetConfigs: FacetConfig[], facetValues: Facet[], 
     };
 };
 
-export const toggleRange = (index: number, range: { lt: number; gt: number }, oldFilters: EsFilter[]) => {
+export const toggleRange = (index: number, range: EsRangeIndex, oldFilters: EsFilter[]) => {
     const toggledFilter = toggleRangeItem(index, range, oldFilters);
 
     const filters = oldFilters.slice();

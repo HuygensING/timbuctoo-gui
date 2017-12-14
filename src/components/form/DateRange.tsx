@@ -1,5 +1,5 @@
 import React, { ChangeEvent, ComponentType, SFC } from 'react';
-import { closestValue, EsFilter, toggleRange } from '../../reducers/search';
+import { closestValue, EsFilter, EsRangeIndex, toggleRange } from '../../reducers/search';
 import styled, { withProps as withStyledProps } from '../../styled-components';
 import InputOptionField from './fields/InputOptionField';
 import { compose } from 'redux';
@@ -20,7 +20,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    updateField: (values: { lt: number; gt: number }, filters: EsFilter[]) => void;
+    updateField: (values: EsRangeIndex, filters: EsFilter[]) => void;
 }
 
 type Props = OwnProps & StateProps & DispatchProps;
@@ -79,7 +79,6 @@ const RangeContainer = styled.section`
 
 const DateRange: SFC<Props> = ({ filter: { range, values, caption }, filters, index, updateField }) => {
     const { gt, lt } = range!;
-    console.log('render');
     const bucketWidth = 100 / values.length;
     const totalCount = values.map(val => val.count).reduce((next, curr) => next + curr);
 
@@ -175,8 +174,7 @@ const mapStateToProps = (state: RootState, { index }: OwnProps) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Props>, props: OwnProps & StateProps) => ({
-    updateField: (values: { gt: number; lt: number }, filters: EsFilter[]) =>
-        dispatch(toggleRange(props.index, values, filters))
+    updateField: (values: EsRangeIndex, filters: EsFilter[]) => dispatch(toggleRange(props.index, values, filters))
 });
 
 export default compose<ComponentType<OwnProps>>(connect(mapStateToProps, mapDispatchToProps))(DateRange);

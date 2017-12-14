@@ -4,7 +4,7 @@ import 'react-input-range/lib/css/index.css';
 import InputRange from 'react-input-range';
 import { withHandlers, withState } from 'recompose';
 import { connect, Dispatch } from 'react-redux';
-import { EsFilter, EsRangeIndexProps, toggleRange } from '../../../reducers/search';
+import { EsFilter, EsRangeIndex, EsRangeIndexProps, toggleRange } from '../../../reducers/search';
 import { injectGlobal } from 'styled-components';
 import theme from '../../../theme/index';
 
@@ -15,7 +15,7 @@ interface OwnProps {
 }
 
 interface DispatchProps {
-    updateField: (values: { gt: number; lt: number }) => void;
+    updateField: (values: EsRangeIndex) => void;
 }
 
 interface RangeState {
@@ -62,17 +62,15 @@ const InputRangeSlider: SFC<Props> = ({ maxValue, updateField, rangeState, setRa
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<Props>, { index, filters }: OwnProps) => ({
-    updateField: (values: { gt: number; lt: number }) => dispatch(toggleRange(index, values, filters))
+    updateField: (values: EsRangeIndex) => dispatch(toggleRange(index, values, filters))
 });
 
 export default compose<SFC<OwnProps>>(
     connect(null, mapDispatchToProps),
-    withState('rangeState', 'setRangeState', ({ filters, index }: OwnProps & StateProps): RangeState => {
-        return {
-            min: filters[index].range!.gt,
-            max: filters[index].range!.lt
-        };
-    }),
+    withState('rangeState', 'setRangeState', ({ filters, index }: OwnProps & StateProps): RangeState => ({
+        min: filters[index].range!.gt,
+        max: filters[index].range!.lt
+    })),
     withHandlers({
         changeState: ({ setRangeState }) => (newRange: EsRangeIndexProps) => setRangeState(newRange)
     })
