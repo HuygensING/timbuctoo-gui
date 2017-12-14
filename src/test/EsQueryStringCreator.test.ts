@@ -15,7 +15,7 @@ describe('Elasticsearch string creator', () => {
     });
 
     it('creates the string accordingly', () => {
-        const filters: Readonly<EsFilter[]> = [
+        const filters: EsFilter[] = [
             {
                 type: FACET_TYPE.multiSelect,
                 caption: 'example multiselect',
@@ -44,7 +44,8 @@ describe('Elasticsearch string creator', () => {
                 ],
                 range: {
                     lt: 3,
-                    gt: 0
+                    gt: 0,
+                    all: false
                 },
                 values: [
                     {

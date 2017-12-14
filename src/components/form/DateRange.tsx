@@ -1,7 +1,6 @@
 import React, { ChangeEvent, ComponentType, SFC } from 'react';
-import InputRange from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
-import { closestValue, EsFilter, EsRangeNumbers, toggleRange } from '../../reducers/search';
+import { closestValue, EsFilter, toggleRange } from '../../reducers/search';
 import styled, { withProps as withStyledProps } from '../../styled-components';
 import InputOptionField from './fields/InputOptionField';
 import { injectGlobal } from 'styled-components';
@@ -10,34 +9,24 @@ import { compose } from 'redux';
 import { connect, Dispatch } from 'react-redux';
 import { RootState } from '../../reducers/rootReducer';
 import { Subtitle } from '../layout/StyledCopy';
-import { withHandlers, withState } from 'recompose';
 import { lighten, darken } from 'polished';
 import translate from '../../services/translate';
+import InputRangeSlider from './fields/InputRangeSlider';
 
 interface OwnProps {
-    filter: EsFilter;
     index: number;
 }
 
 interface StateProps {
     filters: EsFilter[];
+    filter: EsFilter;
 }
 
 interface DispatchProps {
-    updateField: (values: EsRangeNumbers, filters: EsFilter[]) => void;
+    updateField: (values: { lt: number; gt: number }, filters: EsFilter[]) => void;
 }
 
-interface MergedStateProps {
-    rangeState: RangeState;
-    setRangeState: (newRange: RangeState) => void;
-}
-
-type Props = OwnProps & StateProps & DispatchProps & MergedStateProps;
-
-interface RangeState {
-    min: number;
-    max: number;
-}
+type Props = OwnProps & StateProps & DispatchProps;
 
 const InputContainer = styled.div`
     position: relative;
@@ -105,14 +94,9 @@ const RangeContainer = styled.section`
   }
 `)();
 
-const DateRange: SFC<Props> = ({
-    filter: { range, values, caption },
-    filters,
-    updateField,
-    rangeState,
-    setRangeState
-}) => {
+const DateRange: SFC<Props> = ({ filter: { range, values, caption }, filters, index, updateField }) => {
     const { gt, lt } = range!;
+    console.log('render');
     const bucketWidth = 100 / values.length;
     const totalCount = values.map(val => val.count).reduce((next, curr) => next + curr);
 
@@ -163,10 +147,6 @@ const DateRange: SFC<Props> = ({
         updateField(value, filters);
     };
 
-    const changeSliderHandler = (value: { min: number; max: number }) => {
-        updateField({ gt: value.min, lt: value.max }, filters);
-    };
-
     return (
         <RangeContainer>
             <Subtitle>{caption}</Subtitle>
@@ -190,14 +170,7 @@ const DateRange: SFC<Props> = ({
                 })}
             </BucketList>
             <InputContainer style={{ width: `${100 - bucketWidth}%`, left: `${bucketWidth / 2}%` }}>
-                <InputRange
-                    minValue={0}
-                    maxValue={values.length - 1}
-                    value={rangeState}
-                    formatLabel={() => ''}
-                    onChange={(newRange: RangeState) => setRangeState(newRange)}
-                    onChangeComplete={changeSliderHandler}
-                />
+                <InputRangeSlider maxValue={values.length - 1} filters={filters} index={index} />
             </InputContainer>
             <InputOptionField
                 title={translate('search.from')}
@@ -213,23 +186,14 @@ const DateRange: SFC<Props> = ({
     );
 };
 
-const mapStateToProps = (state: RootState) => ({
-    filters: state.search.filters
+const mapStateToProps = (state: RootState, { index }: OwnProps) => ({
+    filters: state.search.filters,
+    filter: state.search.filters[index]
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Props>, props: OwnProps & StateProps) => ({
-    updateField: (values: EsRangeNumbers, filters: EsFilter[]) => dispatch(toggleRange(props.index, values, filters))
+    updateField: (values: { gt: number; lt: number }, filters: EsFilter[]) =>
+        dispatch(toggleRange(props.index, values, filters))
 });
 
-export default compose<ComponentType<OwnProps>>(
-    connect(mapStateToProps, mapDispatchToProps),
-    withState('rangeState', 'setRangeState', ({ filter: { range, values } }: OwnProps): RangeState => {
-        return {
-            min: range!.gt,
-            max: range!.lt
-        };
-    }),
-    withHandlers({
-        changeState: ({ setRangeState }) => (newRange: EsRangeNumbers) => setRangeState(newRange)
-    })
-)(DateRange);
+export default compose<ComponentType<OwnProps>>(connect(mapStateToProps, mapDispatchToProps))(DateRange);

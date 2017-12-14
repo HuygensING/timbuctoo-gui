@@ -23,8 +23,7 @@ import SearchForm from '../form/SearchForm';
 import CollectionTags from '../CollectionTags';
 import SearchResults from '../search/SearchResults';
 import Pagination from '../search/Pagination';
-import { Dummy } from '../Dummy';
-import { Title } from '../layout/StyledCopy';
+import { Link, Title } from '../layout/StyledCopy';
 import styled, { withProps as withStyledProps } from '../../styled-components';
 import MultiSelectForm from '../form/MultiselectForm';
 import { debounce } from 'lodash';
@@ -67,6 +66,31 @@ const StyledForm = withStyledProps<{ loading: boolean }>(styled.form)`
     opacity: ${props => (props.loading ? 0.7 : 1)};
 `;
 
+const FilterTitle = Title.extend`
+    float: left;
+    padding-right: 0.5rem;
+`;
+
+const ResetLink = Link.extend`
+    background: ${props => props.theme.colors.shade.medium};
+    color: ${props => props.theme.colors.white};
+    position: relative;
+    top: 7px;
+    width: 1rem;
+    height: 1rem;
+    text-align: center;
+    line-height: 1.35;
+    font-size: 0.75rem;
+    border-radius: 50%;
+    float: left;
+    margin: 1.1vw 0;
+
+    &:hover {
+        background: ${props => props.theme.colors.error};
+        color: ${props => props.theme.colors.white};
+    }
+`;
+
 const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) => {
     const { collectionList, dataSetId, collection } = metadata.dataSetMetadata!;
 
@@ -94,15 +118,15 @@ const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) =
             <FullSection>
                 <Col sm={12} smPaddingY={1}>
                     <StyledForm onSubmit={e => e.preventDefault()} loading={data!.loading}>
-                        <Title>{translate('globals.filters')}</Title>
-                        <Dummy text={'search-filter'} height={1} marginY={0.5} />
+                        <FilterTitle>{translate('globals.filters')}</FilterTitle>
+                        {!!location.search.length && <ResetLink to={location.pathname}>X</ResetLink>}
                         {filters.length > 0 &&
                             filters.map((filter, idx) => {
                                 switch (filter.type) {
                                     case FACET_TYPE.multiSelect:
-                                        return <MultiSelectForm key={idx} filter={filter} index={idx} />;
+                                        return <MultiSelectForm key={idx} index={idx} />;
                                     case FACET_TYPE.dateRange:
-                                        return <DateRange key={idx} filter={filter} index={idx} />;
+                                        return <DateRange key={idx} index={idx} />;
                                     default:
                                         return null;
                                 }

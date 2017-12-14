@@ -15,12 +15,12 @@ import { Button as ButtonBase } from '../layout/Button';
 import { compose } from 'redux';
 
 interface Props {
-    filter: EsFilter;
     index: number;
 }
 
 interface StateProps {
     filters: EsFilter[];
+    filter: EsFilter;
     updateField: (index: number, value: string, filters: EsFilter[]) => void;
 }
 
@@ -115,8 +115,9 @@ class MultiSelectForm extends PureComponent<FullProps, State> {
     };
 }
 
-const mapStateToProps = (state: RootState) => ({
-    filters: state.search.filters
+const mapStateToProps = (state: RootState, { index }: Props) => ({
+    filters: state.search.filters,
+    filter: state.search.filters[index]
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Props>) => ({

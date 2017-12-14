@@ -82,7 +82,7 @@ export const setLastRangeValue = (values: EsValue[], idx: number): string => {
 };
 
 const createRangeQuery = (filter: EsFilter): EsRange[] => {
-    if (!filter.range) {
+    if (!filter.range || filter.range.all) {
         return [];
     }
 
