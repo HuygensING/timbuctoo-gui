@@ -55,6 +55,7 @@ const BucketList = styled.ul`
 
 const Fill = withStyledProps<{ selected: boolean }>(styled.div)`
     width: 100%;
+    max-height: 100%;
     align-self: flex-end;
     transition: opacity .2s ease;
     background: ${props => props.theme.colors.shade.medium};
@@ -179,7 +180,7 @@ const DateRange: SFC<Props> = ({
                         >
                             <Fill
                                 selected={selected}
-                                style={{ width: '100%', height: `${value.count / totalCount * 10}rem` }}
+                                style={{ width: '100%', height: `${value.count / totalCount * 100}%` }}
                             />
                         </Bucket>
                     );
