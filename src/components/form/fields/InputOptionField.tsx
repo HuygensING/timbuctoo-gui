@@ -17,12 +17,12 @@ const InputStyling = css`
     transition: all 0.2s ease;
 
     &:not(:last-child) {
-        left: -1rem;
+        left: -0.25rem;
     }
 
     &:last-child {
         float: right;
-        right: -1rem;
+        right: -0.25rem;
     }
 `;
 

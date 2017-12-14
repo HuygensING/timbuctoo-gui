@@ -92,7 +92,14 @@ export const minifyValues = (values: EsValue[]): EsValue[] => {
     const minified = nArr.map(name => ({ name: String(name), count: 0 }));
 
     for (const value of values) {
-        const closestIdx = closestValue(Number(value.name), nArr);
+        let closestIdx = nArr.findIndex(num => {
+            return num > Number(value.name);
+        });
+
+        if (closestIdx < 0) {
+            closestIdx = nArr.length - 1;
+        }
+
         minified[closestIdx].count += value.count;
     }
 
@@ -154,13 +161,14 @@ const findRangeIndexes = (values: EsValue[], range: EsRangeProps): EsRangeNumber
     };
 
     for (const [idx, { name }] of values.entries()) {
-        if (name === range.gt) {
-            obj.gt = idx;
+        if (name <= range!.gt) {
+            obj.gt = idx === 0 ? idx : idx + 1;
         }
-        if (name === range.lt) {
-            obj.lt = idx === 0 ? 0 : idx;
+        if (name >= range.lt) {
+            obj.lt = idx !== 0 ? (idx > values.length - 1 ? values.length - 1 : idx - 1) : 0;
         }
     }
+
     return obj;
 };
 

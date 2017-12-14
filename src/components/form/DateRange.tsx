@@ -41,7 +41,7 @@ interface RangeState {
 const InputContainer = styled.div`
     position: relative;
     z-index: 2;
-    margin-top: -1.6rem;
+    margin-top: -0.75rem;
 `;
 
 const BucketList = styled.ul`
@@ -171,7 +171,7 @@ const DateRange: SFC<Props> = ({
                     const selected: boolean = idx <= lt && idx >= gt;
                     return (
                         <Bucket
-                            title={value.name}
+                            title={`Year ${value.name}, ${value.count} results`}
                             style={{ width: `${bucketWidth}%`, height: '10rem' }}
                             key={idx}
                             selected={selected}
@@ -180,9 +180,7 @@ const DateRange: SFC<Props> = ({
                             <Fill
                                 selected={selected}
                                 style={{ width: '100%', height: `${value.count / totalCount * 10}rem` }}
-                            >
-                                {value.count}
-                            </Fill>
+                            />
                         </Bucket>
                     );
                 })}
@@ -213,10 +211,12 @@ const mapDispatchToProps = (dispatch: Dispatch<Props>, props: OwnProps & StatePr
 
 export default compose<ComponentType<OwnProps>>(
     connect(mapStateToProps, mapDispatchToProps),
-    withState('rangeState', 'setRangeState', ({ filter: { range } }: OwnProps): RangeState => ({
-        min: range!.gt,
-        max: range!.lt
-    })),
+    withState('rangeState', 'setRangeState', ({ filter: { range, values } }: OwnProps): RangeState => {
+        return {
+            min: range!.gt,
+            max: range!.lt
+        };
+    }),
     withHandlers({
         changeState: ({ setRangeState }) => (newRange: EsRangeNumbers) => setRangeState(newRange)
     })

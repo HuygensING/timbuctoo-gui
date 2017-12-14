@@ -33,8 +33,8 @@ export interface EsMatch {
 }
 
 export interface EsRangeProps {
-    gt?: string;
-    lt?: string;
+    gt: string;
+    lt: string;
 }
 
 export interface EsRange {
@@ -67,7 +67,7 @@ const createMatchQueries = (filter: EsFilter): EsMatch[] => {
     return queries;
 };
 
-const setRangeAmount = (values: EsValue[], idx: number): string => {
+export const setLastRangeValue = (values: EsValue[], idx: number): string => {
     if (values[idx]) {
         return values[idx].name;
     }
@@ -91,8 +91,8 @@ const createRangeQuery = (filter: EsFilter): EsRange[] => {
 
     for (const path of filter.paths) {
         query.range[convertToEsPath(path)] = {
-            lt: setRangeAmount(filter.values, lt + 1),
-            gt: filter.values[gt].name
+            lt: setLastRangeValue(filter.values, lt + 1),
+            gt: gt - 1 > 0 ? filter.values[gt - 1].name : filter.values[0].name
         };
     }
 

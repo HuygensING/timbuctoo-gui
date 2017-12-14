@@ -64,7 +64,7 @@ type FullProps = ApolloProps & StateProps & DispatchProps & ExtraProps;
 
 // TODO: this is just a simple loading effect, should be way cooler
 const StyledForm = withStyledProps<{ loading: boolean }>(styled.form)`
-    opacity: ${props => (props.loading ? 0.5 : 1)};
+    opacity: ${props => (props.loading ? 0.7 : 1)};
 `;
 
 const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) => {
