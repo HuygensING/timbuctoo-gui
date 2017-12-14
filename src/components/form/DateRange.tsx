@@ -45,7 +45,7 @@ const Fill = withStyledProps<{ selected: boolean }>(styled.div)`
     max-height: 100%;
     align-self: flex-end;
     transition: opacity .2s ease;
-    background: ${props => props.theme.colors.shade.medium};
+    background: ${props => props.theme.colors.primary.light};
     opacity: ${props => (props.selected ? 1 : 0.5)};
 `;
 
@@ -64,7 +64,7 @@ const Bucket = withStyledProps<{ selected: boolean }>(styled.li)`
       background: ${props => props.theme.colors.shade.light};
       
       > ${Fill} {
-        background: ${props => darken(0.05, props.theme.colors.shade.medium)}
+        background: ${props => darken(0.05, props.theme.colors.primary.medium)}
       }
    }
 `;
