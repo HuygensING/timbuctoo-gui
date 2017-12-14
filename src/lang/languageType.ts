@@ -22,6 +22,8 @@ type languageType = {
     'search.view_entry': string;
     'search.more': string;
     'search.less': string;
+    'search.from': string;
+    'search.to': string;
     'footer.powered_by': string;
     'footer.company_name': string;
     'footer.street': string;

@@ -161,14 +161,15 @@ const findRangeIndexes = (values: EsValue[], range: EsRangeProps): EsRangeNumber
     };
 
     for (const [idx, { name }] of values.entries()) {
-        if (name <= range!.gt) {
-            obj.gt = idx === 0 ? idx : idx + 1;
+        //  set next index
+        if (name <= range.gt) {
+            obj.gt = idx + 1;
         }
-        if (name >= range.lt) {
+        //  set previous index
+        if (name <= range.lt) {
             obj.lt = idx !== 0 ? (idx > values.length - 1 ? values.length - 1 : idx - 1) : 0;
         }
     }
-
     return obj;
 };
 

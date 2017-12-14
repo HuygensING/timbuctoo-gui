@@ -6,13 +6,24 @@ import styled, { css } from '../../../styled-components';
 
 const InputStyling = css`
     border: 1px solid transparent;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+    width: auto;
+    max-width: 4rem;
+    margin-left: 0.5rem;
+`;
+
+const Button = styled.button`
+    ${InputStyling};
+`;
+
+const OptionField = styled.div`
     position: relative;
     cursor: pointer;
     font: ${props => props.theme.fonts.body};
-    padding: 0.25rem;
-    border-radius: 0.25rem;
     width: auto;
-    max-width: 4rem;
+    max-width: 50%;
     float: left;
     transition: all 0.2s ease;
 
@@ -24,10 +35,6 @@ const InputStyling = css`
         float: right;
         right: -0.25rem;
     }
-`;
-
-const Button = styled.button`
-    ${InputStyling};
 `;
 
 const Input = styled.input`
@@ -42,6 +49,7 @@ const Input = styled.input`
 
 interface OwnProps {
     value: string | number;
+    title: string;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -50,22 +58,30 @@ interface StateProps {
     toggleState: () => void;
 }
 
+const Small = styled.span`
+    color: ${props => props.theme.colors.shade.medium};
+`;
+
 type Props = OwnProps & StateProps;
 
-const InputOptionField: SFC<Props> = ({ isActive, onChange, toggleState, value }) =>
-    isActive ? (
-        <Input
-            type="number"
-            defaultValue={String(value)}
-            onChange={onChange}
-            onBlur={toggleState}
-            onMouseOut={toggleState}
-        />
-    ) : (
-        <Button type={'button'} onClick={toggleState}>
-            {String(value)}
-        </Button>
-    );
+const InputOptionField: SFC<Props> = ({ isActive, onChange, title, toggleState, value }) => (
+    <OptionField>
+        <Small>{title}</Small>
+        {isActive ? (
+            <Input
+                type="number"
+                defaultValue={String(value)}
+                onChange={onChange}
+                onBlur={toggleState}
+                onMouseOut={toggleState}
+            />
+        ) : (
+            <Button type={'button'} onClick={toggleState}>
+                {String(value)}
+            </Button>
+        )}
+    </OptionField>
+);
 
 export default compose<SFC<OwnProps>>(
     withState('isActive', 'toggleActive', false),

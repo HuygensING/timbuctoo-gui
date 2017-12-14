@@ -25,6 +25,8 @@ const translation: languageType = {
     'search.view_entry': 'View entry',
     'search.more': 'Laat meer zien',
     'search.less': 'Laat minder zien',
+    'search.from': 'vanaf',
+    'search.to': 't/m',
     'footer.powered_by': 'Timbuctoo wordt gesponsord door',
     'footer.company_name': 'Bedrijfs naam',
     'footer.street': 'Straat',

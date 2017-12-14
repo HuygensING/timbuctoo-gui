@@ -12,6 +12,7 @@ import { RootState } from '../../reducers/rootReducer';
 import { Subtitle } from '../layout/StyledCopy';
 import { withHandlers, withState } from 'recompose';
 import { lighten, darken } from 'polished';
+import translate from '../../services/translate';
 
 interface OwnProps {
     filter: EsFilter;
@@ -138,6 +139,8 @@ const DateRange: SFC<Props> = ({
         // selected
         if (!selected) {
             isMin = idx < gt;
+            console.log(value);
+            console.log('selecting');
 
             // deselected
         } else {
@@ -147,6 +150,7 @@ const DateRange: SFC<Props> = ({
             }
 
             isMin = closestValue(idx, [gt, lt]) === gt;
+
             idx = isMin ? idx + 1 : idx - 1;
         }
 
@@ -157,6 +161,8 @@ const DateRange: SFC<Props> = ({
         }
 
         value[isMin ? 'gt' : 'lt'] = idx;
+
+        console.log('updated value', value);
         updateField(value, filters);
     };
 
@@ -196,8 +202,16 @@ const DateRange: SFC<Props> = ({
                     onChangeComplete={changeSliderHandler}
                 />
             </InputContainer>
-            <InputOptionField value={values[gt].name} onChange={changeSingleValueHandler(true)} />
-            <InputOptionField value={values[lt].name} onChange={changeSingleValueHandler(false)} />
+            <InputOptionField
+                title={translate('search.from')}
+                value={values[gt].name}
+                onChange={changeSingleValueHandler(true)}
+            />
+            <InputOptionField
+                title={translate('search.to')}
+                value={values[lt].name}
+                onChange={changeSingleValueHandler(false)}
+            />
         </RangeContainer>
     );
 };
