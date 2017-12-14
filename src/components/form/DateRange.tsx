@@ -1,10 +1,7 @@
 import React, { ChangeEvent, ComponentType, SFC } from 'react';
-import 'react-input-range/lib/css/index.css';
 import { closestValue, EsFilter, toggleRange } from '../../reducers/search';
 import styled, { withProps as withStyledProps } from '../../styled-components';
 import InputOptionField from './fields/InputOptionField';
-import { injectGlobal } from 'styled-components';
-import theme from '../../theme/index';
 import { compose } from 'redux';
 import { connect, Dispatch } from 'react-redux';
 import { RootState } from '../../reducers/rootReducer';
@@ -79,20 +76,6 @@ const RangeContainer = styled.section`
     padding-bottom: 2rem;
     border-bottom: 1px solid ${props => props.theme.colors.shade.light};
 `;
-
-// Needed for styling of range slider
-(() => injectGlobal`  
-  .input-range__track {
-    background: ${theme.colors.shade.medium};
-  }
-  .input-range__slider, .input-range__track--active { 
-    background: ${theme.colors.black}; 
-  }
-  
-  .input-range__slider {
-    border-color: ${theme.colors.black};
-  }
-`)();
 
 const DateRange: SFC<Props> = ({ filter: { range, values, caption }, filters, index, updateField }) => {
     const { gt, lt } = range!;
