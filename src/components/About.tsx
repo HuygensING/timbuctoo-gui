@@ -44,7 +44,7 @@ const OverflowContent = Content.extend`
     overflow: hidden;
 ` as any;
 
-const Overflow = styled.div`
+const Overflow = styled.span`
     position: absolute;
     top: ${collapsedHeight - fadeOutHeight}px;
     left: 0;
