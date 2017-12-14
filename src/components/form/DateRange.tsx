@@ -139,8 +139,6 @@ const DateRange: SFC<Props> = ({
         // selected
         if (!selected) {
             isMin = idx < gt;
-            console.log(value);
-            console.log('selecting');
 
             // deselected
         } else {
@@ -162,7 +160,6 @@ const DateRange: SFC<Props> = ({
 
         value[isMin ? 'gt' : 'lt'] = idx;
 
-        console.log('updated value', value);
         updateField(value, filters);
     };
 
