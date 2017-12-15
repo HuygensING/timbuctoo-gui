@@ -24,7 +24,7 @@ export const DRAGGABLE_COMPONENTS = {
     accordeon: 'accordeon'
 };
 
-export const UNKNOWN_VOCABULARY = 'vocabulary_unknown';
+export const UNKNOWN_VOCABULARY = 'tim_unknown';
 
 export const LEAF_COMPONENTS: ComponentTypes = {
     literal: 'LITERAL',
