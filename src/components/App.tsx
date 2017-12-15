@@ -49,28 +49,36 @@ interface StateProps extends ErrorReducer {
 
 type FullProps = ChildProps<OwnProps & DispatchProps & StateProps, { aboutMe: AboutMe }>;
 
-const App: SFC<FullProps> = ({ errors, status, data, history }) => (
-    <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-            <GridWithMargin>
-                <Header />
-                <Main>
-                    {errors.length > 0 || data!.error ? (
-                        errors.length > 0 ? (
-                            <Error errors={errors} status={status} />
+const App: SFC<FullProps> = props => {
+    const { errors, status, data, history, query: queryString, variables } = props;
+    return (
+        <ThemeProvider theme={theme}>
+            <ConnectedRouter history={history}>
+                <GridWithMargin>
+                    <Header />
+                    <Main>
+                        {errors.length > 0 || data!.error ? (
+                            errors.length > 0 ? (
+                                <Error errors={errors} status={status} query={queryString} variables={variables} />
+                            ) : (
+                                <Error
+                                    errors={[data!.error as Error]}
+                                    status={500}
+                                    query={queryString}
+                                    variables={variables}
+                                />
+                            )
                         ) : (
-                            <Error errors={[data!.error as Error]} status={500} />
-                        )
-                    ) : (
-                        <Routes />
-                    )}
-                </Main>
-                <Footer />
-                <PoweredBy />
-            </GridWithMargin>
-        </ConnectedRouter>
-    </ThemeProvider>
-);
+                            <Routes />
+                        )}
+                    </Main>
+                    <Footer />
+                    <PoweredBy />
+                </GridWithMargin>
+            </ConnectedRouter>
+        </ThemeProvider>
+    );
+};
 
 const mapStateToProps = (state: RootState) => ({
     user: state.user,

@@ -8,13 +8,15 @@ import { ApolloLink } from 'apollo-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import { HttpLink } from 'apollo-link-http';
+import { print } from 'graphql';
 
 const createClient = (store: Store<RootState>) => {
     const links: ApolloLink[] = [
-        onError(({ graphQLErrors, networkError }: ErrorResponse) => {
+        onError(({ graphQLErrors, networkError, operation }: ErrorResponse) => {
             graphQLErrors = graphQLErrors || [];
             const errors: Errors = networkError ? [...graphQLErrors, networkError] : graphQLErrors;
-            store.dispatch(setError(errors, networkError ? 0 : 500));
+            const query = '# operation = ' + operation.operationName + '\n\n' + print(operation.query);
+            store.dispatch(setError(errors, query, operation.variables, networkError ? 0 : 500));
         }),
         setContext(() => {
             const state: RootState = store.getState();

@@ -32,7 +32,12 @@ const ensureExistence = <TProps>(path: string | ((props: TProps) => string), dat
         connect(null, (dispatch, ownProps: TProps) => ({
             notFound: () =>
                 dispatch(
-                    setError([new Error(`Not found (path '${getPath(ownProps)}' did not yield any results)`)], 404)
+                    setError(
+                        [new Error(`Not found (path '${getPath(ownProps)}' did not yield any results)`)],
+                        '',
+                        undefined,
+                        404
+                    )
                 )
         })),
         // never updates (to prevent multiple errors needlessly being dispatched)
