@@ -31,6 +31,7 @@ const GridWithMargin = styled(Grid)`
 `;
 
 const Main = styled.div`
+    overflow: scroll;
     flex: 1;
 `;
 

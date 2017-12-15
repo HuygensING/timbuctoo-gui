@@ -106,9 +106,9 @@ const StyledOptions = withProps<StyledOptionsProps>(styled.ul)`
     overflow: hidden;
     opacity: ${props => (props.isOpen ? '1' : '0')};
     visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
+    min-width: 100%;
     top: 0;
     left: 0;
-    width: 100%;
     height: ${props => (props.isOpen ? 'auto' : '0px')};
     box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.1);
     border-radius: .25rem;
