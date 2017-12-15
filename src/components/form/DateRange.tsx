@@ -17,6 +17,7 @@ interface OwnProps {
 interface StateProps {
     filters: EsFilter[];
     filter: EsFilter;
+    range: EsRangeIndex;
 }
 
 interface DispatchProps {
@@ -79,12 +80,13 @@ const RangeContainer = styled.section`
 
 const DateRange: SFC<Props> = ({ filter: { range, values, caption }, filters, index, updateField }) => {
     const { gt, lt } = range!;
-    const bucketWidth = 100 / values.length;
-    const totalCount = values.map(val => val.count).reduce((next, curr) => next + curr);
 
     if (!values || values.length < 2) {
         return null;
     }
+
+    const bucketWidth = 100 / values.length;
+    const totalCount = values.map(val => val.count).reduce((next, curr) => next + curr);
 
     const changeSingleValueHandler = (isMin: boolean) => (e: ChangeEvent<HTMLInputElement>) => {
         const idx = closestValue(Number(e.currentTarget.value), values.map(val => val.name));
@@ -99,24 +101,13 @@ const DateRange: SFC<Props> = ({ filter: { range, values, caption }, filters, in
     };
 
     const toggleBucketHandler = (idx: number, selected: boolean) => () => {
-        let isMin: boolean = false;
         let value = { gt, lt };
 
-        // selected
-        if (!selected) {
-            isMin = idx < gt;
-
-            // deselected
-        } else {
-            // single out bucket
-            if (idx > gt && idx < lt) {
-                return updateField({ gt: idx, lt: idx }, filters);
-            }
-
-            isMin = closestValue(idx, [gt, lt]) === gt;
-
-            idx = isMin ? idx + 1 : idx - 1;
+        if (selected) {
+            return updateField({ gt: idx, lt: idx }, filters);
         }
+
+        let isMin = idx < gt;
 
         // fix wrong overflow
         if ((isMin && idx > lt) || (!isMin && idx < gt)) {

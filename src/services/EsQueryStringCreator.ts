@@ -67,18 +67,21 @@ const createMatchQueries = (filter: EsFilter): EsMatch[] => {
     return queries;
 };
 
-export const setLastRangeValue = (values: EsValue[], idx: number): string => {
+const calcRangeStep = (values: EsValue[]): number => {
+    return values.length > 1 ? Number(values[1].name) - Number(values[0].name) : 1;
+};
+
+const getRangeName = (values: EsValue[], idx: number, offset: number = 0): string => {
+    idx = idx + offset;
+    const step = calcRangeStep(values);
+
     if (values[idx]) {
         return values[idx].name;
+    } else if (idx > values.length - 1) {
+        return String(Number(values[values.length - 1].name) + step);
     }
 
-    try {
-        const singleLastCount = Number(values[values.length - 2].name);
-        const lastCount = Number(values[values.length - 1].name);
-        return String(lastCount + (lastCount - singleLastCount));
-    } catch {
-        return values[values.length - 1].name;
-    }
+    return String(Number(values[0].name) - step);
 };
 
 const createRangeQuery = (filter: EsFilter): EsRange[] => {
@@ -87,12 +90,13 @@ const createRangeQuery = (filter: EsFilter): EsRange[] => {
     }
 
     const { lt, gt } = filter.range;
+
     const query: EsRange = { range: {} };
 
     for (const path of filter.paths) {
         query.range[convertToEsPath(path)] = {
-            lt: setLastRangeValue(filter.values, lt + 1),
-            gt: gt - 1 > 0 ? filter.values[gt - 1].name : filter.values[0].name
+            lt: getRangeName(filter.values, lt, 1),
+            gt: getRangeName(filter.values, gt, -1)
         };
     }
 

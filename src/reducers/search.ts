@@ -163,7 +163,7 @@ const findRangeIndexes = (values: EsValue[], range: EsRangeProps): EsRangeIndexP
     const obj = {
         lt: values.length - 1,
         gt: 0,
-        all: false
+        all: values.length < 2
     };
 
     for (const [idx, { name }] of values.entries()) {
@@ -252,16 +252,14 @@ export const mergeOldSelected = (newFilters: EsFilter[], location: Location): vo
     }
 };
 
-const toggleRangeItem = (index: number, { lt, gt }: EsRangeIndex, filters: EsFilter[]): EsFilter => {
-    const filterItem = filters[index];
-    const range = {
+const toggleRangeItem = (index: number, { lt, gt }: EsRangeIndex, filters: EsFilter[]): EsFilter => ({
+    ...filters[index],
+    range: {
         lt,
         gt,
-        all: lt === filterItem.values.length - 1 && gt === 0
-    };
-
-    return { ...filterItem, range };
-};
+        all: lt === filters[index].values.length - 1 && gt === 0
+    }
+});
 
 const toggleFilterItem = (index: number, value: string, filters: EsFilter[]): EsFilter => {
     const filterItem = filters[index];
@@ -324,8 +322,6 @@ export const submitSearch = (type: keyof SearchReducer, value: string) => {
 
 export const mergeFilters = (facetConfigs: FacetConfig[], facetValues: Facet[], location: Location) => {
     let filters: EsFilter[] = mergeFacets(facetConfigs, facetValues);
-
-    console.log('merging');
 
     // Iterate through the Elastic search string to add earlier selected states
     mergeOldSelected(filters, location);

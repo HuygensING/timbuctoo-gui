@@ -67,7 +67,7 @@ describe('Elasticsearch string creator', () => {
             }
         ];
         const expectation =
-            '{"bool":{"must":[{"bool":{"should":[{"match":{"firstValue.secondValue.value.raw":"value 1"}},{"match":{"thirdValue.items.fourthValue.value.raw":"value 1"}}]}},{"bool":{"should":[{"range":{"firstValue.secondValue.value.raw":{"lt":"4","gt":"1"},"sixthValue.value.raw":{"lt":"4","gt":"1"}}}]}}]}}';
+            '{"bool":{"must":[{"bool":{"should":[{"match":{"firstValue.secondValue.value.raw":"value 1"}},{"match":{"thirdValue.items.fourthValue.value.raw":"value 1"}}]}},{"bool":{"should":[{"range":{"firstValue.secondValue.value.raw":{"lt":"4","gt":"0"},"sixthValue.value.raw":{"lt":"4","gt":"0"}}}]}}]}}';
         expect(createEsQueryString(filters, FullText)).toBe(expectation);
     });
 });

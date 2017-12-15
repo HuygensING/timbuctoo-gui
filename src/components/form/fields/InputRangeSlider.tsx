@@ -2,9 +2,9 @@ import React, { SFC } from 'react';
 import { compose } from 'redux';
 import 'react-input-range/lib/css/index.css';
 import InputRange from 'react-input-range';
-import { withHandlers, withState } from 'recompose';
+import { lifecycle, withState } from 'recompose';
 import { connect, Dispatch } from 'react-redux';
-import { EsFilter, EsRangeIndex, EsRangeIndexProps, toggleRange } from '../../../reducers/search';
+import { EsFilter, EsRangeIndex, toggleRange } from '../../../reducers/search';
 import { injectGlobal } from 'styled-components';
 import theme from '../../../theme/index';
 
@@ -71,7 +71,20 @@ export default compose<SFC<OwnProps>>(
         min: filters[index].range!.gt,
         max: filters[index].range!.lt
     })),
-    withHandlers({
-        changeState: ({ setRangeState }) => (newRange: EsRangeIndexProps) => setRangeState(newRange)
+    lifecycle({
+        componentWillReceiveProps(nextProps: Props) {
+            const nextRange = nextProps.filters[nextProps.index].range!;
+            const prevRange = this.props.filters[this.props.index].range!;
+
+            if (
+                (nextRange.lt !== nextProps.rangeState.max || nextRange.gt !== nextProps.rangeState.min) &&
+                (nextRange.lt !== prevRange.lt || nextRange.gt !== nextRange.lt)
+            ) {
+                nextProps.setRangeState({
+                    min: nextRange.gt,
+                    max: nextRange.lt
+                });
+            }
+        }
     })
 )(InputRangeSlider);
