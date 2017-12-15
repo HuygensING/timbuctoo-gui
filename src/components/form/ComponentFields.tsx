@@ -4,7 +4,7 @@ import styled from '../../styled-components';
 import DraggableForm from './DraggableForm';
 import { default as Select, OptionProps } from './fields/Select';
 import InputField from './fields/Input';
-import { NormalizedComponentConfig, ReferencePath } from '../../typings/index';
+import { NormalizedComponentConfig } from '../../typings/index';
 import { SELECT_COMPONENT_TYPES } from '../../constants/forms';
 import { connect, Dispatch } from 'react-redux';
 import {
@@ -13,13 +13,13 @@ import {
     modifyViewConfigNode,
     ViewConfigReducer
 } from '../../reducers/viewconfig';
-import { ComponentConfig } from '../../typings/schema';
 import { EMPTY_COMPONENT } from '../../constants/emptyViewComponents';
 import { RootState } from '../../reducers/rootReducer';
 import { compose } from 'redux';
 import ReferencePathSelector from './fields/ReferencePathSelector';
 import { Field, FieldContainer, FieldLabel, FieldValue } from './fields/StyledField';
 import { COMPONENTS } from '../../constants/global';
+import { ReferencePath } from '../../services/propertyPath';
 
 const StyledInput = styled(InputField)`
     display: inline-block;
@@ -38,7 +38,7 @@ interface OwnProps {
 }
 
 interface DispatchProps {
-    modifyNode: (component: ComponentConfig) => void;
+    modifyNode: (component: NormalizedComponentConfig) => void;
     changeNodeType: (component: NormalizedComponentConfig) => void;
     removeNode: (childId: number) => void;
 }
@@ -83,7 +83,7 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, changeNodeType, removeN
     const onChangeHeadHandler = (option: OptionProps) => {
         const componentKey = option.value;
 
-        if (componentKey === item.type) {
+        if (componentKey === item.type || componentKey === null) {
             return false;
         }
 
@@ -127,10 +127,7 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, changeNodeType, removeN
                 {typeof item.value === 'string' && (
                     <FieldValue>
                         {item.type === 'PATH' ? (
-                            <ReferencePathSelector
-                                onChange={onSelectChangeHandler}
-                                paths={item.referencePath as ReferencePath}
-                            />
+                            <ReferencePathSelector onChange={onSelectChangeHandler} path={item.referencePath || []} />
                         ) : (
                             <StyledInputWrapper>
                                 <StyledInput

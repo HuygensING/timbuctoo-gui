@@ -18,6 +18,7 @@ import { withRouter } from 'react-router';
 import renderLoader from '../../services/renderLoader';
 import verifyResponse from '../../services/verifyResponse';
 import { ChildProps } from '../../typings';
+import { decode } from '../../services/UrlStringCreator';
 
 type FullProps = ChildProps<EntryPropertiesProps & EntryValuesProps, { dataSets: DataSetMetadata }>;
 
@@ -29,13 +30,18 @@ const Entry: SFC<FullProps> = (props: FullProps) => {
     const componentConfigs =
         collection!.viewConfig.length > 0
             ? collection!.viewConfig
-            : makeDefaultViewConfig(collection!.properties.items, collection!.summaryProperties, collectionList.items);
+            : makeDefaultViewConfig(
+                  collection!.properties.items,
+                  collection!.summaryProperties,
+                  collection!.itemType,
+                  collectionList.items
+              );
 
     const entry = safeGet(safeGet(props.data!.dataSets, props.match.params.dataSet), props.match.params.collection);
 
     return (
         <section>
-            <FullHelmet pageName={`Entry - ${props.match.params.entry}`} />
+            <FullHelmet pageName={`Details of ${decode(props.match.params.entry)}`} />
             <Grid xs={36} sm={24} xsOffset={6} smOffset={12}>
                 <Col xs={36} sm={24}>
                     {componentConfigs &&

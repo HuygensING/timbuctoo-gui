@@ -3,10 +3,11 @@ import { Property } from '../../../typings/schema';
 import ConnectedSelect from './ConnectedSelect';
 import styled, { withProps } from '../../../styled-components';
 import { ITEMS, VALUE } from '../../../constants/global';
+import { ReferencePath } from '../../../services/propertyPath';
 
 interface Props {
-    onChange: (newPaths: (string[])[]) => void;
-    paths: (string[])[];
+    onChange: (newPath: ReferencePath) => void;
+    path: ReferencePath;
 }
 
 const SelectContainer = styled.div`
@@ -36,42 +37,44 @@ const Value = withProps<{ shownAsMultipleItems: boolean }>(styled.div)`
             : ''}
 `;
 
-const ReferencePathSelector: SFC<Props> = ({ paths, onChange }) => {
-    if (!paths) {
+const ReferencePathSelector: SFC<Props> = ({ path, onChange }) => {
+    if (!path) {
         return null;
     }
 
     const onChangeHandler = (
-        val: string,
+        val: string | null,
         { isList, isValueType, referencedCollections }: Property,
         childIdx: number
     ) => {
-        const newPath = paths.slice(0, childIdx + 1); // TODO: In case of union types, how do I know which ones to expect? <= created ticket for this
+        const newPath = path.slice(0, childIdx + 1); // TODO: In case of union types, how do I know which ones to expect? <= created ticket for this
 
         // update the previous selected value
         newPath[childIdx][1] = val;
 
         // add 'items' in case of list
         if (isList) {
-            newPath.push([ITEMS.toUpperCase(), ITEMS]);
+            newPath.push([ITEMS, ITEMS]);
         }
 
         // set new value
-        const newStep = isValueType ? [VALUE.toUpperCase(), VALUE] : [referencedCollections.items[0], ''];
+        const newSegment: [string, string | null] = isValueType
+            ? ['Value', VALUE]
+            : [referencedCollections.items[0], null];
 
-        newPath.push(newStep);
+        newPath.push(newSegment);
 
         onChange(newPath);
     };
 
     return (
         <SelectContainer>
-            {paths.map(([collectionKey, value], childIdx: number) => {
+            {path.map(([collectionKey, value], childIdx: number) => {
                 if (value === ITEMS) {
                     return null;
                 }
 
-                const isMultiple = paths[childIdx - 1] && paths[childIdx - 1][1] === ITEMS;
+                const isMultiple = path[childIdx - 1] && path[childIdx - 1][1] === ITEMS;
 
                 if (value === VALUE) {
                     return (

@@ -4,7 +4,7 @@ import translate from '../../services/translate';
 import GridSection from '../layout/GridSection';
 import SearchResultEntry from './SearchResultEntry';
 import { SummaryProperties } from '../../typings/schema';
-import { getValue } from '../../services/getValue';
+import { walkPath } from '../../services/propertyPath';
 
 interface Props {
     dataSetId: string;
@@ -14,24 +14,33 @@ interface Props {
     results: any[]; // Object with uri and the three variable fields for title, image and description
 }
 
+function getValue(path: string | null, result: any): string | null {
+    const value = walkPath(path, [], result);
+    if (value === null) {
+        return value;
+    } else if (Array.isArray(value)) {
+        const first = value[0] || null;
+        if (typeof first === 'string' || first === null) {
+            return first;
+        } else {
+            return first.uri;
+        }
+    } else if (typeof value === 'string') {
+        return value;
+    } else {
+        return value.uri;
+    }
+}
+
 const SearchResults: SFC<Props> = ({ results, properties, collectionId, dataSetId, fields }) => {
     if (!properties || !collectionId) {
         return null;
     }
 
-    const setValue = (val: string | null, result: any): string | null => {
-        if (val && result && result[val]) {
-            const valueObj = result[val];
-            return getValue(valueObj);
-        }
-
-        return null;
-    };
-
     const renderEntries = (result: any, idx: number) => {
-        const imageUrl = setValue(fields.image, result);
-        const description = setValue(fields.description, result);
-        const title = setValue(fields.title, result);
+        const imageUrl = getValue(fields.image, result);
+        const description = getValue(fields.description, result);
+        const title = getValue(fields.title, result);
 
         return (
             <SearchResultEntry

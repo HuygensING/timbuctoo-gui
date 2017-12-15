@@ -12,7 +12,7 @@ import verifyResponse from '../../../services/verifyResponse';
 import { branch, renderNothing } from 'recompose';
 
 interface OwnProps extends SelectProps, CollectionEditViewProps {
-    onChange: (value: string, property: Property) => void;
+    onChange: (value: string | null, property: Property) => void;
     shownAsMultipleItems?: boolean;
 }
 

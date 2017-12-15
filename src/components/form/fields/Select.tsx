@@ -5,8 +5,8 @@ import onClickOutside, { InjectedOnClickOutProps, OnClickOutProps } from 'react-
 import { StandardStyledFormElements } from './Input';
 
 export interface OptionProps {
-    key: string;
-    value: string;
+    key: string | null;
+    value: string | null;
 }
 
 export interface SelectProps {
@@ -155,11 +155,13 @@ class SelectField extends Component<FullProps, State> {
                 <SelectHiddenFieldInput
                     onChange={this.onOptionChange}
                     name={name}
-                    defaultValue={(selected && selected.value) || (selectedOption && selectedOption.value)}
+                    defaultValue={
+                        (selected && selected.value) || ((selectedOption && selectedOption.value) || undefined)
+                    }
                 >
                     {options &&
                         options.map((option: OptionProps, idx: number) => (
-                            <option key={`${option.key}-${idx}`} value={option.value}>
+                            <option key={`${option.key}-${idx}`} value={option.value || undefined}>
                                 {option.key}
                             </option>
                         ))}

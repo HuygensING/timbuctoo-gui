@@ -7,7 +7,7 @@ import ContentKeyValue from '../components/content/ContentKeyValue';
 import ContentDivider from '../components/content/ContentDivider';
 import ContentValue from '../components/content/ContentValue';
 
-import { pathResult, uriOrString, walkPath } from './walkPath';
+import { pathResult, uriOrString, walkPath } from './propertyPath';
 import { safeGet } from './GetDataSetValues';
 
 import { ComponentConfig, Entity, LeafComponentConfig } from '../typings/schema';

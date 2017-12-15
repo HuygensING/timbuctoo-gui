@@ -2,6 +2,7 @@ import { Permissions } from './permissions';
 import { ComponentConfig, FacetConfig, FacetConfigType } from './schema';
 import { ComponentClass, SFC } from 'react';
 import { MutationFunc, QueryProps } from 'react-apollo';
+import { ReferencePath } from '../services/propertyPath';
 
 export interface KeyValueObject {
     [name: string]: string;
@@ -11,8 +12,6 @@ export interface KeyValueObject {
 export interface NormalizedItem {
     id: number;
 }
-
-export type ReferencePath = string[][];
 
 export type NormalizedComponentConfig = NormalizedItem &
     ComponentConfig & {

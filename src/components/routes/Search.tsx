@@ -11,7 +11,6 @@ import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver
 import renderLoader from '../../services/renderLoader';
 import graphqlWithProps from '../../services/graphqlWithProps';
 import { reorderUnknownsInList } from '../../services/HandleUnknowns';
-import { getValuesFromObject } from '../../services/getValue';
 import { getCollectionValues } from '../../services/GetDataSetValues';
 import translate from '../../services/translate';
 import { createEsQueryString } from '../../services/EsQueryStringCreator';
@@ -66,8 +65,13 @@ const StyledForm = withStyledProps<{ loading: boolean }>(styled.form)`
 
 const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) => {
     const { collectionList, dataSetId, collection } = metadata.dataSetMetadata!;
-
-    const fields = getValuesFromObject(collection!.summaryProperties);
+    const fields = {
+        title: collection!.summaryProperties.title ? collection!.summaryProperties.title!.value : null,
+        description: collection!.summaryProperties.description
+            ? collection!.summaryProperties.description!.value
+            : null,
+        image: collection!.summaryProperties.image ? collection!.summaryProperties.image!.value : null
+    };
     const collectionItems: CollectionMetadata[] = collectionList && collectionList.items ? collectionList.items : [];
 
     return (

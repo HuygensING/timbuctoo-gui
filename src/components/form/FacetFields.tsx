@@ -11,6 +11,7 @@ import { ButtonAdd } from '../layout/Button';
 import { compose } from 'redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { Field, FieldContainer, FieldLabel, FieldValue } from './fields/StyledField';
+import { ReferencePath } from '../../services/propertyPath';
 
 interface OwnProps {
     item: NormalizedFacetConfig;
@@ -21,7 +22,7 @@ interface DispatchProps {
     modify: (config: NormalizedFacetConfig) => void;
 }
 
-type Props = OwnProps & DispatchProps & RouteComponentProps<{ collection: string }>;
+type Props = OwnProps & DispatchProps & RouteComponentProps<{ collection: string; dataSet: string }>;
 
 const FacetField = Field.extend`
     margin-top: 2rem;
@@ -30,9 +31,9 @@ const FacetField = Field.extend`
 `;
 
 const FacetFields: SFC<Props> = ({ item, modify, match }) => {
-    const onSelectChangeHandler = (newPaths: string[][], pathIdx: number) => {
+    const onSelectChangeHandler = (newPath: ReferencePath, pathIdx: number) => {
         const modifiedItem: NormalizedFacetConfig = { ...item };
-        modifiedItem.referencePaths[pathIdx] = newPaths;
+        modifiedItem.referencePaths[pathIdx] = newPath;
 
         modify(modifiedItem);
     };
@@ -46,7 +47,7 @@ const FacetFields: SFC<Props> = ({ item, modify, match }) => {
     };
 
     const addPathHandler = () =>
-        modify({ ...item, referencePaths: [...item.referencePaths, [[match.params.collection]]] });
+        modify({ ...item, referencePaths: [...item.referencePaths, [[match.params.collection, null]]] });
 
     return (
         <FieldContainer>
@@ -76,10 +77,10 @@ const FacetFields: SFC<Props> = ({ item, modify, match }) => {
             <FacetField>
                 <FieldLabel htmlFor={`${item.id}_facets`}>Facets</FieldLabel>
                 <FieldValue>
-                    {item.referencePaths.map((paths, pathIdx) => (
+                    {item.referencePaths.map((path, pathIdx) => (
                         <ReferencePathSelector
-                            onChange={newPaths => onSelectChangeHandler(newPaths, pathIdx)}
-                            paths={paths}
+                            onChange={newPath => onSelectChangeHandler(newPath, pathIdx)}
+                            path={path}
                             key={pathIdx}
                         />
                     ))}

@@ -1,7 +1,7 @@
 import { CollectionMetadata, FacetConfig } from '../typings/schema';
-import { NormalizedFacetConfig, ReferencePath } from '../typings/index';
+import { NormalizedFacetConfig } from '../typings/index';
 import { arrayMove } from 'react-sortable-hoc';
-import { createReferencePath, mendPath } from '../services/walkPath';
+import { serializePath, ReferencePath, parsePath } from '../services/propertyPath';
 import { facetErrors } from '../services/Validation';
 import { MetaDataProps } from '../services/metaDataResolver';
 
@@ -72,7 +72,7 @@ export const denormalizeFacetConfig = (config: NormalizedFacetConfig): FacetConf
         if (error) {
             throw error;
         }
-        denormalizedConfig.paths.push(mendPath(referencePath));
+        denormalizedConfig.paths.push(serializePath(referencePath));
     }
 
     delete denormalizedConfig.referencePaths;
@@ -88,14 +88,14 @@ export const denormalizeFacets = (facetConfigs: NormalizedFacetConfig[]): FacetC
 
 // reducer
 const references = (payload: { facetConfig: { paths: string[] }; collectionId: string }): ReferencePath[] => {
-    let referencePaths: (string[])[][] = [];
+    let referencePaths: ReferencePath[] = [];
 
     for (const path of payload.facetConfig.paths) {
-        referencePaths = [...referencePaths, createReferencePath(path, payload.collectionId)];
+        referencePaths = [...referencePaths, parsePath(path)];
     }
 
     if (!referencePaths.length) {
-        referencePaths = [[[payload.collectionId]]];
+        referencePaths = [[[payload.collectionId, null]]];
     }
 
     return referencePaths;

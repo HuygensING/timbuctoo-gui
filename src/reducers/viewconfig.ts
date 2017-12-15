@@ -2,7 +2,7 @@ import { ComponentConfig } from '../typings/schema';
 import { arrayMove } from 'react-sortable-hoc';
 import { NormalizedComponentConfig } from '../typings/index';
 import { LEAF_COMPONENTS } from '../constants/global';
-import { createReferencePath, mendPath } from '../services/walkPath';
+import { parsePath, serializePath } from '../services/propertyPath';
 import { componentErrors } from '../services/Validation';
 import { MetaDataProps } from '../services/metaDataResolver';
 
@@ -105,7 +105,11 @@ const normalizeTree = (tree: ComponentConfig[], collectionId: string, startIndex
         };
 
         if (branch.type === LEAF_COMPONENTS.path && typeof branch.value === 'string') {
-            normalizedComponent.referencePath = createReferencePath(branch.value, collectionId);
+            if (branch.value.length > 0) {
+                normalizedComponent.referencePath = parsePath(branch.value);
+            } else {
+                normalizedComponent.referencePath = [[collectionId, null]];
+            }
         }
 
         if (branch.subComponents) {
@@ -128,7 +132,7 @@ const denormalizePath = (childNode: NormalizedComponentConfig): NormalizedCompon
     childNode = { ...childNode };
 
     if (childNode.referencePath) {
-        childNode.value = mendPath(childNode.referencePath);
+        childNode.value = serializePath(childNode.referencePath);
         delete childNode.referencePath;
     }
 

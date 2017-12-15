@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
-import { createQueryFromValue } from '../../services/getValue';
 import setCollectionArguments from '../../services/CollectionArgumentsCreator';
 import { RouteComponentProps } from 'react-router';
 import { MetaDataProps } from '../../services/metaDataResolver';
+import { pathsToGraphQlQuery, parsePath } from '../../services/propertyPath';
 
 export type Props = RouteComponentProps<{ dataSet: string }> & MetaDataProps;
 
@@ -11,11 +11,16 @@ const QUERY_COLLECTION_VALUES = ({ match, location, metadata }: Props) => {
         return null;
     }
 
-    const { properties, summaryProperties, collectionListId, indexConfig } = metadata.dataSetMetadata.collection;
+    const { summaryProperties, collectionListId, indexConfig } = metadata.dataSetMetadata.collection;
 
     const collectionArguments = setCollectionArguments(indexConfig, location);
     const { title, description, image } = summaryProperties;
 
+    const propQuery = pathsToGraphQlQuery(
+        [title, description, image].filter(x => x).map(p => parsePath(p!.value)),
+        match.params.dataSet,
+        '                            '
+    );
     const query = `
         query CollectionValues {
         
@@ -33,9 +38,7 @@ const QUERY_COLLECTION_VALUES = ({ match, location, metadata }: Props) => {
                         }
                         items {
                             uri
-                            ${createQueryFromValue(title, properties)}
-                            ${createQueryFromValue(description, properties)}
-                            ${createQueryFromValue(image, properties)}
+                            ${propQuery}
                         }
                     }
                 }

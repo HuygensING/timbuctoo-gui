@@ -22,6 +22,7 @@ export const QUERY_ENTRY_PROPERTIES = ({ match }: Props) => {
                 collection(collectionId: "${match.params.collection}") {
                     title { value }
                     collectionId
+                    itemType
                     ...CollectionPropertiesReference
                     viewConfig {
                         ...ComponentsFragment
@@ -42,6 +43,7 @@ export const QUERY_ENTRY_PROPERTIES = ({ match }: Props) => {
 interface CollectionMetadataLocal extends CollectionPropertiesReference {
     title?: { value: string };
     collectionId: string;
+    itemType: string;
     viewConfig: ComponentsFragment;
     summaryProperties: {
         title?: { value: string };
