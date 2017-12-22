@@ -15,11 +15,12 @@ interface Props {
 }
 
 const checkBoxChecked = css`
-    border-color: ${props => props.theme.colors.black};
+    border-color: ${props => props.theme.colors.primary.medium};
     background-image: url(${checkMark});
-    background-size: 1rem 1rem;
+    background-size: 0.75rem 0.75rem;
     background-repeat: no-repeat;
-    background-color: ${props => props.theme.colors.shade.dark};
+    background-position: 50% 50%;
+    background-color: ${props => props.theme.colors.primary.medium};
 `;
 
 const CheckBox = withProps<{ isSelected?: boolean }>(styled.figure)`

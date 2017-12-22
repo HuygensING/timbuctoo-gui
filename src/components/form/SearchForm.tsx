@@ -24,6 +24,11 @@ const Form = withProps<{ loading: boolean }>(styled.form)`
       opacity: ${props => (props.loading ? 0.5 : 1)};
 `;
 
+const ExtendedCol = Col.extend`
+    display: inline-flex;
+    align-items: center;
+`;
+
 const SearchForm: SFC<Props & StoreProps> = ({ defaultValues, type, handleChange, requestSearch, loading }) => {
     const onChange = (e: any) => {
         e.preventDefault();
@@ -48,7 +53,7 @@ const SearchForm: SFC<Props & StoreProps> = ({ defaultValues, type, handleChange
     return (
         <Form onSubmit={onSubmit} loading={loading}>
             <Grid>
-                <Col sm={38.5}>
+                <ExtendedCol sm={42}>
                     <InputField
                         name={'search'}
                         type={'text'}
@@ -61,10 +66,8 @@ const SearchForm: SFC<Props & StoreProps> = ({ defaultValues, type, handleChange
                             {translate('search.reset')}
                         </ResetButton>
                     )}
-                </Col>
-                <Col sm={3} smOffset={0.5}>
                     <SubmitButton type={'submit'}>{translate('search.search')}</SubmitButton>
-                </Col>
+                </ExtendedCol>
             </Grid>
         </Form>
     );

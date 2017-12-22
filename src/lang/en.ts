@@ -25,6 +25,8 @@ const translation: languageType = {
     'search.view_entry': 'View entry',
     'search.more': 'Show more',
     'search.less': 'Show less',
+    'search.from': 'from',
+    'search.to': 'to',
     'footer.powered_by': 'Timbuctoo is powered by',
     'footer.company_name': 'Company name',
     'footer.street': 'Street',

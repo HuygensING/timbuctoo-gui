@@ -34,12 +34,13 @@
     "graphql-tag": "^2.5.0",
     "js-cookie": "^2.1.4",
     "lodash": "^4.17.4",
-    "polished": "^1.7.0",
+    "polished": "^1.9.0",
     "query-string": "^5.0.0",
     "react": "^16.0.0",
     "react-apollo": "^2.0.1",
     "react-dom": "^16.0.0",
     "react-helmet": "^5.2.0",
+    "react-input-range": "^1.2.2",
     "react-onclickoutside": "^6.5.0",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
@@ -73,6 +74,7 @@
     "husky": "^0.14.3",
     "lint-staged": "^5.0.0",
     "prettier": "1.8.2",
+    "ts-jest": "^21.2.4",
     "tslint-eslint-rules": "^4.1.1"
   }
 }

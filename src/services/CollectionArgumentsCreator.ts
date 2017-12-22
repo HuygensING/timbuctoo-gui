@@ -1,8 +1,18 @@
 import queryString from 'querystring';
 import { FacetConfig, IndexConfig } from '../typings/schema';
-import { EsMatches, EsQuery } from './EsQueryStringCreator';
-import { Location } from 'history';
 import { pathToEsValueString } from './propertyPath';
+import {
+    EsItem,
+    EsMatch,
+    EsMatches,
+    EsQuery,
+    EsQueryString,
+    EsRange,
+    EsRangeProps,
+    SearchType
+} from './EsQueryStringCreator';
+import { Location } from 'history';
+import { FACET_TYPE } from '../constants/forms';
 
 interface Aggs {
     [name: string]: Agg;
@@ -11,8 +21,15 @@ interface Aggs {
 interface Agg {
     filter: EsQuery | {};
     aggs: {
-        name: {
-            terms: {
+        range?: {
+            date_histogram: {
+                field: string;
+                interval: string;
+                format: string;
+            };
+        };
+        name?: {
+            terms?: {
                 field: string;
             };
         };
@@ -26,6 +43,11 @@ interface ElasticSearchParams {
 
 const doubleStringify = (obj: {}): string => JSON.stringify(JSON.stringify(obj));
 
+type ObjQueryProps<T, K extends keyof T> = { [P in K]: { [name: string]: string | EsRangeProps } };
+
+const hasKeyAsField = <T extends ObjQueryProps<T, K>, K = keyof T>(list: Array<T>, iterator: keyof T, field: string) =>
+    list.find(item => item[iterator] && !!Object.keys(item[iterator]).find(key => key === field));
+
 /** filter aggregations that match the path out of the search object and return a new instance
  *
  * @param {EsQuery} searchObj
@@ -35,18 +57,24 @@ const doubleStringify = (obj: {}): string => JSON.stringify(JSON.stringify(obj))
 const setFilteredSearchObj = (searchObj: EsQuery, field: string): EsQuery => {
     const filteredSearchObj: EsQuery = { bool: { must: [] } };
 
-    searchObj.bool.must.forEach((obj: EsMatches) => {
-        if (obj.hasOwnProperty('query_string')) {
+    searchObj.bool.must.forEach((obj: SearchType) => {
+        if ((obj as EsQueryString).query_string) {
             filteredSearchObj.bool.must.push(obj);
-        } else if (obj.bool && obj.bool.should && obj.bool.should.length > 0 && obj.bool.should[0].match) {
-            const { match } = obj.bool.should[0];
+        } else if (
+            (obj as EsMatches).bool &&
+            ((obj as EsMatches).bool.should as EsMatch[]) &&
+            (obj as EsMatches).bool.should.length > 0
+        ) {
             let keyIsField: boolean = false;
 
-            for (let key in match) {
-                if (match.hasOwnProperty(key)) {
-                    if (key === field) {
-                        keyIsField = true;
-                    }
+            const matches = (obj as EsMatches).bool.should as Array<EsItem>;
+
+            if (!!matches.length) {
+                if (
+                    hasKeyAsField<EsMatch, 'match'>(matches as EsMatch[], 'match', field) ||
+                    hasKeyAsField<EsRange, 'range'>(matches as EsRange[], 'range', field)
+                ) {
+                    keyIsField = true;
                 }
             }
 
@@ -58,6 +86,8 @@ const setFilteredSearchObj = (searchObj: EsQuery, field: string): EsQuery => {
 
     return filteredSearchObj;
 };
+const HISTOGRAM_INTERVAL = 'year';
+const HISTOGRAM_FORMAT = 'yyyy';
 
 /** create a string with aggregations. In case of a querystring add a filter for each aggregation to optimize the counts of filters to be shown
  *
@@ -68,22 +98,36 @@ const setFilteredSearchObj = (searchObj: EsQuery, field: string): EsQuery => {
 const createAggsString = (facets: FacetConfig[], searchObj: EsQuery | null): Aggs => {
     const aggregations: Aggs = {};
 
-    const entries = facets.entries();
-    for (const [idx, { paths, caption, type }] of entries) {
-        if (type === 'MultiSelect' && (caption || type) && paths) {
+    for (const [idx, { paths, caption, type }] of facets.entries()) {
+        if ((caption || type) && paths) {
             const field = pathToEsValueString(paths[0]);
             const filter = searchObj ? setFilteredSearchObj(searchObj, field) : {};
 
-            aggregations[caption || `${type}_${idx}`] = {
-                filter,
-                aggs: {
-                    name: {
-                        terms: {
-                            field
+            switch (type) {
+                case FACET_TYPE.multiSelect:
+                    aggregations[caption || `${type}_${idx}`] = {
+                        filter,
+                        aggs: { name: { terms: { field } } }
+                    };
+                    break;
+                case FACET_TYPE.dateRange:
+                    aggregations[caption || `${type}_${idx}`] = {
+                        filter,
+                        aggs: {
+                            range: {
+                                date_histogram: {
+                                    field,
+                                    interval: HISTOGRAM_INTERVAL,
+                                    format: HISTOGRAM_FORMAT
+                                }
+                            }
                         }
-                    }
-                }
-            };
+                    };
+
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -122,7 +166,7 @@ const setCollectionArguments = (indexConfig: IndexConfig, location: Location): s
     const searchQuery = setElasticSearchParams(indexConfig, search as string);
 
     const elasticsearch = searchQuery ? `elasticsearch: ${searchQuery}` : '';
-    const cursorString = cursor ? `cursor: ${doubleStringify(cursor)}` : '';
+    const cursorString = cursor ? `cursor: ${JSON.stringify(cursor)}` : '';
 
     if (!searchQuery && !cursor) {
         return '';

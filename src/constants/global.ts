@@ -20,6 +20,8 @@ export const VALUE: string = 'value';
 export const ITEMS: string = 'items';
 export const URI: string = 'uri';
 
+export const MAX_AMOUNT_RANGE_BUCKETS: number = 10;
+
 export const DRAGGABLE_COMPONENTS = {
     accordeon: 'accordeon'
 };

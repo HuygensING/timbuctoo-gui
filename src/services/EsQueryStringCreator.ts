@@ -1,15 +1,16 @@
-import { EsFilter, FullTextSearch } from '../reducers/search';
 import { pathToEsValueString } from './propertyPath';
+import { EsFilter, EsValue, FullTextSearch } from '../reducers/search';
+import { FACET_TYPE } from '../constants/forms';
 
 export interface EsQuery {
     bool: EsBool;
 }
 
 export interface EsBool {
-    must: searchType[];
+    must: SearchType[];
 }
 
-type searchType = EsMatches | EsQueryString;
+export type SearchType = EsMatches | EsQueryString;
 
 export interface EsQueryString {
     query_string: {
@@ -17,9 +18,11 @@ export interface EsQueryString {
     };
 }
 
+export type EsItem = EsMatch | EsRange;
+
 export interface EsMatches {
     bool: {
-        should: EsMatch[];
+        should: EsItem[];
     };
 }
 
@@ -29,25 +32,92 @@ export interface EsMatch {
     };
 }
 
+export interface EsRangeProps {
+    gt: string;
+    lt: string;
+}
+
+export interface EsRange {
+    range: {
+        [name: string]: EsRangeProps;
+    };
+}
+
+const createMatchQueries = (filter: EsFilter): EsMatch[] => {
+    const queries: EsMatch[] = [];
+
+    for (const value of filter.values) {
+        if (!value.selected) {
+            continue;
+        }
+
+        for (const path of filter.paths) {
+            queries.push({ match: { [pathToEsValueString(path)]: value.name } });
+        }
+    }
+
+    return queries;
+};
+
+const calcRangeStep = (values: EsValue[]): number => {
+    return values.length > 1 ? Number(values[1].name) - Number(values[0].name) : 1;
+};
+
+const getRangeName = (values: EsValue[], idx: number, offset: number = 0): string => {
+    idx = idx + offset;
+    const step = calcRangeStep(values);
+
+    if (values[idx]) {
+        return values[idx].name;
+    } else if (idx > values.length - 1) {
+        return String(Number(values[values.length - 1].name) + step);
+    }
+
+    return String(Number(values[0].name) - step);
+};
+
+const createRangeQuery = (filter: EsFilter): EsRange[] => {
+    if (!filter.range || filter.range.all) {
+        return [];
+    }
+
+    const { lt, gt } = filter.range;
+
+    const query: EsRange = { range: {} };
+
+    for (const path of filter.paths) {
+        query.range[pathToEsValueString(path)] = {
+            lt: getRangeName(filter.values, lt, 1),
+            gt: getRangeName(filter.values, gt, -1)
+        };
+    }
+
+    return [query];
+};
+
+const createQueriesForFilter = (filter: EsFilter): Array<EsMatch | EsRange> => {
+    switch (filter.type) {
+        case FACET_TYPE.multiSelect:
+            return createMatchQueries(filter);
+        case FACET_TYPE.dateRange:
+            return createRangeQuery(filter);
+        case FACET_TYPE.hierarchical:
+        default:
+            return [];
+    }
+};
+
 /** retrieve all selected values, create a new 'match' for each of them and add them to the query
  *
  * @param {EsFilter[]} filters
  * @param {EsQuery} query
  */
-const addMatchQueries = (filters: Readonly<EsFilter[]>, query: EsQuery): void => {
+const addQueries = (filters: Readonly<EsFilter[]>, query: EsQuery): void => {
     filters.forEach(filter => {
-        const matches: EsMatches = { bool: { should: [] } };
-        let hasValues = false;
+        const queries = createQueriesForFilter(filter);
 
-        filter.values.forEach(value => {
-            if (value.selected) {
-                hasValues = true;
-                const newMatch: EsMatch = { match: { [pathToEsValueString(filter.paths[0])]: value.name } };
-                matches.bool.should.push(newMatch);
-            }
-        });
-
-        if (hasValues) {
+        if (!!queries.length) {
+            const matches: EsMatches = { bool: { should: queries } };
             query.bool.must.push(matches);
         }
     });
@@ -68,7 +138,7 @@ export const createEsQueryString = (filters: Readonly<EsFilter[]>, fullText: Ful
         });
     }
 
-    addMatchQueries(filters, query);
+    addQueries(filters, query);
 
     if (query.bool.must.length === 0) {
         return null;

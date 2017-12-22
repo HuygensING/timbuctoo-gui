@@ -15,12 +15,12 @@ import { Button as ButtonBase } from '../layout/Button';
 import { compose } from 'redux';
 
 interface Props {
-    filter: EsFilter;
     index: number;
 }
 
 interface StateProps {
     filters: EsFilter[];
+    filter: EsFilter;
     updateField: (index: number, value: string, filters: EsFilter[]) => void;
 }
 
@@ -35,7 +35,9 @@ const Section = styled.section`
     display: block;
     float: left;
     width: 100%;
-    margin-bottom: 3.75rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid ${props => props.theme.colors.shade.light};
 `;
 
 const Sub = styled(Subtitle)`
@@ -113,8 +115,9 @@ class MultiSelectForm extends PureComponent<FullProps, State> {
     };
 }
 
-const mapStateToProps = (state: RootState) => ({
-    filters: state.search.filters
+const mapStateToProps = (state: RootState, { index }: Props) => ({
+    filters: state.search.filters,
+    filter: state.search.filters[index]
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Props>) => ({

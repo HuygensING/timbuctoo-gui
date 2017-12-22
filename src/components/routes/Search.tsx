@@ -2,10 +2,9 @@ import React, { ComponentType, SFC } from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { compose } from 'redux';
 import verifyResponse, { handleError } from '../../services/verifyResponse';
-import { ChildProps } from '../../typings';
 import { lifecycle, withProps } from 'recompose';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { Location } from 'history';
+import { History, Location } from 'history';
 import { CollectionMetadata, DataSetMetadata, Facet, FacetConfig } from '../../typings/schema';
 import metaDataResolver, { MetaDataProps } from '../../services/metaDataResolver';
 import renderLoader from '../../services/renderLoader';
@@ -23,13 +22,16 @@ import SearchForm from '../form/SearchForm';
 import CollectionTags from '../CollectionTags';
 import SearchResults from '../search/SearchResults';
 import Pagination from '../search/Pagination';
-import { Dummy } from '../Dummy';
-import { Title } from '../layout/StyledCopy';
+import { Link, Title } from '../layout/StyledCopy';
 import styled, { withProps as withStyledProps } from '../../styled-components';
 import MultiSelectForm from '../form/MultiselectForm';
+import { debounce } from 'lodash';
 
 import { EsFilter, mergeFilters } from '../../reducers/search';
 import { RootState } from '../../reducers/rootReducer';
+import { ChildProps } from '../../typings/index';
+import { FACET_TYPE } from '../../constants/forms';
+import DateRange from '../form/DateRange';
 
 interface StateProps {
     filters: EsFilter[];
@@ -60,7 +62,32 @@ type FullProps = ApolloProps & StateProps & DispatchProps & ExtraProps;
 
 // TODO: this is just a simple loading effect, should be way cooler
 const StyledForm = withStyledProps<{ loading: boolean }>(styled.form)`
-    opacity: ${props => (props.loading ? 0.5 : 1)};
+    opacity: ${props => (props.loading ? 0.7 : 1)};
+`;
+
+const FilterTitle = Title.extend`
+    float: left;
+    padding-right: 0.5rem;
+`;
+
+const ResetLink = Link.extend`
+    background: ${props => props.theme.colors.shade.medium};
+    color: ${props => props.theme.colors.white};
+    position: relative;
+    top: 7px;
+    width: 1rem;
+    height: 1rem;
+    text-align: center;
+    line-height: 1.35;
+    font-size: 0.75rem;
+    border-radius: 50%;
+    float: left;
+    margin: 1.1vw 0;
+
+    &:hover {
+        background: ${props => props.theme.colors.error};
+        color: ${props => props.theme.colors.white};
+    }
 `;
 
 const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) => {
@@ -95,10 +122,19 @@ const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) =
             <FullSection>
                 <Col sm={12} smPaddingY={1}>
                     <StyledForm onSubmit={e => e.preventDefault()} loading={data!.loading}>
-                        <Title>{translate('globals.filters')}</Title>
-                        <Dummy text={'search-filter'} height={1} marginY={0.5} />
+                        <FilterTitle>{translate('globals.filters')}</FilterTitle>
+                        {!!location.search.length && <ResetLink to={location.pathname}>X</ResetLink>}
                         {filters.length > 0 &&
-                            filters.map((filter, idx) => <MultiSelectForm key={idx} filter={filter} index={idx} />)}
+                            filters.map((filter, idx) => {
+                                switch (filter.type) {
+                                    case FACET_TYPE.multiSelect:
+                                        return <MultiSelectForm key={idx} index={idx} />;
+                                    case FACET_TYPE.dateRange:
+                                        return <DateRange key={idx} index={idx} />;
+                                    default:
+                                        return null;
+                                }
+                            })}
                     </StyledForm>
                 </Col>
 
@@ -123,6 +159,10 @@ const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) =
         </section>
     );
 };
+
+const debounceReplace = debounce((history: History, path: string) => {
+    history.replace(path);
+}, 300);
 
 const mapStateToProps = (state: RootState) => ({
     filters: state.search.filters,
@@ -151,7 +191,7 @@ const dataResolver = compose<ComponentType<{}>>(
             if (nextProps.callRequested && !this.props.callRequested) {
                 const query = nextProps.createQueryString();
                 const searchParam = query ? `?search=${encode(query)}` : '';
-                nextProps.history.replace(location.pathname + searchParam);
+                debounceReplace(nextProps.history, location.pathname + searchParam);
             } else if (nextProps.data && this.props.data !== nextProps.data) {
                 const { collectionValues, metadata, location } = nextProps;
                 nextProps.mergeFilter(
