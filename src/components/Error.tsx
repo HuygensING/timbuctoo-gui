@@ -9,6 +9,16 @@ import { GRAPH_URI } from '../constants/api';
 type Props = ErrorReducer;
 
 function Error({ errors, status, query, variables }: Props) {
+    const graphiqlUri =
+        GRAPH_URI.substr(0, GRAPH_URI.length - '/v5/graphql'.length) +
+        '/static/graphiql?query=' +
+        encodeURIComponent(query) +
+        '&variables=' +
+        encodeURIComponent(JSON.stringify(variables));
+
+    if (process.env.NODE_ENV !== 'production') {
+        console.debug('Graphql error: ', graphiqlUri);
+    }
     return (
         <Grid xs={36} sm={24} xsOffset={6} smOffset={12}>
             <Col xs={36} sm={24}>
@@ -24,17 +34,7 @@ function Error({ errors, status, query, variables }: Props) {
                             </div>
                         ))
                         .concat([
-                            <a
-                                target="_BLANK"
-                                key="link"
-                                href={
-                                    GRAPH_URI.substr(0, GRAPH_URI.length - '/v5/graphql'.length) +
-                                    '/static/graphiql?query=' +
-                                    encodeURIComponent(query) +
-                                    '&variables=' +
-                                    encodeURIComponent(JSON.stringify(variables))
-                                }
-                            >
+                            <a target="_BLANK" key="link" href={graphiqlUri}>
                                 Go to graphiql
                             </a>
                         ])
