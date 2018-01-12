@@ -85,7 +85,9 @@ const CollectionTag: SFC<Props> = ({
                     .map((property: Property, idx: number) => (
                         <ProgressBar key={idx} width={'100px'} progress={property.density}>
                             <PredicateLabel
-                                predicate={property.isList ? property.shortenedUri + '(s)' : property.shortenedUri}
+                                predicate={
+                                    property.isList ? property.shortenedUri + '(s)\u200E' : property.shortenedUri
+                                }
                             />
                         </ProgressBar>
                     ))}
