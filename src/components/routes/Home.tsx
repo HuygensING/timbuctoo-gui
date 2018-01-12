@@ -56,12 +56,11 @@ const Home: SFC<FullProps> = ({ data, user, firstSet }) => {
                 </GridSection>
             )}
 
-            {/* TODO Add recently modified */}
             <ListContent
                 smOffset={2}
                 sm={20}
                 smPaddingY={1}
-                title={translate('home.most_popular.title')}
+                title={translate('home.own_datasets.title')}
                 data={allDataSets!}
             />
 
@@ -100,6 +99,7 @@ const query = gql`
                 value
             }
             dataSetId
+            dataSetName
         }
         aboutMe {
             id

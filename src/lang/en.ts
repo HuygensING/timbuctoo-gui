@@ -15,6 +15,7 @@ const translation: languageType = {
     'home.featured.title': 'Featured datasets',
     'home.recently_modified.title': 'Recently modified',
     'home.most_popular.title': 'Most Popular',
+    'home.own_datasets.title': 'Own Datasets',
     'details.collection.property': 'Property',
     'details.collection.density': 'Density',
     'details.collection.unknown': 'Unknown',

@@ -27,6 +27,7 @@ export interface DataSetMetadataQueryArgs {
 export interface DataSetMetadata {
     uri: string;
     dataSetId: string;
+    dataSetName: string;
     title?: Value;
     description?: Value;
     imageUrl?: Value;
