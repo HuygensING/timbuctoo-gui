@@ -117,7 +117,7 @@ class MultiSelectForm extends PureComponent<FullProps, State> {
 
 const mapStateToProps = (state: RootState, { index }: Props) => ({
     filters: state.search.filters,
-    filter: state.search.filters[index]
+    filter: state.search.filters[index] || { caption: '', values: [] }
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Props>) => ({
