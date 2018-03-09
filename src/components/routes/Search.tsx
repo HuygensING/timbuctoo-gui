@@ -145,6 +145,7 @@ const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) =
                             dataSetId={dataSetId}
                             collectionId={collection!.collectionId}
                             properties={collection!.summaryProperties}
+                            propertyMetadata={collection!.properties.items}
                             results={collectionValues.items}
                             fields={fields}
                         />,

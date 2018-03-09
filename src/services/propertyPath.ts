@@ -62,7 +62,7 @@ export function walkPath(pathStr: string | undefined | null, formatters: Formatt
     if (!pathStr) {
         return null;
     }
-    console.groupCollapsed(pathStr);
+    // console.groupCollapsed(pathStr);
 
     const splittedPath = parsePath(pathStr);
     const validationResult = validatePath(splittedPath);
@@ -71,7 +71,7 @@ export function walkPath(pathStr: string | undefined | null, formatters: Formatt
         return null;
     }
     const result = walkPathStep(splittedPath, formatters, entity);
-    console.groupEnd();
+    // console.groupEnd();
     return result;
 }
 
@@ -85,7 +85,7 @@ export function validatePath(path: ReferencePath): 'UNFINISHED' | 'INVALID' | un
 }
 
 function walkPathStep(path: ReferencePath, formatters: FormatterConfig, entity: any): pathResult {
-    console.log(path, entity);
+    // console.log(path, entity);
     const propName = path[0][1];
     if (path.length === 1 && propName === 'value') {
         // getting the value
@@ -202,7 +202,7 @@ function mapToQuery(map: PropContainer, dataSetId: string, prefix: string): stri
         }
         const sub = map[key];
         if (typeof sub === 'boolean') {
-            console.log(typeName, propName);
+            // console.log(typeName, propName);
             if (typeName === 'Value' && propName === 'value') {
                 // always request the value type as well
                 intermediate[typeName].push('value type');

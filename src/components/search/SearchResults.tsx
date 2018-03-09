@@ -3,13 +3,15 @@ import translate from '../../services/translate';
 
 import GridSection from '../layout/GridSection';
 import SearchResultEntry from './SearchResultEntry';
-import { SummaryProperties } from '../../typings/schema';
-import { walkPath } from '../../services/propertyPath';
+import { SummaryProperties, Property } from '../../typings/schema';
+import { walkPath, ReferencePath } from '../../services/propertyPath';
+import { ITEMS } from '../../constants/global';
 
 interface Props {
     dataSetId: string;
     collectionId: string | null;
     properties: SummaryProperties | null;
+    propertyMetadata: Property[];
     fields: { [name: string]: string | null };
     results: any[]; // Object with uri and the three variable fields for title, image and description
 }
@@ -32,7 +34,7 @@ function getValue(path: string | null, result: any): string | null {
     }
 }
 
-const SearchResults: SFC<Props> = ({ results, properties, collectionId, dataSetId, fields }) => {
+const SearchResults: SFC<Props> = ({ results, properties, propertyMetadata, collectionId, dataSetId, fields }) => {
     if (!properties || !collectionId) {
         return null;
     }
@@ -40,7 +42,14 @@ const SearchResults: SFC<Props> = ({ results, properties, collectionId, dataSetI
     const renderEntries = (result: any, idx: number) => {
         const imageUrl = getValue(fields.image, result);
         const description = getValue(fields.description, result);
-        const title = getValue(fields.title, result);
+        let defaultTitle: ReferencePath | undefined = undefined;
+        if (propertyMetadata.some(x => x.name === 'rdfs_label')) {
+            defaultTitle = [[collectionId, 'rdfs_label'], ['Value', 'value']];
+        } else if (propertyMetadata.some(x => x.name === 'rdfs_labelList')) {
+            defaultTitle = [[collectionId, 'rdfs_labelList'], [ITEMS, 'items'], ['Value', 'value']];
+        }
+
+        const title = getValue(fields.title || JSON.stringify(defaultTitle), result);
 
         return (
             <SearchResultEntry
