@@ -72,14 +72,14 @@ class DataSet extends PureComponent<Props> {
                     </Col>
                 )}
 
+                {this.renderProvenanceInfo()}
+
                 <Col sm={48}>
                     <GridSection tag={'div'} gridSize={48} gridOffset={0} cols={2} colSizeOffset={2} gridSpacing={2}>
                         <Colophon owner={owner} contact={contact} />
                         <Dummy text={'Partners'} height={10} />
                     </GridSection>
                 </Col>
-
-                {this.renderProvenanceInfo()}
             </section>
         );
     }
