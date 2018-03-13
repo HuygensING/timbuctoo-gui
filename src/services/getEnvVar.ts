@@ -7,7 +7,7 @@ declare global {
     }
 }
 
-export default function getEnvVar(varName: string) {
+export default function getEnvVar(varName: string): string {
     if (!varName.startsWith('REACT_APP_')) {
         throw new Error("varName must start with REACT_APP_ otherwise it's not picked up by the build step");
     }

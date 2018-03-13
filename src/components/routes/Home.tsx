@@ -21,6 +21,7 @@ import { withProps } from 'recompose';
 import renderLoader from '../../services/renderLoader';
 import verifyResponse from '../../services/verifyResponse';
 import { ChildProps } from '../../typings';
+import getEnvVar from '../../services/getEnvVar';
 
 interface Data {
     promotedDataSets: DataSetMetadata[];
@@ -33,6 +34,8 @@ interface StateProps {
 }
 
 type FullProps = ChildProps<StateProps & { firstSet: string | null } & RouteComponentProps<any>, Data>;
+
+const hideOwnDataSets = getEnvVar('REACT_APP_HIDE_OWN_DATASETS').toLowerCase() === 'true';
 
 const Home: SFC<FullProps> = ({ data, user, firstSet }) => {
     const { promotedDataSets, aboutMe, allDataSets } = data;
@@ -56,13 +59,15 @@ const Home: SFC<FullProps> = ({ data, user, firstSet }) => {
                 </GridSection>
             )}
 
-            <ListContent
-                smOffset={2}
-                sm={20}
-                smPaddingY={1}
-                title={translate('home.own_datasets.title')}
-                data={allDataSets!}
-            />
+            {hideOwnDataSets || (
+                <ListContent
+                    smOffset={2}
+                    sm={20}
+                    smPaddingY={1}
+                    title={translate('home.own_datasets.title')}
+                    data={allDataSets!}
+                />
+            )}
 
             <Col sm={48}>
                 {aboutMe && (
