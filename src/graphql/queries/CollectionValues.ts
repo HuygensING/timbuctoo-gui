@@ -34,7 +34,7 @@ const QUERY_COLLECTION_VALUES = ({ match, location, metadata }: Props) => {
         [description, image]
             .filter(x => x)
             .map(p => parsePath(p!.value))
-            .concat(title != null ? parsePath(title!.value) : defaultTitle !== undefined ? [defaultTitle] : []),
+            .concat(title != null ? [parsePath(title!.value)] : defaultTitle !== undefined ? [defaultTitle] : []),
         match.params.dataSet,
         '                            '
     );
