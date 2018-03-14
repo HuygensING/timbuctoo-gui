@@ -73,7 +73,10 @@ class About extends PureComponent<Props, State> {
             <Grid sm={48}>
                 <StyledCol sm={48} smPadding={3}>
                     <Title>{title}</Title>
-                    <OverflowContent isOpen={this.state.isOpen}>
+                    <OverflowContent
+                        isOpen={this.state.isOpen}
+                        className={this.props.isMarkDown ? 'markdown-body' : null}
+                    >
                         {this.props.isMarkDown ? (
                             <span dangerouslySetInnerHTML={{ __html: parser.render(body) }} />
                         ) : (
