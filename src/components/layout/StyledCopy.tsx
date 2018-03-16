@@ -93,6 +93,10 @@ export const Title = withProps<ElementProps>(styled.h1)`
     ${EmptyStyle};
 `;
 
+export const HeroTitle = Title.extend`
+    font: ${props => props.theme.fonts.heroTitle};
+`;
+
 /*
 * Subtitle
 * Available props: TextProps

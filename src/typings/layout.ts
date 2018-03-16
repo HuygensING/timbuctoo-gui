@@ -15,6 +15,7 @@ export interface ColorShades {
 export interface Fonts {
     readonly heading: string;
     readonly title: string;
+    readonly heroTitle: string;
     readonly subTitle: string;
     readonly body: string;
 }

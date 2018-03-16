@@ -5,7 +5,7 @@ import theme from '../../theme';
 
 import { Col } from '../layout/Grid';
 import Image from '../layout/Image';
-import { Content, Title } from '../layout/StyledCopy';
+import { Content, HeroTitle } from '../layout/StyledCopy';
 import { ButtonLink } from '../layout/Button';
 import getEnvVar from '../../services/getEnvVar';
 
@@ -56,9 +56,9 @@ const Hero = ({ title, content, searchPath, buttonText, imgUrl }: HeroProps) => 
                 <DarkenImage />
             </HeroImageWrapper>
             <CenteredContent>
-                <Title align="center" color={theme.colors.white}>
+                <HeroTitle align="center" color={theme.colors.white}>
                     {title}
-                </Title>
+                </HeroTitle>
                 {content && (
                     <Content align="center" color={theme.colors.white}>
                         {content}

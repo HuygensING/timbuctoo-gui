@@ -30,6 +30,7 @@ const theme: ThemeProps = {
     },
     fonts: {
         heading: '500 2.5rem/1.2 Roboto, sans-serif',
+        heroTitle: '500 4.5rem/1.2 Roboto, sans-serif',
         title: '500 1.5rem/1.2 Roboto, sans-serif',
         subTitle: '500 1rem/1.2 Roboto, sans-serif',
         body: '400 .875rem/1.6 Roboto, sans-serif'
