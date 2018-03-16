@@ -90,6 +90,25 @@ const ResetLink = Link.extend`
     }
 `;
 
+class FacetErrorHandler extends React.Component<any, { hasError: boolean }> {
+    constructor(props: any) {
+        super(props);
+        this.state = { hasError: false };
+    }
+    componentDidCatch(error: any, info: any) {
+        console.error(error, info);
+        this.setState({ hasError: true });
+    }
+
+    render() {
+        if (this.state.hasError) {
+            console.error('fallback');
+            return <div>Facet failed to load</div>;
+        }
+        return this.props.children;
+    }
+}
+
 const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) => {
     const { collectionList, dataSetId, collection } = metadata.dataSetMetadata!;
     const fields = {
@@ -128,9 +147,17 @@ const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) =
                             filters.map((filter, idx) => {
                                 switch (filter.type) {
                                     case FACET_TYPE.multiSelect:
-                                        return <MultiSelectForm key={idx} index={idx} />;
+                                        return (
+                                            <FacetErrorHandler>
+                                                <MultiSelectForm key={idx} index={idx} />
+                                            </FacetErrorHandler>
+                                        );
                                     case FACET_TYPE.dateRange:
-                                        return <DateRange key={idx} index={idx} />;
+                                        return (
+                                            <FacetErrorHandler>
+                                                <DateRange key={idx} index={idx} />
+                                            </FacetErrorHandler>
+                                        );
                                     default:
                                         return null;
                                 }
