@@ -37,7 +37,7 @@ ENV REACT_APP_DEFAULT_HERO_IMAGE=/assets/_tmp/header--library.jpg
 ENV REACT_APP_LOGO_URL=/assets/logo-timbuctoo.svg
 ENV REACT_APP_TEXT_EN_APP_TITLE=Timbuctoo
 ENV REACT_APP_TEXT_NL_APP_TITLE=Timbuctoo
-ENV REACT_APP_API_URL=http://data.anansi.clariah.nl/v5/graphql
+ENV REACT_APP_API_URL=https://data.anansi.clariah.nl/v5/graphql
 ENV REACT_APP_LOGIN_URL=https://secure.huygens.knaw.nl/saml2/login
  
 # Set the command to start the node server.
