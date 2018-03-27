@@ -79,8 +79,8 @@ const FacetConfig: SFC<GraphProps> = props => {
 };
 
 const submitFacetConfig = () => gql`
-    mutation submitFacetConfig($dataSet: ID!, $collectionUri: String!, $indexConfig: IndexConfigInput!) {
-        setIndexConfig(dataSet: $dataSet, collectionUri: $collectionUri, indexConfig: $indexConfig) {
+    mutation submitFacetConfig($dataSetId: ID!, $collectionUri: String!, $indexConfig: IndexConfigInput!) {
+        setIndexConfig(dataSetId: $dataSetId, collectionUri: $collectionUri, indexConfig: $indexConfig) {
             ...CollectionIndexConfig
         }
     }

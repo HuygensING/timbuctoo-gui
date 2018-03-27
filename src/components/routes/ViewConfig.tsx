@@ -60,8 +60,8 @@ const ViewConfig: SFC<GraphProps> = props => {
 };
 
 const submitViewConfig = () => gql`
-    mutation submitViewConfig($dataSet: String!, $collectionUri: String!, $viewConfig: [ComponentInput!]!) {
-        setViewConfig(dataSet: $dataSet, collectionUri: $collectionUri, viewConfig: $viewConfig) {
+    mutation submitViewConfig($dataSetId: String!, $collectionUri: String!, $viewConfig: [ComponentInput!]!) {
+        setViewConfig(dataSetId: $dataSetId, collectionUri: $collectionUri, viewConfig: $viewConfig) {
             ...ComponentsFragment
         }
     }
