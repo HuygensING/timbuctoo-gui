@@ -28,6 +28,7 @@ export interface DataSetMetadata {
     uri: string;
     dataSetId: string;
     dataSetName: string;
+    ownerId: string;
     title?: Value;
     description?: Value;
     imageUrl?: Value;
