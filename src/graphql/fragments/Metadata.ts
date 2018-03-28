@@ -104,6 +104,8 @@ const collectionIndexConfig = gql`
 const dataSetMetadataFragment = gql`
     fragment DataSetMetadataFragment on DataSetMetadata {
         dataSetId
+        dataSetName
+        ownerId
         title { value }
         description { value }
         imageUrl { value }

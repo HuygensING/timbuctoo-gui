@@ -22,6 +22,7 @@ import { compose } from 'redux';
 import renderLoader from '../../services/renderLoader';
 import { RootState } from '../../reducers/rootReducer';
 import verifyResponse from '../../services/verifyResponse';
+import Upload from '../Upload';
 
 interface StateProps {
     loggedIn: boolean;
@@ -31,15 +32,15 @@ type Props = MetaDataProps & StateProps & DataSetProps;
 
 class DataSet extends PureComponent<Props> {
     render() {
-        const { dataSetId, title, description, imageUrl, collectionList, owner, contact } = this.props.metadata
-            .dataSetMetadata!;
+        const { dataSetId, dataSetName, ownerId, title, description, imageUrl, collectionList, owner, contact } = this
+            .props.metadata.dataSetMetadata!;
 
         const collectionItems: CollectionMetadata[] =
             collectionList && collectionList.items ? collectionList.items : [];
 
         return (
             <section>
-                <FullHelmet pageName={getValue(title) || ''} />
+                <FullHelmet pageName={`Dataset: ${getValue(title)}`} />
 
                 <Hero
                     title={getValue(title)}
@@ -73,6 +74,13 @@ class DataSet extends PureComponent<Props> {
                 )}
 
                 {this.renderProvenanceInfo()}
+                {this.props.loggedIn && (
+                    <Upload
+                        dataSetName={dataSetName}
+                        ownerId={ownerId}
+                        onCompletion={() => this.props.metadata.refetch()}
+                    />
+                )}
 
                 <Col sm={48}>
                     <GridSection tag={'div'} gridSize={48} gridOffset={0} cols={2} colSizeOffset={2} gridSpacing={2}>

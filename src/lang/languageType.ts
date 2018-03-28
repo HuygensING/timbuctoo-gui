@@ -32,6 +32,9 @@ type languageType = {
     'footer.address': string;
     'footer.phone': string;
     'footer.opening_hours': string;
+    'upload.heading': string;
+    'upload.body': string;
+    'upload.rejected': string;
     error: string;
     'error.404': string;
     'error.500': string;
