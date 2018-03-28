@@ -1,12 +1,9 @@
-import { SUB_ROUTES } from './routeNaming';
 import { ButtonVariant } from '../typings/layout';
 import { MenuItemProp } from '../typings';
 import { ComponentTypes } from '../typings/viewComponents';
-import User from '../components/icons/User';
-import Heart from '../components/icons/Heart';
 import Book from '../components/icons/Book';
-import GitBranch from '../components/icons/GitBranch';
 import { FacetConfig } from '../typings/schema';
+import { SUB_ROUTES, ROUTE_PATHS } from './routeNaming';
 
 export const HSID: string = 'hsid';
 
@@ -55,24 +52,9 @@ export const BUTTON_VARIANT: { [name: string]: ButtonVariant } = {
 
 export const MENU_ITEMS: MenuItemProp[] = [
     {
-        path: '',
-        name: 'Account',
-        icon: User
-    },
-    {
-        path: SUB_ROUTES.favorites,
-        name: 'Favorites',
-        icon: Heart
-    },
-    {
-        path: SUB_ROUTES.dataSets,
+        path: `/${ROUTE_PATHS.account}${SUB_ROUTES.dataSets}`,
         name: 'My datasets',
         icon: Book
-    },
-    {
-        path: SUB_ROUTES.pullRequests,
-        name: 'Pull requests',
-        icon: GitBranch
     }
 ];
 

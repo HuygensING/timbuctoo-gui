@@ -7,6 +7,7 @@ import Entry from '../components/routes/Entry';
 import DataSet from '../components/routes/DataSet';
 import ViewConfig from '../components/routes/ViewConfig';
 import FacetConfig from '../components/routes/FacetConfig';
+import DataSetOverview from '../components/routes/DataSetOverview';
 
 export interface RouteInfo {
     path?: string;
@@ -59,7 +60,7 @@ export const routes: RouteObject[] = [
             },
             {
                 path: SUB_ROUTES.dataSets,
-                component: DummyRoute
+                component: DataSetOverview
             },
             {
                 path: SUB_ROUTES.pullRequests,

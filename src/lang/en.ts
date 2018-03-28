@@ -19,6 +19,7 @@ const translation: languageType = {
     'details.collection.property': 'Property',
     'details.collection.density': 'Density',
     'details.collection.unknown': 'Unknown',
+    'dataset_overview.title': 'Your datasets',
     'search.placeholder': 'Type to search...',
     'search.reset': 'Reset',
     'search.search': 'Search',

@@ -6,7 +6,7 @@ import { calcColWidth } from '../layout/Grid';
 import { Subtitle, Content, Link } from '../layout/StyledCopy';
 
 import { getValue } from '../../services/getValue';
-import { DataSetMetadata } from '../../typings/schema';
+import { Value } from '../../typings/schema';
 import { StyledComponentClass } from 'styled-components';
 
 const ListItem = styled.li`
@@ -17,7 +17,17 @@ const ListItem = styled.li`
 
 const LinkableTitle = Subtitle.withComponent(Link) as StyledComponentClass<{}, {}, { to: string }>;
 
-const ListContentItem = ({ title, description, dataSetId, dataSetName }: DataSetMetadata) => {
+const ListContentItem = ({
+    title,
+    description,
+    dataSetId,
+    dataSetName
+}: {
+    title?: Value;
+    description?: Value;
+    dataSetId: String;
+    dataSetName: String;
+}) => {
     const titleField = getValue(title);
     const descrField = getValue(description);
 

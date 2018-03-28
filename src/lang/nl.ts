@@ -16,6 +16,7 @@ const translation: languageType = {
     'home.recently_modified.title': 'Laatst aangepast',
     'home.most_popular.title': 'Populaire datasets',
     'home.own_datasets.title': 'Eigen Datasets',
+    'dataset_overview.title': 'Jouw datasets',
     'details.collection.property': 'Property',
     'details.collection.density': 'Density',
     'details.collection.unknown': 'Onbekend',

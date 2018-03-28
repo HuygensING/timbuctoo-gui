@@ -13,6 +13,7 @@ type languageType = {
     'home.recently_modified.title': string;
     'home.most_popular.title': string;
     'home.own_datasets.title': string;
+    'dataset_overview.title': string;
     'details.collection.property': string;
     'details.collection.density': string;
     'details.collection.unknown': string;

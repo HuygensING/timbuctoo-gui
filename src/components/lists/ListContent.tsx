@@ -6,7 +6,7 @@ import { Title } from '../layout/StyledCopy';
 
 import ListContentItem from './ListContentItem';
 import { SFC } from 'react';
-import { DataSetMetadata } from '../../typings/schema';
+import { Value } from '../../typings/schema';
 import { ColProps } from '../../typings/layout';
 
 const List = styled.ul`
@@ -16,7 +16,12 @@ const List = styled.ul`
 
 interface Props extends ColProps {
     title: string | null;
-    data: DataSetMetadata[];
+    data: Array<{
+        title?: Value;
+        description?: Value;
+        dataSetId: String;
+        dataSetName: String;
+    }>;
 }
 
 const ListContent: SFC<Props> = ({ title, data, ...rest }) => (
