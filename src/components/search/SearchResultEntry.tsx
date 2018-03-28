@@ -9,7 +9,7 @@ import { ROUTE_PATHS } from '../../constants/routeNaming';
 import { encode } from '../../services/UrlStringCreator';
 
 export interface ResultDataSetMetadata {
-    imageUrl: string | null;
+    image: string | null;
     title: string | null;
     description: string | null;
     collectionId: string;
@@ -45,7 +45,7 @@ const SearchDescription = styled(Content)`
     ${MaxWidth};
 `;
 
-const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataSetId, uri }: ResultDataSetMetadata) => {
+const SearchResultEntry = ({ title, image, description, collectionId, dataSetId, uri }: ResultDataSetMetadata) => {
     const url = `/${ROUTE_PATHS.details}/${dataSetId}/${collectionId}/${encode(uri)}`;
 
     return (
@@ -55,10 +55,10 @@ const SearchResultEntry = ({ title, imageUrl, description, collectionId, dataSet
             <ButtonLink to={url} data-small={true}>
                 {translate('search.view_entry')}
             </ButtonLink>
-            {imageUrl &&
-                imageUrl.indexOf('http') > -1 && (
+            {image &&
+                image.indexOf('http') > -1 && (
                     <ImageWrapper>
-                        <Image src={imageUrl} ratio={1} fillOut={true} />
+                        <Image src={image} ratio={1} fillOut={true} />
                     </ImageWrapper>
                 )}
         </SearchItem>

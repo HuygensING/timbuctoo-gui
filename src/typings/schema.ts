@@ -80,7 +80,6 @@ export interface CollectionMetadata {
     title?: Value;
     archeType?: Entity;
     indexConfig: IndexConfig;
-    summaryProperties: SummaryProperties;
     viewConfig: Array<ComponentConfig>;
 }
 
@@ -148,23 +147,11 @@ export interface IndexConfig {
     next?: IndexConfig;
 }
 
-export interface SummaryProperties {
-    title?: Value;
-    description?: Value;
-    image?: Value;
-}
-
 export interface IndexConfig {
     path?: Value;
     typ?: Value;
     fullTextSearch?: Value;
     next?: IndexConfig;
-}
-
-export interface SummaryProperties {
-    title?: Value;
-    description?: Value;
-    image?: Value;
 }
 
 export type ComponentType = 'PATH' | 'LITERAL' | 'TITLE' | 'IMAGE' | 'LINK' | 'DIVIDER' | 'KEYVALUE';

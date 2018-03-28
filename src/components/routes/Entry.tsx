@@ -30,12 +30,7 @@ const Entry: SFC<FullProps> = (props: FullProps) => {
     const componentConfigs =
         collection!.viewConfig.length > 0
             ? collection!.viewConfig
-            : makeDefaultViewConfig(
-                  collection!.properties.items,
-                  collection!.summaryProperties,
-                  collection!.itemType,
-                  collectionList.items
-              );
+            : makeDefaultViewConfig(collection!.properties.items, collection!.itemType, collectionList.items);
 
     const entry = safeGet(safeGet(props.data!.dataSets, props.match.params.dataSet), props.match.params.collection);
 

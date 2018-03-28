@@ -52,11 +52,6 @@ export function parsePath(pathStr: string): ReferencePath {
     }
 }
 
-/** Turn string representation into a path array */
-export function parseSummaryProperty(collectionId: string, propNameOrPath: string): ReferencePath {
-    return JSON.parse(propNameOrPath);
-}
-
 /** Grab path values from a javascript object */
 export function walkPath(pathStr: string | undefined | null, formatters: FormatterConfig, entity: Entity): pathResult {
     if (!pathStr) {

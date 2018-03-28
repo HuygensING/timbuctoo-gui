@@ -14,9 +14,6 @@ export const QUERY_ENTRY_PROPERTIES = ({ match }: Props) => {
                     items {
                         itemType
                         collectionId
-                        summaryProperties {
-                            title { value }
-                        }
                     }
                 }
                 collection(collectionId: "${match.params.collection}") {
@@ -26,11 +23,6 @@ export const QUERY_ENTRY_PROPERTIES = ({ match }: Props) => {
                     ...CollectionPropertiesReference
                     viewConfig {
                         ...ComponentsFragment
-                    }
-                    summaryProperties {
-                        title { value }
-                        description { value }
-                        image { value }
                     }
                 }
             }
@@ -45,11 +37,6 @@ interface CollectionMetadataLocal extends CollectionPropertiesReference {
     collectionId: string;
     itemType: string;
     viewConfig: ComponentsFragment;
-    summaryProperties: {
-        title?: { value: string };
-        description?: { value: string };
-        image?: { value: string };
-    };
 }
 
 checkTypes<QueryMetadata, Query>();
@@ -59,9 +46,6 @@ export interface QueryMetadata {
             items: Array<{
                 itemType: string;
                 collectionId: string;
-                summaryProperties: {
-                    title?: { value: string };
-                };
             }>;
         };
         collection?: CollectionMetadataLocal;

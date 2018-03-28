@@ -111,13 +111,6 @@ class FacetErrorHandler extends React.Component<any, { hasError: boolean }> {
 
 const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) => {
     const { collectionList, dataSetId, collection } = metadata.dataSetMetadata!;
-    const fields = {
-        title: collection!.summaryProperties.title ? collection!.summaryProperties.title!.value : null,
-        description: collection!.summaryProperties.description
-            ? collection!.summaryProperties.description!.value
-            : null,
-        image: collection!.summaryProperties.image ? collection!.summaryProperties.image!.value : null
-    };
     const collectionItems: CollectionMetadata[] = collectionList && collectionList.items ? collectionList.items : [];
 
     return (
@@ -171,10 +164,8 @@ const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) =
                             key={'results'}
                             dataSetId={dataSetId}
                             collectionId={collection!.collectionId}
-                            properties={collection!.summaryProperties}
                             propertyMetadata={collection!.properties.items}
                             results={collectionValues.items}
-                            fields={fields}
                         />,
                         <Pagination
                             key={'pagination'}

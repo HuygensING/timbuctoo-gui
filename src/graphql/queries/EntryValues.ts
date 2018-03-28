@@ -10,43 +10,17 @@ import {
     LinkComponentConfig,
     Property,
     Query,
-    SummaryProperties,
     TitleComponentConfig
 } from '../../typings/schema';
 import { RouteComponentProps } from 'react-router';
 import { MetaDataProps } from '../../services/metaDataResolver';
-import {
-    parsePath,
-    serializePath,
-    pathsToGraphQlQuery,
-    ReferencePath,
-    parseSummaryProperty
-} from '../../services/propertyPath';
+import { parsePath, serializePath, pathsToGraphQlQuery, ReferencePath } from '../../services/propertyPath';
 import { COMPONENTS, ITEMS, URI } from '../../constants/global';
 import { EMPTY_COMPONENT } from '../../constants/emptyViewComponents';
 
 // `type: never` makes the type checker report an error if the case switch does not handle all types
 function checkUnknownComponent(type: never) {
     console.error(`Type ${(type as ComponentConfig).type} is not handled!`);
-}
-
-function getTitleProp(
-    typeId: string,
-    otherCollections: Array<{ collectionId: string; summaryProperties: { title?: { value: string } } }>
-): ReferencePath {
-    for (const collection of otherCollections) {
-        if (collection.collectionId === typeId) {
-            const title = collection.summaryProperties.title;
-
-            if (title) {
-                return parseSummaryProperty(typeId, title.value);
-            }
-
-            return [['Entity', URI]];
-        }
-    }
-
-    return [['Entity', URI]];
 }
 
 const createPropertyConfig = (
@@ -69,13 +43,7 @@ const createPropertyConfig = (
                 { ...EMPTY_COMPONENT[COMPONENTS.path], value: serializePath(path.concat(uriSegment)) },
                 {
                     ...EMPTY_COMPONENT[COMPONENTS.path],
-                    value: serializePath(
-                        path.concat(
-                            referencedCollections.items.length === 1
-                                ? getTitleProp(referencedCollections.items[0], otherCollections)
-                                : uriSegment
-                        )
-                    )
+                    value: serializePath(path.concat([['Entity', 'title'], ['Value', 'value']]))
                 }
             ]
         } as LinkComponentConfig;
@@ -90,24 +58,21 @@ const createPropertyConfig = (
 
 export function makeDefaultViewConfig(
     properties: Array<Property>,
-    summaryProperties: SummaryProperties,
     collectionId: string,
     otherCollections: Array<CollectionMetadata>
 ): Array<ComponentConfig> {
-    const title: ComponentConfig[] = summaryProperties.title
-        ? [
-              {
-                  ...EMPTY_COMPONENT[COMPONENTS.title],
-                  subComponents: [{ ...EMPTY_COMPONENT[COMPONENTS.path], value: summaryProperties.title.value }]
-              } as TitleComponentConfig
-          ]
-        : [];
+    const title: TitleComponentConfig = {
+        ...EMPTY_COMPONENT[COMPONENTS.title],
+        subComponents: [
+            { ...EMPTY_COMPONENT[COMPONENTS.path], value: serializePath([['Entity', 'title'], ['Value', 'value']]) }
+        ]
+    } as TitleComponentConfig;
 
     const defaultConfig: ComponentConfig[] = properties.map(property =>
         createPropertyConfig(collectionId, property, otherCollections)
     );
 
-    return [...title, ...defaultConfig];
+    return [title, ...defaultConfig];
 }
 
 function getPaths(components: ComponentConfig[], result: ReferencePath[]): ReferencePath[] {
@@ -165,7 +130,6 @@ export function QUERY_ENTRY_VALUES({ match, metadata }: Props) {
                 ? (metadata.dataSetMetadata.collection.viewConfig as Array<ComponentConfig>)
                 : makeDefaultViewConfig(
                       metadata.dataSetMetadata.collection.properties.items,
-                      metadata.dataSetMetadata.collection.summaryProperties,
                       metadata.dataSetMetadata.collection.collectionId,
                       metadata.dataSetMetadata.collectionList.items
                   ))) ||

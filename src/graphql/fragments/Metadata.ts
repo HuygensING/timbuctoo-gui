@@ -101,22 +101,6 @@ const collectionIndexConfig = gql`
     }
 `;
 
-const collectionSummaryProperties = gql`
-    fragment CollectionSummaryProperties on CollectionMetadata {
-        summaryProperties {
-            title {
-                value
-            }
-            description {
-                value
-            }
-            image {
-                value
-            }
-        }
-    }
-`;
-
 const dataSetMetadataFragment = gql`
     fragment DataSetMetadataFragment on DataSetMetadata {
         dataSetId
@@ -153,6 +137,5 @@ export {
     collectionPropertiesDensity,
     collectionPropertiesReference,
     CollectionPropertiesReference,
-    collectionSummaryProperties,
     collectionIndexConfig
 };

@@ -1,10 +1,5 @@
 import gql from 'graphql-tag';
-import {
-    collectionBase,
-    collectionIndexConfig,
-    collectionPropertiesDensity,
-    collectionSummaryProperties
-} from '../fragments/Metadata';
+import { collectionBase, collectionIndexConfig, collectionPropertiesDensity } from '../fragments/Metadata';
 import { RouteComponentProps } from 'react-router';
 import { componentsFragment } from '../fragments/Components';
 
@@ -20,7 +15,6 @@ const QUERY_COLLECTION_PROPERTIES = ({ match }: Props) => {
                     uri
                     ...CollectionBase
                     ...CollectionPropertiesDensity
-                    ...CollectionSummaryProperties
                     indexConfig {
                         ...CollectionIndexConfig
                     }
@@ -38,9 +32,7 @@ const QUERY_COLLECTION_PROPERTIES = ({ match }: Props) => {
         }
     `;
 
-    return gql`${query}${collectionBase}${collectionPropertiesDensity}${collectionSummaryProperties}${
-        collectionIndexConfig
-    }${componentsFragment}`;
+    return gql`${query}${collectionBase}${collectionPropertiesDensity}${collectionIndexConfig}${componentsFragment}`;
 };
 
 export default QUERY_COLLECTION_PROPERTIES;

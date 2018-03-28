@@ -41,7 +41,6 @@ type CollectionMetadata {
   title: Value
   archeType: Entity
   indexerConfig: IndexerConfig
-  summaryProperties: SummaryProperties!
   components(count: Int = 20, cursor: ID = ""): ComponentList!
 }
 
@@ -716,12 +715,6 @@ type RoleWithMembers {
 type RootMutation {
   setViewComponents(input: ViewComponentsInput): Boolean
   setFacets(input: FacetsInput): Boolean
-}
-
-type SummaryProperties {
-  title: Value
-  description: Value
-  image: Value
 }
 
 union Union_DUMMY__oberon2_clusius_Membership__DUMMY__oberon2_clusius_Residence__DUMMY__oberon2_clusius_Institutes__ = DUMMY__oberon2_clusius_Membership | DUMMY__oberon2_clusius_Residence | DUMMY__oberon2_clusius_Institutes
