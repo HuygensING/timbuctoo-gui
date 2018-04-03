@@ -41,7 +41,7 @@ const ViewConfig: SFC<GraphProps> = props => {
 
         try {
             const viewConfig = props.denormalizeTree();
-            await props.mutate!({ variables: { dataSet: dataSetId, collectionUri: collection!.uri, viewConfig } });
+            await props.mutate!({ variables: { dataSetId: dataSetId, collectionUri: collection!.uri, viewConfig } });
             alert(`The collection ${collection!.collectionId} has been updated`);
         } catch (e) {
             alert(e); // TODO: Make this fancy, I'd suggest to maybe add an optional error to NormalizedComponentConfig, add a scrollTo and style the selectBox accordingly

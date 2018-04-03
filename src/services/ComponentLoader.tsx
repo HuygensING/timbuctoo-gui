@@ -7,7 +7,7 @@ import ContentKeyValue from '../components/content/ContentKeyValue';
 import ContentDivider from '../components/content/ContentDivider';
 import ContentValue from '../components/content/ContentValue';
 
-import { pathResult, uriOrString, walkPath } from './propertyPath';
+import { pathResult, walkPath } from './propertyPath';
 import { safeGet } from './GetDataSetValues';
 
 import { ComponentConfig, Entity, LeafComponentConfig } from '../typings/schema';
@@ -33,27 +33,54 @@ function getValueOrLiteral(component: LeafComponentConfig | null, data: Entity):
     }
 }
 
-function normalize(result: pathResult): { normalized: uriOrString[]; wasSingle: boolean } {
-    if (!result) {
-        return { normalized: [], wasSingle: true };
-    } else if (Array.isArray(result)) {
-        return { normalized: result, wasSingle: false };
-    } else if (typeof result === 'string') {
-        if (!result || result === '') {
-            return { normalized: [], wasSingle: true };
-        } else {
-            return { normalized: [result], wasSingle: true };
-        }
+function getUriWithType(
+    component: LeafComponentConfig | null,
+    data: Entity
+): Array<{ uri: string; __typename: string }> {
+    if (!component) {
+        return [];
     } else {
-        if (!result.uri || result.uri === '') {
-            return { normalized: [], wasSingle: true };
+        if (component.type !== 'PATH') {
+            return [];
         } else {
-            return { normalized: [result], wasSingle: true };
+            try {
+                const uris = walkPath(component.value, [], data);
+                const typenames = walkPath(
+                    JSON.stringify(
+                        JSON.parse(component.value as string)
+                            .slice(0, -1)
+                            .concat([['Entity', '__typename']])
+                    ),
+                    [],
+                    data
+                );
+                if (uris === null || typenames == null) {
+                    return [];
+                } else if (Array.isArray(uris)) {
+                    return uris.map((uri, i) => ({ uri, __typename: typenames[i] }));
+                } else {
+                    return [{ uri: uris, __typename: typenames as string }];
+                }
+            } catch (e) {
+                return [];
+            }
         }
     }
 }
 
-function makeArraysOfSameLength(arrA: pathResult, arrB: pathResult): [uriOrString[], uriOrString[]] {
+function normalize(result: pathResult): { normalized: string[]; wasSingle: boolean } {
+    if (!result) {
+        return { normalized: [], wasSingle: true };
+    } else if (Array.isArray(result)) {
+        return { normalized: result, wasSingle: false };
+    } else if (result === '') {
+        return { normalized: [], wasSingle: true };
+    } else {
+        return { normalized: [result], wasSingle: true };
+    }
+}
+
+function makeArraysOfSameLength(arrA: pathResult, arrB: pathResult): [string[], string[]] {
     let { normalized: normalizedA, wasSingle: wasSingleA } = normalize(arrA);
     let { normalized: normalizedB, wasSingle: wasSingleB } = normalize(arrB);
 
@@ -73,8 +100,18 @@ function makeArraysOfSameLength(arrA: pathResult, arrB: pathResult): [uriOrStrin
     return [normalizedA, normalizedB];
 }
 
-function valOrUri(item: string | { uri: string }): string {
-    return typeof item === 'string' ? item : item.uri;
+function asArray(input: pathResult, length?: number): string[] {
+    if (input == null) {
+        return [];
+    } else if (Array.isArray(input)) {
+        return input;
+    } else {
+        const result = [];
+        for (let i = 0; i < (length || 1); i++) {
+            result[i] = input;
+        }
+        return result;
+    }
 }
 
 export class ComponentLoader extends React.Component<
@@ -109,27 +146,20 @@ export class ComponentLoader extends React.Component<
                     getValueOrLiteral(safeGet(componentConfig.subComponents, '1'), data)
                 );
                 // What to do if the arrays are of a different size? use empty string for all the different items
-                return srcs.map((src, i) => (
-                    <ContentImage key={i} src={valOrUri(src)} alt={valOrUri(alts[i])} options={{}} />
-                ));
+                return srcs.map((src, i) => <ContentImage key={i} src={src} alt={alts[i]} options={{}} />);
+            case 'INTERNAL_LINK':
             case 'LINK':
-                const [tos, values] = makeArraysOfSameLength(
-                    getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data),
-                    getValueOrLiteral(safeGet(componentConfig.subComponents, '1'), data)
+                const uris =
+                    componentConfig.type === 'INTERNAL_LINK'
+                        ? getUriWithType(safeGet(componentConfig.subComponents, '0'), data).map(
+                              (to, i) => '../' + this.props.idPerUri[to.__typename] + '/' + encodeURIComponent(to.uri)
+                          )
+                        : asArray(getValueOrLiteral(safeGet(componentConfig.subComponents, '0'), data));
+                const values = asArray(
+                    getValueOrLiteral(safeGet(componentConfig.subComponents, '1'), data),
+                    uris.length
                 );
-                const retVal: JSX.Element[] = [];
-                tos.forEach((to, i) => {
-                    if (typeof to !== 'string') {
-                        retVal.push(
-                            <ContentLink
-                                key={i}
-                                to={'../' + this.props.idPerUri[to.type] + '/' + encodeURIComponent(to.uri)}
-                                value={valOrUri(values[i])}
-                            />
-                        );
-                    }
-                });
-                return retVal;
+                return uris.map((uri, i) => <ContentLink key={i} to={uri} value={values[i]} />);
             case 'KEYVALUE':
                 return (
                     <ContentKeyValue label={componentConfig.value} data={data}>

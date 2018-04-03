@@ -124,6 +124,8 @@ const StyledOption = withProps<StyledOptionProps>(styled.button)`
     font: ${props => props.theme.fonts.body};
     background: ${props => (props.selected ? props.theme.colors.shade.light : props.theme.colors.white)};
     transition: background 0.15s ease-in-out;
+    white-space: nowrap;
+    text-align: start;
 
     &:hover {
         background: ${props => props.theme.colors.shade.light};

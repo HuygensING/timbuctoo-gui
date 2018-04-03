@@ -1,34 +1,38 @@
 import { COMPONENTS } from './global';
 import { ComponentType, FacetConfigType } from '../typings/schema';
 
-export const SELECT_COMPONENT_TYPES: { key: string; value: ComponentType }[] = [
+export const SELECT_COMPONENT_TYPES: { key: ComponentType; value: string }[] = [
     {
-        key: 'Title',
-        value: COMPONENTS.title
+        value: 'Title',
+        key: COMPONENTS.title
     },
     {
-        key: 'Path',
-        value: COMPONENTS.path
+        value: 'Path',
+        key: COMPONENTS.path
     },
     {
-        key: 'Literal',
-        value: COMPONENTS.literal
+        value: 'Literal',
+        key: COMPONENTS.literal
     },
     {
-        key: 'Image',
-        value: COMPONENTS.image
+        value: 'Image',
+        key: COMPONENTS.image
     },
     {
-        key: 'Link',
-        value: COMPONENTS.link
+        value: 'Link',
+        key: COMPONENTS.link
     },
     {
-        key: 'Key-Value',
-        value: COMPONENTS.keyValue
+        value: 'Link inside this dataset',
+        key: COMPONENTS.internalLink
     },
     {
-        key: 'Divider',
-        value: COMPONENTS.divider
+        value: 'Key-Value',
+        key: COMPONENTS.keyValue
+    },
+    {
+        value: 'Divider',
+        key: COMPONENTS.divider
     }
 ];
 

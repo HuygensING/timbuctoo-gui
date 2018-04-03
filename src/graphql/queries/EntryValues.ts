@@ -38,7 +38,7 @@ const createPropertyConfig = (
         value = { ...EMPTY_COMPONENT[COMPONENTS.path], value: serializePath(path.concat([['Value', 'value']])) };
     } else {
         value = {
-            ...EMPTY_COMPONENT[COMPONENTS.link],
+            ...EMPTY_COMPONENT[COMPONENTS.internalLink],
             subComponents: [
                 { ...EMPTY_COMPONENT[COMPONENTS.path], value: serializePath(path.concat(uriSegment)) },
                 {
@@ -97,6 +97,7 @@ function getPaths(components: ComponentConfig[], result: ReferencePath[]): Refer
                 }
                 break;
             case 'LINK':
+            case 'INTERNAL_LINK':
                 if (component.subComponents !== undefined) {
                     getPaths(component.subComponents, result);
                 }

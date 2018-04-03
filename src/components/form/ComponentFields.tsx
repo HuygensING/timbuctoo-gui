@@ -56,6 +56,7 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, changeNodeType, removeN
             case COMPONENTS.divider:
                 return 1;
             case COMPONENTS.link:
+            case COMPONENTS.internalLink:
             case COMPONENTS.image:
                 return 2;
             default:
@@ -81,7 +82,7 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, changeNodeType, removeN
     const onSelectChangeHandler = (newPath: ReferencePath) => modifyNode({ ...item, referencePath: newPath });
 
     const onChangeHeadHandler = (option: OptionProps) => {
-        const componentKey = option.value;
+        const componentKey = option.key;
 
         if (componentKey === item.type || componentKey === null) {
             return false;
@@ -114,7 +115,7 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, changeNodeType, removeN
                         name={'Component'}
                         options={SELECT_COMPONENT_TYPES}
                         selected={
-                            SELECT_COMPONENT_TYPES.find(valueType => valueType.value === item.type) ||
+                            SELECT_COMPONENT_TYPES.find(valueType => valueType.key === item.type) ||
                             SELECT_COMPONENT_TYPES[0]
                         }
                         onChange={onChangeHeadHandler}

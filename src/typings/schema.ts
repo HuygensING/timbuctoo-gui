@@ -155,7 +155,7 @@ export interface IndexConfig {
     next?: IndexConfig;
 }
 
-export type ComponentType = 'PATH' | 'LITERAL' | 'TITLE' | 'IMAGE' | 'LINK' | 'DIVIDER' | 'KEYVALUE';
+export type ComponentType = ComponentConfig['type'];
 
 export interface ComponentValueField {
     value: string;
@@ -168,6 +168,7 @@ export type ComponentConfig = NodeComponentConfig | LeafComponentConfig;
 export type NodeComponentConfig =
     | ImageComponentConfig
     | LinkComponentConfig
+    | InternalLinkComponentConfig
     | KeyvalueComponentConfig
     | TitleComponentConfig
     | DividerComponentConfig;
@@ -216,6 +217,11 @@ export interface ImageComponentConfig extends GraphQlComponentConfig {
 
 export interface LinkComponentConfig extends GraphQlComponentConfig {
     type: 'LINK';
+    subComponents?: [LeafComponentConfig, LeafComponentConfig];
+}
+
+export interface InternalLinkComponentConfig extends GraphQlComponentConfig {
+    type: 'INTERNAL_LINK';
     subComponents?: [LeafComponentConfig, LeafComponentConfig];
 }
 

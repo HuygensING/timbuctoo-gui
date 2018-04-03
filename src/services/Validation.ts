@@ -1,8 +1,9 @@
 import { NormalizedComponentConfig, NormalizedFacetConfig } from '../typings/index';
-import { COMPONENTS, VALUE } from '../constants/global';
+import { COMPONENTS, VALUE, URI } from '../constants/global';
 import { ReferencePath } from './propertyPath';
 
-const referenceIncomplete = (path: ReferencePath | undefined) => path && path[path.length - 1][1] !== VALUE;
+const referenceIncomplete = (path: ReferencePath | undefined) =>
+    path && (path[path.length - 1][1] !== VALUE && path[path.length - 1][1] !== URI);
 export const componentErrors = (childNode: NormalizedComponentConfig): string | null => {
     // has a selectpath, but is not completed
     if (referenceIncomplete(childNode.referencePath)) {

@@ -34,6 +34,7 @@ export const NODE_COMPONENTS: ComponentTypes = {
     title: 'TITLE',
     image: 'IMAGE',
     link: 'LINK',
+    internalLink: 'INTERNAL_LINK',
     keyValue: 'KEYVALUE',
     divider: 'DIVIDER'
 };

@@ -7,12 +7,11 @@ import Select, { OptionProps, SelectProps } from './Select';
 import { CollectionMetadata, Property } from '../../../typings/schema';
 import { compose } from 'redux';
 import { default as metaDataResolver, MetaDataProps } from '../../../services/metaDataResolver';
-import { RDF_TYPE } from '../../../constants/global';
 import verifyResponse from '../../../services/verifyResponse';
 import { branch, renderNothing } from 'recompose';
 
 interface OwnProps extends SelectProps, CollectionEditViewProps {
-    onChange: (value: string | null, property: Property) => void;
+    onChange: (value: string | null, property: Property | 'uri') => void;
     shownAsMultipleItems?: boolean;
 }
 
@@ -26,15 +25,19 @@ const SelectField: SFC<Props> = ({ name, selected, metadata, onChange, shownAsMu
 
     const options: OptionProps[] = collection
         ? collection.properties.items
-              .filter(property => property.name !== RDF_TYPE)
-              .map(property => ({ key: property.name, value: property.name }))
+              .map(property => ({
+                  key: property.name,
+                  value: (property.isInverse ? '⬅︎ ' : '') + property.shortenedUri
+              }))
+              .sort((a, b) => (a.value < b.value ? -1 : 1))
+              .concat([{ key: 'uri', value: '«The uri of this entity»' }])
         : [];
 
     const onChangeHandler = (option: OptionProps) => {
-        const property = collection ? collection.properties.items.find(field => field.name === option.value) : null;
+        const property = collection ? collection.properties.items.find(field => field.name === option.key) : null;
 
-        if (property && onChange) {
-            onChange(option.value, property);
+        if ((option.key === 'uri' || property) && onChange) {
+            onChange(option.key, property || 'uri');
         }
     };
 

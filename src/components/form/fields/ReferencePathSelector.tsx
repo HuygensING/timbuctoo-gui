@@ -2,7 +2,7 @@ import React, { SFC } from 'react';
 import { Property } from '../../../typings/schema';
 import ConnectedSelect from './ConnectedSelect';
 import styled, { withProps } from '../../../styled-components';
-import { ITEMS, VALUE } from '../../../constants/global';
+import { ITEMS, VALUE, URI } from '../../../constants/global';
 import { ReferencePath } from '../../../services/propertyPath';
 
 interface Props {
@@ -42,29 +42,34 @@ const ReferencePathSelector: SFC<Props> = ({ path, onChange }) => {
         return null;
     }
 
-    const onChangeHandler = (
-        val: string | null,
-        { isList, isValueType, referencedCollections }: Property,
-        childIdx: number
-    ) => {
-        const newPath = path.slice(0, childIdx + 1); // TODO: In case of union types, how do I know which ones to expect? <= created ticket for this
+    const onChangeHandler = (val: string | null, prop: Property | 'uri', childIdx: number) => {
+        if (prop === 'uri') {
+            const newPath = path.slice(0, childIdx + 1);
 
-        // update the previous selected value
-        newPath[childIdx][1] = val;
+            // update the previous selected value
+            newPath[childIdx][1] = 'uri';
+            onChange(newPath);
+        } else {
+            const { isList, isValueType, referencedCollections } = prop;
+            const newPath = path.slice(0, childIdx + 1);
 
-        // add 'items' in case of list
-        if (isList) {
-            newPath.push([ITEMS, ITEMS]);
+            // update the previous selected value
+            newPath[childIdx][1] = val;
+
+            // add 'items' in case of list
+            if (isList) {
+                newPath.push([ITEMS, ITEMS]);
+            }
+
+            // set new value
+            const newSegment: [string, string | null] = isValueType
+                ? ['Value', VALUE]
+                : [referencedCollections.items[0], null]; // TODO: merge multiple types
+
+            newPath.push(newSegment);
+
+            onChange(newPath);
         }
-
-        // set new value
-        const newSegment: [string, string | null] = isValueType
-            ? ['Value', VALUE]
-            : [referencedCollections.items[0], null];
-
-        newPath.push(newSegment);
-
-        onChange(newPath);
     };
 
     return (
@@ -80,6 +85,12 @@ const ReferencePathSelector: SFC<Props> = ({ path, onChange }) => {
                     return (
                         <Value key={childIdx} shownAsMultipleItems={isMultiple}>
                             {value}
+                        </Value>
+                    );
+                } else if (value === URI) {
+                    return (
+                        <Value key={childIdx} shownAsMultipleItems={isMultiple}>
+                            uri
                         </Value>
                     );
                 }

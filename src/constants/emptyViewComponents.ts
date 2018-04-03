@@ -40,6 +40,11 @@ export const EMPTY_NODE_COMPONENT: EmptyNodeComponentsMap = {
         formatter: [],
         subComponents: [{ ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] }, { ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] }]
     },
+    [COMPONENTS.internalLink]: {
+        type: 'INTERNAL_LINK',
+        formatter: [],
+        subComponents: [{ ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] }, { ...EMPTY_LEAF_COMPONENT[COMPONENTS.path] }]
+    },
     [COMPONENTS.keyValue]: {
         type: 'KEYVALUE',
         formatter: [],

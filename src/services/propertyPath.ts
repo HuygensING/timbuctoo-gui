@@ -1,13 +1,12 @@
 import { Entity, FormatterConfig } from '../typings/schema';
 import { valueToString } from './getValue';
-import { ITEMS } from '../constants/global';
+import { ITEMS, VALUE, URI } from '../constants/global';
 
 export interface TypedUri {
     uri: string;
     type: string;
 }
-export type uriOrString = string | TypedUri;
-export type pathResult = uriOrString[] | uriOrString | null;
+export type pathResult = string[] | string | null;
 
 /** prop == null means that the path is being constructed */
 export type ReferencePath = Array<[string, string | null]>;
@@ -82,15 +81,14 @@ export function validatePath(path: ReferencePath): 'UNFINISHED' | 'INVALID' | un
 function walkPathStep(path: ReferencePath, formatters: FormatterConfig, entity: any): pathResult {
     // console.log(path, entity);
     const propName = path[0][1];
-    if (path.length === 1 && propName === 'value') {
+    if (path.length === 1 && propName === URI) {
+        return entity.uri;
+    } else if (path.length === 1 && propName === VALUE) {
         // getting the value
         return valueToString(entity, formatters.concat(DEFAULT_FORMATTERS));
     } else if (path.length === 1 && propName === 'uri') {
         // getting the uri (unnamespaced uri is special)
-        return {
-            uri: entity.uri,
-            type: entity.__typename
-        };
+        return entity.uri;
     } else {
         const sub = entity[propName!];
         if (sub === null) {
@@ -102,7 +100,7 @@ function walkPathStep(path: ReferencePath, formatters: FormatterConfig, entity: 
             );
             return null;
         } else if (Array.isArray(sub)) {
-            let retVal: uriOrString[] = [];
+            let retVal: string[] = [];
             for (const item of sub) {
                 const subResult = walkPathStep(path.slice(1), formatters, item);
                 if (subResult) {
