@@ -1,78 +1,13 @@
 import gql from 'graphql-tag';
 import { decode } from '../../services/UrlStringCreator';
-import {
-    checkTypes,
-    CollectionMetadata,
-    ComponentConfig,
-    DataSetMetadata,
-    Entity,
-    EntityList,
-    LinkComponentConfig,
-    Property,
-    Query,
-    TitleComponentConfig
-} from '../../typings/schema';
+import { checkTypes, ComponentConfig, DataSetMetadata, Entity, EntityList, Query } from '../../typings/schema';
 import { RouteComponentProps } from 'react-router';
 import { MetaDataProps } from '../../services/metaDataResolver';
-import { parsePath, serializePath, pathsToGraphQlQuery, ReferencePath } from '../../services/propertyPath';
-import { COMPONENTS, ITEMS, URI } from '../../constants/global';
-import { EMPTY_COMPONENT } from '../../constants/emptyViewComponents';
+import { parsePath, pathsToGraphQlQuery, ReferencePath } from '../../services/propertyPath';
 
 // `type: never` makes the type checker report an error if the case switch does not handle all types
 function checkUnknownComponent(type: never) {
     console.error(`Type ${(type as ComponentConfig).type} is not handled!`);
-}
-
-const createPropertyConfig = (
-    collectionId: string,
-    { name, isList, isValueType, referencedCollections, isInverse, shortenedUri }: Property,
-    otherCollections: Array<CollectionMetadata>
-): ComponentConfig => {
-    const uriSegment: ReferencePath = [['Entity', URI]];
-
-    const path: ReferencePath = [[collectionId, name] as [string, string]].concat(isList ? [[ITEMS, ITEMS]] : []);
-
-    let value: ComponentConfig;
-
-    if (isValueType) {
-        value = { ...EMPTY_COMPONENT[COMPONENTS.path], value: serializePath(path.concat([['Value', 'value']])) };
-    } else {
-        value = {
-            ...EMPTY_COMPONENT[COMPONENTS.internalLink],
-            subComponents: [
-                { ...EMPTY_COMPONENT[COMPONENTS.path], value: serializePath(path.concat(uriSegment)) },
-                {
-                    ...EMPTY_COMPONENT[COMPONENTS.path],
-                    value: serializePath(path.concat([['Entity', 'title'], ['Value', 'value']]))
-                }
-            ]
-        } as LinkComponentConfig;
-    }
-
-    return {
-        ...EMPTY_COMPONENT[COMPONENTS.keyValue],
-        value: (isInverse ? '⬅︎ ' : '') + shortenedUri,
-        subComponents: [value]
-    } as ComponentConfig;
-};
-
-export function makeDefaultViewConfig(
-    properties: Array<Property>,
-    collectionId: string,
-    otherCollections: Array<CollectionMetadata>
-): Array<ComponentConfig> {
-    const title: TitleComponentConfig = {
-        ...EMPTY_COMPONENT[COMPONENTS.title],
-        subComponents: [
-            { ...EMPTY_COMPONENT[COMPONENTS.path], value: serializePath([['Entity', 'title'], ['Value', 'value']]) }
-        ]
-    } as TitleComponentConfig;
-
-    const defaultConfig: ComponentConfig[] = properties.map(property =>
-        createPropertyConfig(collectionId, property, otherCollections)
-    );
-
-    return [title, ...defaultConfig];
 }
 
 function getPaths(components: ComponentConfig[], result: ReferencePath[]): ReferencePath[] {
@@ -124,17 +59,9 @@ export type Props = RouteComponentProps<{
 
 export function QUERY_ENTRY_VALUES({ match, metadata }: Props) {
     const values =
-        (metadata &&
-            metadata.dataSetMetadata &&
-            metadata.dataSetMetadata.collection &&
-            (metadata.dataSetMetadata.collection.viewConfig.length > 0
-                ? (metadata.dataSetMetadata.collection.viewConfig as Array<ComponentConfig>)
-                : makeDefaultViewConfig(
-                      metadata.dataSetMetadata.collection.properties.items,
-                      metadata.dataSetMetadata.collection.collectionId,
-                      metadata.dataSetMetadata.collectionList.items
-                  ))) ||
-        [];
+        metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection
+            ? metadata.dataSetMetadata.collection.viewConfig
+            : [];
     const query = `
         query EntryValues {
             dataSets {

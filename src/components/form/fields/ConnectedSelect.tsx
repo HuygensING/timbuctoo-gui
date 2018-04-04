@@ -23,15 +23,20 @@ const SelectField: SFC<Props> = ({ name, selected, metadata, onChange, shownAsMu
             ? metadata.dataSetMetadata.collection
             : null;
 
-    const options: OptionProps[] = collection
+    const options: OptionProps[] = (collection
         ? collection.properties.items
               .map(property => ({
                   key: property.name,
                   value: (property.isInverse ? '⬅︎ ' : '') + property.shortenedUri
               }))
               .sort((a, b) => (a.value < b.value ? -1 : 1))
-              .concat([{ key: 'uri', value: '«The uri of this entity»' }])
-        : [];
+        : []
+    ).concat([
+        { key: 'title', value: '«The title of this entity»' },
+        { key: 'image', value: '«The image of this entity»' },
+        { key: 'description', value: '«The description of this entity»' },
+        { key: 'uri', value: '«The uri of this entity»' }
+    ]);
 
     const onChangeHandler = (option: OptionProps) => {
         const property = collection ? collection.properties.items.find(field => field.name === option.key) : null;

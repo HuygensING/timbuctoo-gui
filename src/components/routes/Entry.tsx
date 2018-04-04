@@ -5,11 +5,7 @@ import FullHelmet from '../FullHelmet';
 import { Col, Grid } from '../layout/Grid';
 import { ComponentLoader } from '../../services/ComponentLoader';
 import { Props as EntryPropertiesProps, QUERY_ENTRY_PROPERTIES } from '../../graphql/queries/EntryProperties';
-import {
-    makeDefaultViewConfig,
-    Props as EntryValuesProps,
-    QUERY_ENTRY_VALUES
-} from '../../graphql/queries/EntryValues';
+import { Props as EntryValuesProps, QUERY_ENTRY_VALUES } from '../../graphql/queries/EntryValues';
 import { safeGet } from '../../services/GetDataSetValues';
 import metaDataResolver from '../../services/metaDataResolver';
 import { compose } from 'redux';
@@ -27,10 +23,7 @@ const Entry: SFC<FullProps> = (props: FullProps) => {
 
     const idPerUri: { [key: string]: string | undefined } = {};
     collectionList.items.map(coll => (idPerUri[coll.itemType] = coll.collectionId));
-    const componentConfigs =
-        collection!.viewConfig.length > 0
-            ? collection!.viewConfig
-            : makeDefaultViewConfig(collection!.properties.items, collection!.itemType, collectionList.items);
+    const componentConfigs = collection!.viewConfig;
 
     const entry = safeGet(safeGet(props.data!.dataSets, props.match.params.dataSet), props.match.params.collection);
 
