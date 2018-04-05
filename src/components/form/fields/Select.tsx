@@ -16,6 +16,7 @@ export interface SelectProps {
     onChange: Function;
     disabled?: boolean;
     shownAsMultipleItems?: boolean;
+    isFinal: boolean;
 }
 
 export type FullProps = SelectProps & InjectedOnClickOutProps & OnClickOutProps;
@@ -70,7 +71,7 @@ const SelectWrapper = withProps<{ shownAsMultipleItems?: boolean }>(styled.div)`
     margin: 0 ${props => (props.shownAsMultipleItems ? '15px 15px' : '10px 10px')} 0;
 `;
 
-const StyledSelect = withProps<{ shownAsMultipleItems?: boolean }>(styled.button)`
+const StyledSelect = withProps<{ shownAsMultipleItems?: boolean; isFinal?: boolean }>(styled.button)`
     background: ${props => props.theme.colors.white};
     min-width: 10rem;
     border-radius: .25rem;
@@ -78,8 +79,14 @@ const StyledSelect = withProps<{ shownAsMultipleItems?: boolean }>(styled.button
     width: 100%;
     font: ${props => props.theme.fonts.body};
     cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
-    color: ${props => (props.disabled ? props.theme.colors.error : props.theme.colors.shade.dark)};
-    border: 1px solid ${props => (props.disabled ? props.theme.colors.error : props.theme.colors.shade.medium)};
+    color: ${props =>
+        props.disabled
+            ? props.theme.colors.error
+            : props.isFinal ? props.theme.colors.primary.medium : props.theme.colors.shade.dark};
+    border: 1px solid ${props =>
+        props.disabled
+            ? props.theme.colors.error
+            : props.isFinal ? props.theme.colors.primary.medium : props.theme.colors.shade.medium};
     
     ${props =>
         props.shownAsMultipleItems
@@ -149,7 +156,7 @@ class SelectField extends Component<FullProps, State> {
     }
 
     render() {
-        const { name, options, selected, disabled, shownAsMultipleItems } = this.props;
+        const { name, options, selected, disabled, shownAsMultipleItems, isFinal } = this.props;
         const { isOpen, selectedOption } = this.state;
 
         return (
@@ -173,6 +180,7 @@ class SelectField extends Component<FullProps, State> {
                     onClick={this.onSelectClick}
                     disabled={disabled}
                     shownAsMultipleItems={shownAsMultipleItems}
+                    isFinal={isFinal}
                 >
                     {(selected && selected.value) || (selectedOption && selectedOption.key) || name}{' '}
                     <Arrow disabled={disabled} />

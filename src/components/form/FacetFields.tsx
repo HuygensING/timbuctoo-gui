@@ -59,6 +59,7 @@ const FacetFields: SFC<Props> = ({ item, modify, match }) => {
                         selected={SELECT_FACET_TYPES.find(({ value }) => value === item.type) || SELECT_FACET_TYPES[0]}
                         options={SELECT_FACET_TYPES}
                         onChange={switchTypeHandler}
+                        isFinal={false}
                     />
                 </FieldValue>
             </Field>

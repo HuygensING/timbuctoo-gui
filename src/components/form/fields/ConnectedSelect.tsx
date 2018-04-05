@@ -11,13 +11,21 @@ import verifyResponse from '../../../services/verifyResponse';
 import { branch, renderNothing } from 'recompose';
 
 interface OwnProps extends SelectProps, CollectionEditViewProps {
-    onChange: (value: string | null, property: Property | 'uri') => void;
+    onChange: (value: string | null, property: Property | 'title' | 'image' | 'description' | 'uri') => void;
     shownAsMultipleItems?: boolean;
+    isFinal: boolean;
 }
 
 export type Props = OwnProps & RouteComponentProps<{ dataSet: string }> & MetaDataProps;
 
-const SelectField: SFC<Props> = ({ name, selected, metadata, onChange, shownAsMultipleItems = false }) => {
+const SelectField: SFC<Props> = ({
+    name,
+    selected,
+    metadata,
+    onChange,
+    shownAsMultipleItems = false,
+    isFinal = false
+}) => {
     const collection: CollectionMetadata | null =
         metadata && metadata.dataSetMetadata && metadata.dataSetMetadata.collection
             ? metadata.dataSetMetadata.collection
@@ -40,9 +48,14 @@ const SelectField: SFC<Props> = ({ name, selected, metadata, onChange, shownAsMu
 
     const onChangeHandler = (option: OptionProps) => {
         const property = collection ? collection.properties.items.find(field => field.name === option.key) : null;
+        const key = option.key;
 
-        if ((option.key === 'uri' || property) && onChange) {
-            onChange(option.key, property || 'uri');
+        if (onChange) {
+            if (property) {
+                onChange(key, property);
+            } else if (key === 'title' || key === 'image' || key === 'description' || key === 'uri') {
+                onChange(key, key);
+            }
         }
     };
 
@@ -54,6 +67,7 @@ const SelectField: SFC<Props> = ({ name, selected, metadata, onChange, shownAsMu
             shownAsMultipleItems={shownAsMultipleItems}
             onChange={onChangeHandler}
             disabled={!options.length}
+            isFinal={isFinal}
         />
     );
 };

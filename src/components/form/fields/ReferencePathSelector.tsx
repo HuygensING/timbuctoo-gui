@@ -42,12 +42,19 @@ const ReferencePathSelector: SFC<Props> = ({ path, onChange }) => {
         return null;
     }
 
-    const onChangeHandler = (val: string | null, prop: Property | 'uri', childIdx: number) => {
-        if (prop === 'uri') {
+    const onChangeHandler = (
+        val: string | null,
+        prop: Property | 'title' | 'image' | 'description' | 'uri',
+        childIdx: number
+    ) => {
+        if (prop === 'title' || prop === 'image' || prop === 'description' || prop === 'uri') {
             const newPath = path.slice(0, childIdx + 1);
 
             // update the previous selected value
-            newPath[childIdx][1] = 'uri';
+            newPath[childIdx][1] = prop;
+            if (prop !== 'uri') {
+                newPath.push(['Value', VALUE]);
+            }
             onChange(newPath);
         } else {
             const { isList, isValueType, referencedCollections } = prop;
@@ -87,24 +94,19 @@ const ReferencePathSelector: SFC<Props> = ({ path, onChange }) => {
                             {value}
                         </Value>
                     );
-                } else if (value === URI) {
+                } else {
                     return (
-                        <Value key={childIdx} shownAsMultipleItems={isMultiple}>
-                            uri
-                        </Value>
+                        <ConnectedSelect
+                            key={childIdx}
+                            shownAsMultipleItems={isMultiple}
+                            selected={{ key: value, value: value }}
+                            isFinal={value === URI}
+                            name={`select`}
+                            collectionIds={[collectionKey]}
+                            onChange={(val, property) => onChangeHandler(val, property, childIdx)}
+                        />
                     );
                 }
-
-                return (
-                    <ConnectedSelect
-                        key={childIdx}
-                        shownAsMultipleItems={isMultiple}
-                        selected={{ key: value, value: value }}
-                        name={`select`}
-                        collectionIds={[collectionKey]}
-                        onChange={(val, property) => onChangeHandler(val, property, childIdx)}
-                    />
-                );
             })}
         </SelectContainer>
     );

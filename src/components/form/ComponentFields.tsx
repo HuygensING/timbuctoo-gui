@@ -119,6 +119,7 @@ const ComponentFields: SFC<Props> = ({ item, modifyNode, changeNodeType, removeN
                             SELECT_COMPONENT_TYPES[0]
                         }
                         onChange={onChangeHeadHandler}
+                        isFinal={false}
                     />
                 </FieldValue>
             </Field>
