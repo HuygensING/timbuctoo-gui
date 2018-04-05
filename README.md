@@ -5,10 +5,9 @@
 
 In the `.env` file, you can add these variables, which will affect the application:
 
-### `REACT_APP_API_URL` _: string URL_
+### `REACT_APP_BACKEND_URL` _: string URL_
 
-You can set the api url for the graphql endpoint you want to connect to the project.
-This should be the url pointing to the graphQl endpoint which can give back all datasets.
+You can set the api url for timbuctoo endpoint that you want to connect to the project.
 
 ### `REACT_APP_LOGIN_URL` _: string URL_
 
