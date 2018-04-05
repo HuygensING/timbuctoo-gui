@@ -7,11 +7,14 @@ import Image from '../layout/Image';
 import { ButtonLink } from '../layout/Button';
 import { ROUTE_PATHS } from '../../constants/routeNaming';
 import { encode } from '../../services/UrlStringCreator';
+import { valueToString } from '../../services/getValue';
+import { Value } from '../../typings/schema';
+import { DEFAULT_FORMATTERS } from '../../services/propertyPath';
 
 export interface ResultDataSetMetadata {
-    image: string | null;
-    title: string | null;
-    description: string | null;
+    image: Value | null;
+    title: Value | null;
+    description: Value | null;
     collectionId: string;
     dataSetId: string;
     uri: string;
@@ -45,20 +48,25 @@ const SearchDescription = styled(Content)`
     ${MaxWidth};
 `;
 
+function format(input: Value | null) {
+    return input == null ? input : valueToString(input, DEFAULT_FORMATTERS);
+}
+
 const SearchResultEntry = ({ title, image, description, collectionId, dataSetId, uri }: ResultDataSetMetadata) => {
     const url = `/${ROUTE_PATHS.details}/${dataSetId}/${collectionId}/${encode(uri)}`;
 
     return (
         <SearchItem>
-            <SearchTitle>{title}</SearchTitle>
-            <SearchDescription>{description}</SearchDescription>
+            <SearchTitle>{format(title)}</SearchTitle>
+            <SearchDescription>{format(description)}</SearchDescription>
             <ButtonLink to={url} data-small={true}>
                 {translate('search.view_entry')}
             </ButtonLink>
             {image &&
-                image.indexOf('http') > -1 && (
+                image.value &&
+                image.value.indexOf('http') > -1 && (
                     <ImageWrapper>
-                        <Image src={image} ratio={1} fillOut={true} />
+                        <Image src={image.value} ratio={1} fillOut={true} />
                     </ImageWrapper>
                 )}
         </SearchItem>

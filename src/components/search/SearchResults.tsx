@@ -21,9 +21,9 @@ const SearchResults: SFC<Props> = ({ results, propertyMetadata, collectionId, da
         return (
             <SearchResultEntry
                 key={idx}
-                image={result.image ? result.image.value : null}
-                title={result.title ? result.title.value : null}
-                description={result.description ? result.description.value : null}
+                image={result.image}
+                title={result.title}
+                description={result.description}
                 uri={result.uri}
                 collectionId={collectionId}
                 dataSetId={dataSetId}

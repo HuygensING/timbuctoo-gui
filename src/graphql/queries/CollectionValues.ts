@@ -31,9 +31,9 @@ const QUERY_COLLECTION_VALUES = ({ match, location, metadata }: Props) => {
                         }
                         items {
                             uri
-                            title { value }
-                            description { value }
-                            image { value }
+                            title { value type }
+                            description { value type }
+                            image { value type }
                         }
                     }
                 }

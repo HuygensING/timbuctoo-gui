@@ -13,7 +13,7 @@ export type ReferencePath = Array<[string, string | null]>;
 
 const ES_PATH_SPLIT = '.';
 
-const DEFAULT_FORMATTERS: FormatterConfig = [
+export const DEFAULT_FORMATTERS: FormatterConfig = [
     {
         type: 'http://timbuctoo.huygens.knaw.nl/static/v5/datatype/person-name',
         name: 'PERSON_NAMES'
