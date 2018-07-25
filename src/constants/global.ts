@@ -1,9 +1,6 @@
 import { ButtonVariant } from '../typings/layout';
-import { MenuItemProp } from '../typings';
 import { ComponentTypes } from '../typings/viewComponents';
-import Book from '../components/icons/Book';
 import { FacetConfig } from '../typings/schema';
-import { SUB_ROUTES, ROUTE_PATHS } from './routeNaming';
 
 export const HSID: string = 'hsid';
 
@@ -50,14 +47,6 @@ export const BUTTON_VARIANT: { [name: string]: ButtonVariant } = {
     dark: 'dark',
     disabled: 'disabled'
 };
-
-export const MENU_ITEMS: MenuItemProp[] = [
-    {
-        path: `/${ROUTE_PATHS.account}${SUB_ROUTES.dataSets}`,
-        name: 'My datasets',
-        icon: Book
-    }
-];
 
 export const EMPTY_FACET_CONFIG: FacetConfig = {
     type: 'MultiSelect',

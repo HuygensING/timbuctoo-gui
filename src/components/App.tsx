@@ -4,36 +4,23 @@ import { connect, Dispatch } from 'react-redux';
 import { graphql, ChildProps } from 'react-apollo';
 
 import Routes from './Routes';
-import { default as styled, ThemeProvider } from 'styled-components';
-import theme from '../theme';
-import Header from './header/Header';
-import Footer from './footer/Footer';
-import PoweredBy from './PoweredBy';
-import { Grid } from './layout/Grid';
 import { AboutMe } from '../typings/schema';
 import { LogInUser, LogOutUser, UserReducer } from '../reducers/user';
 import { History, Location } from 'history';
 import { compose } from 'redux';
 import { RootState } from '../reducers/rootReducer';
 import Error from './Error';
-import { HEADER_HEIGHT, HISTORY_REPLACE } from '../constants/global';
+import { HISTORY_REPLACE } from '../constants/global';
 import { ErrorReducer } from '../reducers/error';
 import renderLoader from '../services/renderLoader';
 import { lifecycle } from 'recompose';
 import gql from 'graphql-tag';
 import { ConnectedRouter } from 'react-router-redux';
-
-const GridWithMargin = styled(Grid)`
-    padding-top: ${HEADER_HEIGHT};
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-`;
-
-const Main = styled.div`
-    overflow: scroll;
-    flex: 1;
-`;
+import { AppContainer } from '../components-view/AppContainer';
+import getEnvVar from '../services/getEnvVar';
+import translate from '../services/translate';
+import { ROUTE_PATHS } from '../constants/routeNaming';
+import { LOGIN_URL } from '../constants/api';
 
 interface OwnProps {
     history: History;
@@ -46,43 +33,90 @@ interface DispatchProps {
 
 interface StateProps extends ErrorReducer {
     user: UserReducer;
+    routing: { location: Location } | null;
+}
+
+const regex = new RegExp(`${ROUTE_PATHS.details}|${ROUTE_PATHS.edit}|${ROUTE_PATHS.search}`);
+function getDataSetFromRoute(location: Location | null): { key: string; value: string } | null {
+    if (location && location.pathname) {
+        const locationList = location.pathname.split('/');
+
+        for (const [idx, segment] of locationList.entries()) {
+            if (segment.search(regex) > -1) {
+                const activeDataSet = locationList[idx + 1];
+                const activeDataSetList = activeDataSet.split('__');
+
+                return {
+                    key: activeDataSetList[1] || `...${activeDataSet.substr(-10)}`,
+                    value: activeDataSet
+                };
+            }
+        }
+    }
+    return null;
 }
 
 type FullProps = ChildProps<OwnProps & DispatchProps & StateProps, { aboutMe: AboutMe }>;
 
-const App: SFC<FullProps> = props => {
-    const { errors, status, data, history, query: queryString, variables } = props;
-    return (
-        <ThemeProvider theme={theme}>
+function doLogin() {
+    console.log('logging in');
+    const form = document.createElement('form');
+    form.action = LOGIN_URL;
+    form.method = 'POST';
+    form.innerHTML = `<input name="hsurl" value=${window.location} type="hidden" />`;
+    form.style.display = 'none';
+    document.body.appendChild(form);
+    form.submit();
+    console.log('submitted!');
+}
+
+class App extends React.Component<FullProps, { menuOpen: boolean }> {
+    constructor(props: FullProps, context?: any) {
+        super(props, context);
+        this.state = { menuOpen: false };
+    }
+    render() {
+        const { errors, status, routing, data, history, query: queryString, variables, logOutUser, user } = this.props;
+        const dataSetName = getDataSetFromRoute(routing ? routing.location : null);
+        return (
             <ConnectedRouter history={history}>
-                <GridWithMargin>
-                    <Header />
-                    <Main>
-                        {errors.length > 0 || data!.error ? (
-                            errors.length > 0 ? (
-                                <Error errors={errors} status={status} query={queryString} variables={variables} />
-                            ) : (
-                                <Error
-                                    errors={[data!.error as Error]}
-                                    status={500}
-                                    query={queryString}
-                                    variables={variables}
-                                />
-                            )
+                <AppContainer
+                    homeUrl={ROUTE_PATHS.root}
+                    loggedInUser={user.loggedIn ? { avatarUrl: user.avatar, username: user.name } : undefined}
+                    sectionHomeLink={
+                        dataSetName
+                            ? { caption: dataSetName.key, url: `/${ROUTE_PATHS.details}/${dataSetName.value}` }
+                            : undefined
+                    }
+                    menuIsExpanded={this.state.menuOpen}
+                    logo={{ alt: translate('globals.app_title'), url: getEnvVar('REACT_APP_LOGO_URL') }}
+                    onLoginClick={doLogin}
+                    onLogoutClick={logOutUser}
+                    onOpenMenuClick={() => this.setState(s => ({ menuOpen: !s.menuOpen }))}
+                >
+                    {errors.length > 0 || data!.error ? (
+                        errors.length > 0 ? (
+                            <Error errors={errors} status={status} query={queryString} variables={variables} />
                         ) : (
-                            <Routes />
-                        )}
-                    </Main>
-                    <Footer />
-                    <PoweredBy />
-                </GridWithMargin>
+                            <Error
+                                errors={[data!.error as Error]}
+                                status={500}
+                                query={queryString}
+                                variables={variables}
+                            />
+                        )
+                    ) : (
+                        <Routes />
+                    )}
+                </AppContainer>
             </ConnectedRouter>
-        </ThemeProvider>
-    );
-};
+        );
+    }
+}
 
 const mapStateToProps = (state: RootState) => ({
     user: state.user,
+    routing: state.routing,
     ...state.error
 });
 
