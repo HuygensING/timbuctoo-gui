@@ -394,6 +394,7 @@ export const ContentBlock: SFC<{ color?: string; width?: number | string; height
     width = 100,
     height = 100
 }) => <div style={{ backgroundColor: color, width: width, height: height }} />;
+ContentBlock.displayName = 'ContentBlock';
 
 export class Embed extends React.Component<{
     caption: string;

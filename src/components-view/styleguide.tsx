@@ -13,6 +13,8 @@ const defaults = {
     onOpenMenuClick: () => console.log('onOpenMenuClick')
 };
 
+AppContainer.displayName = 'AppContainer'; // required for the source code preview in the optimized builds to work
+
 export const Storybook: SFC<{}> = () => (
     <ThemeProvider theme={theme}>
         <StyleGuide>
