@@ -13,8 +13,6 @@ import { MenuItem } from './MenuItem';
 import { NameAndAvatar } from './NameAndAvatar';
 import Book from '../../components/icons/Book';
 
-const HEADER_HEIGHT: string = '4rem';
-
 /*
   - when a parent component interacts with a child component: put it in one SFC
   - when a "thing" is repeated across multiple places in the app (from the viewpoint of the user) make an SFC (or
@@ -24,15 +22,19 @@ const HEADER_HEIGHT: string = '4rem';
     - feel free to use extend to add more specific styling though
 */
 
-const GridWithMarginForHeader = Grid.extend`
-    padding-top: ${HEADER_HEIGHT};
-    min-height: 100vh; /*make sure it fills the whole screen, even when the content is too small*/
+const OuterContainer = styled.div`
+    height: 100vh;
+`;
+
+const MainAndFooterContainer = styled.section`
+    display: flex;
+    height: calc(100vh - 4rem); /*make sure it fills the whole screen, even when the content is too small*/
     flex-direction: column;
+    overflow: scroll;
 `;
 
 const Main = styled.div`
-    overflow: scroll;
-    flex: 1; /*make it fill all columns of the grid */
+    flex: 1; /* push the footer down */
 `;
 
 const Header = styled.div`
@@ -40,9 +42,8 @@ const Header = styled.div`
     display: flex;
     width: 100vw;
     padding: 0.5rem;
-    position: fixed;
     top: 0;
-    height: ${HEADER_HEIGHT};
+    height: 4rem;
     background: ${theme.colors.black};
     backface-visibility: hidden;
     z-index: 100;
@@ -74,7 +75,7 @@ const HomeImage = styled.img`
     display: inline-block;
 `;
 
-const MenuButton = styled.button`
+const LoginButton = styled.button`
     padding: 0.25rem 1rem;
     border: 1px solid #fff;
     border-radius: 0.25rem;
@@ -82,11 +83,10 @@ const MenuButton = styled.button`
     background: transparent;
     font: ${props => props.theme.fonts.body};
     right: 1rem;
-    top: 50%;
     color: #fff;
     text-decoration: none;
     cursor: pointer;
-    transform: translateY(-50%);
+    align-self: center;
 `;
 
 interface AppProps {
@@ -148,14 +148,14 @@ const Dl = styled.dl`
 `;
 
 export const AppContainer: SFC<AppProps> = props => (
-    <GridWithMarginForHeader>
+    <OuterContainer>
         <Header>
             <HomeLink homeUrl={props.homeUrl} logo={props.logo} />
             {props.sectionHomeLink && (
                 <SectionHomeLink href={props.sectionHomeLink.url}>{props.sectionHomeLink.caption}</SectionHomeLink>
             )}
             {props.loggedInUser === undefined ? (
-                <MenuButton onClick={props.onLoginClick}>Login</MenuButton>
+                <LoginButton onClick={props.onLoginClick}>Login</LoginButton>
             ) : (
                 <NameAndAvatar
                     onClick={props.onOpenMenuClick}
@@ -189,37 +189,39 @@ export const AppContainer: SFC<AppProps> = props => (
                     </Tooltip>
                 )}
         </Header>
-        <Main>{props.children}</Main>
-        <FooterContainer tag={'footer'}>
-            <H1>Footer</H1>
-            {props.loggedInUser && (
-                <WhiteCol sm={8}>
-                    {/* <button onClick={() => switchLanguage('nl')}>NL</button> |{' '}
-              <button onClick={() => switchLanguage('en')}>EN</button> */}
+        <MainAndFooterContainer>
+            <Main>{props.children}</Main>
+            <FooterContainer tag={'footer'}>
+                <H1>Footer</H1>
+                {props.loggedInUser && (
+                    <WhiteCol sm={8}>
+                        {/* <button onClick={() => switchLanguage('nl')}>NL</button> |{' '}
+                <button onClick={() => switchLanguage('en')}>EN</button> */}
+                    </WhiteCol>
+                )}
+                <WhiteCol sm={8} smOffset={props.loggedInUser ? 26 : 34}>
+                    <Content color={'#fff'}>{translate('footer.powered_by')}:</Content>
+                    <Dl>
+                        <Dt>{translate('footer.company_name')}</Dt>
+                        <Dd>{addressData.company}</Dd>
+
+                        <Dt>{translate('footer.street')}</Dt>
+                        <Dd>{addressData.street}</Dd>
+
+                        <Dt>{translate('footer.address')}</Dt>
+                        <Dd>
+                            {addressData.zip} {addressData.city}
+                        </Dd>
+
+                        <Dt>{translate('footer.phone')}</Dt>
+                        <Dd>{addressData.phone}</Dd>
+
+                        <Dt>{translate('footer.opening_hours')}</Dt>
+                        <Dd>{addressData.openingHours}</Dd>
+                    </Dl>
                 </WhiteCol>
-            )}
-            <WhiteCol sm={8} smOffset={props.loggedInUser ? 26 : 34}>
-                <Content color={'#fff'}>{translate('footer.powered_by')}:</Content>
-                <Dl>
-                    <Dt>{translate('footer.company_name')}</Dt>
-                    <Dd>{addressData.company}</Dd>
-
-                    <Dt>{translate('footer.street')}</Dt>
-                    <Dd>{addressData.street}</Dd>
-
-                    <Dt>{translate('footer.address')}</Dt>
-                    <Dd>
-                        {addressData.zip} {addressData.city}
-                    </Dd>
-
-                    <Dt>{translate('footer.phone')}</Dt>
-                    <Dd>{addressData.phone}</Dd>
-
-                    <Dt>{translate('footer.opening_hours')}</Dt>
-                    <Dd>{addressData.openingHours}</Dd>
-                </Dl>
-            </WhiteCol>
-        </FooterContainer>
+            </FooterContainer>
+        </MainAndFooterContainer>
         <PoweredBy />
-    </GridWithMarginForHeader>
+    </OuterContainer>
 );
