@@ -389,6 +389,12 @@ export class StyleGuide extends React.Component<{
     }
 }
 
+export function withDefaults<T>(name: string, elm: (props: T) => React.ReactElement<T>, defaults: T): SFC<Partial<T>> {
+    const result: SFC<Partial<T>> = (props: Partial<T>) => elm(Object.assign({}, defaults, props));
+    result.displayName = name; // required for the source code preview in the optimized builds to work
+    return result;
+}
+
 export const ContentBlock: SFC<{ color?: string; width?: number | string; height?: number | string }> = ({
     color = 'violet',
     width = 100,
@@ -398,7 +404,7 @@ ContentBlock.displayName = 'ContentBlock';
 
 export class Embed extends React.Component<{
     caption: string;
-    description: string;
+    description?: string;
     fullscreen?: 'FILL' | 'BIG' | 'SMALL';
 }> {
     render() {

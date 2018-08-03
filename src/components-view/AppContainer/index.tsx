@@ -89,7 +89,7 @@ const LoginButton = styled.button`
     align-self: center;
 `;
 
-interface AppProps {
+export interface AppProps {
     homeUrl: string;
     menuIsExpanded: boolean;
     logo: {
