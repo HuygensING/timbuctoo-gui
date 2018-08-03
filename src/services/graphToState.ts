@@ -29,7 +29,7 @@ export default <Props>(action: GraphToStateAction['type'], dataProp: keyof Props
                       componentWillReceiveProps(nextProps: Props) {
                           if (
                               dataProp in nextProps &&
-                              !shallowEqual(nextProps[dataProp] as any, this.props[dataProp])
+                              !shallowEqual(nextProps[dataProp] as any, this.props[dataProp] as any)
                           ) {
                               this.props.graphToState(nextProps[dataProp]);
                           }

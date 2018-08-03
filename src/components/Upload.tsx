@@ -151,7 +151,7 @@ export default compose<FullProps, OwnProps>(
     withHandlers<FullProps, HandlerProps>({
         enter: ({ setHovering }) => () => setHovering(true),
         leave: ({ setHovering }) => () => setHovering(false),
-        drop: ({ setFiles, ownerId, dataSetName, onCompletion, hsid }) => async (
+        drop: ({ setFiles, ownerId, dataSetName, onCompletion, hsid }) => () => async (
             accepted: ImageFile[],
             rejected: ImageFile[],
             event: DragEvent<HTMLDivElement>

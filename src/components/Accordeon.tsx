@@ -105,7 +105,9 @@ const mapDispatchToProps = (dispatch: Dispatch<OwnProps>, { configType, item }: 
         };
     }
 
-    return {};
+    return {
+        deleteNode: () => {}
+    };
 };
 
 export default connect(null, mapDispatchToProps)(Accordeon);
