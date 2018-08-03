@@ -1,6 +1,6 @@
 import React, { SFC } from 'react';
 import { default as styled } from 'styled-components';
-import { StyledAnchor } from './HyperLink';
+import { StyledAnchor } from '../HyperLink';
 
 const Button = styled.button`
     display: block;

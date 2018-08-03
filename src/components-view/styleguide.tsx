@@ -45,7 +45,7 @@ export const Storybook: SFC<{}> = () => (
                 </Embed>
             </DescribedMock>
             <DescribedMock title="Emplaces">
-                <Embed fullscreen="SMALL" caption="">
+                <Embed fullscreen="BIG" caption="">
                     <EmPlaces$ />
                 </Embed>
             </DescribedMock>

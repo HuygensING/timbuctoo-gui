@@ -1,6 +1,6 @@
 import React, { SFC } from 'react';
 import { default as styled } from 'styled-components';
-import { UnstyledAnchor as A, StyledAnchor } from './HyperLink';
+import { UnstyledAnchor as A, StyledAnchor } from '../HyperLink';
 import Tooltip, { ALIGN } from '../../components/Tooltip';
 import PoweredBy from '../../components/PoweredBy';
 import { Grid, calcColWidth, Col } from '../../components/layout/Grid';

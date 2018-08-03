@@ -13,7 +13,9 @@ export interface em_Place_em_preferredName {
     value: string;
 }
 
-export interface em_Place_em_alternateNameList_items_oppole20180627_value_xsd_string {}
+export interface em_Place_em_alternateNameList_items_oppole20180627_value_xsd_string {
+    value?: string;
+}
 
 export interface em_Place_em_alternateNameList_items_oppole20180627_value_rdf_langString {
     value: string;

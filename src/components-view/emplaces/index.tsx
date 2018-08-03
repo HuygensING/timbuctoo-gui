@@ -1,7 +1,13 @@
 import React, { SFC } from 'react';
-import { em_Place, em_Place_em_reference, em_Place_em_reference_oppole20180627_em_Bib_entry } from './types/emlo2';
+import {
+    em_Place,
+    em_Place_em_reference,
+    em_Place_em_reference_oppole20180627_em_Bib_entry,
+    em_Place_em_hasRelationList_items
+} from './types/emlo2';
 import { makeSafeGetter } from '../safeGetter';
 import styled from 'styled-components';
+import { UnstyledAnchor } from '../HyperLink';
 
 /*
 		th {
@@ -59,10 +65,88 @@ const Column = styled.div`
 
 const PlussedList = styled.ul`
     list-style: none;
+    padding-left: 1rem;
     > li::before {
         content: '+  ';
     }
 `;
+
+const MainHeading = styled.h1`
+    font-size: 2em;
+    font-weight: bold;
+`;
+const SubHeading = styled.h2`
+    font-size: 1.5em;
+    font-weight: bold;
+`;
+
+const Citation: SFC<{ href?: string; title?: string }> = function Citations(props) {
+    return props.href == null ? null : (
+        <UnstyledAnchor href={props.href} target="_blank">
+            {props.title}
+        </UnstyledAnchor>
+    );
+};
+
+type relationListItem = {
+    em_relationTo?: null | {
+        title?: null | {
+            value: string;
+        };
+        em_placeCategory?: null | {
+            rdfs_label?: null | {
+                value?: string;
+            };
+        };
+        em_hasRelationList?: null | {
+            items?: relationListItem[];
+        };
+    };
+};
+
+function* createHierarchy(start: relationListItem, hierarchyType: string | null): IterableIterator<string> {
+    const data = makeSafeGetter(start);
+    yield data('em_relationTo')('title')('value').val('{Name unknown}');
+    const relations = data('em_relationTo')('em_hasRelationList')('items')
+        .vals()
+        .filter(
+            item =>
+                hierarchyType == null ||
+                makeSafeGetter(item)('em_relationTo')('em_placeCategory')('rdfs_label')('value').val(undefined) ===
+                    hierarchyType
+        );
+
+    for (let rel of relations) {
+        yield* createHierarchy(rel, hierarchyType);
+    }
+}
+
+const HierarchyLevel: SFC<{ items: string[] }> = function({ items }) {
+    return (
+        <PlussedList>
+            <li>{items[0]}</li>
+            {items.length > 1 ? <HierarchyLevel items={items.slice(1)} /> : null}
+        </PlussedList>
+    );
+};
+
+const CurrentHierarchy: SFC<{
+    placeTitle?: string;
+    relatedPlaces: em_Place_em_hasRelationList_items[];
+}> = function({ placeTitle, relatedPlaces }) {
+    const hierarchy = Array.from(createHierarchy(relatedPlaces[0], null));
+    hierarchy.reverse();
+    hierarchy.push(placeTitle || '{Name unknown}');
+
+    return <HierarchyLevel items={hierarchy} />;
+};
+
+const MetadataPart: SFC<{ label: string; value: string }> = ({ label, value }) => (
+    <p>
+        <b>{label}</b>
+        {value}
+    </p>
+);
 
 export const EmPlaces: SFC<em_Place> = function(data) {
     const d = makeSafeGetter(data);
@@ -70,38 +154,66 @@ export const EmPlaces: SFC<em_Place> = function(data) {
         <div>
             <Column>
                 <div>
-                    <h1>{d('em_preferredName')('value').val('')}</h1>
+                    <MainHeading>{d('em_preferredName')('value').val('')}</MainHeading>
                 </div>
-                {/* <div> <i>{data.em_alternateNameList.items.map(item => item.value).join(", ")}</i> </div>
-      <div> <div><h2>Current Hierarchy</h2><CurrentHierarchy currenplace={data} relatedPlaces={data.em_hasRelationList.items.filter(item => !item.em_when))} /></div> </div> */}
+                <div>
+                    <i>
+                        {d('em_alternateNameList')('items')('value')
+                            .vals()
+                            .join(', ')}
+                    </i>
+                </div>
                 <div>
                     <div>
-                        <h2>Location</h2>
+                        <SubHeading>Current Hierarchy</SubHeading>
+                        <CurrentHierarchy
+                            placeTitle={d('title')('value').val(undefined)}
+                            relatedPlaces={d('em_hasRelationList')('items')
+                                .vals()
+                                .filter(item => !item.em_when)}
+                        />
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <SubHeading>Location</SubHeading>
                         <p>
                             {d('em_where')('em_location')('wgs84_pos_lat')('value').val('')},{' '}
                             {d('em_where')('em_location')('wgs84_pos_long')('value').val('')}
                         </p>
                     </div>
                 </div>
-                {/* <div> <div><h2>Citation</h2><Citations rawCitation={data.em_reference} /></div> </div> */}
                 <div>
                     <div>
-                        <h2>Permanent URI</h2>
+                        <SubHeading>Citation</SubHeading>
+                        <Citation
+                            href={d('em_reference')
+                                .t(test)('dcterms_source')('value')
+                                .val(undefined)}
+                            title={d('em_reference')
+                                .t(test)('dcterms_title')('value')
+                                .val(undefined)}
+                        />
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <SubHeading>Permanent URI</SubHeading>
                         <p>{d('em_canonicalURI')('uri').val('')}</p>
                     </div>
                 </div>
                 <div>
                     <div>
-                        <h2>See Also</h2>
+                        <SubHeading>See Also</SubHeading>
                         <p />
                     </div>
                 </div>
-                {/* <div> <div><h2>Name Attestations</h2><PlaceNameTable input={data.em_hasAnnotationList.items} /></div> </div>
-      <div> <div><h2>Calendars</h2><Calendars input={data.em_hasAnnotationList.items} /></div> </div>
-      <div> <div><h2>Related Places</h2><RelatedPlaces input={data.em_hasRelationList.items} /></div> </div> */}
+                {/* <div> <div><SubHeading>Name Attestations</SubHeading><PlaceNameTable input={data.em_hasAnnotationList.items} /></div> </div>
+      <div> <div><SubHeading>Calendars</SubHeading><Calendars input={data.em_hasAnnotationList.items} /></div> </div>
+      <div> <div><SubHeading>Related Places</SubHeading><RelatedPlaces input={data.em_hasRelationList.items} /></div> </div> */}
                 <div>
                     <div>
-                        <h2>Related Resources</h2>
+                        <SubHeading>Related Resources</SubHeading>
                         <PlussedList>
                             {d('rdfs_seeAlsoList')('items')('title')('value')
                                 .vals()
@@ -113,7 +225,7 @@ export const EmPlaces: SFC<em_Place> = function(data) {
                 </div>
                 <div>
                     <div>
-                        <h2>Bibliography</h2>
+                        <SubHeading>Bibliography</SubHeading>
                         <p>
                             {d('em_reference')
                                 .t(test)('dcterms_title')('value')
@@ -121,23 +233,26 @@ export const EmPlaces: SFC<em_Place> = function(data) {
                         </p>
                     </div>
                 </div>
-                {/* <div><Metadata data={data} /></div> */}
+                <MetadataPart label="Creator" value="{creator}" />
+                <MetadataPart label="Contributors" value="{contributors}" />
+                <MetadataPart label="Reference" value={d('em_coreDataRef')('title')('value').val('')} />
+                <MetadataPart label="Licenses" value="{licenses}" />
             </Column>
             <Column>
                 <div>
-                    <h2>Maps</h2>
+                    <SubHeading>Maps</SubHeading>
                     <div />
                 </div>
                 <div>
                     <div>
-                        <h2>Description</h2>
+                        <SubHeading>Description</SubHeading>
                         <p>{d('em_editorialNote')('value').val('')}</p>
                     </div>
                 </div>
-                {/* <div> <div><h2>Historical Hierarchies</h2><HistoricalHierarchies requestedPlace={data} historicalHierarchies={data.em_hasRelationList.items.filter(item => item.em_relationType && item.em_relationType.title && item.em_relationType.title.value === "Former part of")} /></div> </div> */}
+                {/* <div> <div><SubHeading>Historical Hierarchies</SubHeading><HistoricalHierarchies requestedPlace={data} historicalHierarchies={data.em_hasRelationList.items.filter(item => item.em_relationType && item.em_relationType.title && item.em_relationType.title.value === "Former part of")} /></div> </div> */}
                 <div>
                     <div>
-                        <h2>Feedback</h2>
+                        <SubHeading>Feedback</SubHeading>
                         <p>
                             Please email us your comments. We welcome contributions from individual scholars and
                             projects.
@@ -234,33 +349,7 @@ export const EmPlaces: SFC<em_Place> = function(data) {
 //   });
 //   return (beginYears.sort((a, b) => b - a)[0] + "-" + endYears.sort((a,b) => a - b)[0]);
 // }
-// function createHierarchy(start, hierarchyType, coll) {
-//   coll.push(start);
-//   if (start.em_relationTo.em_hasRelationList) {
-//     start.em_relationTo.em_hasRelationList.items.filter(item => hierarchyType == null || (item.em_relationTo.em_placeCategory && item.em_relationTo.em_placeCategory.rdfs_label && item.em_relationTo.em_placeCategory.rdfs_label.value === hierarchyType)).forEach(rel => {
-//       createHierarchy(rel, hierarchyType, coll);
-//     });
-//   }
-// }
 
-// const CurrentHierarchy: SFC<{}> = function CurrentHierarchy(currentPlace, relatedPlaces) {
-//   var hierarchy = [];
-//   createHierarchy(relatedPlaces[0], null, hierarchy);
-//   var reverse = hierarchy.reverse();
-
-//   var parentList = document.createElement("ul");
-//   var firstList = parentList;
-//   var prefParent;
-//   reverse.forEach(rel => {
-//     parentList.appendChild(createTextElement("li", rel.em_relationTo && rel.em_relationTo.title ? rel.em_relationTo.title.value : "{Name unknown}"));
-//     prefParent = parentList;
-//     parentList = document.createElement("ul");
-//     prefParent.appendChild(parentList);
-//   });
-//   parentList.appendChild(createTextElement("li", currentPlace.title.value));
-
-//   return firstList;
-// }
 // const Calendars: SFC<{}> = function Calendars(input) {
 //   return createTable(input.filter(an => an.oa_hasBody).filter(an => an.oa_hasBody.rdf_type).filter(an => an.oa_hasBody.rdf_type.uri === "http://emplaces.namespace.example.org/Calendar").map(an => {
 //     var flatten = new Object();
@@ -289,12 +378,6 @@ export const EmPlaces: SFC<em_Place> = function(data) {
 //   // 	flatten.Relationship = relation.em_relationType.title.value;
 //   // 	return flatten;
 //   // }));
-// }
-// const Metadata: SFC<{}> = function Metadata(parent, data) {
-//   appendMetadataPart(parent, "Creator", "{creator}");
-//   appendMetadataPart(parent, "Contributors", "{contributors}");
-//   appendMetadataPart(parent, "Reference Gazetteers", data.em_coreDataRef.title.value);
-//   appendMetadataPart(parent, "Licenses", "{licenses}");
 // }
 // const HistoricalHierarchies: SFC<{}> = function HistoricalHierarchies(requestedPlace, historicalHierarchies) {
 //   var completeDiv = document.createElement("div");
@@ -326,15 +409,6 @@ export const EmPlaces: SFC<em_Place> = function(data) {
 //   }
 //   return completeDiv;
 // }
-// const Citations: SFC<{}> = function Citations(rawCitation) {
-//   var link = document.createElement("a");
-//   link.setAttribute("href", rawCitation.dcterms_source.value);
-//   link.setAttribute("target", "_blank");
-//   link.appendChild(document.createTextNode(rawCitation.dcterms_title.value));
-
-//   return link;
-// }
-
 export const dummyData: em_Place = {
     title: { value: 'City of Opole' },
     em_preferredName: { value: 'Opole' },

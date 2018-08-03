@@ -12,9 +12,10 @@ interface SafeGetter<TCur, TIsArray extends true | false> {
         UnwrapArray<Gettable<TCur>[Tkey]>,
         IsStillArray<Gettable<TCur>[Tkey], TIsArray>
     >;
-    val: <TDefault>(def: TDefault) => NonNullable<TCur> | TDefault;
-    vals: () => Array<NonNullable<TCur>>;
+    val: TIsArray extends true ? never : <TDefault, Y>(def: TDefault) => NonNullable<TCur> | TDefault;
+    vals: TIsArray extends true ? () => Array<NonNullable<TCur>> : never;
     t: <U extends TCur>(test: (input: TCur) => input is U) => SafeGetter<U, TIsArray>;
+    map: <U extends TCur>(proj: (input: TCur) => U) => SafeGetter<U, TIsArray>;
 }
 
 /**
@@ -88,13 +89,14 @@ export function testCases() {
                   b?: {
                       someUndef?: string;
                       number: 1;
+                      someSimpleArray: string[];
                       c:
                           | Array<{ otherNumber: number; subArray?: number[] }>
                           | { otherNumber: number; subArray?: number[] };
                   };
               };
     } = {
-        a: { b: { number: 1, c: [{ otherNumber: 2 }, { otherNumber: 3, subArray: [4, 5] }] } }
+        a: { b: { number: 1, someSimpleArray: ['a'], c: [{ otherNumber: 2 }, { otherNumber: 3, subArray: [4, 5] }] } }
     };
     const safe = makeSafeGetter(input);
 
@@ -105,7 +107,9 @@ export function testCases() {
     console.log(safe('a')('b')('someUndef').val(undefined), "This should show the value 'undefined'");
     console.log(safe('a')('b')('someUndef').val('DEFAULT'), "This should show the string 'DEFAULT'");
     console.log(JSON.stringify(safe('a')('b')('c')('otherNumber').vals()), 'This should show [2, 3]');
-    console.log(JSON.stringify(safe('a')('b')('c')('otherNumber').val('Default')), 'This should show 2');
+    // console.log(safe('a')('b')('someSimpleArray').val()) // doesn't pass the type checker because this is always an array
+    console.log(safe('a')('b')('someSimpleArray').vals(), "this should be ['a']");
+    console.log(JSON.stringify(safe('a')('b')('c')('otherNumber').val('Default')), 'This should show 2'); // DOES type check because this is not always an array. It will return the first found value in case of an array
     console.log(JSON.stringify(safe('a')('b')('c')('subArray').vals()), 'This should show [4, 5]');
 
     // note that the string properties still give you autocomplete
