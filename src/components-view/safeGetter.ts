@@ -1,21 +1,21 @@
-type Gettable<T> = Exclude<T, undefined | null | string | number | boolean>;
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never;
+
+type FilterAvailableType<U, TKey extends keyof UnionToIntersection<U>> = U extends any
+    ? TKey extends keyof U ? U : never
+    : never;
+
 type UnwrapArray<T> = T extends (infer U)[] ? U : T;
 type IsArray<T> = T extends any[] ? true : false;
-// type DefOrArray<T, TIsArray> = TIsArray extends true
-//     ? () => T[]
-//     : <TDefault>(def: TDefault) => NonNullable<T> | TDefault;
 type IsStillArray<T, PrevIsArray extends true | false> = PrevIsArray extends true ? true : IsArray<T>;
 
 interface SafeGetter<TCur, TIsArray extends true | false> {
     path: string[];
-    <Tkey extends keyof Gettable<TCur>>(key: Tkey): SafeGetter<
-        UnwrapArray<Gettable<TCur>[Tkey]>,
-        IsStillArray<Gettable<TCur>[Tkey], TIsArray>
+    <Tkey extends keyof UnionToIntersection<TCur>>(key: Tkey): SafeGetter<
+        UnwrapArray<FilterAvailableType<TCur, Tkey>[Tkey]>,
+        IsStillArray<FilterAvailableType<TCur, Tkey>[Tkey], TIsArray>
     >;
-    val: TIsArray extends true ? never : <TDefault, Y>(def: TDefault) => NonNullable<TCur> | TDefault;
-    vals: TIsArray extends true ? () => Array<NonNullable<TCur>> : never;
-    t: <U extends TCur>(test: (input: TCur) => input is U) => SafeGetter<U, TIsArray>;
-    map: <U extends TCur>(proj: (input: TCur) => U) => SafeGetter<U, TIsArray>;
+    val: true extends TIsArray ? never : <TDefault, Y>(def: TDefault) => NonNullable<TCur> | TDefault;
+    vals: true extends TIsArray ? () => Array<NonNullable<TCur>> : never;
 }
 
 /**
@@ -59,9 +59,6 @@ export function makeSafeGetter<T>(obj: T, path?: string[]): SafeGetter<T, IsArra
                 } else {
                     return Array.from(generateValues(obj, path));
                 }
-            },
-            t: function() {
-                return makeSafeGetter(obj, path);
             }
         }
     ) as any) as SafeGetter<T, IsArray<T>>;
@@ -83,6 +80,7 @@ function* generateValues(obj: any, path: string[]): IterableIterator<any> {
 
 export function testCases() {
     const input: {
+        d: { a: { b: number } } | { c: { d: number } | {} };
         a:
             | string
             | {
@@ -96,20 +94,24 @@ export function testCases() {
                   };
               };
     } = {
+        d: { a: { b: 1 } },
         a: { b: { number: 1, someSimpleArray: ['a'], c: [{ otherNumber: 2 }, { otherNumber: 3, subArray: [4, 5] }] } }
     };
     const safe = makeSafeGetter(input);
 
-    // console.log(input.a.b.number) // will not pass the type checker
+    // input.a.b.number // will not pass the type checker
+    // safe("a")("b")("____number") // this also will not pass the type checker
     console.log(safe('a')('b')('number'), 'This should show a function object in the console'); // will pass the type checker an show the wrapper object in the console
-    // console.log(safe("a")("b")("____number")) // will still not pass the type checker
+    console.log(safe('d')('a')('b').val('default'), 'This should show the value 1'); // this is valid, note that D is a union type
+    console.log(safe('d')('c')('d').val('default'), 'This should show the value 1'); // this too
+    // safe("d")("b")("b").val("default") // but _this_ (mixing the two paths of the union) isn't!
     console.log(safe('a')('b')('number').val('DEFAULT'), 'This should show the value 1');
     console.log(safe('a')('b')('someUndef').val(undefined), "This should show the value 'undefined'");
     console.log(safe('a')('b')('someUndef').val('DEFAULT'), "This should show the string 'DEFAULT'");
-    console.log(JSON.stringify(safe('a')('b')('c')('otherNumber').vals()), 'This should show [2, 3]');
-    // console.log(safe('a')('b')('someSimpleArray').val()) // doesn't pass the type checker because this is always an array
+    // safe('a')('b')('someSimpleArray').val('default'); // doesn't pass the type checker because this is always an array (the function will work though and return a one element array)
     console.log(safe('a')('b')('someSimpleArray').vals(), "this should be ['a']");
-    console.log(JSON.stringify(safe('a')('b')('c')('otherNumber').val('Default')), 'This should show 2'); // DOES type check because this is not always an array. It will return the first found value in case of an array
+    // JSON.stringify(safe('a')('b')('c')('otherNumber').val('default'); // doesn't pass the type checker because this is sometimes an array (the function will work though and return a the first element as a one element array)
+    console.log(JSON.stringify(safe('a')('b')('c')('otherNumber').vals()), 'This should show [2, 3]');
     console.log(JSON.stringify(safe('a')('b')('c')('subArray').vals()), 'This should show [4, 5]');
 
     // note that the string properties still give you autocomplete

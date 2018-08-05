@@ -1,10 +1,5 @@
 import React, { SFC } from 'react';
-import {
-    em_Place,
-    em_Place_em_reference,
-    em_Place_em_reference_oppole20180627_em_Bib_entry,
-    em_Place_em_hasRelationList_items
-} from './types/emlo2';
+import { em_Place, em_Place_em_hasRelationList_items } from './types/emlo2';
 import { makeSafeGetter } from '../safeGetter';
 import styled from 'styled-components';
 import { UnstyledAnchor } from '../HyperLink';
@@ -53,10 +48,6 @@ import { UnstyledAnchor } from '../HyperLink';
 			color: #AAA;
     }
     */
-
-function test(input: em_Place_em_reference): input is em_Place_em_reference_oppole20180627_em_Bib_entry {
-    return 'dcterms_title' in input;
-}
 
 const Column = styled.div`
     float: left;
@@ -112,7 +103,7 @@ function* createHierarchy(start: relationListItem, hierarchyType: string | null)
         .filter(
             item =>
                 hierarchyType == null ||
-                makeSafeGetter(item)('em_relationTo')('em_placeCategory')('rdfs_label')('value').val(undefined) ===
+                makeSafeGetter(item)('em_relationTo')('em_placeCategory')('rdfs_label')('value').val(null) ===
                     hierarchyType
         );
 
@@ -187,12 +178,8 @@ export const EmPlaces: SFC<em_Place> = function(data) {
                     <div>
                         <SubHeading>Citation</SubHeading>
                         <Citation
-                            href={d('em_reference')
-                                .t(test)('dcterms_source')('value')
-                                .val(undefined)}
-                            title={d('em_reference')
-                                .t(test)('dcterms_title')('value')
-                                .val(undefined)}
+                            href={d('em_reference')('dcterms_source')('value').val(undefined)}
+                            title={d('em_reference')('dcterms_title')('value').val(undefined)}
                         />
                     </div>
                 </div>
@@ -226,11 +213,7 @@ export const EmPlaces: SFC<em_Place> = function(data) {
                 <div>
                     <div>
                         <SubHeading>Bibliography</SubHeading>
-                        <p>
-                            {d('em_reference')
-                                .t(test)('dcterms_title')('value')
-                                .val('')}
-                        </p>
+                        <p>{d('em_reference')('dcterms_title')('value').val('')}</p>
                     </div>
                 </div>
                 <MetadataPart label="Creator" value="{creator}" />
