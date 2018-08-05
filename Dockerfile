@@ -11,6 +11,7 @@ RUN npm install
 
 COPY ./public ./public
 COPY ./src ./src
+COPY ./tsconfig.prod.json .
 COPY ./tsconfig.json .
 COPY ./tslint.json .
 COPY ./.env .
