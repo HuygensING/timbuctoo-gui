@@ -1,6 +1,6 @@
 import React, { SFC } from 'react';
-import { em_Place, em_Place_em_hasRelationList_items } from './types/emlo2';
-import { makeSafeGetter } from '../safeGetter';
+import { em_Place, em_Place_em_hasRelationList_items, em_Place_em_hasAnnotationList_items } from './types/emlo2';
+import { makeSafeGetter, SafeGetter } from '../safeGetter';
 import styled from 'styled-components';
 import { UnstyledAnchor } from '../HyperLink';
 
@@ -139,6 +139,49 @@ const MetadataPart: SFC<{ label: string; value: string }> = ({ label, value }) =
     </p>
 );
 
+class SimpleTable<T> extends React.Component<{ items: T[] }> {
+    render() {
+        const headers = Object.keys(this.props.items[0]) as Array<keyof T>;
+        return (
+            <table>
+                <tr>
+                    {headers.map(header => (
+                        <th key={header}>{header}</th>
+                    ))}
+                </tr>
+                {this.props.items.map((item, i) => (
+                    <tr key={i}>
+                        {headers.map(header => (
+                            <th>{item[header] == null ? '' : item[header].toString()}</th>
+                        ))}
+                    </tr>
+                ))}
+            </table>
+        );
+    }
+}
+
+const PlaceNameTable: SFC<{ input: SafeGetter<em_Place_em_hasAnnotationList_items, true> }> = function({ input }) {
+    const items = input
+        .vals()
+        .filter(
+            an =>
+                makeSafeGetter(an)('oa_hasBody')('rdf_type')('uri').val('') ===
+                'http://emplaces.namespace.example.org/Place_name'
+        )
+        .map(function(an) {
+            return {
+                Name: makeSafeGetter(an)('oa_hasBody')('em_name')('value').val(''),
+                Language: '(' + makeSafeGetter(an)('oa_hasBody')('em_language')('em_tag')('value').val('') + ')',
+                Date: makeSafeGetter(an)('em_when')('rdfs_label')('value').val(''),
+                Source: makeSafeGetter(an)('em_sourceList')('items')('rdfs_label')('value')
+                    .vals()
+                    .join('<br>')
+            };
+        });
+    return <SimpleTable items={items} />;
+};
+
 export const EmPlaces: SFC<em_Place> = function(data) {
     const d = makeSafeGetter(data);
     return (
@@ -195,9 +238,24 @@ export const EmPlaces: SFC<em_Place> = function(data) {
                         <p />
                     </div>
                 </div>
-                {/* <div> <div><SubHeading>Name Attestations</SubHeading><PlaceNameTable input={data.em_hasAnnotationList.items} /></div> </div>
-      <div> <div><SubHeading>Calendars</SubHeading><Calendars input={data.em_hasAnnotationList.items} /></div> </div>
-      <div> <div><SubHeading>Related Places</SubHeading><RelatedPlaces input={data.em_hasRelationList.items} /></div> </div> */}
+                <div>
+                    <div>
+                        <SubHeading>Name Attestations</SubHeading>
+                        <PlaceNameTable input={d('em_hasAnnotationList')('items')} />
+                    </div>
+                </div>
+                {/* <div>
+                    <div>
+                        <SubHeading>Calendars</SubHeading>
+                        <Calendars input={data.em_hasAnnotationList.items} />
+                    </div>
+                </div> */}
+                <div>
+                    <div>
+                        <SubHeading>Related Places</SubHeading>
+                        {/* <RelatedPlaces input={data.em_hasRelationList.items} /> */}
+                    </div>
+                </div>
                 <div>
                     <div>
                         <SubHeading>Related Resources</SubHeading>
@@ -252,19 +310,6 @@ export const EmPlaces: SFC<em_Place> = function(data) {
 //   var element = document.createElement(elementName);
 //   element.appendChild(document.createTextNode(value));
 //   return element;
-// }
-// function createTable(items) {
-//   var headers = Object.keys(items[0]);
-//   var table = document.createElement("table");
-//   var headerRow = document.createElement("tr");
-//   table.appendChild(headerRow);
-//   headers.forEach(header => headerRow.appendChild(createTextElement("th", header)));
-//   items.forEach(item => {
-//     var row = document.createElement("tr");
-//     table.appendChild(row);
-//     headers.forEach(header => row.appendChild(createTextElement("td", item[header])));
-//   });
-//   return table;
 // }
 // function appendMetadataPart(parent, title, value) {
 //   var element = document.createElement("p");
@@ -338,17 +383,6 @@ export const EmPlaces: SFC<em_Place> = function(data) {
 //     var flatten = new Object();
 //     flatten.Name = an.oa_hasBody.rdfs_label.value;
 //     flatten.Date = an.em_when.rdfs_label.value;
-//     return flatten;
-//   }));
-// }
-// const PlaceNameTable: SFC<{}> = function PlaceNameTable(input) {
-//   return createTable(input.filter(an => an.oa_hasBody).filter(an => an.oa_hasBody.rdf_type).filter(an => an.oa_hasBody.rdf_type.uri === "http://emplaces.namespace.example.org/Place_name").map(an => {
-//     var flatten = new Object();
-//     var body = an.oa_hasBody;
-//     flatten.Name = body.em_name.value;
-//     flatten.Language = "(" + body.em_language.em_tag.value + ")";
-//     flatten.Date = an.em_when.rdfs_label.value;
-//     flatten.Source = an.em_sourceList.items.map(source => source.rdfs_label.value).join("<br>");
 //     return flatten;
 //   }));
 // }
