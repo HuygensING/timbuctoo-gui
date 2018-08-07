@@ -8,7 +8,7 @@ type UnwrapArray<T> = T extends (infer U)[] ? U : T;
 type IsArray<T> = T extends any[] ? true : false;
 type IsStillArray<T, PrevIsArray extends true | false> = PrevIsArray extends true ? true : IsArray<T>;
 
-interface SafeGetter<TCur, TIsArray extends true | false> {
+export interface SafeGetter<TCur, TIsArray extends true | false> {
     path: string[];
     <Tkey extends keyof UnionToIntersection<TCur>>(key: Tkey): SafeGetter<
         UnwrapArray<FilterAvailableType<TCur, Tkey>[Tkey]>,
@@ -16,6 +16,9 @@ interface SafeGetter<TCur, TIsArray extends true | false> {
     >;
     val: true extends TIsArray ? never : <TDefault, Y>(def: TDefault) => NonNullable<TCur> | TDefault;
     vals: true extends TIsArray ? () => Array<NonNullable<TCur>> : never;
+    filter: true extends TIsArray
+        ? (filter: (input: TCur, idx: number) => boolean) => SafeGetter<TCur, TIsArray>
+        : never;
 }
 
 /**
@@ -59,12 +62,15 @@ export function makeSafeGetter<T>(obj: T, path?: string[]): SafeGetter<T, IsArra
                 } else {
                     return Array.from(generateValues(obj, path));
                 }
+            },
+            filter: function(func: any) {
+                return makeSafeGetter(obj, (path || []).concat([func]));
             }
         }
     ) as any) as SafeGetter<T, IsArray<T>>;
 }
 
-function* generateValues(obj: any, path: string[]): IterableIterator<any> {
+function* generateValues(obj: any, path: any[]): IterableIterator<any> {
     if (obj == null) {
         return; // stop generating
     } else if (Array.isArray(obj)) {
@@ -73,6 +79,13 @@ function* generateValues(obj: any, path: string[]): IterableIterator<any> {
         }
     } else if (path.length === 0) {
         yield obj;
+    } else if (typeof path[0] === 'function') {
+        let i = 0;
+        for (let item of generateValues(obj, path.slice(1))) {
+            if (path[0](item, i++)) {
+                yield item;
+            }
+        }
     } else {
         yield* generateValues(obj[path[0]], path.slice(1));
     }
@@ -80,7 +93,18 @@ function* generateValues(obj: any, path: string[]): IterableIterator<any> {
 
 export function testCases() {
     const input: {
-        d: { a: { b: number } } | { c: { d: number } | {} };
+        d:
+            | {
+                  a: {
+                      b: number;
+                  };
+              }
+            | {
+                  c: {
+                      d: number;
+                  };
+              }
+            | {};
         a:
             | string
             | {
@@ -88,9 +112,7 @@ export function testCases() {
                       someUndef?: string;
                       number: 1;
                       someSimpleArray: string[];
-                      c:
-                          | Array<{ otherNumber: number; subArray?: number[] }>
-                          | { otherNumber: number; subArray?: number[] };
+                      c: { otherNumber: number; subArray?: number[] }[] | { otherNumber: number; subArray?: number[] };
                   };
               };
     } = {
