@@ -17,7 +17,7 @@ export interface SafeGetter<TCur, TIsArray extends true | false> {
     val: true extends TIsArray ? never : <TDefault, Y>(def: TDefault) => NonNullable<TCur> | TDefault;
     vals: true extends TIsArray ? () => Array<NonNullable<TCur>> : never;
     filter: true extends TIsArray
-        ? (filter: (input: TCur, idx: number) => boolean) => SafeGetter<TCur, TIsArray>
+        ? (filter: (input: SafeGetter<TCur, false>, idx: number) => boolean) => SafeGetter<TCur, TIsArray>
         : never;
 }
 
@@ -82,7 +82,7 @@ function* generateValues(obj: any, path: any[]): IterableIterator<any> {
     } else if (typeof path[0] === 'function') {
         let i = 0;
         for (let item of generateValues(obj, path.slice(1))) {
-            if (path[0](item, i++)) {
+            if (path[0](makeSafeGetter(item), i++)) {
                 yield item;
             }
         }

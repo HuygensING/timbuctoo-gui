@@ -1,53 +1,8 @@
-import React, { SFC } from 'react';
+import React, { SFC, ReactElement, Fragment } from 'react';
 import { em_Place, em_Place_em_hasRelationList_items, em_Place_em_hasAnnotationList_items } from './types/emlo2';
 import { makeSafeGetter, SafeGetter } from '../safeGetter';
 import styled from 'styled-components';
 import { UnstyledAnchor } from '../HyperLink';
-
-/*
-		th {
-			background-color: #EEE;
-			text-align: left;
-			padding-right: 5em;
-		}
-		td {
-			padding-right: 5em;
-		}
-		.tabHeaders {
-			background-color: #EEE;
-			overflow: hidden;
-			cursor: pointer;
-			padding: 5px;
-		}
-		.tabHeader.active {
-			font-weight: bold;
-		}
-		
-		.hierarchyTabContents {
-			border: 1px solid black;
-			display: none;
-			text-align: center;
-			padding-left: 200px;
-		}
-		.hierarchyTabContents.active {
-			display: block;
-		}
-		.hierarchyLabels {
-			display: block;
-			float: left;
-			width: 200px;
-			padding: 5px;
-		}
-		.hierarchyLink {
-			cursor: pointer;
-		}
-		.hierarchyLink.active{
-			font-weight: bold;
-		}
-		.date {
-			color: #AAA;
-    }
-    */
 
 const Column = styled.div`
     float: left;
@@ -79,33 +34,19 @@ const Citation: SFC<{ href?: string; title?: string }> = function Citations(prop
     );
 };
 
-type relationListItem = {
-    em_relationTo?: null | {
-        title?: null | {
-            value: string;
-        };
-        em_placeCategory?: null | {
-            rdfs_label?: null | {
-                value?: string;
-            };
-        };
-        em_hasRelationList?: null | {
-            items?: relationListItem[];
-        };
-    };
-};
-
-function* createHierarchy(start: relationListItem, hierarchyType: string | null): IterableIterator<string> {
+function* createHierarchy(
+    start: em_Place_em_hasRelationList_items,
+    hierarchyType: string | null
+): IterableIterator<SafeGetter<em_Place_em_hasRelationList_items, false>> {
     const data = makeSafeGetter(start);
-    yield data('em_relationTo')('title')('value').val('{Name unknown}');
+    yield data;
     const relations = data('em_relationTo')('em_hasRelationList')('items')
-        .vals()
         .filter(
-            item =>
+            x =>
                 hierarchyType == null ||
-                makeSafeGetter(item)('em_relationTo')('em_placeCategory')('rdfs_label')('value').val(null) ===
-                    hierarchyType
-        );
+                x('em_relationTo')('em_placeCategory')('rdfs_label')('value').val(null) === hierarchyType
+        )
+        .vals();
 
     for (let rel of relations) {
         yield* createHierarchy(rel, hierarchyType);
@@ -125,7 +66,9 @@ const CurrentHierarchy: SFC<{
     placeTitle?: string;
     relatedPlaces: em_Place_em_hasRelationList_items[];
 }> = function({ placeTitle, relatedPlaces }) {
-    const hierarchy = Array.from(createHierarchy(relatedPlaces[0], null));
+    const hierarchy = Array.from(createHierarchy(relatedPlaces[0], null)).map(x =>
+        x('em_relationTo')('title')('value').val('{Name unknown}')
+    );
     hierarchy.reverse();
     hierarchy.push(placeTitle || '{Name unknown}');
 
@@ -134,10 +77,18 @@ const CurrentHierarchy: SFC<{
 
 const MetadataPart: SFC<{ label: string; value: string }> = ({ label, value }) => (
     <p>
-        <b>{label}</b>
-        {value}
+        <b>{label}</b>: {value}
     </p>
 );
+
+const HeaderCell = styled.th`
+    background-color: #eee;
+    text-align: left;
+    padding-right: 5em;
+`;
+const BodyCell = styled.td`
+    padding-right: 5em;
+`;
 
 class SimpleTable<T> extends React.Component<{ items: T[] }> {
     render() {
@@ -146,13 +97,13 @@ class SimpleTable<T> extends React.Component<{ items: T[] }> {
             <table>
                 <tr>
                     {headers.map(header => (
-                        <th key={header}>{header}</th>
+                        <HeaderCell key={header}>{header}</HeaderCell>
                     ))}
                 </tr>
                 {this.props.items.map((item, i) => (
                     <tr key={i}>
                         {headers.map(header => (
-                            <th>{item[header] == null ? '' : item[header].toString()}</th>
+                            <BodyCell>{item[header] == null ? '' : item[header].toString()}</BodyCell>
                         ))}
                     </tr>
                 ))}
@@ -161,25 +112,143 @@ class SimpleTable<T> extends React.Component<{ items: T[] }> {
     }
 }
 
-const PlaceNameTable: SFC<{ input: SafeGetter<em_Place_em_hasAnnotationList_items, true> }> = function({ input }) {
-    const items = input
-        .vals()
-        .filter(
-            an =>
-                makeSafeGetter(an)('oa_hasBody')('rdf_type')('uri').val('') ===
-                'http://emplaces.namespace.example.org/Place_name'
-        )
-        .map(function(an) {
-            return {
-                Name: makeSafeGetter(an)('oa_hasBody')('em_name')('value').val(''),
-                Language: '(' + makeSafeGetter(an)('oa_hasBody')('em_language')('em_tag')('value').val('') + ')',
-                Date: makeSafeGetter(an)('em_when')('rdfs_label')('value').val(''),
-                Source: makeSafeGetter(an)('em_sourceList')('items')('rdfs_label')('value')
-                    .vals()
-                    .join('<br>')
-            };
-        });
+const PlaceNameTable: SFC<{ input: em_Place_em_hasAnnotationList_items[] }> = function({ input }) {
+    const items = input.map(function(an) {
+        return {
+            Name: makeSafeGetter(an)('oa_hasBody')('em_name')('value').val(''),
+            Language: '(' + makeSafeGetter(an)('oa_hasBody')('em_language')('em_tag')('value').val('') + ')',
+            Date: makeSafeGetter(an)('em_when')('rdfs_label')('value').val(''),
+            Source: makeSafeGetter(an)('em_sourceList')('items')('rdfs_label')('value')
+                .vals()
+                .join('<br>')
+        };
+    });
     return <SimpleTable items={items} />;
+};
+
+const Calendars: SFC<{ input: em_Place_em_hasAnnotationList_items[] }> = function({ input }) {
+    const items = input.map(an => ({
+        Name: makeSafeGetter(an)('oa_hasBody')('rdfs_label')('value').val(''),
+        Date: makeSafeGetter(an)('em_when')('rdfs_label')('value').val('')
+    }));
+
+    return <SimpleTable items={items} />;
+};
+
+function createHierarchyLabel(hierrachyArray: Array<SafeGetter<em_Place_em_hasRelationList_items, false>>) {
+    const beginYears: number[] = [];
+    const endYears: number[] = [];
+    hierrachyArray.map(rel => rel('em_when')('rdfs_label')('value').val('NaN-NaN')).forEach(when => {
+        const splitted = when.split('-');
+        beginYears.push(+splitted[0]);
+        endYears.push(+splitted[1]);
+    });
+    return beginYears.sort((a, b) => b - a)[0] + '-' + endYears.sort((a, b) => a - b)[0];
+}
+
+const TabHeaders = styled.div`
+    background-color: #eee;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 5px;
+
+    &.active {
+        font-weight: bold;
+    }
+`;
+
+const HierarchyTabContents = styled.div`
+    border: 1px solid black;
+    display: none;
+    text-align: center;
+    padding-left: 200px;
+    &.active {
+        display: block;
+    }
+`;
+const HierarchyLabels = styled.div`
+    display: block;
+    float: left;
+    width: 200px;
+    padding: 5px;
+`;
+
+const HierarchyLink = styled.p`
+    cursor: pointer;
+    &.active {
+        font-weight: bold;
+    }
+`;
+const Date = styled.p`
+    color: #aaa;
+`;
+
+function hierarchyContent(
+    requestedPlace: SafeGetter<em_Place, false>,
+    type: string,
+    hierarchyStart: em_Place_em_hasRelationList_items,
+    first: boolean
+): [ReactElement<any>, ReactElement<any>] {
+    const hierarchy = Array.from(createHierarchy(hierarchyStart, type));
+    hierarchy.reverse();
+
+    const hierarchyLabelValue = createHierarchyLabel(hierarchy);
+    const linkLabel = <HierarchyLink>{hierarchyLabelValue}</HierarchyLink>;
+    const hierarchyId = type + ' ' + hierarchyLabelValue;
+    //   linkLabel.onclick = function(event) {
+    //     openTab(event, hierarchyId)
+    //   };
+    const hierarchyDiv = (
+        <HierarchyTabContents className={first ? ' active' : ''} id={hierarchyId}>
+            {hierarchy.map(place => (
+                <Fragment>
+                    <p className="place">{place('em_relationTo')('title')('value').val('')}</p>
+                    <Date>{place('em_when')('rdfs_label')('value').val('')}</Date>
+                </Fragment>
+            ))}
+            <p>{requestedPlace('title')('value').val('')}</p>
+        </HierarchyTabContents>
+    );
+    return [linkLabel, hierarchyDiv];
+}
+
+const HistoricalHierarchies: SFC<{
+    requestedPlace: SafeGetter<em_Place, false>;
+    historicalHierarchies: SafeGetter<em_Place_em_hasRelationList_items, true>;
+}> = function({ requestedPlace, historicalHierarchies }) {
+    const hierarchiesByType: { [key: string]: em_Place_em_hasRelationList_items[] } = {};
+    for (let item of historicalHierarchies.vals()) {
+        const type = makeSafeGetter(item)('em_relationTo')('em_placeCategory')('rdfs_label')('value').val('');
+        if (!hierarchiesByType.hasOwnProperty(type)) {
+            hierarchiesByType[type] = [];
+        }
+        hierarchiesByType[type].push(item);
+    }
+
+    const tabContent: ReactElement<any>[] = [];
+    const labelsDiv: ReactElement<any>[] = [];
+    Object.keys(hierarchiesByType).forEach(type => {
+        hierarchiesByType[type].forEach((hierarchy, i) => {
+            const [label, content] = hierarchyContent(requestedPlace, type, hierarchy, i === 0);
+            tabContent.push(content);
+            labelsDiv.push(label);
+        });
+    });
+    return (
+        <div>
+            <TabHeaders>
+                {Object.keys(hierarchiesByType)
+                    .sort()
+                    .map((type, i) => (
+                        <p className={'tabHeader' + (i === 0 ? ' first' : '')}>{type}</p>
+                    ))}
+            </TabHeaders>
+            <div className="tabContent">
+                <HierarchyLabels>{labelsDiv}</HierarchyLabels>
+                {tabContent}
+            </div>
+        </div>
+    );
 };
 
 export const EmPlaces: SFC<em_Place> = function(data) {
@@ -241,19 +310,36 @@ export const EmPlaces: SFC<em_Place> = function(data) {
                 <div>
                     <div>
                         <SubHeading>Name Attestations</SubHeading>
-                        <PlaceNameTable input={d('em_hasAnnotationList')('items')} />
+                        <PlaceNameTable
+                            input={d('em_hasAnnotationList')('items')
+                                .filter(
+                                    x =>
+                                        x('oa_hasBody')('rdf_type')('uri').val('') ===
+                                        'http://emplaces.namespace.example.org/Place_name'
+                                )
+                                .vals()}
+                        />
                     </div>
                 </div>
-                {/* <div>
+                <div>
                     <div>
                         <SubHeading>Calendars</SubHeading>
-                        <Calendars input={data.em_hasAnnotationList.items} />
+                        <Calendars
+                            input={d('em_hasAnnotationList')('items')
+                                .filter(
+                                    x =>
+                                        x('oa_hasBody')('rdf_type')('uri').val('') ===
+                                        'http://emplaces.namespace.example.org/Calendar'
+                                )
+                                .vals()}
+                        />
                     </div>
-                </div> */}
+                </div>
                 <div>
                     <div>
                         <SubHeading>Related Places</SubHeading>
                         {/* <RelatedPlaces input={data.em_hasRelationList.items} /> */}
+                        <p />
                     </div>
                 </div>
                 <div>
@@ -290,7 +376,17 @@ export const EmPlaces: SFC<em_Place> = function(data) {
                         <p>{d('em_editorialNote')('value').val('')}</p>
                     </div>
                 </div>
-                {/* <div> <div><SubHeading>Historical Hierarchies</SubHeading><HistoricalHierarchies requestedPlace={data} historicalHierarchies={data.em_hasRelationList.items.filter(item => item.em_relationType && item.em_relationType.title && item.em_relationType.title.value === "Former part of")} /></div> </div> */}
+                <div>
+                    <div>
+                        <SubHeading>Historical Hierarchies</SubHeading>
+                        <HistoricalHierarchies
+                            requestedPlace={d}
+                            historicalHierarchies={d('em_hasRelationList')('items').filter(
+                                item => item('em_relationType')('title')('value').val('') === 'Former part of'
+                            )}
+                        />
+                    </div>
+                </div>
                 <div>
                     <div>
                         <SubHeading>Feedback</SubHeading>
@@ -337,55 +433,6 @@ export const EmPlaces: SFC<em_Place> = function(data) {
 //     "variables": null
 //   }));
 // }
-// function hierarchyContent(requestedPlace, type, hierarchyStart, first, parent, labels) {
-//   var hierarchy = []
-//   createHierarchy(hierarchyStart, type, hierarchy);
-//   var reverse = hierarchy.reverse();
-//   var hierarchyLabelValue = createHierarchyLabel(reverse);
-//   var linkLabel = createTextElement("p", hierarchyLabelValue);
-//   linkLabel.classList.add("hierarchyLink");
-//   var hierarchyId = type + " " + hierarchyLabelValue
-//   linkLabel.onclick = function(event) {
-//     openTab(event, hierarchyId)
-//   };
-//   labels.appendChild(linkLabel);
-//   var hierarchyDiv = document.createElement("div");
-//   hierarchyDiv.classList.add("hierarchyTabContents");
-//   hierarchyDiv.id = hierarchyId;
-//   if (first) {
-//     hierarchyDiv.classList.add("active");
-//     linkLabel.classList.add("active");
-//   }
-//   reverse.forEach(place => {
-//     var placeElement = createTextElement("p", place.em_relationTo.title.value);
-//     placeElement.classList.add("place");
-//     hierarchyDiv.appendChild(placeElement);
-//     var dateElement = createTextElement("p", place.em_when.rdfs_label.value);
-//     dateElement.classList.add("date");
-//     hierarchyDiv.appendChild(dateElement);
-//   });
-//   hierarchyDiv.appendChild(createTextElement("p", requestedPlace.title.value));
-//   parent.appendChild(hierarchyDiv);
-// }
-// function createHierarchyLabel(hierrachyArray) {
-//   var beginYears = [];
-//   var endYears = [];
-//   hierrachyArray.map(rel => rel.em_when.rdfs_label.value).forEach(when => {
-//     var splitted = when.split("-");
-//     beginYears.push(splitted[0]);
-//     endYears.push(splitted[1]);
-//   });
-//   return (beginYears.sort((a, b) => b - a)[0] + "-" + endYears.sort((a,b) => a - b)[0]);
-// }
-
-// const Calendars: SFC<{}> = function Calendars(input) {
-//   return createTable(input.filter(an => an.oa_hasBody).filter(an => an.oa_hasBody.rdf_type).filter(an => an.oa_hasBody.rdf_type.uri === "http://emplaces.namespace.example.org/Calendar").map(an => {
-//     var flatten = new Object();
-//     flatten.Name = an.oa_hasBody.rdfs_label.value;
-//     flatten.Date = an.em_when.rdfs_label.value;
-//     return flatten;
-//   }));
-// }
 // const RelatedPlaces: SFC<{}> = function RelatedPlaces(input) {
 //   return document.createElement("p");
 //   // return createTable(input.map(relation => {
@@ -396,36 +443,7 @@ export const EmPlaces: SFC<em_Place> = function(data) {
 //   // 	return flatten;
 //   // }));
 // }
-// const HistoricalHierarchies: SFC<{}> = function HistoricalHierarchies(requestedPlace, historicalHierarchies) {
-//   var completeDiv = document.createElement("div");
-//   var tabHeaders = document.createElement("div");
-//   tabHeaders.classList.add("tabHeaders");
-//   completeDiv.appendChild(tabHeaders);
-//   var labelsDiv =  document.createElement("div");
-//   labelsDiv.classList.add("hierarchyLabels");
-//   var tabContent = document.createElement("div");
-//   tabContent.appendChild(labelsDiv);
-//   completeDiv.appendChild(tabContent);
-//   var first = true;
-//   var hierarchiesByType = historicalHierarchies.reduce(function (rv, v) {
-//     (rv[v.em_relationTo.em_placeCategory.rdfs_label.value] = rv[v.em_relationTo.em_placeCategory.rdfs_label.value] || []).push(v);
-//     return rv;
-//   }, {});
-//   for (hierarchyType in hierarchiesByType) {
-//     var tab = createTextElement("p", hierarchyType);
-//     tab.classList.add("tabHeader");
-//     tabHeaders.append(tab);
-//     var hierarchies = hierarchiesByType[hierarchyType];
-//     hierarchies.forEach(hierarchy => {
-//       hierarchyContent(requestedPlace, hierarchyType, hierarchy, first, tabContent, labelsDiv);
-//       if (first) {
-//         tab.classList.add("active")
-//         first = false;
-//       }
-//     });
-//   }
-//   return completeDiv;
-// }
+
 export const dummyData: em_Place = {
     title: { value: 'City of Opole' },
     em_preferredName: { value: 'Opole' },
