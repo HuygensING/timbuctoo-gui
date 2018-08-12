@@ -4,11 +4,6 @@ import { makeSafeGetter, SafeGetter } from '../safeGetter';
 import styled from 'styled-components';
 import { UnstyledAnchor } from '../HyperLink';
 
-const Column = styled.div`
-    float: left;
-    width: 50%;
-`;
-
 const PlussedList = styled.ul`
     list-style: none;
     padding-left: 1rem;
@@ -251,153 +246,137 @@ const HistoricalHierarchies: SFC<{
     );
 };
 
+const ColumnWrapper = styled.div`
+    column-count: 2;
+    @media (max-width: 999px) {
+        column-count: 1;
+    }
+`;
+
+const Segment = styled.div`
+    break-inside: avoid;
+`;
+
 export const EmPlaces: SFC<em_Place> = function(data) {
     const d = makeSafeGetter(data);
     return (
-        <div>
-            <Column>
-                <div>
-                    <MainHeading>{d('em_preferredName')('value').val('')}</MainHeading>
-                </div>
-                <div>
-                    <i>
-                        {d('em_alternateNameList')('items')('value')
-                            .vals()
-                            .join(', ')}
-                    </i>
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>Current Hierarchy</SubHeading>
-                        <CurrentHierarchy
-                            placeTitle={d('title')('value').val(undefined)}
-                            relatedPlaces={d('em_hasRelationList')('items')
-                                .vals()
-                                .filter(item => !item.em_when)}
-                        />
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>Location</SubHeading>
-                        <p>
-                            {d('em_where')('em_location')('wgs84_pos_lat')('value').val('')},{' '}
-                            {d('em_where')('em_location')('wgs84_pos_long')('value').val('')}
-                        </p>
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>Citation</SubHeading>
-                        <Citation
-                            href={d('em_reference')('dcterms_source')('value').val(undefined)}
-                            title={d('em_reference')('dcterms_title')('value').val(undefined)}
-                        />
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>Permanent URI</SubHeading>
-                        <p>{d('em_canonicalURI')('uri').val('')}</p>
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>See Also</SubHeading>
-                        <p />
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>Name Attestations</SubHeading>
-                        <PlaceNameTable
-                            input={d('em_hasAnnotationList')('items')
-                                .filter(
-                                    x =>
-                                        x('oa_hasBody')('rdf_type')('uri').val('') ===
-                                        'http://emplaces.namespace.example.org/Place_name'
-                                )
-                                .vals()}
-                        />
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>Calendars</SubHeading>
-                        <Calendars
-                            input={d('em_hasAnnotationList')('items')
-                                .filter(
-                                    x =>
-                                        x('oa_hasBody')('rdf_type')('uri').val('') ===
-                                        'http://emplaces.namespace.example.org/Calendar'
-                                )
-                                .vals()}
-                        />
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>Related Places</SubHeading>
-                        {/* <RelatedPlaces input={data.em_hasRelationList.items} /> */}
-                        <p />
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>Related Resources</SubHeading>
-                        <PlussedList>
-                            {d('rdfs_seeAlsoList')('items')('title')('value')
-                                .vals()
-                                .map(x => (
-                                    <li key={x}>{x}</li>
-                                ))}
-                        </PlussedList>
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>Bibliography</SubHeading>
-                        <p>{d('em_reference')('dcterms_title')('value').val('')}</p>
-                    </div>
-                </div>
-                <MetadataPart label="Creator" value="{creator}" />
-                <MetadataPart label="Contributors" value="{contributors}" />
-                <MetadataPart label="Reference" value={d('em_coreDataRef')('title')('value').val('')} />
-                <MetadataPart label="Licenses" value="{licenses}" />
-            </Column>
-            <Column>
-                <div>
-                    <SubHeading>Maps</SubHeading>
-                    <div />
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>Description</SubHeading>
-                        <p>{d('em_editorialNote')('value').val('')}</p>
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>Historical Hierarchies</SubHeading>
-                        <HistoricalHierarchies
-                            requestedPlace={d}
-                            historicalHierarchies={d('em_hasRelationList')('items').filter(
-                                item => item('em_relationType')('title')('value').val('') === 'Former part of'
-                            )}
-                        />
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <SubHeading>Feedback</SubHeading>
-                        <p>
-                            Please email us your comments. We welcome contributions from individual scholars and
-                            projects.
-                        </p>
-                    </div>
-                </div>
-            </Column>
-        </div>
+        <ColumnWrapper>
+            <Segment>
+                <MainHeading>{d('em_preferredName')('value').val('')}</MainHeading>
+                <i>
+                    {d('em_alternateNameList')('items')('value')
+                        .vals()
+                        .join(', ')}
+                </i>
+            </Segment>
+            <Segment>
+                <SubHeading>Current Hierarchy</SubHeading>
+                <CurrentHierarchy
+                    placeTitle={d('title')('value').val(undefined)}
+                    relatedPlaces={d('em_hasRelationList')('items')
+                        .vals()
+                        .filter(item => !item.em_when)}
+                />
+            </Segment>
+            <Segment>
+                <SubHeading>Location</SubHeading>
+                <p>
+                    {d('em_where')('em_location')('wgs84_pos_lat')('value').val('')},{' '}
+                    {d('em_where')('em_location')('wgs84_pos_long')('value').val('')}
+                </p>
+            </Segment>
+            <Segment>
+                <SubHeading>Citation</SubHeading>
+                <Citation
+                    href={d('em_reference')('dcterms_source')('value').val(undefined)}
+                    title={d('em_reference')('dcterms_title')('value').val(undefined)}
+                />
+            </Segment>
+            <Segment>
+                <SubHeading>Permanent URI</SubHeading>
+                <p>
+                    <UnstyledAnchor href={d('em_canonicalURI')('uri').val('')}>
+                        {d('em_canonicalURI')('uri').val('')}
+                    </UnstyledAnchor>
+                </p>
+            </Segment>
+            <Segment>
+                <SubHeading>See Also</SubHeading>
+                <p />
+            </Segment>
+            <Segment>
+                <SubHeading>Name Attestations</SubHeading>
+                <PlaceNameTable
+                    input={d('em_hasAnnotationList')('items')
+                        .filter(
+                            x =>
+                                x('oa_hasBody')('rdf_type')('uri').val('') ===
+                                'http://emplaces.namespace.example.org/Place_name'
+                        )
+                        .vals()}
+                />
+            </Segment>
+            <Segment>
+                <SubHeading>Calendars</SubHeading>
+                <Calendars
+                    input={d('em_hasAnnotationList')('items')
+                        .filter(
+                            x =>
+                                x('oa_hasBody')('rdf_type')('uri').val('') ===
+                                'http://emplaces.namespace.example.org/Calendar'
+                        )
+                        .vals()}
+                />
+            </Segment>
+            <Segment>
+                <SubHeading>Related Places</SubHeading>
+                {/* <RelatedPlaces input={data.em_hasRelationList.items} /> */}
+                <p />
+            </Segment>
+            <Segment>
+                <SubHeading>Related Resources</SubHeading>
+                <PlussedList>
+                    {d('rdfs_seeAlsoList')('items')('title')('value')
+                        .vals()
+                        .map(x => (
+                            <li key={x}>
+                                <UnstyledAnchor rel="nofollow" href={x}>
+                                    {x}
+                                </UnstyledAnchor>
+                            </li>
+                        ))}
+                </PlussedList>
+            </Segment>
+            <Segment>
+                <SubHeading>Bibliography</SubHeading>
+                <p>{d('em_reference')('dcterms_title')('value').val('')}</p>
+            </Segment>
+            <MetadataPart label="Creator" value="{creator}" />
+            <MetadataPart label="Contributors" value="{contributors}" />
+            <MetadataPart label="Reference" value={d('em_coreDataRef')('title')('value').val('')} />
+            <MetadataPart label="Licenses" value="{licenses}" />
+            <Segment>
+                <SubHeading>Maps</SubHeading>
+                <div />
+            </Segment>
+            <Segment>
+                <SubHeading>Description</SubHeading>
+                <p>{d('em_editorialNote')('value').val('')}</p>
+            </Segment>
+            <Segment>
+                <SubHeading>Historical Hierarchies</SubHeading>
+                <HistoricalHierarchies
+                    requestedPlace={d}
+                    historicalHierarchies={d('em_hasRelationList')('items').filter(
+                        item => item('em_relationType')('title')('value').val('') === 'Former part of'
+                    )}
+                />
+            </Segment>
+            <Segment>
+                <SubHeading>Feedback</SubHeading>
+                <p>Please email us your comments. We welcome contributions from individual scholars and projects.</p>
+            </Segment>
+        </ColumnWrapper>
     );
     // updateMap(map, data.em_where);
 };
