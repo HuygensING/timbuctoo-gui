@@ -131,6 +131,10 @@ function addStyles() {
                 font-weight: 700;
             }
 
+            .compOuter {
+                box-shadow: darkgrey 0px 0px 10px;
+                background-color: white;
+            }
             @media (max-width: 700px) {
                 .hds-aside {
                     display: none;
@@ -222,7 +226,9 @@ function serializeItem(item: any, options: any, delimit: boolean = true) {
         });
     } else if (typeof item === 'function') {
         result = options.useFunctionCode
-            ? options.functionNameOnly ? item.name.toString() : item.toString()
+            ? options.functionNameOnly
+                ? item.name.toString()
+                : item.toString()
             : `() => ...`;
     } else {
         result = '(UNKNOWN)';
@@ -382,7 +388,9 @@ export class StyleGuide extends React.Component<{
                     </div>
                 </div>
                 <div className="hds-content">
-                    {asArray(this.props.children).map(it => <div key={it.props.title}>{it}</div>)}
+                    {asArray(this.props.children).map(it => (
+                        <div key={it.props.title}>{it}</div>
+                    ))}
                 </div>
             </div>
         );
@@ -421,8 +429,8 @@ export class Embed extends React.Component<{
                     left: 0,
                     width: '100vw',
                     height: '100vh',
-                    backgroundColor: 'white',
-                    overflow: 'scroll'
+                    overflow: 'scroll',
+                    boxShadow: 'darkgrey 0px 0px 20px'
                 };
                 return (
                     <div className="compOuter" style={outerElmStyle}>
@@ -435,8 +443,6 @@ export class Embed extends React.Component<{
                     height: '100vh',
                     transform: props.fullscreen === 'BIG' ? 'scale(0.8)' : 'scale(0.4)',
                     transformOrigin: 'top left',
-                    boxShadow: 'darkgrey 0px 0px 20px',
-                    backgroundColor: 'white',
                     overflow: 'scroll'
                 };
                 wrapperStyle = {
