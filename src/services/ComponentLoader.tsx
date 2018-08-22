@@ -13,9 +13,7 @@ import { safeGet } from './GetDataSetValues';
 import { ComponentConfig, Entity, LeafComponentConfig } from '../typings/schema';
 
 // `type: never` makes the type checker report an error if the case switch does not handle all types
-function checkUnknownComponent(type: never) {
-    console.error(`Type ${(type as ComponentConfig).type} is not handled!`);
-}
+function checkUnknownComponent(type: never) {}
 
 function getValueOrLiteral(component: LeafComponentConfig | null, data: Entity): pathResult {
     if (!component) {

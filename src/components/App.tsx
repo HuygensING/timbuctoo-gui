@@ -59,7 +59,6 @@ function getDataSetFromRoute(location: Location | null): { key: string; value: s
 type FullProps = ChildProps<OwnProps & DispatchProps & StateProps, { aboutMe: AboutMe }>;
 
 function doLogin() {
-    console.log('logging in');
     const form = document.createElement('form');
     form.action = LOGIN_URL;
     form.method = 'POST';
@@ -67,7 +66,6 @@ function doLogin() {
     form.style.display = 'none';
     document.body.appendChild(form);
     form.submit();
-    console.log('submitted!');
 }
 
 class App extends React.Component<FullProps, { menuOpen: boolean }> {
@@ -136,7 +134,10 @@ const query = gql`
 export default compose<SFC<OwnProps>>(
     graphql(query),
     renderLoader(),
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
     lifecycle<FullProps, {}>({
         componentWillMount() {
             if (

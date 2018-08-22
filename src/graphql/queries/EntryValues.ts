@@ -6,9 +6,7 @@ import { MetaDataProps } from '../../services/metaDataResolver';
 import { parsePath, pathsToGraphQlQuery, ReferencePath } from '../../services/propertyPath';
 
 // `type: never` makes the type checker report an error if the case switch does not handle all types
-function checkUnknownComponent(type: never) {
-    console.error(`Type ${(type as ComponentConfig).type} is not handled!`);
-}
+function checkUnknownComponent(type: never) {}
 
 function getPaths(components: ComponentConfig[], result: ReferencePath[]): ReferencePath[] {
     for (const component of components) {
@@ -74,7 +72,9 @@ export function QUERY_ENTRY_VALUES({ match, metadata }: Props) {
             }
         }
     `;
-    return gql`${query}`;
+    return gql`
+        ${query}
+    `;
 }
 
 checkTypes<QueryValuesToCheck, Query>();

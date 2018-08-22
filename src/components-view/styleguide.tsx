@@ -10,9 +10,9 @@ const AppContainer$ = withDefaults<AppProps>('AppContainer', props => <AppContai
     homeUrl: 'http://example.org',
     menuIsExpanded: false,
     logo: { alt: 'LOGO ALT', url: 'http://placekitten.com/270/40' },
-    onLoginClick: () => console.log('onLoginClick'),
-    onLogoutClick: () => console.log('onLogoutClick'),
-    onOpenMenuClick: () => console.log('onOpenMenuClick')
+    onLoginClick: () => {},
+    onLogoutClick: () => {},
+    onOpenMenuClick: () => {}
 });
 
 const EmPlaces$ = withDefaults<em_Place>('EmPlaces', props => <EmPlaces {...props} />, dummyData);

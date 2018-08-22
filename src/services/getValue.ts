@@ -2,9 +2,7 @@
 
 import { Value, FormatterConfig } from '../typings/schema';
 
-function checkAllTypesAreHandler(formatterName: never) {
-    console.error(formatterName + ' is not handled!');
-}
+function checkAllTypesAreHandler(formatterName: never) {}
 
 function findFirst<T>(input: T[], filter: (item: T) => boolean): T | undefined {
     for (const item of input) {
@@ -26,9 +24,13 @@ export function valueToString(value: Value, formatters: FormatterConfig): string
                     .components.map((x: { value: string }) => x.value)
                     .join(' ');
             } catch (e) {
-                console.error(e);
+                if (process.env.NODE_ENV !== 'production') {
+                    // the if statement makes sure this is only done in development mode
+                    // tslint:disable-next-line:no-console
+                    console.error(e);
+                }
+                return value.value;
             }
-            return value.value;
         case 'STRING':
             return value.value;
         default:

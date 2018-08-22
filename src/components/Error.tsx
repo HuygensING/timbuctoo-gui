@@ -17,6 +17,8 @@ function Error({ errors, status, query, variables }: Props) {
         encodeURIComponent(JSON.stringify(variables));
 
     if (process.env.NODE_ENV !== 'production') {
+        // the if statement makes sure this is only done in development mode
+        // tslint:disable-next-line:no-console
         console.debug('Graphql error: ', graphiqlUri);
     }
     return (
@@ -44,7 +46,9 @@ function Error({ errors, status, query, variables }: Props) {
                         <p>
                             {status === 500
                                 ? translate('error.500')
-                                : status === 404 ? translate('error.404') : translate(`network_error`)}
+                                : status === 404
+                                    ? translate('error.404')
+                                    : translate(`network_error`)}
                         </p>
                     </div>
                 )}

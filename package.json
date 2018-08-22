@@ -14,7 +14,7 @@
   "lint-staged": {
     "*.ts?(x)": [
       "prettier --write",
-      "tslint --project . --config tslint.prod.json",
+      "tslint --project .",
       "git add"
     ]
   },

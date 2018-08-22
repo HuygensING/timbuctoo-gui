@@ -91,50 +91,60 @@ function* generateValues(obj: any, path: any[]): IterableIterator<any> {
     }
 }
 
-export function testCases() {
-    const input: {
-        d:
-            | {
-                  a: {
-                      b: number;
-                  };
-              }
-            | {
-                  c: {
-                      d: number;
-                  };
-              }
-            | {};
-        a:
-            | string
-            | {
-                  b?: {
-                      someUndef?: string;
-                      number: 1;
-                      someSimpleArray: string[];
-                      c: { otherNumber: number; subArray?: number[] }[] | { otherNumber: number; subArray?: number[] };
-                  };
-              };
-    } = {
-        d: { a: { b: 1 } },
-        a: { b: { number: 1, someSimpleArray: ['a'], c: [{ otherNumber: 2 }, { otherNumber: 3, subArray: [4, 5] }] } }
-    };
-    const safe = makeSafeGetter(input);
+// const input: {
+//     d:
+//         | {
+//                 a: {
+//                     b: number;
+//                 };
+//             }
+//         | {
+//                 c: {
+//                     d: number;
+//                 };
+//             }
+//         | {};
+//     a:
+//         | string
+//         | {
+//                 b?: {
+//                     someUndef?: string;
+//                     number: 1;
+//                     someSimpleArray: string[];
+//                     c: { otherNumber: number; subArray?: number[] }[] | { otherNumber: number; subArray?: number[] };
+//                 };
+//             };
+// } = {
+//     d: { a: { b: 1 } },
+//     a: { b: { number: 1, someSimpleArray: ['a'], c: [{ otherNumber: 2 }, { otherNumber: 3, subArray: [4, 5] }] } }
+// };
+// const safe = makeSafeGetter(input);
 
-    // input.a.b.number // will not pass the type checker
-    // safe("a")("b")("____number") // this also will not pass the type checker
-    console.log(safe('a')('b')('number'), 'This should show a function object in the console'); // will pass the type checker an show the wrapper object in the console
-    console.log(safe('d')('a')('b').val('default'), 'This should show the value 1'); // this is valid, note that D is a union type
-    console.log(safe('d')('c')('d').val('default'), 'This should show the value 1'); // this too
-    // safe("d")("b")("b").val("default") // but _this_ (mixing the two paths of the union) isn't!
-    console.log(safe('a')('b')('number').val('DEFAULT'), 'This should show the value 1');
-    console.log(safe('a')('b')('someUndef').val(undefined), "This should show the value 'undefined'");
-    console.log(safe('a')('b')('someUndef').val('DEFAULT'), "This should show the string 'DEFAULT'");
-    // safe('a')('b')('someSimpleArray').val('default'); // doesn't pass the type checker because this is always an array (the function will work though and return a one element array)
-    console.log(safe('a')('b')('someSimpleArray').vals(), "this should be ['a']");
-    // JSON.stringify(safe('a')('b')('c')('otherNumber').val('default'); // doesn't pass the type checker because this is sometimes an array (the function will work though and return a the first element as a one element array)
-    console.log(JSON.stringify(safe('a')('b')('c')('otherNumber').vals()), 'This should show [2, 3]');
-    console.log(JSON.stringify(safe('a')('b')('c')('subArray').vals()), 'This should show [4, 5]');
+// function assert<T>(test: () => T, expected: T) {
+//     const testResult = test();
+//     const testResultString = JSON.stringify(testResult);
+//     const expectedString = JSON.stringify(expected);
+//     const testString = test.toString().substring(21, test.toString().length - 3);
+//     if (testResultString === expectedString) {
+//         console.log(testString, testResult, "==", expected)
+//     } else {
+//         console.error(testString, testResult, "!=", expected)
+//     }
+// }
 
-    // note that the string properties still give you autocomplete
-}
+// // input.a.b.number // will not pass the type checker
+// // safe("a")("b")("____number") // this also will not pass the type checker
+// assert(() => safe('a')('b')('number').val(0), 1); // will pass the type checker an show the wrapper object in the console
+// assert(() => safe('d')('a')('b').val('default'), 1); // this is valid, note that D is a union type
+// assert(() => safe('d')('c')('d').val('default'), 'default'); // this too
+// // safe("d")("b")("b").val("default") // but _this_ (mixing the two paths of the union) isn't!
+// assert(() => safe('a')('b')('number').val('DEFAULT'), 1);
+// assert(() => safe('a')('b')('someUndef').val(undefined), undefined);
+// assert(() => safe('a')('b')('someUndef').val('DEFAULT'), "DEFAULT");
+// // safe('a')('b')('someSimpleArray').val('default'); // doesn't pass the type checker because this is always an array (the function will work though and return a one element array)
+// assert(() => safe('a')('b')('someSimpleArray').vals(), ['a']);
+// // JSON.stringify(safe('a')('b')('c')('otherNumber').val('default'); // doesn't pass the type checker because this is sometimes an array (the function will work though and return a the first element as a one element array)
+// assert(() => safe('a')('b')('c')('otherNumber').vals(), [2, 3]);
+// assert(() => safe('a')('b')('c')('subArray').vals(), [4, 5]);
+
+// // note that the string properties still give you autocomplete

@@ -130,8 +130,10 @@ const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] =>
                 try {
                     obj.values = minifyValues(obj.values);
                 } catch (e) {
-                    if (process.env.NODE_ENV === 'development') {
-                        console.warn(e);
+                    if (process.env.NODE_ENV !== 'production') {
+                        // the if statement makes sure this is only done in development mode
+                        // tslint:disable-next-line:no-console
+                        console.error(e);
                     }
                 }
             }

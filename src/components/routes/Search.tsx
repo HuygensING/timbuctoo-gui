@@ -96,13 +96,16 @@ class FacetErrorHandler extends React.Component<any, { hasError: boolean }> {
         this.state = { hasError: false };
     }
     componentDidCatch(error: any, info: any) {
-        console.error(error, info);
+        if (process.env.NODE_ENV !== 'production') {
+            // the if statement makes sure this is only done in development mode
+            // tslint:disable-next-line:no-console
+            console.error(error, info);
+        }
         this.setState({ hasError: true });
     }
 
     render() {
         if (this.state.hasError) {
-            console.error('fallback');
             return <div>Facet failed to load</div>;
         }
         return this.props.children;
@@ -201,10 +204,15 @@ const dataResolver = compose<ComponentType<{}>>(
     verifyResponse<FullProps, 'metadata'>('metadata', 'dataSetMetadata.collection'),
     graphqlWithProps<ApolloProps>(QUERY_COLLECTION_VALUES),
     handleError('data'),
-    connect(mapStateToProps, mapDispatchToProps),
-    withProps(({ data, metadata }: FullProps): ExtraProps => ({
-        collectionValues: getCollectionValues(data, metadata)
-    })),
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withProps(
+        ({ data, metadata }: FullProps): ExtraProps => ({
+            collectionValues: getCollectionValues(data, metadata)
+        })
+    ),
     lifecycle<FullProps, {}>({
         componentWillReceiveProps(nextProps: FullProps) {
             if (nextProps.callRequested && !this.props.callRequested) {

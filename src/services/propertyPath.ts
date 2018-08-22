@@ -29,10 +29,8 @@ export function pathToEsValueString(path: string) {
 
 /** Create a graphql query that retrieves all the values of the paths */
 export function pathsToGraphQlQuery(paths: ReferencePath[], dataSetId: string, indent: string): string {
-    // paths.map(serializePath).forEach(x => console.log(x));
     const map = componentPathsToMap(paths);
     const qry = mapToQuery(map, dataSetId, indent);
-    // console.log(qry);
     return qry.substr(indent.length); // skip first indent so you can paste the query easily in a literal
 }
 
@@ -46,7 +44,11 @@ export function parsePath(pathStr: string): ReferencePath {
     try {
         return JSON.parse(pathStr);
     } catch (e) {
-        console.error('Error when parsing path', pathStr);
+        if (process.env.NODE_ENV !== 'production') {
+            // the if statement makes sure this is only done in development mode
+            // tslint:disable-next-line:no-console
+            console.error('Error when parsing path', pathStr);
+        }
         throw e;
     }
 }
@@ -56,16 +58,16 @@ export function walkPath(pathStr: string | undefined | null, formatters: Formatt
     if (!pathStr) {
         return null;
     }
-    // console.groupCollapsed(pathStr);
 
     const splittedPath = parsePath(pathStr);
     const validationResult = validatePath(splittedPath);
-    if (validationResult != null) {
+    if (validationResult != null && process.env.NODE_ENV !== 'production') {
+        // the if statement makes sure this is only done in development mode
+        // tslint:disable-next-line:no-console
         console.warn('Path is ' + validationResult + '!', pathStr);
         return null;
     }
     const result = walkPathStep(splittedPath, formatters, entity);
-    // console.groupEnd();
     return result;
 }
 
@@ -79,7 +81,6 @@ export function validatePath(path: ReferencePath): 'UNFINISHED' | 'INVALID' | un
 }
 
 function walkPathStep(path: ReferencePath, formatters: FormatterConfig, entity: any): pathResult {
-    // console.log(path, entity);
     const propName = path[0][1];
     if (path.length === 1 && propName === URI) {
         return entity.uri;
@@ -94,10 +95,14 @@ function walkPathStep(path: ReferencePath, formatters: FormatterConfig, entity: 
         if (sub === null) {
             return null;
         } else if (sub === undefined) {
-            console.error(
-                path,
-                'was used in walkPath, but apparently not used to generate the graphql query (the prop was not present instead of null)'
-            );
+            if (process.env.NODE_ENV !== 'production') {
+                // the if statement makes sure this is only done in development mode
+                // tslint:disable-next-line:no-console
+                console.error(
+                    path,
+                    'was used in walkPath, but apparently not used to generate the graphql query (the prop was not present instead of null)'
+                );
+            }
             return null;
         } else if (Array.isArray(sub)) {
             let retVal: string[] = [];
@@ -143,7 +148,9 @@ function componentPathsToMap(paths: ReferencePath[]): PropContainer {
 
 function pathToMap(path: ReferencePath, cur: PropContainer) {
     const validationResult = validatePath(path);
-    if (validationResult != null) {
+    if (validationResult != null && process.env.NODE_ENV !== 'production') {
+        // the if statement makes sure this is only done in development mode
+        // tslint:disable-next-line:no-console
         console.warn('Path is ' + validationResult + '!', path);
         return;
     }
@@ -195,7 +202,6 @@ function mapToQuery(map: PropContainer, dataSetId: string, prefix: string): stri
         }
         const sub = map[key];
         if (typeof sub === 'boolean') {
-            // console.log(typeName, propName);
             if (typeName === 'Value' && propName === 'value') {
                 // always request the value type as well
                 intermediate[typeName].push('value type');
