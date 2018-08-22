@@ -3,19 +3,18 @@ import { StyleGuide, DescribedMock, Embed, ContentBlock, withDefaults } from './
 import { AppContainer, AppProps } from './AppContainer';
 import { ThemeProvider } from 'styled-components';
 import theme from '../theme';
-import { EmPlaces, dummyData } from './emplaces';
-import { em_Place } from './emplaces/types/emlo2';
+import { EmPlaces, HistoricalHierarchies, dummyData } from './emplaces';
 
-const AppContainer$ = withDefaults<AppProps>('AppContainer', props => <AppContainer {...props} />, {
+const defaultAppProps = {
     homeUrl: 'http://example.org',
     menuIsExpanded: false,
     logo: { alt: 'LOGO ALT', url: 'http://placekitten.com/270/40' },
     onLoginClick: () => {},
     onLogoutClick: () => {},
     onOpenMenuClick: () => {}
-});
+};
 
-const EmPlaces$ = withDefaults<em_Place>('EmPlaces', props => <EmPlaces {...props} />, dummyData);
+const AppContainer$ = withDefaults<AppProps>('AppContainer', props => <AppContainer {...props} />, defaultAppProps);
 
 export const Storybook: SFC<{}> = () => (
     <ThemeProvider theme={theme}>
@@ -46,7 +45,155 @@ export const Storybook: SFC<{}> = () => (
             </DescribedMock>
             <DescribedMock title="Emplaces">
                 <Embed fullscreen="BIG" caption="">
-                    <EmPlaces$ />
+                    <EmPlaces
+                        place={dummyData.place}
+                        onSwitchHierarchyClick={(type, id) => {}}
+                        containerProps={defaultAppProps}
+                    />
+                </Embed>
+                <Embed caption="Hierarchies empty">
+                    <HistoricalHierarchies data={{}} placeName="City of Opole" selectedRange={0} selectedType="" />
+                </Embed>
+                <Embed caption="Hierarchies with default data">
+                    <HistoricalHierarchies
+                        data={{
+                            'Administrative division': [
+                                {
+                                    from: 1348,
+                                    to: 1521,
+                                    items: [
+                                        { label: 'Holy Roman Empire', date: '1348-1806' },
+                                        { label: 'Bohemian Crown', date: '1348-1806' },
+                                        { label: 'Duchy of Opole', date: '1281-1521' }
+                                    ]
+                                },
+                                {
+                                    from: 1521,
+                                    to: 1806,
+                                    items: [
+                                        { label: 'Holy Roman Empire', date: '1348-1806' },
+                                        { label: 'Bohemian Crown', date: '1348-1806' },
+                                        { label: 'Duchy of Opole and Racibórz', date: '1521-1809' }
+                                    ]
+                                },
+                                {
+                                    from: 1742,
+                                    to: 1806,
+                                    items: [
+                                        { label: 'Holy Roman Empire', date: '1348-1806' },
+                                        { label: 'Bohemian Crown', date: '1348-1806' },
+                                        { label: 'Duchy of Opole', date: '1521-1809' },
+                                        { label: 'County of Opole', date: '1742-1945' }
+                                    ]
+                                }
+                            ]
+                        }}
+                        placeName="City of Opole"
+                        selectedRange={0}
+                        selectedType="Administrative division"
+                    />
+                </Embed>
+                <Embed caption="Hierarchies with the second range selected">
+                    <HistoricalHierarchies
+                        data={{
+                            'Administrative division': [
+                                {
+                                    from: 1348,
+                                    to: 1521,
+                                    items: [
+                                        { label: 'Holy Roman Empire', date: '1348-1806' },
+                                        { label: 'Bohemian Crown', date: '1348-1806' },
+                                        { label: 'Duchy of Opole', date: '1281-1521' }
+                                    ]
+                                },
+                                {
+                                    from: 1521,
+                                    to: 1806,
+                                    items: [
+                                        { label: 'Holy Roman Empire', date: '1348-1806' },
+                                        { label: 'Bohemian Crown', date: '1348-1806' },
+                                        { label: 'Duchy of Opole and Racibórz', date: '1521-1809' }
+                                    ]
+                                },
+                                {
+                                    from: 1742,
+                                    to: 1806,
+                                    items: [
+                                        { label: 'Holy Roman Empire', date: '1348-1806' },
+                                        { label: 'Bohemian Crown', date: '1348-1806' },
+                                        { label: 'Duchy of Opole', date: '1521-1809' },
+                                        { label: 'County of Opole', date: '1742-1945' }
+                                    ]
+                                }
+                            ]
+                        }}
+                        placeName="City of Opole"
+                        selectedRange={1}
+                        selectedType="Administrative division"
+                    />
+                </Embed>
+                <Embed caption="Hierarchies with multiple types of data">
+                    <HistoricalHierarchies
+                        data={{
+                            'Administrative division': [
+                                {
+                                    from: 1348,
+                                    to: 1521,
+                                    items: [
+                                        { label: 'Holy Roman Empire', date: '1348-1806' },
+                                        { label: 'Bohemian Crown', date: '1348-1806' },
+                                        { label: 'Duchy of Opole', date: '1281-1521' }
+                                    ]
+                                }
+                            ],
+                            Ecclesiastical: [
+                                {
+                                    from: 1521,
+                                    to: 1806,
+                                    items: [
+                                        { label: 'Holy Roman Empire', date: '1348-1806' },
+                                        { label: 'Bohemian Crown', date: '1348-1806' },
+                                        { label: 'Duchy of Opole and Racibórz', date: '1521-1809' }
+                                    ]
+                                },
+                                {
+                                    from: 1742,
+                                    to: 1806,
+                                    items: [
+                                        { label: 'Holy Roman Empire', date: '1348-1806' },
+                                        { label: 'Bohemian Crown', date: '1348-1806' },
+                                        { label: 'Duchy of Opole', date: '1521-1809' },
+                                        { label: 'County of Opole', date: '1742-1945' }
+                                    ]
+                                }
+                            ],
+                            Military: []
+                        }}
+                        placeName="City of Opole"
+                        selectedRange={0}
+                        selectedType="Ecclesiastical"
+                    />
+                </Embed>
+                <Embed caption="Hierarchies with many types of data">
+                    <HistoricalHierarchies
+                        data={{
+                            'Administrative division': [],
+                            Ecclesiastical: [],
+                            Military: [],
+                            'Administrative division2': [],
+                            Ecclesiastical2: [],
+                            Military2: [],
+                            'Administrative division3': [],
+                            Ecclesiastical3: [],
+                            Military3: [],
+                            'Administrative division4': [],
+                            Ecclesiastical4: [],
+                            Military4: []
+                        }}
+                        placeName=""
+                        selectedRange={0}
+                        selectedType="Ecclesiastical"
+                    />
                 </Embed>
             </DescribedMock>
         </StyleGuide>
