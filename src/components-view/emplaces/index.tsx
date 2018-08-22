@@ -331,11 +331,13 @@ const ColumnWrapper = styled.div`
 `;
 
 const Segment = styled.div`
-    break-inside: avoid;
+    @media (max-width: 999px) {
+        break-inside: avoid;
+    }
 
     @media (min-width: 1000px) {
         &.breakPoint {
-            break-before: 'column';
+            break-before: column;
         }
     }
 `;
@@ -477,7 +479,6 @@ export const EmPlaces: SFC<{
             </ColumnWrapper>
         </AppContainer>
     );
-    // updateMap(map, data.em_where);
 };
 
 // function createTextElement(elementName, value) {
