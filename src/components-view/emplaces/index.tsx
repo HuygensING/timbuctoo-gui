@@ -4,10 +4,12 @@ import { makeSafeGetter, SafeGetter } from '../safeGetter';
 import styled from 'styled-components';
 import { UnstyledAnchor } from '../HyperLink';
 import { AppContainer, AppProps } from '../AppContainer';
+import { Map } from '../map';
 
 const PlussedList = styled.ul`
     list-style: none;
     padding-left: 1rem;
+    white-space: nowrap;
     > li::before {
         content: '+  ';
     }
@@ -443,7 +445,10 @@ export const EmPlaces: SFC<{
                 <MetadataPart label="Licenses" value="{licenses}" />
                 <Segment className="breakPoint">
                     <SubHeading>Maps</SubHeading>
-                    <div />
+                    <Map
+                        lat={+d('em_where')('em_location')('wgs84_pos_lat')('value').val('0')}
+                        long={+d('em_where')('em_location')('wgs84_pos_long')('value').val('0')}
+                    />
                 </Segment>
                 <Segment>
                     <SubHeading>Description</SubHeading>

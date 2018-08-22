@@ -35,6 +35,7 @@ const MainAndFooterContainer = styled.section`
 
 const Main = styled.div`
     flex: 1; /* push the footer down */
+    margin: 1rem;
 `;
 
 const Header = styled.div`

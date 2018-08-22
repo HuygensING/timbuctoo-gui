@@ -404,10 +404,10 @@ export function withDefaults<T>(name: string, elm: (props: T) => React.ReactElem
 }
 
 export const ContentBlock: SFC<{ color?: string; width?: number | string; height?: number | string }> = ({
-    color = 'violet',
+    color = 'linear-gradient(#FFF, Fuchsia)',
     width = 100,
     height = 100
-}) => <div style={{ backgroundColor: color, width: width, height: height }} />;
+}) => <div style={{ background: color, width: width, height: height }} />;
 ContentBlock.displayName = 'ContentBlock';
 
 export class Embed extends React.Component<{

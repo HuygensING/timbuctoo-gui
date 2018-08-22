@@ -44,7 +44,7 @@ export const Storybook: SFC<{}> = () => (
                 </Embed>
             </DescribedMock>
             <DescribedMock title="Emplaces">
-                <Embed fullscreen="BIG" caption="">
+                <Embed fullscreen="SMALL" caption="">
                     <EmPlaces
                         place={dummyData.place}
                         onSwitchHierarchyClick={(type, id) => {}}
