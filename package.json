@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
+    "build": "CI=true react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "faker": "graphql-faker --extend http://localhost:8080/v5/graphql \\  -H 'Accept:application/json' -H 'Content-Type:application/json'",
@@ -14,7 +14,7 @@
   "lint-staged": {
     "*.ts?(x)": [
       "prettier --write",
-      "tslint --project .",
+      "tslint --project . --config tslint.prod.json",
       "git add"
     ]
   },

@@ -1,4 +1,5 @@
 {
+    "defaultSeverity": "warning",
     "extends": ["tslint-react", "tslint-eslint-rules"],
     "rules": {
         "align": [
@@ -70,6 +71,7 @@
         "no-switch-case-fall-through": true,
         "no-trailing-whitespace": false,
         "no-unused-expression": true,
+        "no-unused-variable": true,
         "no-use-before-declare": true,
         "no-var-keyword": true,
         "object-curly-spacing": [
