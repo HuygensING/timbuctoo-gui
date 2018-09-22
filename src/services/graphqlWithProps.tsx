@@ -16,16 +16,12 @@ const updateQueryOptions = (options?: UpdateOptions) => {
 
     const { queryName, path, mutationName } = options; // TODO: update this so the mutation does not complain about heuristic fragment matching
     return {
-        options: {
-            updateQueries: {
-                [queryName]: (cache: any, { mutationResult: { data } }: any) => {
-                    const mutation = get(data, mutationName);
-                    if (!has(cache, path) || !mutation) {
-                        return cache;
-                    }
-                    return set(cache, path, mutation);
-                }
+        [queryName]: (cache: any, { mutationResult: { data } }: any) => {
+            const mutation = get(data, mutationName);
+            if (!has(cache, path) || !mutation) {
+                return cache;
             }
+            return set(cache, path, mutation);
         }
     };
 };
@@ -35,9 +31,18 @@ const updateQueryOptions = (options?: UpdateOptions) => {
  * Pass it a function that returns a query and it will invoke it with the wrapped component's props,
  * creating a graphql component with the returned query
  */
-function graphqlWithProps<T>(query: (props: T) => any, updateOptions?: UpdateOptions) {
+function graphqlWithProps<T>(
+    query: (props: T) => any,
+    updateOptions?: UpdateOptions,
+    variables?: (props: T) => { [key: string]: any }
+) {
     return (WrappedComponent: CompositeComponent<T>) => (props: T): JSX.Element => {
-        const ComponentWithQuery = graphql(query(props), updateQueryOptions(updateOptions))(WrappedComponent);
+        const ComponentWithQuery = graphql(query(props), {
+            options: {
+                updateQueries: updateQueryOptions(updateOptions),
+                variables: variables === undefined || variables === null ? {} : variables(props)
+            }
+        })(WrappedComponent);
         return <ComponentWithQuery {...props} />;
     };
 }

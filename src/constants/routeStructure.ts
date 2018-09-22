@@ -8,6 +8,7 @@ import DataSet from '../components/routes/DataSet';
 import ViewConfig from '../components/routes/ViewConfig';
 import FacetConfig from '../components/routes/FacetConfig';
 import DataSetOverview from '../components/routes/DataSetOverview';
+import EmplacesWithData from '../components-view/emplaces/EmPlacesWithData';
 
 export interface RouteInfo {
     path?: string;
@@ -36,6 +37,12 @@ export const routes: RouteObject[] = [
     {
         key: `/${ROUTE_PATHS.details}`,
         routes: [
+            {
+                path: `/:${ROUTE_KEYS.dataSet}(ue85b462c027ef2b282bf87b44e9670ebb085715d__emlo_oppole20180627)/:${
+                    ROUTE_KEYS.collection
+                }(em_Place)/:${ROUTE_KEYS.entry}`,
+                component: EmplacesWithData
+            },
             {
                 path: `/:${ROUTE_KEYS.dataSet}/:${ROUTE_KEYS.collection}/:${ROUTE_KEYS.entry}`,
                 component: Entry

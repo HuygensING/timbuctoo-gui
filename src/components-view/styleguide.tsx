@@ -45,11 +45,13 @@ export const Storybook: SFC<{}> = () => (
             </DescribedMock>
             <DescribedMock title="Emplaces">
                 <Embed fullscreen="SMALL" caption="">
-                    <EmPlaces
-                        place={dummyData.place}
-                        onSwitchHierarchyClick={(type, id) => {}}
-                        containerProps={defaultAppProps}
-                    />
+                    <AppContainer$>
+                        <EmPlaces
+                            place={dummyData.place}
+                            onSwitchHierarchyClick={(type, id) => {}}
+                            selectedHierarchy={{ type: '', range: 0 }}
+                        />
+                    </AppContainer$>
                 </Embed>
                 <Embed caption="Hierarchies empty">
                     <HistoricalHierarchies data={{}} placeName="City of Opole" selectedRange={0} selectedType="" />

@@ -1,7 +1,11 @@
-query emlo2 {
+import gql from 'graphql-tag';
+
+export const query = function(dataSetId: string, collectionId: string) {
+    const queryString = `
+query emlo2($uri: String!) {
   dataSets {
-    ue85b462c027ef2b282bf87b44e9670ebb085715d__emlo_oppole20180627 {
-      em_Place(uri: "http://emplaces.data.example.org/Opole_P") {
+    ${dataSetId} {
+      ${collectionId}(uri: $uri) {
         title {
           ...value
         }
@@ -285,3 +289,9 @@ fragment relatedPlace on ue85b462c027ef2b282bf87b44e9670ebb085715d__emlo_oppole2
     }
   }
 }
+`;
+
+    return gql`
+        ${queryString}
+    `;
+};

@@ -3,7 +3,6 @@ import { em_Place, em_Place_em_hasRelationList_items, em_Place_em_hasAnnotationL
 import { makeSafeGetter, SafeGetter } from '../safeGetter';
 import styled from 'styled-components';
 import { UnstyledAnchor } from '../HyperLink';
-import { AppContainer, AppProps } from '../AppContainer';
 import { Map } from '../map';
 
 const PlussedList = styled.ul`
@@ -90,6 +89,9 @@ const BodyCell = styled.td`
 
 class SimpleTable<T> extends React.Component<{ items: T[] }> {
     render() {
+        if (this.props.items.length === 0) {
+            return <div />;
+        }
         const headers = Object.keys(this.props.items[0]) as Array<keyof T>;
         return (
             <table>
@@ -324,6 +326,7 @@ export const HistoricalHierarchies: SFC<{
 };
 
 const ColumnWrapper = styled.div`
+    padding: 1rem;
     column-count: 2;
     @media (max-width: 999px) {
         column-count: 1;
@@ -343,141 +346,137 @@ const Segment = styled.div`
 `;
 
 export const EmPlaces: SFC<{
-    containerProps: AppProps;
     place: em_Place;
     onSwitchHierarchyClick: (type: string, id: number) => void;
+    selectedHierarchy: { type: string; range: number };
 }> = function(data) {
     const d = makeSafeGetter(data.place);
     return (
-        <AppContainer {...data.containerProps}>
-            <ColumnWrapper>
-                <Segment>
-                    <MainHeading>{d('em_preferredName')('value').val('')}</MainHeading>
-                    <i>
-                        {d('em_alternateNameList')('items')('value')
+        <ColumnWrapper>
+            <Segment>
+                <MainHeading>{d('em_preferredName')('value').val('')}</MainHeading>
+                <i>
+                    {d('em_alternateNameList')('items')('value')
+                        .vals()
+                        .join(', ')}
+                </i>
+            </Segment>
+            <Segment>
+                <SubHeading>Current Hierarchy</SubHeading>
+                <CurrentHierarchy
+                    placeTitle={d('title')('value').val(undefined)}
+                    relatedPlaces={d('em_hasRelationList')('items')
+                        .vals()
+                        .filter(item => !item.em_when)}
+                />
+            </Segment>
+            <Segment>
+                <SubHeading>Location</SubHeading>
+                <p>
+                    {d('em_where')('em_location')('wgs84_pos_lat')('value').val('')},{' '}
+                    {d('em_where')('em_location')('wgs84_pos_long')('value').val('')}
+                </p>
+            </Segment>
+            <Segment>
+                <SubHeading>Citation</SubHeading>
+                <Citation
+                    href={d('em_reference')('dcterms_source')('value').val(undefined)}
+                    title={d('em_reference')('dcterms_title')('value').val(undefined)}
+                />
+            </Segment>
+            <Segment>
+                <SubHeading>Permanent URI</SubHeading>
+                <p>
+                    <UnstyledAnchor href={d('em_canonicalURI')('uri').val('')}>
+                        {d('em_canonicalURI')('uri').val('')}
+                    </UnstyledAnchor>
+                </p>
+            </Segment>
+            <Segment>
+                <SubHeading>See Also</SubHeading>
+                <p />
+            </Segment>
+            <Segment>
+                <SubHeading>Name Attestations</SubHeading>
+                <PlaceNameTable
+                    input={d('em_hasAnnotationList')('items')
+                        .filter(
+                            x =>
+                                x('oa_hasBody')('rdf_type')('uri').val('') ===
+                                'http://emplaces.namespace.example.org/Place_name'
+                        )
+                        .vals()}
+                />
+            </Segment>
+            <Segment>
+                <SubHeading>Calendars</SubHeading>
+                <Calendars
+                    input={d('em_hasAnnotationList')('items')
+                        .filter(
+                            x =>
+                                x('oa_hasBody')('rdf_type')('uri').val('') ===
+                                'http://emplaces.namespace.example.org/Calendar'
+                        )
+                        .vals()}
+                />
+            </Segment>
+            <Segment>
+                <SubHeading>Related Places</SubHeading>
+                {/* <RelatedPlaces input={data.em_hasRelationList.items} /> */}
+                <p />
+            </Segment>
+            <Segment>
+                <SubHeading>Related Resources</SubHeading>
+                <PlussedList>
+                    {d('rdfs_seeAlsoList')('items')('title')('value')
+                        .vals()
+                        .map(x => (
+                            <li key={x}>
+                                <UnstyledAnchor rel="nofollow" href={x}>
+                                    {x}
+                                </UnstyledAnchor>
+                            </li>
+                        ))}
+                </PlussedList>
+            </Segment>
+            <Segment>
+                <SubHeading>Bibliography</SubHeading>
+                <p>{d('em_reference')('dcterms_title')('value').val('')}</p>
+            </Segment>
+            <MetadataPart label="Creator" value="{creator}" />
+            <MetadataPart label="Contributors" value="{contributors}" />
+            <MetadataPart label="Reference" value={d('em_coreDataRef')('title')('value').val('')} />
+            <MetadataPart label="Licenses" value="{licenses}" />
+            <Segment className="breakPoint">
+                <SubHeading>Maps</SubHeading>
+                <Map
+                    lat={+d('em_where')('em_location')('wgs84_pos_lat')('value').val('0')}
+                    long={+d('em_where')('em_location')('wgs84_pos_long')('value').val('0')}
+                />
+            </Segment>
+            <Segment>
+                <SubHeading>Description</SubHeading>
+                <p>{d('em_editorialNote')('value').val('')}</p>
+            </Segment>
+            <Segment>
+                <SubHeading>Historical Hierarchies</SubHeading>
+                <HistoricalHierarchies
+                    placeName={d('title')('value').val('')}
+                    data={ParseHistoricalHierarchies(
+                        d('em_hasRelationList')('items')
+                            .filter(item => item('em_relationType')('title')('value').val('') === 'Former part of')
                             .vals()
-                            .join(', ')}
-                    </i>
-                </Segment>
-                <Segment>
-                    <SubHeading>Current Hierarchy</SubHeading>
-                    <CurrentHierarchy
-                        placeTitle={d('title')('value').val(undefined)}
-                        relatedPlaces={d('em_hasRelationList')('items')
-                            .vals()
-                            .filter(item => !item.em_when)}
-                    />
-                </Segment>
-                <Segment>
-                    <SubHeading>Location</SubHeading>
-                    <p>
-                        {d('em_where')('em_location')('wgs84_pos_lat')('value').val('')},{' '}
-                        {d('em_where')('em_location')('wgs84_pos_long')('value').val('')}
-                    </p>
-                </Segment>
-                <Segment>
-                    <SubHeading>Citation</SubHeading>
-                    <Citation
-                        href={d('em_reference')('dcterms_source')('value').val(undefined)}
-                        title={d('em_reference')('dcterms_title')('value').val(undefined)}
-                    />
-                </Segment>
-                <Segment>
-                    <SubHeading>Permanent URI</SubHeading>
-                    <p>
-                        <UnstyledAnchor href={d('em_canonicalURI')('uri').val('')}>
-                            {d('em_canonicalURI')('uri').val('')}
-                        </UnstyledAnchor>
-                    </p>
-                </Segment>
-                <Segment>
-                    <SubHeading>See Also</SubHeading>
-                    <p />
-                </Segment>
-                <Segment>
-                    <SubHeading>Name Attestations</SubHeading>
-                    <PlaceNameTable
-                        input={d('em_hasAnnotationList')('items')
-                            .filter(
-                                x =>
-                                    x('oa_hasBody')('rdf_type')('uri').val('') ===
-                                    'http://emplaces.namespace.example.org/Place_name'
-                            )
-                            .vals()}
-                    />
-                </Segment>
-                <Segment>
-                    <SubHeading>Calendars</SubHeading>
-                    <Calendars
-                        input={d('em_hasAnnotationList')('items')
-                            .filter(
-                                x =>
-                                    x('oa_hasBody')('rdf_type')('uri').val('') ===
-                                    'http://emplaces.namespace.example.org/Calendar'
-                            )
-                            .vals()}
-                    />
-                </Segment>
-                <Segment>
-                    <SubHeading>Related Places</SubHeading>
-                    {/* <RelatedPlaces input={data.em_hasRelationList.items} /> */}
-                    <p />
-                </Segment>
-                <Segment>
-                    <SubHeading>Related Resources</SubHeading>
-                    <PlussedList>
-                        {d('rdfs_seeAlsoList')('items')('title')('value')
-                            .vals()
-                            .map(x => (
-                                <li key={x}>
-                                    <UnstyledAnchor rel="nofollow" href={x}>
-                                        {x}
-                                    </UnstyledAnchor>
-                                </li>
-                            ))}
-                    </PlussedList>
-                </Segment>
-                <Segment>
-                    <SubHeading>Bibliography</SubHeading>
-                    <p>{d('em_reference')('dcterms_title')('value').val('')}</p>
-                </Segment>
-                <MetadataPart label="Creator" value="{creator}" />
-                <MetadataPart label="Contributors" value="{contributors}" />
-                <MetadataPart label="Reference" value={d('em_coreDataRef')('title')('value').val('')} />
-                <MetadataPart label="Licenses" value="{licenses}" />
-                <Segment className="breakPoint">
-                    <SubHeading>Maps</SubHeading>
-                    <Map
-                        lat={+d('em_where')('em_location')('wgs84_pos_lat')('value').val('0')}
-                        long={+d('em_where')('em_location')('wgs84_pos_long')('value').val('0')}
-                    />
-                </Segment>
-                <Segment>
-                    <SubHeading>Description</SubHeading>
-                    <p>{d('em_editorialNote')('value').val('')}</p>
-                </Segment>
-                <Segment>
-                    <SubHeading>Historical Hierarchies</SubHeading>
-                    <HistoricalHierarchies
-                        placeName={d('title')('value').val('')}
-                        data={ParseHistoricalHierarchies(
-                            d('em_hasRelationList')('items')
-                                .filter(item => item('em_relationType')('title')('value').val('') === 'Former part of')
-                                .vals()
-                        )}
-                        selectedRange={0}
-                        selectedType=""
-                        onChange={data.onSwitchHierarchyClick}
-                    />
-                </Segment>
-                <Segment>
-                    <SubHeading>Feedback</SubHeading>
-                    <p>
-                        Please email us your comments. We welcome contributions from individual scholars and projects.
-                    </p>
-                </Segment>
-            </ColumnWrapper>
-        </AppContainer>
+                    )}
+                    selectedRange={data.selectedHierarchy.range}
+                    selectedType={data.selectedHierarchy.type}
+                    onChange={data.onSwitchHierarchyClick}
+                />
+            </Segment>
+            <Segment>
+                <SubHeading>Feedback</SubHeading>
+                <p>Please email us your comments. We welcome contributions from individual scholars and projects.</p>
+            </Segment>
+        </ColumnWrapper>
     );
 };
 
