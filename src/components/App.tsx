@@ -40,7 +40,7 @@ interface OwnProps {
 }
 
 interface DispatchProps {
-    logInUser: (hsid: string) => void;
+    logInUser: (sessionToken: string) => void;
     logOutUser: () => void;
 }
 
@@ -109,9 +109,9 @@ export default compose<SFC<OwnProps>>(
                 !this.props.user.loggedIn &&
                 this.props.data!.aboutMe &&
                 this.props.data!.aboutMe!.id &&
-                this.props.user.hsid.length > 0
+                this.props.user.sessionToken.length > 0
             ) {
-                this.props.logInUser(this.props.user.hsid);
+                this.props.logInUser(this.props.user.sessionToken);
             }
 
             this.props.history.listen((location: Location, action: string) => {
@@ -128,12 +128,12 @@ export default compose<SFC<OwnProps>>(
                 data!.aboutMe &&
                 data!.aboutMe!.id &&
                 this.props.data!.aboutMe !== data!.aboutMe &&
-                user.hsid.length > 0
+                user.sessionToken.length > 0
             ) {
-                this.props.logInUser(user.hsid);
+                this.props.logInUser(user.sessionToken);
             }
 
-            if ((user.hsid || user.loggedIn) && (data!.error || data!.aboutMe === null)) {
+            if ((user.sessionToken || user.loggedIn) && (data!.error || data!.aboutMe === null)) {
                 this.props.logOutUser();
             }
         }

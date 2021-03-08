@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { HSID } from '../constants/global';
+import { SESSION_TOKEN } from '../constants/global';
 
 type Query = string | null;
 
@@ -23,13 +23,13 @@ const getQueryStringValue = (query: string, key: string): Query => {
 
 const retrieveId = (): string => {
     const query = window.location.search;
-    const queryParamValue: Query = getQueryStringValue(query, HSID);
+    const queryParamValue: Query = getQueryStringValue(query, SESSION_TOKEN);
 
     if (queryParamValue) {
         return queryParamValue;
     }
 
-    const cookieValue: string | undefined = Cookies.get(HSID);
+    const cookieValue: string | undefined = Cookies.get(SESSION_TOKEN);
 
     if (cookieValue) {
         return cookieValue;

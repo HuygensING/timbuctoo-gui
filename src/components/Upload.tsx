@@ -78,7 +78,7 @@ interface StateProps {
 }
 
 interface ConnectedStateProps {
-    hsid: string;
+    sessionToken: string;
 }
 
 interface HandlerProps {
@@ -145,13 +145,13 @@ const Upload: SFC<FullProps> = (props: FullProps) => (
 );
 
 export default compose<FullProps, OwnProps>(
-    connect(({ user: { hsid } }: RootState) => ({ hsid })),
+    connect(({ user: { sessionToken } }: RootState) => ({ sessionToken: sessionToken })),
     withState('hovering', 'setHovering', false),
     withState('files', 'setFiles', []),
     withHandlers<FullProps, HandlerProps>({
         enter: ({ setHovering }) => () => setHovering(true),
         leave: ({ setHovering }) => () => setHovering(false),
-        drop: ({ setFiles, ownerId, dataSetName, onCompletion, hsid }) => async (
+        drop: ({ setFiles, ownerId, dataSetName, onCompletion, sessionToken }) => async (
             accepted: ImageFile[],
             rejected: ImageFile[],
             event: DragEvent<HTMLDivElement>
@@ -181,7 +181,7 @@ export default compose<FullProps, OwnProps>(
                     method: 'POST',
                     body: data,
                     headers: {
-                        authorization: hsid
+                        authorization: sessionToken
                     }
                 });
 

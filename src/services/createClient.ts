@@ -22,7 +22,7 @@ const createClient = (store: Store<RootState>) => {
             const state: RootState = store.getState();
             return {
                 headers: {
-                    authorization: (state && state.user && state.user.hsid) || null
+                    authorization: (state && state.user && state.user.sessionToken) || null
                 }
             };
         }),

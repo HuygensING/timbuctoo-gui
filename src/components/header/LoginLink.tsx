@@ -12,8 +12,8 @@ const Button = styled.button`
 const value: string = window.location.href;
 
 const LoginLink = () => (
-    <form action={LOGIN_URL} method="POST">
-        <input name="hsurl" value={value} type="hidden" />
+    <form action={LOGIN_URL} method="GET">
+        <input name="redirect-uri" value={value} type="hidden" />
         <Button type="submit">Login</Button>
     </form>
 );

@@ -1,10 +1,10 @@
 import Cookies from 'js-cookie';
 import retrieveId from '../services/RetrieveId';
-import { HSID } from '../constants/global';
+import { SESSION_TOKEN } from '../constants/global';
 import { client } from '../index';
 
 export interface UserReducer {
-    hsid: Readonly<string>;
+    sessionToken: Readonly<string>;
     language: Readonly<'en' | 'nl'>;
     loggedIn: Readonly<boolean>;
     avatar: Readonly<string>;
@@ -13,13 +13,13 @@ export interface UserReducer {
 }
 
 const loggedOutState = {
-    hsid: '',
+    sessionToken: '',
     loggedIn: false
 };
 
-const hsid = retrieveId();
+const sessionToken = retrieveId();
 const initialState: UserReducer = {
-    hsid,
+    sessionToken: sessionToken,
     language: 'en',
     loggedIn: false,
 
@@ -67,14 +67,14 @@ export default (state: UserReducer = initialState, action: Action) => {
 
 // action creators
 export const LogInUser = (auth: string): LoginAction => {
-    Cookies.set(HSID, auth);
+    Cookies.set(SESSION_TOKEN, auth);
     return {
         type: 'LOG_IN'
     };
 };
 
 export const LogOutUser = (): LogoutAction => {
-    Cookies.remove(HSID);
+    Cookies.remove(SESSION_TOKEN);
     client.resetStore();
 
     return {

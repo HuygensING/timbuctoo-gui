@@ -5,7 +5,7 @@ import Book from '../components/icons/Book';
 import { FacetConfig } from '../typings/schema';
 import { SUB_ROUTES, ROUTE_PATHS } from './routeNaming';
 
-export const HSID: string = 'hsid';
+export const SESSION_TOKEN: string = 'sessionToken';
 
 export const CONTAINER_PADDING: number = 1.5;
 export const HEADER_HEIGHT: string = '4rem';
