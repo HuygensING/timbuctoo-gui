@@ -1,27 +1,4 @@
 import gql from 'graphql-tag';
-const contactFragment = gql`
-    fragment ContactFragment on ContactInfo {
-        name {
-            value
-        }
-        email {
-            value
-        }
-    }
-`;
-
-const provenanceFragment = gql`
-    fragment ProvenanceInfoFragment on DataSetMetadata {
-        provenanceInfo {
-            title {
-                value
-            }
-            body {
-                value
-            }
-        }
-    }
-`;
 
 const collectionBase = gql`
     fragment CollectionBase on CollectionMetadata {
@@ -110,25 +87,24 @@ const dataSetMetadataFragment = gql`
         description { value }
         imageUrl { value }
         owner {
-            ...ContactFragment
+            name { value }
+            email { value }
         }
         contact {
-            ...ContactFragment
+            name { value }
+            email { value }
         }
-        ...ProvenanceInfoFragment
+        provenanceInfo {
+            title { value }
+            body { value type }
+        }
         collectionList {
             items {
                 ...CollectionBase
                 ...CollectionPropertiesDensity
             }
         }
-        provenanceInfo {
-            title { value }
-            body { value type }
-        }
     }
-    ${contactFragment}
-    ${provenanceFragment}
     ${collectionBase}
     ${collectionPropertiesDensity}
 `;
