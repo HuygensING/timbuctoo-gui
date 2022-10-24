@@ -26,6 +26,7 @@ WORKDIR /app
 COPY --from=0 /build-app/build .
 
 # Build for production.
+RUN npm config set unsafe-perm true
 RUN npm install -g serve
 
 ENV REACT_APP_PRIMARY_COLOR=#269075
