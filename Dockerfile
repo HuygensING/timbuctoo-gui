@@ -27,7 +27,7 @@ COPY --from=0 /build-app/build .
 
 # Build for production.
 RUN npm config set unsafe-perm true
-RUN npm install -g serve
+RUN npm install -g serve@6.5.3
 
 ENV REACT_APP_PRIMARY_COLOR=#269075
 ENV REACT_APP_TEXT_EN_TITLE="We care for your data"
