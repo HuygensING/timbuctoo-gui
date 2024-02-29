@@ -11,27 +11,20 @@ import renderLoader from '../../services/renderLoader';
 import graphqlWithProps from '../../services/graphqlWithProps';
 import { reorderUnknownsInList } from '../../services/HandleUnknowns';
 import { getCollectionValues } from '../../services/GetDataSetValues';
-import translate from '../../services/translate';
 import { createEsQueryString } from '../../services/EsQueryStringCreator';
 import { encode } from '../../services/UrlStringCreator';
 import QUERY_COLLECTION_PROPERTIES from '../../graphql/queries/CollectionProperties';
 import QUERY_COLLECTION_VALUES from '../../graphql/queries/CollectionValues';
 import FullHelmet from '../FullHelmet';
 import { Col, FullSection } from '../layout/Grid';
-import SearchForm from '../form/SearchForm';
 import CollectionTags from '../CollectionTags';
 import SearchResults from '../search/SearchResults';
 import Pagination from '../search/Pagination';
-import { Link, Title } from '../layout/StyledCopy';
-import styled, { withProps as withStyledProps } from '../../styled-components';
-import MultiSelectForm from '../form/MultiselectForm';
 import { debounce } from 'lodash';
 
 import { EsFilter, mergeFilters } from '../../reducers/search';
 import { RootState } from '../../reducers/rootReducer';
 import { ChildProps } from '../../typings/index';
-import { FACET_TYPE } from '../../constants/forms';
-import DateRange from '../form/DateRange';
 
 interface StateProps {
     filters: EsFilter[];
@@ -60,54 +53,55 @@ type ApolloProps = ChildProps<
 
 type FullProps = ApolloProps & StateProps & DispatchProps & ExtraProps;
 
+// TODO: Disabled facet support
 // TODO: this is just a simple loading effect, should be way cooler
-const StyledForm = withStyledProps<{ loading: boolean }>(styled.form)`
-    opacity: ${props => (props.loading ? 0.7 : 1)};
-`;
-
-const FilterTitle = Title.extend`
-    float: left;
-    padding-right: 0.5rem;
-`;
-
-const ResetLink = Link.extend`
-    background: ${props => props.theme.colors.shade.medium};
-    color: ${props => props.theme.colors.white};
-    position: relative;
-    top: 7px;
-    width: 1rem;
-    height: 1rem;
-    text-align: center;
-    line-height: 1.35;
-    font-size: 0.75rem;
-    border-radius: 50%;
-    float: left;
-    margin: 1.1vw 0;
-
-    &:hover {
-        background: ${props => props.theme.colors.error};
-        color: ${props => props.theme.colors.white};
-    }
-`;
-
-class FacetErrorHandler extends React.Component<any, { hasError: boolean }> {
-    constructor(props: any) {
-        super(props);
-        this.state = { hasError: false };
-    }
-    componentDidCatch(error: any, info: any) {
-        console.error(error, info);
-        this.setState({ hasError: true });
-    }
-
-    render() {
-        if (this.state.hasError) {
-            console.error('fallback');
-            return <div>Facet failed to load</div>;
-        }
-        return this.props.children;
-    }
-}
+// const StyledForm = withStyledProps<{ loading: boolean }>(styled.form)`
+//     opacity: ${props => (props.loading ? 0.7 : 1)};
+// `;
+//
+// const FilterTitle = Title.extend`
+//     float: left;
+//     padding-right: 0.5rem;
+// `;
+//
+// const ResetLink = Link.extend`
+//     background: ${props => props.theme.colors.shade.medium};
+//     color: ${props => props.theme.colors.white};
+//     position: relative;
+//     top: 7px;
+//     width: 1rem;
+//     height: 1rem;
+//     text-align: center;
+//     line-height: 1.35;
+//     font-size: 0.75rem;
+//     border-radius: 50%;
+//     float: left;
+//     margin: 1.1vw 0;
+//
+//     &:hover {
+//         background: ${props => props.theme.colors.error};
+//         color: ${props => props.theme.colors.white};
+//     }
+// `;
+//
+// class FacetErrorHandler extends React.Component<any, { hasError: boolean }> {
+//     constructor(props: any) {
+//         super(props);
+//         this.state = { hasError: false };
+//     }
+//     componentDidCatch(error: any, info: any) {
+//         console.error(error, info);
+//         this.setState({ hasError: true });
+//     }
+//
+//     render() {
+//         if (this.state.hasError) {
+//             console.error('fallback');
+//             return <div>Facet failed to load</div>;
+//         }
+//         return this.props.children;
+//     }
+// }
 
 const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) => {
     const { collectionList, dataSetId, collection } = metadata.dataSetMetadata!;
@@ -117,10 +111,11 @@ const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) =
         <section>
             <FullHelmet pageName={`search: ${dataSetId}`} />
 
-            <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={1}>
-                {/* TODO: Connect the fulltext search as well */}
-                <SearchForm type={'collection'} loading={data!.loading} />
-            </Col>
+            {/* TODO: Disabled facet search */}
+            {/*<Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={1}>*/}
+            {/*    /!* TODO: Connect the fulltext search as well *!/*/}
+            {/*    /!*<SearchForm type={'collection'} loading={data!.loading} />*!/*/}
+            {/*</Col>*/}
 
             <Col sm={42} smOffset={3} xs={46} xsOffset={1} smPaddingTop={0.5}>
                 <CollectionTags
@@ -132,33 +127,34 @@ const Search: SFC<FullProps> = ({ metadata, data, collectionValues, filters }) =
             </Col>
 
             <FullSection>
-                <Col sm={12} smPaddingY={1}>
-                    <StyledForm onSubmit={e => e.preventDefault()} loading={data!.loading}>
-                        <FilterTitle>{translate('globals.filters')}</FilterTitle>
-                        {!!location.search.length && <ResetLink to={location.pathname}>X</ResetLink>}
-                        {filters.length > 0 &&
-                            filters.map((filter, idx) => {
-                                switch (filter.type) {
-                                    case FACET_TYPE.multiSelect:
-                                        return (
-                                            <FacetErrorHandler>
-                                                <MultiSelectForm key={idx} index={idx} />
-                                            </FacetErrorHandler>
-                                        );
-                                    case FACET_TYPE.dateRange:
-                                        return (
-                                            <FacetErrorHandler>
-                                                <DateRange key={idx} index={idx} />
-                                            </FacetErrorHandler>
-                                        );
-                                    default:
-                                        return null;
-                                }
-                            })}
-                    </StyledForm>
-                </Col>
+                {/* TODO: Disabled facet support */}
+                {/*<Col sm={12} smPaddingY={1}>*/}
+                {/*    <StyledForm onSubmit={e => e.preventDefault()} loading={data!.loading}>*/}
+                {/*        <FilterTitle>{translate('globals.filters')}</FilterTitle>*/}
+                {/*        {!!location.search.length && <ResetLink to={location.pathname}>X</ResetLink>}*/}
+                {/*        {filters.length > 0 &&*/}
+                {/*            filters.map((filter, idx) => {*/}
+                {/*                switch (filter.type) {*/}
+                {/*                    case FACET_TYPE.multiSelect:*/}
+                {/*                        return (*/}
+                {/*                            <FacetErrorHandler>*/}
+                {/*                                <MultiSelectForm key={idx} index={idx} />*/}
+                {/*                            </FacetErrorHandler>*/}
+                {/*                        );*/}
+                {/*                    case FACET_TYPE.dateRange:*/}
+                {/*                        return (*/}
+                {/*                            <FacetErrorHandler>*/}
+                {/*                                <DateRange key={idx} index={idx} />*/}
+                {/*                            </FacetErrorHandler>*/}
+                {/*                        );*/}
+                {/*                    default:*/}
+                {/*                        return null;*/}
+                {/*                }*/}
+                {/*            })}*/}
+                {/*    </StyledForm>*/}
+                {/*</Col>*/}
 
-                <Col sm={27} smOffset={3} smPaddingY={1}>
+                <Col sm={40} smOffset={3} smPaddingY={1}>
                     {collectionValues && [
                         <SearchResults
                             key={'results'}
@@ -212,9 +208,9 @@ const dataResolver = compose<ComponentType<{}>>(
                 const searchParam = query ? `?search=${encode(query)}` : '';
                 debounceReplace(nextProps.history, location.pathname + searchParam);
             } else if (nextProps.data && this.props.data !== nextProps.data) {
-                const { collectionValues, metadata, location } = nextProps;
+                const { collectionValues, location } = nextProps;
                 nextProps.mergeFilter(
-                    metadata.dataSetMetadata!.collection!.indexConfig.facet,
+                    [], // TODO: Removed facet support: metadata.dataSetMetadata!.collection!.indexConfig.facet,
                     collectionValues!.facets,
                     location
                 );

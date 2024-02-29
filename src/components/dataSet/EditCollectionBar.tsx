@@ -56,9 +56,10 @@ const EditCollectionBar: SFC<Props> = ({ collection, dataSetId }) => {
     return (
         <Bar>
             <TitleBox>{getValue(collection.title) || collection.collectionId}</TitleBox>
-            <LinkBox to={`/${ROUTE_PATHS.edit}/${dataSetId}${SUB_ROUTES.facetConfig}/${collection.collectionId}`}>
-                Edit facets<EditIcon />
-            </LinkBox>
+            {/* TODO: Disabled facet support */}
+            {/*<LinkBox to={`/${ROUTE_PATHS.edit}/${dataSetId}${SUB_ROUTES.facetConfig}/${collection.collectionId}`}>*/}
+            {/*    Edit facets<EditIcon />*/}
+            {/*</LinkBox>*/}
             <LinkBox to={`/${ROUTE_PATHS.edit}/${dataSetId}${SUB_ROUTES.viewConfig}/${collection.collectionId}`}>
                 Edit screen<EditIcon />
             </LinkBox>

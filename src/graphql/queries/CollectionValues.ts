@@ -10,25 +10,26 @@ const QUERY_COLLECTION_VALUES = ({ match, location, metadata }: Props) => {
         return null;
     }
 
-    const { collectionListId, indexConfig } = metadata.dataSetMetadata.collection;
+    // TODO: Removed facet support: indexConfig
+    const { collectionListId } = metadata.dataSetMetadata.collection;
+    const collectionArguments = setCollectionArguments({ facet: [], fullText: [] }, location);
 
-    const collectionArguments = setCollectionArguments(indexConfig, location);
+    // TODO: Removed facet support
+    //  facets {
+    //                             caption
+    //                             options {
+    //                                 name
+    //                                 count
+    //                             }
+    //                         }
 
     const query = `
         query CollectionValues {
-        
             dataSets {
                 ${match.params.dataSet} {
                     ${collectionListId}${collectionArguments} {
                         nextCursor
                         prevCursor
-                        facets {
-                            caption
-                            options {
-                                name
-                                count
-                            }
-                        }
                         items {
                             uri
                             title { value type }

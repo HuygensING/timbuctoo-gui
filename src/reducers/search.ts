@@ -112,34 +112,36 @@ export const minifyValues = (values: EsValue[]): EsValue[] => {
 };
 
 const mergeFacets = (configs: FacetConfig[], facets: Facet[]): EsFilter[] =>
-    facets.map(facet => {
-        const config = configs.find((configItem, idx) => {
-            const num = facet.caption.split('_')[1];
-            return Number(num) === idx || (!!configItem.caption && facet.caption === configItem.caption);
-        });
+    !facets
+        ? []
+        : facets.map(facet => {
+              const config = configs.find((configItem, idx) => {
+                  const num = facet.caption.split('_')[1];
+                  return Number(num) === idx || (!!configItem.caption && facet.caption === configItem.caption);
+              });
 
-        const obj: EsFilter = {
-            paths: config ? config.paths : [],
-            type: config ? config.type : FACET_TYPE.multiSelect,
-            caption: facet.caption,
-            values: facet.options || []
-        };
+              const obj: EsFilter = {
+                  paths: config ? config.paths : [],
+                  type: config ? config.type : FACET_TYPE.multiSelect,
+                  caption: facet.caption,
+                  values: facet.options || []
+              };
 
-        if (obj.type === FACET_TYPE.dateRange) {
-            if (obj.values.length > MAX_AMOUNT_RANGE_BUCKETS) {
-                try {
-                    obj.values = minifyValues(obj.values);
-                } catch (e) {
-                    if (process.env.NODE_ENV === 'development') {
-                        console.warn(e);
-                    }
-                }
-            }
+              if (obj.type === FACET_TYPE.dateRange) {
+                  if (obj.values.length > MAX_AMOUNT_RANGE_BUCKETS) {
+                      try {
+                          obj.values = minifyValues(obj.values);
+                      } catch (e) {
+                          if (process.env.NODE_ENV === 'development') {
+                              console.warn(e);
+                          }
+                      }
+                  }
 
-            obj.range = { gt: 0, lt: obj.values.length > 1 ? obj.values.length - 1 : 1, all: true };
-        }
-        return obj;
-    });
+                  obj.range = { gt: 0, lt: obj.values.length > 1 ? obj.values.length - 1 : 1, all: true };
+              }
+              return obj;
+          });
 
 const setSelectedFilter = (filter: EsFilter, name: string): EsFilter => {
     let newFilter: EsFilter = { ...filter };

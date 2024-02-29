@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { collectionBase, collectionIndexConfig, collectionPropertiesDensity } from '../fragments/Metadata';
+import { collectionBase, collectionPropertiesDensity } from '../fragments/Metadata';
 import { RouteComponentProps } from 'react-router';
 import { componentsFragment } from '../fragments/Components';
 
@@ -7,6 +7,11 @@ export type Props = RouteComponentProps<{ dataSet: string; collection: string }>
 
 const QUERY_COLLECTION_PROPERTIES = ({ match }: Props) => {
     // TODO: Might be smart to split this up in multiple queries. When all calls are here, let's check
+
+    // TODO: Removed index support
+    //  indexConfig {
+    //                         ...CollectionIndexConfig
+    //                     }
     const query = `
         query CollectionProperties {
             dataSetMetadata(dataSetId: "${match.params.dataSet}") {
@@ -15,9 +20,6 @@ const QUERY_COLLECTION_PROPERTIES = ({ match }: Props) => {
                     uri
                     ...CollectionBase
                     ...CollectionPropertiesDensity
-                    indexConfig {
-                        ...CollectionIndexConfig
-                    }
                     viewConfig {
                         ...ComponentsFragment
                     }
@@ -32,7 +34,8 @@ const QUERY_COLLECTION_PROPERTIES = ({ match }: Props) => {
         }
     `;
 
-    return gql`${query}${collectionBase}${collectionPropertiesDensity}${collectionIndexConfig}${componentsFragment}`;
+    // TODO: removed index support: collectionIndexConfig
+    return gql`${query}${collectionBase}${collectionPropertiesDensity}${componentsFragment}`;
 };
 
 export default QUERY_COLLECTION_PROPERTIES;

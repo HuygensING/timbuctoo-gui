@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { CollectionMetadata } from '../../typings/schema';
 import FullHelmet from '../FullHelmet';
 import Hero from '../hero/Hero';
-import { ROUTE_PATHS } from '../../constants/routeNaming';
-import { encode } from '../../services/UrlStringCreator';
 import { Col } from '../layout/Grid';
 import { isKnown, reorderUnknownsInList } from '../../services/HandleUnknowns';
 import GridSection from '../layout/GridSection';
@@ -46,12 +44,14 @@ class DataSet extends PureComponent<Props> {
                     title={getValue(title)}
                     content={getValue(description)}
                     imgUrl={getValue(imageUrl)}
-                    searchPath={
-                        collectionItems.length
-                            ? `/${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionItems[0].collectionId)}`
-                            : ''
-                    }
-                    buttonText={'Search this dataset'}
+                    searchPath={null}
+                    buttonText={null}
+                    // searchPath={
+                    //     collectionItems.length
+                    //         ? `/${ROUTE_PATHS.details}/${dataSetId}/${encode(collectionItems[0].collectionId)}`
+                    //         : ''
+                    // }
+                    // buttonText={'Search this dataset'}
                 />
 
                 <Col sm={42} smOffset={3} smPaddingBottom={0.5}>
