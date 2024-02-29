@@ -19,7 +19,7 @@ const loggedOutState = {
 
 const sessionToken = retrieveId();
 const initialState: UserReducer = {
-    sessionToken: sessionToken,
+    sessionToken,
     language: 'en',
     loggedIn: false,
 

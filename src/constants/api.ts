@@ -6,6 +6,6 @@ if (API_URL.endsWith('/')) {
 }
 
 export const GRAPH_URI = API_URL + '/v5/graphql';
-export const LOGIN_URL = getEnvVar('REACT_APP_LOGIN_URL');
+export const LOGIN_URL = API_URL + '/login';
 export const dataSetUploadUrl = (ownerId: string, dataSetName: string) =>
     `${API_URL}/v5/${ownerId}/${dataSetName}/upload/rdf`;

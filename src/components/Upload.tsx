@@ -145,7 +145,7 @@ const Upload: SFC<FullProps> = (props: FullProps) => (
 );
 
 export default compose<FullProps, OwnProps>(
-    connect(({ user: { sessionToken } }: RootState) => ({ sessionToken: sessionToken })),
+    connect(({ user: { sessionToken } }: RootState) => ({ sessionToken })),
     withState('hovering', 'setHovering', false),
     withState('files', 'setFiles', []),
     withHandlers<FullProps, HandlerProps>({
