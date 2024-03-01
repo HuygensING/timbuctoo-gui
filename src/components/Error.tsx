@@ -10,7 +10,7 @@ type Props = ErrorReducer;
 
 function Error({ errors, status, query, variables }: Props) {
     const graphiqlUri =
-        GRAPH_URI.substr(0, GRAPH_URI.length - '/v5/graphql'.length) +
+        GRAPH_URI.substr(0, GRAPH_URI.length - '/graphql'.length) +
         '/static/graphiql?query=' +
         encodeURIComponent(query) +
         '&variables=' +

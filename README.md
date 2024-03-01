@@ -9,11 +9,6 @@ In the `.env` file, you can add these variables, which will affect the applicati
 
 You can set the api url for timbuctoo endpoint that you want to connect to the project.
 
-### `REACT_APP_LOGIN_URL` _: string URL_
-
-This expects the url the application posts to when attempting a login. The key that is stored 
-in the query-parameter after logging in will be stored in a cookie, so a user doesn't have to log in every time
-
 ## Available Scripts
 
 In the project directory, you can run:

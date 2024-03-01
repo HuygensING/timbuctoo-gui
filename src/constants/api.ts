@@ -5,7 +5,7 @@ if (API_URL.endsWith('/')) {
     API_URL = API_URL.replace(/\/+$/, '');
 }
 
-export const GRAPH_URI = API_URL + '/v5/graphql';
+export const GRAPH_URI = API_URL + '/graphql';
 export const LOGIN_URL = API_URL + '/login';
 export const dataSetUploadUrl = (ownerId: string, dataSetName: string) =>
-    `${API_URL}/v5/${ownerId}/${dataSetName}/upload/rdf`;
+    `${API_URL}/${ownerId}/${dataSetName}/upload/rdf`;
